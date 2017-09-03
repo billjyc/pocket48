@@ -90,7 +90,7 @@ if __name__ == '__main__':
 
     qq_handler = QQHandler()
     qq_handler.login('fxftest')
-    groups = qq_handler.list_group('483548995')
+    groups = qq_handler.list_group(group_number)
     if groups:
         group = groups[0]
         handler = Pocket48Handler(group)
@@ -98,8 +98,8 @@ if __name__ == '__main__':
         while True:
             r1 = handler.get_member_room_msg(roomId)
             handler.parse_room_msg(r1)
-            r2 = handler.get_member_room_comment(roomId)
-            handler.parse_room_msg(r2)
+            # r2 = handler.get_member_room_comment(roomId)
+            # handler.parse_room_msg(r2)
             handler.last_monitor_time = int(time.time())
             time.sleep(60)
     else:
