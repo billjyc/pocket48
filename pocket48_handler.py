@@ -40,10 +40,10 @@ class Pocket48Handler:
 
             # 判断是否为成员
             if self.is_member(extInfo['senderRole']):
-                message = '成员消息：' + message
+                message = '【成员消息】' + message
                 QQHandler.send(self.group, message)
             else:
-                message = '房间评论：' + message
+                message = '【房间评论】' + message
 
             QQHandler.send(self.test_group, message)
 
