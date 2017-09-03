@@ -5,7 +5,7 @@ import json
 from config_reader import ConfigReader
 import time
 from qqhandler import QQHandler
-from qqbot.utf8logger import INFO,ERROR
+from qqbot.utf8logger import INFO,ERROR,DEBUG
 
 import sys
 
@@ -25,7 +25,7 @@ class Pocket48Handler:
             "roomId": room_id, "lastTime": 0, "limit": 10
         }
         response = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
-        INFO(response.text)
+        DEBUG(response.text)
         return response.text
 
     def parse_room_msg(self, response):
@@ -56,7 +56,7 @@ class Pocket48Handler:
         }
         # 收到响应  
         response = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
-        INFO(response.text)
+        DEBUG(response.text)
         return response.text
 
     def is_member(self, role):
@@ -97,13 +97,14 @@ if __name__ == '__main__':
     qq_handler.login('fxftest')
     groups = qq_handler.list_group(group_number)
     test_groups = qq_handler.list_group(test_group_number)
-    if groups or test_groups:
+    if groups and test_groups:
         if test_groups:
             test_group = test_groups[0]
         if groups:
             group = groups[0]
-        else:
-            group = test_group
+
+        INFO('Group: ' + group)
+        INFO('Test Group: ' + test_group)
         handler = Pocket48Handler(group, test_group)
 
         while True:
