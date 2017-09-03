@@ -96,9 +96,15 @@ if __name__ == '__main__':
     qq_handler = QQHandler()
     qq_handler.login('fxftest')
     groups = qq_handler.list_group(group_number)
-    if groups:
-        group = groups[0]
-        handler = Pocket48Handler(group)
+    test_groups = qq_handler.list_group(test_group_number)
+    if groups or test_groups:
+        if test_groups:
+            test_group = test_groups[0]
+        if groups:
+            group = groups[0]
+        else:
+            group = test_group
+        handler = Pocket48Handler(group, test_group)
 
         while True:
             r1 = handler.get_member_room_msg(roomId)
