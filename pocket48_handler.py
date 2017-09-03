@@ -97,11 +97,16 @@ if __name__ == '__main__':
     qq_handler.login('fxftest')
     groups = qq_handler.list_group(group_number)
     test_groups = qq_handler.list_group(test_group_number)
-    if groups and test_groups:
+    DEBUG('Group: ' + str(groups is None))
+    DEBUG('Test Group: ' + str(test_groups is None))
+
+    if groups or test_groups:
         if test_groups:
             test_group = test_groups[0]
         if groups:
             group = groups[0]
+        else:
+            group = test_groups[0]
 
         INFO('Group: ' + group)
         INFO('Test Group: ' + test_group)
