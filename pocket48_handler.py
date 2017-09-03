@@ -5,6 +5,7 @@ import json
 from config_reader import ConfigReader
 import time
 from qqhandler import QQHandler
+from qqbot.utf8logger import INFO,ERROR
 
 
 class Pocket48Handler:
@@ -18,7 +19,7 @@ class Pocket48Handler:
             "roomId": room_id, "lastTime": 0, "limit": 2
         }
         response = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
-        print response.text
+        INFO(response.text)
         return response.text
 
     def parse_room_msg(self, response):
@@ -29,8 +30,14 @@ class Pocket48Handler:
                 break
             extInfo = json.loads(msg['extInfo'])
             message = '[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
+
+            # 判断是否为成员
+            if self.is_member(extInfo['senderRole']):
+                message = '成员消息：' + message
+            else:
+                message = '房间评论：' + message
             QQHandler.send(self.group, message)
-            print '[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
+            # print '[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
 
     def get_member_room_comment(self, room_id):
         url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/comment'
@@ -39,8 +46,11 @@ class Pocket48Handler:
         }
         # 收到响应  
         response = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
-        print response.text
+        INFO(response.text)
         return response.text
+
+    def is_member(self, role):
+        return role == 1
 
     '''
     将10位时间戳转化为13位
@@ -87,4 +97,4 @@ if __name__ == '__main__':
             handler.last_monitor_time = int(time.time())
             time.sleep(60)
     else:
-        print '群号输入不正确！'
+        ERROR('群号输入不正确！')
