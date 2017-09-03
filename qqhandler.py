@@ -13,6 +13,10 @@ class QQHandler:
     def list_group(self, group_number):
         return bot.List('group', group_number)
 
+    def update(self):
+        bot.Update('buddy')
+        bot.Update('group')
+
     @classmethod
     def send(cls, receiver, message):
         bot.SendTo(receiver, message)
