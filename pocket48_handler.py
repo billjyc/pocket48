@@ -7,6 +7,11 @@ import time
 from qqhandler import QQHandler
 from qqbot.utf8logger import INFO,ERROR
 
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 
 class Pocket48Handler:
     def __init__(self, group):
@@ -16,7 +21,7 @@ class Pocket48Handler:
     def get_member_room_msg(self, room_id):
         url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/chat'
         params = {
-            "roomId": room_id, "lastTime": 0, "limit": 2
+            "roomId": room_id, "lastTime": 0, "limit": 10
         }
         response = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
         INFO(response.text)
@@ -30,6 +35,7 @@ class Pocket48Handler:
                 break
             extInfo = json.loads(msg['extInfo'])
             message = '[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
+            INFO(message)
 
             # 判断是否为成员
             if self.is_member(extInfo['senderRole']):
@@ -42,7 +48,7 @@ class Pocket48Handler:
     def get_member_room_comment(self, room_id):
         url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/comment'
         params = {
-            "roomId": room_id, "lastTime": 0, "limit": 2
+            "roomId": room_id, "lastTime": 0, "limit": 10
         }
         # 收到响应  
         response = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
@@ -83,7 +89,7 @@ if __name__ == '__main__':
     group_number = ConfigReader.get_group_number()
 
     qq_handler = QQHandler()
-    qq_handler.login(qq_number)
+    qq_handler.login('fxftest')
     groups = qq_handler.list_group('483548995')
     if groups:
         group = groups[0]
