@@ -14,9 +14,10 @@ sys.setdefaultencoding('utf8')
 
 
 class Pocket48Handler:
-    def __init__(self, group):
+    def __init__(self, group, test_group):
         self.last_monitor_time = int(time.time())
         self.group = group
+        self.test_group = test_group
 
     def get_member_room_msg(self, room_id):
         url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/chat'
@@ -40,9 +41,12 @@ class Pocket48Handler:
             # 判断是否为成员
             if self.is_member(extInfo['senderRole']):
                 message = '成员消息：' + message
+                QQHandler.send(self.group, message)
             else:
                 message = '房间评论：' + message
-            QQHandler.send(self.group, message)
+
+            QQHandler.send(self.test_group, message)
+
             # print '[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
 
     def get_member_room_comment(self, room_id):
@@ -87,6 +91,7 @@ if __name__ == '__main__':
     roomId = ConfigReader.get_member_room_number('fengxiaofei')
     qq_number = ConfigReader.get_qq_number()
     group_number = ConfigReader.get_group_number()
+    test_group_number = ConfigReader.get_test_group_number()
 
     qq_handler = QQHandler()
     qq_handler.login('fxftest')
@@ -98,8 +103,8 @@ if __name__ == '__main__':
         while True:
             r1 = handler.get_member_room_msg(roomId)
             handler.parse_room_msg(r1)
-            # r2 = handler.get_member_room_comment(roomId)
-            # handler.parse_room_msg(r2)
+            r2 = handler.get_member_room_comment(roomId)
+            handler.parse_room_msg(r2)
             handler.last_monitor_time = int(time.time())
             time.sleep(60)
     else:

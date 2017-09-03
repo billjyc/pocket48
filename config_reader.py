@@ -20,6 +20,10 @@ class ConfigReader:
     def get_group_number(cls):
         return cls.conf.get('qq_conf', 'group_number')
 
+    @classmethod
+    def get_test_group_number(cls):
+        return cls.conf.get('qq_conf', 'test_group_number')
 
-if __name__=='__main__':
+
+if __name__ =='__main__':
     print ConfigReader.get_member_room_number('fengxiaofei')
