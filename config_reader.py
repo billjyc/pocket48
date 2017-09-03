@@ -13,8 +13,8 @@ class ConfigReader:
         return cls.conf.get('juju_room', name)
 
     @classmethod
-    def get_qq_number(cls):
-        return cls.conf.get('qq_conf', 'qq')
+    def get_qq_number(cls, name):
+        return cls.conf.get('qq_conf', name)
 
     @classmethod
     def get_group_number(cls):

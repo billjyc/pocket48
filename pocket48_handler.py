@@ -22,7 +22,7 @@ class Pocket48Handler:
     def get_member_room_msg(self, room_id):
         url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/chat'
         params = {
-            "roomId": room_id, "lastTime": 0, "limit": 10
+            "roomId": room_id, "lastTime": 0, "limit": 5
         }
         response = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
         DEBUG(response.text)
@@ -35,16 +35,25 @@ class Pocket48Handler:
             if msg['msgTime'] < self.convert_timestamp(self.last_monitor_time):
                 break
             extInfo = json.loads(msg['extInfo'])
-            message = '[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
-            INFO(message)
-
+            message = ''
+            print type(extInfo)
             # 判断是否为成员
             if self.is_member(extInfo['senderRole']):
-                message = '【成员消息】' + message
+                if 'text' in extInfo.keys():  # 普通消息
+                    message = '【成员消息】[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
+                elif 'messageText' in extInfo.keys():  # 翻牌消息
+                    member_msg = extInfo['messageText']
+                    fanpai_msg = extInfo['faipaiContent']
+                    fanpai_id = extInfo['faipaiName']
+                    message = '【翻牌】[%s]-%s\n【被翻牌】%s:%s' % (msg['msgTimeStr'], member_msg, fanpai_id, fanpai_msg)
+                elif 'url' in msg['bodys'].keys():  # 图片
+                    url = msg['bodys']['url']
+                    message = '【图片】[%s]-%s' % (msg['msgTimeStr'], url)
                 QQHandler.send(self.group, message)
             else:
-                message = '【房间评论】' + message
-
+                time.sleep(2)
+                message = '【房间评论】[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
+            INFO(message)
             QQHandler.send(self.test_group, message)
 
             # print '[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
@@ -89,12 +98,13 @@ class Pocket48Handler:
 
 if __name__ == '__main__':
     roomId = ConfigReader.get_member_room_number('fengxiaofei')
-    qq_number = ConfigReader.get_qq_number()
+    qq_number = ConfigReader.get_qq_number('qq2')
     group_number = ConfigReader.get_group_number()
     test_group_number = ConfigReader.get_test_group_number()
 
     qq_handler = QQHandler()
-    qq_handler.login('fxftest')
+    # qq_handler.login('fxftest')
+    qq_handler.login(qq_number)
     qq_handler.update()
     groups = qq_handler.list_group(group_number)
     test_groups = qq_handler.list_group(test_group_number)
