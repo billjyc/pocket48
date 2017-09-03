@@ -98,7 +98,7 @@ class Pocket48Handler:
 
 if __name__ == '__main__':
     roomId = ConfigReader.get_member_room_number('fengxiaofei')
-    qq_number = ConfigReader.get_qq_number('qq2')
+    qq_number = ConfigReader.get_qq_number('qq')
     group_number = ConfigReader.get_group_number()
     test_group_number = ConfigReader.get_test_group_number()
 
