@@ -108,8 +108,8 @@ if __name__ == '__main__':
         else:
             group = test_groups[0]
 
-        INFO('Group: ' + group)
-        INFO('Test Group: ' + test_group)
+        # INFO('Group: ' + group)
+        # INFO('Test Group: ' + test_group)
         handler = Pocket48Handler(group, test_group)
 
         while True:
