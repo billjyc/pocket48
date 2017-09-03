@@ -103,8 +103,8 @@ if __name__ == '__main__':
     test_group_number = ConfigReader.get_test_group_number()
 
     qq_handler = QQHandler()
-    # qq_handler.login('fxftest')
-    qq_handler.login(qq_number)
+    qq_handler.login('fxftest')
+    # qq_handler.login(qq_number)
     qq_handler.update()
     groups = qq_handler.list_group(group_number)
     test_groups = qq_handler.list_group(test_group_number)
