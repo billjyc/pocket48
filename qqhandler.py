@@ -34,11 +34,6 @@ class QQHandler:
         bot.SendTo(receiver, message)
 
 
-@qqbotsched(minute='*')
-def restart_sche(bot):
-    DEBUG('RESTART scheduled')
-    bot.Restart()
-
 if __name__ == '__main__':
     print bot.conf.qq
     # handler = QQHandler()
