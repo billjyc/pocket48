@@ -42,6 +42,7 @@ class Pocket48Handler:
         is_member_msg = True
         for msg in msgs:
             extInfo = json.loads(msg['extInfo'])
+            platform = extInfo['platform']
             # bodys = json.loads(msg['bodys'])
             if msg['msgTime'] < self.convert_timestamp(self.last_monitor_time):
                 break
@@ -51,7 +52,7 @@ class Pocket48Handler:
                 DEBUG('成员消息')
                 DEBUG('extInfo.keys():' + ','.join(extInfo.keys()))
                 if 'text' in extInfo.keys():  # 普通消息
-                    DEBUG('图片消息')
+                    DEBUG('普通消息')
                     message += '【成员消息】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
                 elif 'messageText' in extInfo.keys():  # 翻牌消息
                     DEBUG('翻牌')
@@ -60,7 +61,7 @@ class Pocket48Handler:
                     fanpai_id = extInfo['faipaiName']
                     message += '【翻牌】[%s]-%s\n【被翻牌】冯晓菲的%s:%s\n' % (msg['msgTimeStr'], member_msg, fanpai_id, fanpai_msg)
                 elif self.check_json_format(msg['bodys']):  # 图片
-                    DEBUG('图片')
+                    DEBUG('图片消息')
                     bodys = json.loads(msg['bodys'])
                     if 'url' in bodys.keys():
                         url = bodys['url']
@@ -73,7 +74,8 @@ class Pocket48Handler:
         if message:
             QQHandler.send(self.test_group, message)
             if is_member_msg:  # 海底捞只接收成员消息
-                QQHandler.send(self.group, message)
+                pass
+                # QQHandler.send(self.group, message)
 
         # print '[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
 
