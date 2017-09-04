@@ -47,7 +47,8 @@ class Pocket48Handler:
             # 判断是否为成员
             if self.is_member(extInfo['senderRole']):
                 is_member_msg = True
-
+                DEBUG('成员消息')
+                DEBUG('extInfo.keys():' + ','.join(extInfo.keys()))
                 if 'text' in extInfo.keys():  # 普通消息
                     DEBUG('图片消息')
                     message += '【成员消息】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
@@ -64,6 +65,7 @@ class Pocket48Handler:
                         url = bodys['url']
                         message += '【图片】[%s]-%s\n' % (msg['msgTimeStr'], url)
             else:
+                DEBUG('房间评论')
                 is_member_msg = False
                 message += '【房间评论】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
         INFO('message: %s', message)
@@ -172,7 +174,7 @@ if __name__ == '__main__':
         while True:
             r1 = handler.get_member_room_msg(roomId)
             handler.parse_room_msg(r1)
-            r2 = handler.get_member_room_comment(roomId)
+            # r2 = handler.get_member_room_comment(roomId)
             # handler.parse_room_msg(r2)
             # handler.last_monitor_time = int(time.time())
             time.sleep(60)
