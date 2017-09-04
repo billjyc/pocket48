@@ -41,7 +41,7 @@ class Pocket48Handler:
         for msg in msgs:
             extInfo = json.loads(msg['extInfo'])
             # bodys = json.loads(msg['bodys'])
-            DEBUG(json.dumps(extInfo))
+            DEBUG(msg['extInfo'])
             if msg['msgTime'] < self.convert_timestamp(self.last_monitor_time):
                 break
             # 判断是否为成员
@@ -63,11 +63,12 @@ class Pocket48Handler:
             else:
                 is_member_msg = False
                 message += '【房间评论】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
+        INFO('message: %s', message)
+        if message:
+            QQHandler.send(self.test_group, message)
+            if is_member_msg:  # 海底捞只接收成员消息
+                QQHandler.send(self.group, message)
 
-        QQHandler.send(self.test_group, message)
-        if is_member_msg:  # 海底捞只接收成员消息
-            QQHandler.send(self.group, message)
-        INFO(message)
         # print '[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
 
     def get_member_room_comment(self, room_id):
