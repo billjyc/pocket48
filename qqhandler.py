@@ -36,6 +36,7 @@ class QQHandler:
 
 @qqbotsched(minute='*')
 def restart_sche(bot):
+    DEBUG('RESTART scheduled')
     bot.Restart()
 
 if __name__ == '__main__':
