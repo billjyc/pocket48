@@ -2,7 +2,6 @@
 
 from qqbot import _bot as bot
 
-
 class QQHandler:
     def __init__(self):
         pass

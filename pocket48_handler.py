@@ -6,6 +6,7 @@ from config_reader import ConfigReader
 import time
 from qqhandler import QQHandler
 from qqbot.utf8logger import INFO,ERROR,DEBUG
+import urllib2
 
 import sys
 
@@ -54,7 +55,7 @@ class Pocket48Handler:
                 time.sleep(2)
                 message = '【房间评论】[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
             INFO(message)
-            QQHandler.send(self.test_group, message)
+            # QQHandler.send(self.test_group, message)
 
             # print '[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
 
@@ -97,6 +98,9 @@ class Pocket48Handler:
         return header
 
 if __name__ == '__main__':
+    # proxy = 'proxy.tencent.com:8080'
+    # opener = urllib2.build_opener(urllib2.ProxyHandler({'http': proxy}))
+    # urllib2.install_opener(opener)
     roomId = ConfigReader.get_member_room_number('fengxiaofei')
     qq_number = ConfigReader.get_qq_number('qq')
     group_number = ConfigReader.get_group_number()
@@ -127,8 +131,8 @@ if __name__ == '__main__':
             r1 = handler.get_member_room_msg(roomId)
             handler.parse_room_msg(r1)
             r2 = handler.get_member_room_comment(roomId)
-            handler.parse_room_msg(r2)
-            handler.last_monitor_time = int(time.time())
+            # handler.parse_room_msg(r2)
+            # handler.last_monitor_time = int(time.time())
             time.sleep(60)
     else:
         ERROR('群号输入不正确！')
