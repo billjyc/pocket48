@@ -21,6 +21,11 @@ class Pocket48Handler:
         self.test_group = test_group
 
     def get_member_room_msg(self, room_id):
+        """
+        获取成员房间消息
+        :param room_id: 房间id
+        :return:
+        """
         url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/chat'
         params = {
             "roomId": room_id, "lastTime": 0, "limit": 5
@@ -35,7 +40,7 @@ class Pocket48Handler:
         is_member_msg = True
         for msg in msgs:
             extInfo = json.loads(msg['extInfo'])
-            bodys = json.loads(msg['bodys'])
+            # bodys = json.loads(msg['bodys'])
             DEBUG(json.dumps(extInfo))
             if msg['msgTime'] < self.convert_timestamp(self.last_monitor_time):
                 break
@@ -50,9 +55,11 @@ class Pocket48Handler:
                     fanpai_msg = extInfo['faipaiContent']
                     fanpai_id = extInfo['faipaiName']
                     message += '【翻牌】[%s]-%s\n【被翻牌】冯晓菲的%s:%s\n' % (msg['msgTimeStr'], member_msg, fanpai_id, fanpai_msg)
-                elif 'url' in bodys.keys():  # 图片
-                    url = bodys['url']
-                    message = '【图片】[%s]-%s\n' % (msg['msgTimeStr'], url)
+                elif self.check_json_format(msg['bodys']):  # 图片
+                    bodys = json.loads(msg['bodys'])
+                    if 'url' in bodys.keys():
+                        url = bodys['url']
+                        message += '【图片】[%s]-%s\n' % (msg['msgTimeStr'], url)
             else:
                 is_member_msg = False
                 message += '【房间评论】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
@@ -64,6 +71,11 @@ class Pocket48Handler:
         # print '[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
 
     def get_member_room_comment(self, room_id):
+        """
+        获取成员房间的粉丝评论
+        :param room_id: 房间id
+        :return:
+        """
         url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/comment'
         params = {
             "roomId": room_id, "lastTime": 0, "limit": 10
@@ -73,18 +85,41 @@ class Pocket48Handler:
         return response.text
 
     def is_member(self, role):
+        """
+        判断是否为成员
+        :param role: 成员为1
+        :return:
+        """
         return role == 1
 
-    '''
-    将10位时间戳转化为13位
-    '''
     def convert_timestamp(self, timestamp):
+        """
+        将10位时间戳转化为13位
+        :param timestamp:
+        :return:
+        """
         return timestamp * 1000
 
-    '''
-    请求头信息
-    '''
+    def check_json_format(self, raw_msg):
+        """
+        判断给定字符串是不是符合json格式
+        :param raw_msg:
+        :return:
+        """
+        if isinstance(raw_msg, str):  # 首先判断变量是否为字符串
+            try:
+                json.loads(raw_msg, encoding='utf-8')
+            except ValueError:
+                return False
+            return True
+        else:
+            return False
+
     def header_args(self):
+        """
+        构造请求头信息
+        :return:
+        """
         header = {
             'os': 'android',
             'User-Agent': 'Mobile_Pocket',
