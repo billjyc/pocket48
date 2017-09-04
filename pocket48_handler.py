@@ -36,6 +36,7 @@ class Pocket48Handler:
             if msg['msgTime'] < self.convert_timestamp(self.last_monitor_time):
                 break
             extInfo = json.loads(msg['extInfo'])
+            bodys = json.loads(msg['bodys'])
             message = ''
             print type(extInfo)
             # 判断是否为成员
@@ -47,8 +48,8 @@ class Pocket48Handler:
                     fanpai_msg = extInfo['faipaiContent']
                     fanpai_id = extInfo['faipaiName']
                     message = '【翻牌】[%s]-%s\n【被翻牌】%s:%s' % (msg['msgTimeStr'], member_msg, fanpai_id, fanpai_msg)
-                elif 'url' in msg['bodys'].keys():  # 图片
-                    url = msg['bodys']['url']
+                elif 'url' in bodys.keys():  # 图片
+                    url = bodys['url']
                     message = '【图片】[%s]-%s' % (msg['msgTimeStr'], url)
                 QQHandler.send(self.group, message)
             else:
