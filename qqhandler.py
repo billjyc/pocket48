@@ -3,6 +3,8 @@
 from qqbot import _bot as bot
 from qqbot import qqbotsched
 
+from qqbot.utf8logger import DEBUG
+
 class QQHandler:
     def __init__(self):
         pass
@@ -17,8 +19,9 @@ class QQHandler:
         bot.Update('buddy')
         bot.Update('group')
 
-    @qqbotsched(hour='23', minute='*/2')
+    @qqbotsched(minute='*')
     def restart(self):
+        DEBUG('RESTART')
         bot.Restart()
 
     def fresh_restart(self):
