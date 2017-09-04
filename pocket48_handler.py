@@ -34,14 +34,15 @@ class Pocket48Handler:
         return response.text
 
     def parse_room_msg(self, response):
+        DEBUG(response)
         rsp_json = json.loads(response)
         msgs = rsp_json['content']['data']
+
         message = ''
         is_member_msg = True
         for msg in msgs:
             extInfo = json.loads(msg['extInfo'])
             # bodys = json.loads(msg['bodys'])
-            DEBUG(msg['extInfo'])
             if msg['msgTime'] < self.convert_timestamp(self.last_monitor_time):
                 break
             # 判断是否为成员
@@ -174,9 +175,9 @@ if __name__ == '__main__':
         while True:
             r1 = handler.get_member_room_msg(roomId)
             handler.parse_room_msg(r1)
-            # r2 = handler.get_member_room_comment(roomId)
-            # handler.parse_room_msg(r2)
-            # handler.last_monitor_time = int(time.time())
+            r2 = handler.get_member_room_comment(roomId)
+            handler.parse_room_msg(r2)
+            handler.last_monitor_time = int(time.time())
             time.sleep(60)
     else:
         ERROR('群号输入不正确！')
