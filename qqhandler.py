@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from qqbot import _bot as bot
+from qqbot import qqbotsched
 
 class QQHandler:
     def __init__(self):
@@ -15,6 +16,16 @@ class QQHandler:
     def update(self):
         bot.Update('buddy')
         bot.Update('group')
+
+    @qqbotsched(hour='23', minute='22, 24')
+    def restart(self):
+        bot.Restart()
+
+    def fresh_restart(self):
+        bot.FreshRestart()
+
+    def stop(self):
+        bot.Stop()
 
     @classmethod
     def send(cls, receiver, message):
