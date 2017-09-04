@@ -17,7 +17,7 @@ class QQHandler:
         bot.Update('buddy')
         bot.Update('group')
 
-    @qqbotsched(hour='23', minute='22, 24')
+    @qqbotsched(hour='23', minute='*/2')
     def restart(self):
         bot.Restart()
 
