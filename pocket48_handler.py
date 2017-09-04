@@ -26,39 +26,42 @@ class Pocket48Handler:
             "roomId": room_id, "lastTime": 0, "limit": 5
         }
         response = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
-        DEBUG(response.text)
         return response.text
 
     def parse_room_msg(self, response):
         rsp_json = json.loads(response)
         msgs = rsp_json['content']['data']
+        message = ''
+        is_member_msg = True
         for msg in msgs:
-            if msg['msgTime'] < self.convert_timestamp(self.last_monitor_time):
-                break
             extInfo = json.loads(msg['extInfo'])
             bodys = json.loads(msg['bodys'])
-            message = ''
-            print type(extInfo)
+            DEBUG(json.dumps(extInfo))
+            if msg['msgTime'] < self.convert_timestamp(self.last_monitor_time):
+                break
             # 判断是否为成员
             if self.is_member(extInfo['senderRole']):
+                is_member_msg = True
+
                 if 'text' in extInfo.keys():  # 普通消息
-                    message = '【成员消息】[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
+                    message += '【成员消息】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
                 elif 'messageText' in extInfo.keys():  # 翻牌消息
                     member_msg = extInfo['messageText']
                     fanpai_msg = extInfo['faipaiContent']
                     fanpai_id = extInfo['faipaiName']
-                    message = '【翻牌】[%s]-%s\n【被翻牌】%s:%s' % (msg['msgTimeStr'], member_msg, fanpai_id, fanpai_msg)
+                    message += '【翻牌】[%s]-%s\n【被翻牌】冯晓菲的%s:%s\n' % (msg['msgTimeStr'], member_msg, fanpai_id, fanpai_msg)
                 elif 'url' in bodys.keys():  # 图片
                     url = bodys['url']
-                    message = '【图片】[%s]-%s' % (msg['msgTimeStr'], url)
-                QQHandler.send(self.group, message)
+                    message = '【图片】[%s]-%s\n' % (msg['msgTimeStr'], url)
             else:
-                time.sleep(2)
-                message = '【房间评论】[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
-            INFO(message)
-            # QQHandler.send(self.test_group, message)
+                is_member_msg = False
+                message += '【房间评论】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
 
-            # print '[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
+        QQHandler.send(self.test_group, message)
+        if is_member_msg:  # 海底捞只接收成员消息
+            QQHandler.send(self.group, message)
+        INFO(message)
+        # print '[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
 
     def get_member_room_comment(self, room_id):
         url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/comment'
@@ -67,7 +70,6 @@ class Pocket48Handler:
         }
         # 收到响应  
         response = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
-        DEBUG(response.text)
         return response.text
 
     def is_member(self, role):
