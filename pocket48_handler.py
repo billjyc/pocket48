@@ -148,7 +148,7 @@ class Pocket48Handler:
         return header
 
 
-@qqbotsched(minute='*')
+@qqbotsched(hour='*/2')
 def restart_sche(bot):
     DEBUG('RESTART scheduled')
     bot.Restart()
