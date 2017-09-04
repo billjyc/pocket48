@@ -49,13 +49,16 @@ class Pocket48Handler:
                 is_member_msg = True
 
                 if 'text' in extInfo.keys():  # 普通消息
+                    DEBUG('图片消息')
                     message += '【成员消息】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
                 elif 'messageText' in extInfo.keys():  # 翻牌消息
+                    DEBUG('翻牌')
                     member_msg = extInfo['messageText']
                     fanpai_msg = extInfo['faipaiContent']
                     fanpai_id = extInfo['faipaiName']
                     message += '【翻牌】[%s]-%s\n【被翻牌】冯晓菲的%s:%s\n' % (msg['msgTimeStr'], member_msg, fanpai_id, fanpai_msg)
                 elif self.check_json_format(msg['bodys']):  # 图片
+                    DEBUG('图片')
                     bodys = json.loads(msg['bodys'])
                     if 'url' in bodys.keys():
                         url = bodys['url']
