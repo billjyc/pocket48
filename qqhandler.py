@@ -19,7 +19,6 @@ class QQHandler:
         bot.Update('buddy')
         bot.Update('group')
 
-    @qqbotsched(minute='*')
     def restart(self):
         DEBUG('RESTART')
         bot.Restart()
@@ -33,6 +32,11 @@ class QQHandler:
     @classmethod
     def send(cls, receiver, message):
         bot.SendTo(receiver, message)
+
+
+@qqbotsched(minute='*')
+def restart_sche(bot):
+    bot.Restart()
 
 if __name__ == '__main__':
     print bot.conf.qq
