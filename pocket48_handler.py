@@ -60,12 +60,21 @@ class Pocket48Handler:
                     fanpai_msg = extInfo['faipaiContent']
                     fanpai_id = extInfo['faipaiName']
                     message += '【翻牌】[%s]-%s\n【被翻牌】冯晓菲的%s:%s\n' % (msg['msgTimeStr'], member_msg, fanpai_id, fanpai_msg)
-                elif self.check_json_format(msg['bodys']):  # 图片
-                    DEBUG('图片消息')
+                # elif self.check_json_format(msg['bodys']):  # 图片
+                #     DEBUG('图片消息')
+                #     bodys = json.loads(msg['bodys'])
+                #     if 'url' in bodys.keys():
+                #         url = bodys['url']
+                #         message += '【图片】[%s]-%s\n' % (msg['msgTimeStr'], url)
+                else:
+                    is_json = self.check_json_format(msg['bodys'])
                     bodys = json.loads(msg['bodys'])
                     if 'url' in bodys.keys():
                         url = bodys['url']
+                        DEBUG('图片')
                         message += '【图片】[%s]-%s\n' % (msg['msgTimeStr'], url)
+                    else:
+                        DEBUG('房间语音')
             else:
                 DEBUG('房间评论')
                 is_member_msg = False
