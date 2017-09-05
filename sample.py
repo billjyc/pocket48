@@ -13,6 +13,7 @@ qq_handler = None
 roomId = 0
 group_number = '0'
 test_group_number = '0'
+big_group_number = '0'
 
 def onInit(bot):
     # 初始化时被调用
@@ -41,17 +42,23 @@ def onQQMessage(bot, contact, member, content):
     DEBUG('member: %s', str(getattr(member, 'uin')))
     DEBUG('content: %s', content)
     DEBUG('contact: %s', contact.ctype)
-    global group_number, test_group_number
-    if contact.ctype == 'group' and (contact.qq == group_number or contact.qq == test_group_number):
+    global group_number, test_group_number, big_group_number
+    if contact.ctype == 'group' and contact.qq in [group_number, big_group_number, test_group_number]:
         if '@ME' in content:
             bot.SendTo(contact, member.name + '，艾特我干嘛呢？')
         elif content == '--version':
             bot.SendTo(contact, 'QQbot-' + bot.conf.version)
         elif content == '-fxf':
             bot.SendTo(contact, '我最喜欢冯晓菲')
-        elif content in ['生日', '生诞', '集资']:
-            bot.SendTo(contact,
-                       '集资链接: https://wds.modian.com/show_weidashang_pro/6682?mdsf=1012033_share_sms_android_wdsxiangmu_6682')
+        elif content in ['-生日', '-生诞', '-集资', '-我有钱']:
+            jizi_link = ConfigReader.get_property('profile', 'jizi_link')
+            bot.SendTo(contact, '集资链接: %s' % jizi_link)
+        elif content in ['-微博', '-超话']:
+            weibo_link = ConfigReader.get_property('profile', 'weibo_link')
+            super_tag = ConfigReader.get_property('profile', 'super_tag')
+            bot.SendTo(contact, '微博: %s\n超级话题: %s' % (weibo_link, super_tag))
+        else:
+            bot.SendTo(contact, '机器人无法识别您的命令QAQ')
 
 
 def onInterval(bot):
@@ -64,9 +71,10 @@ def onStartupComplete(bot):
     # 启动完成时被调用
     # bot : QQBot 对象，提供 List/SendTo/GroupXXX/Stop/Restart 等接口，详见文档第五节
     DEBUG('%s.onStartupComplete', __name__)
-    global qq_handler, pocket48_handler, roomId, group_number, test_group_number
+    global qq_handler, pocket48_handler, roomId, group_number, test_group_number, big_group_number
     group_number = ConfigReader.get_group_number()
     test_group_number = ConfigReader.get_test_group_number()
+    big_group_number = ConfigReader.get_property('qq_conf', 'big_group_number')
     roomId = ConfigReader.get_member_room_number('fengxiaofei')
     qq_number = ConfigReader.get_qq_number('qq')
     qq_handler = QQHandler()
@@ -146,7 +154,7 @@ def onExpire(bot):
     DEBUG('ON-EXPIRE')
 
 
-@qqbotsched(hour='*/4')
+@qqbotsched(hour='10')
 def restart_sche(bot):
     DEBUG('RESTART scheduled')
     bot.FreshRestart()

@@ -24,6 +24,10 @@ class ConfigReader:
     def get_test_group_number(cls):
         return cls.conf.get('qq_conf', 'test_group_number')
 
+    @classmethod
+    def get_property(cls, root, name):
+        return cls.conf.get(root, name)
 
-if __name__ =='__main__':
+
+if __name__ == '__main__':
     print ConfigReader.get_member_room_number('fengxiaofei')
