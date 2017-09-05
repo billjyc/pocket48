@@ -44,21 +44,22 @@ def onQQMessage(bot, contact, member, content):
     DEBUG('contact: %s', contact.ctype)
     global group_number, test_group_number, big_group_number
     if contact.ctype == 'group' and contact.qq in [group_number, big_group_number, test_group_number]:
-        if '@ME' in content:
-            bot.SendTo(contact, member.name + '，艾特我干嘛呢？')
-        elif content == '--version':
-            bot.SendTo(contact, 'QQbot-' + bot.conf.version)
-        elif content == '-fxf':
-            bot.SendTo(contact, '我最喜欢冯晓菲')
-        elif content in ['-生日', '-生诞', '-集资', '-我有钱']:
-            jizi_link = ConfigReader.get_property('profile', 'jizi_link')
-            bot.SendTo(contact, '集资链接: %s' % jizi_link)
-        elif content in ['-微博', '-超话']:
-            weibo_link = ConfigReader.get_property('profile', 'weibo_link')
-            super_tag = ConfigReader.get_property('profile', 'super_tag')
-            bot.SendTo(contact, '微博: %s\n超级话题: %s' % (weibo_link, super_tag))
-        else:
-            bot.SendTo(contact, '机器人无法识别您的命令QAQ')
+        if content.startswith('-'):
+            if '@ME' in content:
+                bot.SendTo(contact, member.name + '，艾特我干嘛呢？')
+            elif content == '-version':
+                bot.SendTo(contact, 'QQbot-' + bot.conf.version)
+            elif content == '-fxf':
+                bot.SendTo(contact, '我最喜欢冯晓菲')
+            elif content in ['-生日', '-生诞', '-集资', '-我有钱']:
+                jizi_link = ConfigReader.get_property('profile', 'jizi_link')
+                bot.SendTo(contact, '集资链接: %s' % jizi_link)
+            elif content in ['-微博', '-超话']:
+                weibo_link = ConfigReader.get_property('profile', 'weibo_link')
+                super_tag = ConfigReader.get_property('profile', 'super_tag')
+                bot.SendTo(contact, '微博: %s\n超级话题: %s' % (weibo_link, super_tag))
+            else:
+                bot.SendTo(contact, '机器人无法识别您的命令QAQ')
 
 
 def onInterval(bot):
