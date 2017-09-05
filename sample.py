@@ -60,7 +60,8 @@ def onQQMessage(bot, contact, member, content):
                 bot.SendTo(contact, '微博: %s\n超级话题: %s' % (weibo_link, super_tag))
             elif content in ['-公演']:
                 live_link = ConfigReader.get_property('profile', 'live_link')
-                live_schedule = ConfigReader.get_property('profile', 'live_schedule')
+                strs = ConfigReader.get_property('profile', 'live_schedule').split(',')
+                live_schedule = '\n'.join(strs)
                 msg = '直播传送门: %s\n本周安排: %s' % (live_link, live_schedule)
                 bot.SendTo(contact, msg)
             else:
