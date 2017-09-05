@@ -3,6 +3,7 @@ from qqbot import qqbotsched
 from qqbot.utf8logger import DEBUG, INFO, ERROR
 import json
 import time
+import random
 
 from config_reader import ConfigReader
 from pocket48_handler import Pocket48Handler
@@ -40,8 +41,8 @@ def onQQMessage(bot, contact, member, content):
     # member  : QContact 对象，仅当本消息为 群或讨论组 消息时有效，代表实际发消息的成员
     # content : str 对象，消息内容
     DEBUG('member: %s', str(getattr(member, 'uin')))
-    DEBUG('content: %s', content)
-    DEBUG('contact: %s', contact.ctype)
+    # DEBUG('content: %s', content)
+    # DEBUG('contact: %s', contact.ctype)
     global group_number, test_group_number, big_group_number
     if contact.ctype == 'group' and contact.qq in [group_number, big_group_number, test_group_number]:
         if content.startswith('-'):
@@ -50,7 +51,8 @@ def onQQMessage(bot, contact, member, content):
             elif content == '-version':
                 bot.SendTo(contact, 'QQbot-' + bot.conf.version)
             elif content == '-fxf':
-                bot.SendTo(contact, '我最喜欢冯晓菲')
+                strs = ConfigReader.get_property('profile', 'i_love_fxf').split(';')
+                bot.SendTo(contact, random_str(strs))
             elif content in ['-生日', '-生诞', '-集资', '-我有钱']:
                 jizi_link = ConfigReader.get_property('profile', 'jizi_link')
                 bot.SendTo(contact, '集资链接: %s' % jizi_link)
@@ -60,12 +62,13 @@ def onQQMessage(bot, contact, member, content):
                 bot.SendTo(contact, '微博: %s\n超级话题: %s' % (weibo_link, super_tag))
             elif content in ['-公演']:
                 live_link = ConfigReader.get_property('profile', 'live_link')
-                strs = ConfigReader.get_property('profile', 'live_schedule').split(',')
+                strs = ConfigReader.get_property('profile', 'live_schedule').split(';')
                 live_schedule = '\n'.join(strs)
                 msg = '直播传送门: %s\n本周安排: %s' % (live_link, live_schedule)
                 bot.SendTo(contact, msg)
             else:
-                bot.SendTo(contact, '机器人无法识别您的命令QAQ')
+                str = ConfigReader.get_property('profile', 'no_such_command')
+                bot.SendTo(contact, str)
 
 
 def onInterval(bot):
@@ -159,6 +162,10 @@ def onExpire(bot):
     #       只可以访问配置信息 bot.conf
     # bot : QQBot 对象
     DEBUG('ON-EXPIRE')
+
+
+def random_str(strs):
+    return random.choice(strs)
 
 
 @qqbotsched(hour='10')
