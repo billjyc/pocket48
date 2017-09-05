@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from qqbot import qqbotsched
-from qqbot.utf8logger import DEBUG, INFO
+from qqbot.utf8logger import DEBUG, INFO, ERROR
 import json
 import time
 
@@ -11,6 +11,8 @@ from qqhandler import QQHandler
 pocket48_handler = None
 qq_handler = None
 roomId = 0
+group_number = '0'
+test_group_number = '0'
 
 def onInit(bot):
     # 初始化时被调用
@@ -39,7 +41,8 @@ def onQQMessage(bot, contact, member, content):
     DEBUG('member: %s', str(getattr(member, 'uin')))
     DEBUG('content: %s', content)
     DEBUG('contact: %s', contact.ctype)
-    if contact.ctype == 'group':
+    global group_number, test_group_number
+    if contact.ctype == 'group' and (contact.qq == group_number or contact.qq == test_group_number):
         if '@ME' in content:
             bot.SendTo(contact, member.name + '，艾特我干嘛呢？')
         elif content == '--version':
@@ -58,7 +61,7 @@ def onStartupComplete(bot):
     # 启动完成时被调用
     # bot : QQBot 对象，提供 List/SendTo/GroupXXX/Stop/Restart 等接口，详见文档第五节
     DEBUG('%s.onStartupComplete', __name__)
-    global qq_handler, pocket48_handler, roomId
+    global qq_handler, pocket48_handler, roomId, group_number, test_group_number
     group_number = ConfigReader.get_group_number()
     test_group_number = ConfigReader.get_test_group_number()
     roomId = ConfigReader.get_member_room_number('fengxiaofei')
@@ -79,6 +82,8 @@ def onStartupComplete(bot):
         # INFO('Group: ' + group)
         # INFO('Test Group: ' + test_group)
         pocket48_handler = Pocket48Handler(group, test_group)
+    else:
+        ERROR('群号输入不正确！')
 
 
 def onUpdate(bot, tinfo):
@@ -138,7 +143,7 @@ def onExpire(bot):
     DEBUG('ON-EXPIRE')
 
 
-@qqbotsched(hour='*/2')
+@qqbotsched(hour='*/4')
 def restart_sche(bot):
     DEBUG('RESTART scheduled')
     bot.FreshRestart()
