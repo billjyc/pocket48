@@ -182,5 +182,9 @@ def get_room_msgs(bot):
     pocket48_handler.parse_room_msg(r1)
     r2 = pocket48_handler.get_member_room_comment(roomId)
     pocket48_handler.parse_room_msg(r2)
-    pocket48_handler.last_monitor_time = int(time.time())
+
+    timestamp = min(pocket48_handler.last_monitor_time + 30, int(time.time()))
+    if pocket48_handler.last_monitor_time + 60 <= int(time.time()):
+        timestamp = int(time.time())
+    pocket48_handler.last_monitor_time = timestamp
 
