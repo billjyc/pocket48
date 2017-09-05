@@ -1,8 +1,16 @@
 # -*- coding: utf-8 -*-
 from qqbot import qqbotsched
-from qqbot.utf8logger import DEBUG
+from qqbot.utf8logger import DEBUG, INFO
 import json
+import time
 
+from config_reader import ConfigReader
+from pocket48_handler import Pocket48Handler
+from qqhandler import QQHandler
+
+pocket48_handler = None
+qq_handler = None
+roomId = 0
 
 def onInit(bot):
     # 初始化时被调用
@@ -50,6 +58,27 @@ def onStartupComplete(bot):
     # 启动完成时被调用
     # bot : QQBot 对象，提供 List/SendTo/GroupXXX/Stop/Restart 等接口，详见文档第五节
     DEBUG('%s.onStartupComplete', __name__)
+    global qq_handler, pocket48_handler, roomId
+    group_number = ConfigReader.get_group_number()
+    test_group_number = ConfigReader.get_test_group_number()
+    roomId = ConfigReader.get_member_room_number('fengxiaofei')
+    qq_number = ConfigReader.get_qq_number('qq')
+    qq_handler = QQHandler()
+    qq_handler.update()
+    groups = qq_handler.list_group(group_number)
+    test_groups = qq_handler.list_group(test_group_number)
+
+    if groups or test_groups:
+        if test_groups:
+            test_group = test_groups[0]
+        if groups:
+            group = groups[0]
+        else:
+            group = test_groups[0]
+
+        # INFO('Group: ' + group)
+        # INFO('Test Group: ' + test_group)
+        pocket48_handler = Pocket48Handler(group, test_group)
 
 
 def onUpdate(bot, tinfo):
@@ -112,5 +141,16 @@ def onExpire(bot):
 @qqbotsched(hour='*/2')
 def restart_sche(bot):
     DEBUG('RESTART scheduled')
-    bot.Restart()
+    bot.FreshRestart()
+
+
+@qqbotsched(minute='*')
+def get_room_msgs(bot):
+    global qq_handler, pocket48_handler, roomId
+
+    r1 = pocket48_handler.get_member_room_msg(roomId)
+    pocket48_handler.parse_room_msg(r1)
+    r2 = pocket48_handler.get_member_room_comment(roomId)
+    pocket48_handler.parse_room_msg(r2)
+    pocket48_handler.last_monitor_time = int(time.time())
 
