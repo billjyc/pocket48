@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from qqbot import qqbotsched
 from qqbot.utf8logger import DEBUG
 import json
 
@@ -85,3 +85,10 @@ def onExit(bot, code, reason, error):
     #
 
     DEBUG('%s.onExit: %r %r %r', __name__, code, reason, error)
+
+
+@qqbotsched(hour='*/2')
+def restart_sche(bot):
+    DEBUG('RESTART scheduled')
+    bot.Restart()
+

@@ -3,13 +3,10 @@
 import requests
 import json
 
-from qqbot import qqbotsched
-
 from config_reader import ConfigReader
 import time
 from qqhandler import QQHandler
 from qqbot.utf8logger import INFO,ERROR,DEBUG
-import urllib2
 
 import sys
 
@@ -147,11 +144,6 @@ class Pocket48Handler:
         }
         return header
 
-
-@qqbotsched(hour='*/2')
-def restart_sche(bot):
-    DEBUG('RESTART scheduled')
-    bot.Restart()
 
 if __name__ == '__main__':
     # proxy = 'proxy.tencent.com:8080'

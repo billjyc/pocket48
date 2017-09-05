@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from qqbot import _bot as bot
-from qqbot import qqbotsched
 
 from qqbot.utf8logger import DEBUG
+
 
 class QQHandler:
     def __init__(self):
