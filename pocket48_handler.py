@@ -118,10 +118,13 @@ class Pocket48Handler:
         if isinstance(raw_msg, str):  # 首先判断变量是否为字符串
             try:
                 json.loads(raw_msg, encoding='utf-8')
-            except ValueError:
+            except ValueError, e:
+                ERROR(e)
                 return False
+            DEBUG('is json')
             return True
         else:
+            DEBUG('is not string')
             return False
 
     def header_args(self):
@@ -146,41 +149,63 @@ class Pocket48Handler:
 
 
 if __name__ == '__main__':
-    # proxy = 'proxy.tencent.com:8080'
-    # opener = urllib2.build_opener(urllib2.ProxyHandler({'http': proxy}))
-    # urllib2.install_opener(opener)
-    roomId = ConfigReader.get_member_room_number('fengxiaofei')
-    qq_number = ConfigReader.get_qq_number('qq')
-    group_number = ConfigReader.get_group_number()
-    test_group_number = ConfigReader.get_test_group_number()
-
-    qq_handler = QQHandler()
-    qq_handler.login('fxftest')
-    # qq_handler.login(qq_number)
-    qq_handler.update()
-    groups = qq_handler.list_group(group_number)
-    test_groups = qq_handler.list_group(test_group_number)
-    DEBUG('Group: ' + str(groups is None))
-    DEBUG('Test Group: ' + str(test_groups is None))
-
-    if groups or test_groups:
-        if test_groups:
-            test_group = test_groups[0]
-        if groups:
-            group = groups[0]
-        else:
-            group = test_groups[0]
-
-        # INFO('Group: ' + group)
-        # INFO('Test Group: ' + test_group)
-        handler = Pocket48Handler(group, test_group)
-
-        while True:
-            r1 = handler.get_member_room_msg(roomId)
-            handler.parse_room_msg(r1)
-            r2 = handler.get_member_room_comment(roomId)
-            handler.parse_room_msg(r2)
-            handler.last_monitor_time = int(time.time())
-            time.sleep(60)
-    else:
-        ERROR('群号输入不正确！')
+    pocket48_handler = Pocket48Handler('0','0')
+    response = """
+    {
+    "status": 200,
+    "message": "success",
+    "content": {
+        "data": [
+            {
+                "msgidClient": "69a4d58e-68c5-436d-9bf8-515ebbf4c9f2",
+                "msgTime": 1504593232216,
+                "msgTimeStr": "2017-09-05 14:33:52",
+                "userId": 0,
+                "msgType": 1,
+                "bodys": "{\"size\":543698,\"ext\":\"jpg\",\"w\":2668,\"url\":\"https://nos.netease.com/nim/NDA5MzEwOA==/bmltYV8xNzc5NzQyNDlfMTUwMjcwOTY0MDQ0OV84MTI2ZTI2ZC0wMDJlLTQzODctOTNlZC1kODdjOTYzYWQ5N2Q=\",\"md5\":\"2a7ba548dda48a02b82e9b6e1264400b\",\"h\":2668}",
+                "extInfo": "{\"source\":\"juju\",\"fromApp\":2,\"messageObject\":\"image\",\"senderAvatar\":\"/mediasource/avatar/149914554773652wp2jnnu6.jpg\",\"senderHonor\":\"\",\"referenceNumber\":0,\"dianzanNumber\":0,\"senderId\":6432,\"version\":\"2.1.3\",\"senderName\":\"冯晓菲\",\"senderRole\":1,\"chatBackgroundBubbles2\":7,\"platform\":\"ios\",\"roomType\":1,\"sourceId\":\"5780791\",\"chatBackgroundBubbles\":0,\"contentType\":1,\"build\":18300,\"role\":2,\"senderLevel\":\"X\",\"content\":\"\"}"
+            },
+            {
+                "msgidClient": "a25eb045-1805-4a51-9d7e-2bbc830df4d9",
+                "msgTime": 1504587916063,
+                "msgTimeStr": "2017-09-05 13:05:16",
+                "userId": 0,
+                "msgType": 0,
+                "bodys": "🤦🏻‍♀️",
+                "extInfo": "{\"source\":\"juju\",\"fromApp\":2,\"messageObject\":\"text\",\"senderAvatar\":\"/mediasource/avatar/149914554773652wp2jnnu6.jpg\",\"senderHonor\":\"\",\"referenceNumber\":0,\"dianzanNumber\":0,\"senderId\":6432,\"version\":\"2.1.3\",\"senderName\":\"冯晓菲\",\"senderRole\":1,\"chatBackgroundBubbles2\":7,\"platform\":\"ios\",\"roomType\":1,\"sourceId\":\"5780791\",\"chatBackgroundBubbles\":0,\"contentType\":1,\"build\":18300,\"role\":2,\"senderLevel\":\"X\",\"text\":\"🤦🏻‍♀️\",\"content\":\"\"}"
+            },
+            {
+                "msgidClient": "dfd4479a-4658-43a2-a6cc-f9ac18f07e4c",
+                "msgTime": 1504587908224,
+                "msgTimeStr": "2017-09-05 13:05:08",
+                "userId": 0,
+                "msgType": 0,
+                "bodys": "午饭还是米线",
+                "extInfo": "{\"source\":\"juju\",\"fromApp\":2,\"messageObject\":\"text\",\"senderAvatar\":\"/mediasource/avatar/149914554773652wp2jnnu6.jpg\",\"senderHonor\":\"\",\"referenceNumber\":0,\"dianzanNumber\":0,\"senderId\":6432,\"version\":\"2.1.3\",\"senderName\":\"冯晓菲\",\"senderRole\":1,\"chatBackgroundBubbles2\":7,\"platform\":\"ios\",\"roomType\":1,\"sourceId\":\"5780791\",\"chatBackgroundBubbles\":0,\"contentType\":1,\"build\":18300,\"role\":2,\"senderLevel\":\"X\",\"text\":\"午饭还是米线\",\"content\":\"\"}"
+            },
+            {
+                "msgidClient": "5e84ad4c-8270-4175-bbe6-0a738ca55e46",
+                "msgTime": 1504585888427,
+                "msgTimeStr": "2017-09-05 12:31:28",
+                "userId": 0,
+                "msgType": 0,
+                "bodys": "",
+                "extInfo": "{\"faipaiName\":\"酸甜苦辣小熊猫歪\",\"source\":\"juju\",\"fromApp\":2,\"messageObject\":\"faipaiText\",\"senderAvatar\":\"/mediasource/avatar/149914554773652wp2jnnu6.jpg\",\"faipaiContent\":\"灰灰醒啦\",\"faipaiPortrait\":\"/mediasource/avatar/1502129005082wq5YVONR68.png\",\"senderHonor\":\"\",\"referenceNumber\":0,\"messageText\":\"早就醒了 已经化好妆了\",\"dianzanNumber\":0,\"senderId\":6432,\"version\":\"2.1.3\",\"senderName\":\"冯晓菲\",\"senderRole\":1,\"chatBackgroundBubbles2\":7,\"platform\":\"ios\",\"roomType\":1,\"sourceId\":\"5780791\",\"chatBackgroundBubbles\":0,\"contentType\":1,\"build\":18300,\"faipaiUserId\":386361,\"role\":2,\"senderLevel\":\"X\",\"content\":\"\"}"
+            },
+            {
+                "msgidClient": "ea6e1664-1949-492e-a0a9-0cc2ac0bdd18",
+                "msgTime": 1504585785454,
+                "msgTimeStr": "2017-09-05 12:29:45",
+                "userId": 0,
+                "msgType": 0,
+                "bodys": "睡了十个小时",
+                "extInfo": "{\"source\":\"juju\",\"fromApp\":2,\"messageObject\":\"text\",\"senderAvatar\":\"/mediasource/avatar/149914554773652wp2jnnu6.jpg\",\"senderHonor\":\"\",\"referenceNumber\":0,\"dianzanNumber\":0,\"senderId\":6432,\"version\":\"2.1.3\",\"senderName\":\"冯晓菲\",\"senderRole\":1,\"chatBackgroundBubbles2\":7,\"platform\":\"ios\",\"roomType\":1,\"sourceId\":\"5780791\",\"chatBackgroundBubbles\":0,\"contentType\":1,\"build\":18300,\"role\":2,\"senderLevel\":\"X\",\"text\":\"睡了十个小时\",\"content\":\"\"}"
+            }
+        ],
+        "lastTime": 1504585785454
+    }
+}
+    """
+    json_str = json.loads(response)
+    # print response
+    # pocket48_handler.parse_room_msg(response)
