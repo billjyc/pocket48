@@ -66,6 +66,10 @@ def onQQMessage(bot, contact, member, content):
                 live_schedule = '\n'.join(strs)
                 msg = '直播传送门: %s\n本周安排: %s' % (live_link, live_schedule)
                 bot.SendTo(contact, msg)
+            elif content in ['-统计']:
+                histogram = ConfigReader.get_property('profile', 'histogram')
+                msg = '公演统计链接: %s' % histogram
+                bot.SendTo(contact, msg)
             else:
                 no_such_command = ConfigReader.get_property('profile', 'no_such_command')
                 bot.SendTo(contact, no_such_command)
