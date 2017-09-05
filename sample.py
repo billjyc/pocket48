@@ -50,7 +50,7 @@ def onQQMessage(bot, contact, member, content):
         elif content == '-fxf':
             bot.SendTo(contact, '我最喜欢冯晓菲')
         elif content in ['生日', '生诞', '集资']:
-            bot.sentTo(contact,
+            bot.SendTo(contact,
                        '集资链接: https://wds.modian.com/show_weidashang_pro/6682?mdsf=1012033_share_sms_android_wdsxiangmu_6682')
 
 
