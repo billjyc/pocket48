@@ -67,8 +67,8 @@ def onQQMessage(bot, contact, member, content):
                 msg = '直播传送门: %s\n本周安排: %s' % (live_link, live_schedule)
                 bot.SendTo(contact, msg)
             else:
-                str = ConfigReader.get_property('profile', 'no_such_command')
-                bot.SendTo(contact, str)
+                no_such_command = ConfigReader.get_property('profile', 'no_such_command')
+                bot.SendTo(contact, no_such_command)
 
 
 def onInterval(bot):
