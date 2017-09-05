@@ -58,6 +58,11 @@ def onQQMessage(bot, contact, member, content):
                 weibo_link = ConfigReader.get_property('profile', 'weibo_link')
                 super_tag = ConfigReader.get_property('profile', 'super_tag')
                 bot.SendTo(contact, '微博: %s\n超级话题: %s' % (weibo_link, super_tag))
+            elif content in ['-公演']:
+                live_link = ConfigReader.get_property('profile', 'live_link')
+                live_schedule = ConfigReader.get_property('profile', 'live_schedule')
+                msg = '直播传送门: %s\n本周安排: %s' % (live_link, live_schedule)
+                bot.SendTo(contact, msg)
             else:
                 bot.SendTo(contact, '机器人无法识别您的命令QAQ')
 
