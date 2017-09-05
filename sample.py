@@ -167,7 +167,7 @@ def restart_sche(bot):
     bot.FreshRestart()
 
 
-@qqbotsched(minute='*')
+@qqbotsched(second='*/30')
 def get_room_msgs(bot):
     global qq_handler, pocket48_handler, roomId
 
