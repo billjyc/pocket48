@@ -76,12 +76,12 @@ class Pocket48Handler:
                     else:
                         DEBUG('房间语音')
                 if message:
-                    QQHandler.send(self.member_room_msg_groups, message)
+                    QQHandler.send_to_groups(self.member_room_msg_groups, message)
             else:
                 DEBUG('房间评论')
                 message += '【房间评论】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
                 if message:
-                    QQHandler.send(self.member_room_comment_msg_groups, message)
+                    QQHandler.send_to_groups(self.member_room_comment_msg_groups, message)
         INFO('message: %s', message)
 
         # print '[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
