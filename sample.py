@@ -193,7 +193,7 @@ def update_conf(bot):
     global_config.WEIBO_LINK = ConfigReader.get_property('profile', 'weibo_link')
     global_config.SUPER_TAG = ConfigReader.get_property('profile', 'super_tag')
 
-    global_config.MEMBER_ATTR = ConfigReader.get_property('profile', 'attr')
+    global_config.MEMBER_ATTR = ConfigReader.get_property('profile', 'member_attr')
     global_config.I_LOVE = ConfigReader.get_property('profile', 'i_love').split(';')
 
     global_config.AT_AUTO_REPLY = ConfigReader.get_property('profile', 'at_auto_reply').split(';')
