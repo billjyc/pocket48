@@ -2,7 +2,7 @@
 echo stop application
 qq stop
 
-git pull
+# git pull
 
 echo start qqbot
 # 将用户名换成在conf中填写的用户名
