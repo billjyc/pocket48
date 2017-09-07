@@ -167,7 +167,7 @@ def restart_sche(bot):
     bot.FreshRestart()
 
 
-@qqbotsched(minute='*')
+@qqbotsched(minute='*/30')
 def update_conf(bot):
     """
     每隔1分钟读取配置文件
