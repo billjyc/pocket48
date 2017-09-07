@@ -201,15 +201,19 @@ def update_conf(bot):
 
 @qqbotsched(second='*/30')
 def get_room_msgs(bot):
+    start_t = time.time()
     global qq_handler, pocket48_handler
 
     r1 = pocket48_handler.get_member_room_msg(global_config.ROOM_ID)
     pocket48_handler.parse_room_msg(r1)
-    r2 = pocket48_handler.get_member_room_comment(global_config.ROOM_ID)
-    pocket48_handler.parse_room_msg(r2)
+    # r2 = pocket48_handler.get_member_room_comment(global_config.ROOM_ID)
+    # pocket48_handler.parse_room_msg(r2)
 
     timestamp = min(pocket48_handler.last_monitor_time + 30, int(time.time()))
     if pocket48_handler.last_monitor_time + 60 <= int(time.time()):
         timestamp = int(time.time())
     pocket48_handler.last_monitor_time = timestamp
+
+    end_t = time.time()
+    DEBUG('执行时间: %s', end_t-start_t)
 
