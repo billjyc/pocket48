@@ -16,7 +16,7 @@ sys.setdefaultencoding('utf8')
 
 class Pocket48Handler:
     def __init__(self, auto_reply_groups, member_room_msg_groups, member_room_comment_msg_groups):
-        self.last_monitor_time = int(time.time())
+        self.last_monitor_time = time.time()
         self.auto_reply_groups = auto_reply_groups
         self.member_room_msg_groups = member_room_msg_groups
         self.member_room_comment_msg_groups = member_room_comment_msg_groups
@@ -82,7 +82,7 @@ class Pocket48Handler:
                 message += '【房间评论】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
                 if message and len(self.member_room_comment_msg_groups) > 0:
                     QQHandler.send_to_groups(self.member_room_comment_msg_groups, message)
-        INFO('message: %s', message)
+        # INFO('message: %s', message)
 
         # print '[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
 
