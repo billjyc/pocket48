@@ -20,11 +20,12 @@ class QQHandler:
         """
         result = []
         for group_number in groups:
-            group = bot.List('group', group_number)
-            if group:
-                result.append(group[0])
-            else:
-                ERROR('没有搜索到对应的群号: %s', group_number)
+            if group_number:
+                group = bot.List('group', group_number)
+                if group:
+                    result.append(group[0])
+                else:
+                    ERROR('没有搜索到对应的群号: %s', group_number)
         return result
 
     def update(self):
