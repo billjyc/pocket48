@@ -199,7 +199,7 @@ def update_conf(bot):
     global_config.AT_AUTO_REPLY = ConfigReader.get_property('profile', 'at_auto_reply').split(';')
 
 
-@qqbotsched(second='*/10')
+@qqbotsched(second='*/60')
 def get_room_msgs(bot):
     start_t = time.time()
     global qq_handler, pocket48_handler
@@ -212,10 +212,10 @@ def get_room_msgs(bot):
     if pocket48_handler.last_monitor_time == -1:
         pocket48_handler.last_monitor_time = start_t
     else:
-        pocket48_handler.last_monitor_time = pocket48_handler.last_monitor_time + 10
+        pocket48_handler.last_monitor_time = pocket48_handler.last_monitor_time + 60
 
     # 这里做一下时间戳同步
-    if pocket48_handler.last_monitor_time + 10 <= time.time():
+    if pocket48_handler.last_monitor_time + 60 <= time.time():
         pocket48_handler.last_monitor_time = time.time()
 
     end_t = time.time()
