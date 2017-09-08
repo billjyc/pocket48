@@ -209,11 +209,14 @@ def get_room_msgs(bot):
     # r2 = pocket48_handler.get_member_room_comment(global_config.ROOM_ID)
     # pocket48_handler.parse_room_msg(r2)
 
-    timestamp = pocket48_handler.last_monitor_time + 10
+    if pocket48_handler.last_monitor_time == -1:
+        pocket48_handler.last_monitor_time = start_t
+    else:
+        pocket48_handler.last_monitor_time = pocket48_handler.last_monitor_time + 10
+
     # 这里做一下时间戳同步
-    if pocket48_handler.last_monitor_time + 20 <= time.time():
-        timestamp = time.time()
-    pocket48_handler.last_monitor_time = timestamp
+    if pocket48_handler.last_monitor_time + 10 <= time.time():
+        pocket48_handler.last_monitor_time = time.time()
 
     end_t = time.time()
     DEBUG('执行时间: %s', end_t-start_t)

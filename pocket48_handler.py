@@ -16,7 +16,7 @@ sys.setdefaultencoding('utf8')
 
 class Pocket48Handler:
     def __init__(self, auto_reply_groups, member_room_msg_groups, member_room_comment_msg_groups):
-        self.last_monitor_time = time.time()
+        self.last_monitor_time = -1
         self.auto_reply_groups = auto_reply_groups
         self.member_room_msg_groups = member_room_msg_groups
         self.member_room_comment_msg_groups = member_room_comment_msg_groups
@@ -40,12 +40,12 @@ class Pocket48Handler:
         msgs = rsp_json['content']['data']
 
         message = ''
-        is_member_msg = True
         for msg in msgs:
             extInfo = json.loads(msg['extInfo'])
             platform = extInfo['platform']
             # bodys = json.loads(msg['bodys'])
-            if msg['msgTime'] < self.convert_timestamp(self.last_monitor_time):
+            temp_timestamp = self.convert_timestamp(self.last_monitor_time)
+            if self.last_monitor_time < 0 or msg['msgTime'] < temp_timestamp:
                 break
             # 判断是否为成员
             if self.is_member(extInfo['senderRole']):
