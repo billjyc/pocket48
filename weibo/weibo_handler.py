@@ -120,7 +120,7 @@ class WeiboMonitor:
                             for j in i['mblog']['pics']:
                                 returnDict['picUrls'].append(j['url'])
                         return returnDict
-            self.echoMsg('Info', 'Has %d id(s)' % len(self.itemIds))
+            self.echoMsg('Info', '微博队列共有 %d 条' % len(self.itemIds))
         except Exception as e:
             self.echoMsg('Error', e)
             sys.exit()

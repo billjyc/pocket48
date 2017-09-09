@@ -20,6 +20,8 @@ class Pocket48Handler:
         self.auto_reply_groups = auto_reply_groups
         self.member_room_msg_groups = member_room_msg_groups
         self.member_room_comment_msg_groups = member_room_comment_msg_groups
+        self.member_room_msg_ids = []
+        self.member_room_comment_ids = []
 
     def get_member_room_msg(self, room_id):
         """
@@ -31,10 +33,45 @@ class Pocket48Handler:
         params = {
             "roomId": room_id, "lastTime": 0, "limit": 5
         }
-        response = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
+        try:
+            response = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
+        except Exception as e:
+            ERROR('获取成员消息失败')
+            ERROR(e)
         return response.text
 
+    def init_msg_queues(self, room_id):
+        """
+        初始化房间消息队列
+        :param room_id:
+        :return:
+        """
+        try:
+            r1 = self.get_member_room_msg(room_id)
+            r2 = self.get_member_room_comment(room_id)
+
+            r1_json = json.loads(r1)
+            r2_json = json.loads(r2)
+            for r in r1_json['content']['data']:
+                msg_id = r['msgidClient']
+                self.member_room_msg_ids.append(msg_id)
+
+            for r in r2_json['content']['data']:
+                msg_id = r['msgidClient']
+                self.member_room_comment_ids.append(msg_id)
+
+            DEBUG('成员消息队列: %s', len(self.member_room_msg_ids))
+            DEBUG('房间评论队列: %s', len(self.member_room_comment_ids))
+        except Exception as e:
+            ERROR('初始化消息队列失败')
+            ERROR(e)
+
     def parse_room_msg(self, response):
+        """
+        对响应进行处理
+        :param response:
+        :return:
+        """
         # DEBUG(response)
         rsp_json = json.loads(response)
         msgs = rsp_json['content']['data']
@@ -43,13 +80,18 @@ class Pocket48Handler:
         for msg in msgs:
             extInfo = json.loads(msg['extInfo'])
             platform = extInfo['platform']
+            msg_id = msg['msgidClient']
+
             # bodys = json.loads(msg['bodys'])
-            temp_timestamp = self.convert_timestamp(self.last_monitor_time)
-            if self.last_monitor_time < 0 or msg['msgTime'] < temp_timestamp:
-                break
+            # temp_timestamp = self.convert_timestamp(self.last_monitor_time)
+            # if self.last_monitor_time < 0 or msg['msgTime'] < temp_timestamp:
+            #     break
             # 判断是否为成员
             if self.is_member(extInfo['senderRole']):
+                if msg_id in self.member_room_msg_ids:
+                    continue
                 DEBUG('成员消息')
+                self.member_room_msg_ids.append(msg_id)
                 DEBUG('extInfo.keys():' + ','.join(extInfo.keys()))
                 if 'text' in extInfo.keys():  # 普通消息
                     DEBUG('普通消息')
@@ -78,11 +120,16 @@ class Pocket48Handler:
                 if message and len(self.member_room_msg_groups) > 0:
                     QQHandler.send_to_groups(self.member_room_msg_groups, message)
             else:
+                if msg_id in self.member_room_comment_ids:
+                    continue
                 DEBUG('房间评论')
+                self.member_room_comment_ids.append(msg_id)
                 message += '【房间评论】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
                 if message and len(self.member_room_comment_msg_groups) > 0:
                     QQHandler.send_to_groups(self.member_room_comment_msg_groups, message)
-        # INFO('message: %s', message)
+        INFO('message: %s', message)
+        DEBUG('成员消息队列: %s', len(self.member_room_msg_ids))
+        DEBUG('房间评论队列: %s', len(self.member_room_comment_ids))
 
         # print '[%s]-%s: %s' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
 
@@ -96,8 +143,12 @@ class Pocket48Handler:
         params = {
             "roomId": room_id, "lastTime": 0, "limit": 10
         }
-        # 收到响应  
-        response = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
+        # 收到响应
+        try:
+            response = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
+        except Exception as e:
+            ERROR('获取房间评论失败')
+            ERROR(e)
         return response.text
 
     def is_member(self, role):
