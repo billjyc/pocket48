@@ -89,7 +89,7 @@ def onStartupComplete(bot):
 
     # 初始化QQHandler并更新联系人
     qq_handler = QQHandler()
-    qq_handler.update()
+    # qq_handler.update()
 
     # 读取配置文件中的群号，进行处理，转化为QContact对象
     auto_reply_groups = qq_handler.list_group(global_config.AUTO_REPLY_GROUPS)
@@ -211,7 +211,7 @@ def get_room_msgs(bot):
 
     DEBUG('last_monitor_time: %s', pocket48_handler.last_monitor_time)
     DEBUG('current time: %s', time.time())
-    if pocket48_handler.last_monitor_time == -1:
+    if pocket48_handler.last_monitor_time < 0:
         pocket48_handler.last_monitor_time = start_t
     else:
         pocket48_handler.last_monitor_time = pocket48_handler.last_monitor_time + 30
