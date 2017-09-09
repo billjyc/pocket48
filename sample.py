@@ -209,7 +209,7 @@ def get_room_msgs(bot):
     r1 = pocket48_handler.get_member_room_msg(global_config.ROOM_ID)
     pocket48_handler.parse_room_msg(r1)
     r2 = pocket48_handler.get_member_room_comment(global_config.ROOM_ID)
-    pocket48_handler.parse_room_msg(r2)
+    pocket48_handler.parse_room_comment(r2)
 
     DEBUG('last_monitor_time: %s', pocket48_handler.last_monitor_time)
     DEBUG('current time: %s', time.time())
