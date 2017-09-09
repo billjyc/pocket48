@@ -35,7 +35,7 @@ class Pocket48Handler:
         return response.text
 
     def parse_room_msg(self, response):
-        DEBUG(response)
+        # DEBUG(response)
         rsp_json = json.loads(response)
         msgs = rsp_json['content']['data']
 
