@@ -191,6 +191,7 @@ def update_conf(bot):
     member_name = ConfigReader.get_property('root', 'member_name')
     global_config.ROOM_ID = ConfigReader.get_member_room_number(member_name)
     global_config.MEMBER_ID = ConfigReader.get_property('live', member_name)
+    DEBUG('当前监控的成员是: %s, 房间ID: %s, member_id: %s', member_name, global_config.ROOM_ID, global_config.MEMBER_ID)
 
     global_config.JIZI_KEYWORDS = ConfigReader.get_property('profile', 'jizi_keywords').split(';')
     global_config.JIZI_LINK = ConfigReader.get_property('profile', 'jizi_link').split(';')

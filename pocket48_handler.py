@@ -22,7 +22,7 @@ class Pocket48Handler:
         self.member_room_comment_msg_groups = member_room_comment_msg_groups
         self.member_room_msg_ids = []
         self.member_room_comment_ids = []
-        self.member_live_ids = set()
+        self.member_live_ids = []
 
     def get_member_live_msg(self):
         """
@@ -226,7 +226,7 @@ class Pocket48Handler:
                     msg += '你的小宝贝儿开露脸直播了: %s\n开始时间: %s' % (sub_title, start_time)
                 elif type == 2:  # 电台直播
                     msg += '你的小宝贝儿开电台直播了: %s\n开始时间: %s' % (sub_title, start_time)
-                self.member_live_ids.add(live_id)
+                self.member_live_ids.append(live_id)
         if msg and len(self.member_room_msg_groups) > 0:
             QQHandler.send_to_groups(self.member_room_msg_groups, msg)
 
