@@ -84,7 +84,7 @@ def onStartupComplete(bot):
     DEBUG('%s.onStartupComplete', __name__)
     global qq_handler, pocket48_handler
 
-    pocket48_handler = Pocket48Handler([], [], [])
+    pocket48_handler = Pocket48Handler([], [], [], [])
     # 初始化QQHandler并更新联系人
     qq_handler = QQHandler()
     # 先更新配置
