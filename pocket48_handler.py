@@ -234,10 +234,11 @@ class Pocket48Handler:
                 stream_path = live['streamPath']  # 流地址
                 sub_title = live['subTitle']  # 直播名称
                 live_type = live['liveType']
+                url = 'https://h5.48.cn/2017appshare/memberLiveShare/index.html?id=%s' % live_id
                 if live_type == 1:  # 露脸直播
-                    msg += '你的小宝贝儿开露脸直播了: %s\n开始时间: %s' % (sub_title, start_time)
+                    msg += '你的小宝贝儿开露脸直播了: %s\n直播链接: %s\n开始时间: %s' % (sub_title, url, start_time)
                 elif live_type == 2:  # 电台直播
-                    msg += '你的小宝贝儿开电台直播了: %s\n开始时间: %s' % (sub_title, start_time)
+                    msg += '你的小宝贝儿开电台直播了: %s\n直播链接: %s\n开始时间: %s' % (sub_title, url, start_time)
                 self.member_live_ids.append(live_id)
         DEBUG(msg)
         if msg and len(self.member_live_groups) > 0:
@@ -310,7 +311,7 @@ class Pocket48Handler:
 
 
 if __name__ == '__main__':
-    handler = Pocket48Handler([], [], [])
+    handler = Pocket48Handler([], [], [], [])
     response = handler.get_member_live_msg()
-    handler.parse_member_live(response, 35)
+    handler.parse_member_live(response, 6432)
     # print handler.convert_timestamp_to_timestr(1504970619679)
