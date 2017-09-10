@@ -84,20 +84,20 @@ def onStartupComplete(bot):
     DEBUG('%s.onStartupComplete', __name__)
     global qq_handler, pocket48_handler
 
+    pocket48_handler = Pocket48Handler([], [], [])
+    # 初始化QQHandler并更新联系人
+    qq_handler = QQHandler()
     # 先更新配置
     update_conf(bot)
 
-    # 初始化QQHandler并更新联系人
-    qq_handler = QQHandler()
     # qq_handler.update()
 
     # 读取配置文件中的群号，进行处理，转化为QContact对象
-    auto_reply_groups = qq_handler.list_group(global_config.AUTO_REPLY_GROUPS)
-    member_room_msg_groups = qq_handler.list_group(global_config.MEMBER_ROOM_MSG_GROUPS)
-    member_room_comment_groups = qq_handler.list_group(global_config.MEMBER_ROOM_COMMENT_GROUPS)
+    # auto_reply_groups = qq_handler.list_group(global_config.AUTO_REPLY_GROUPS)
+    # member_room_msg_groups = qq_handler.list_group(global_config.MEMBER_ROOM_MSG_GROUPS)
+    # member_room_comment_groups = qq_handler.list_group(global_config.MEMBER_ROOM_COMMENT_GROUPS)
 
-    pocket48_handler = Pocket48Handler(auto_reply_groups, member_room_msg_groups,
-                                       member_room_comment_groups)
+
     pocket48_handler.init_msg_queues(global_config.ROOM_ID)
 
 
@@ -175,14 +175,22 @@ def update_conf(bot):
     :param bot:
     :return:
     """
+    global pocket48_handler
     DEBUG('读取配置文件')
     global_config.AUTO_REPLY_GROUPS = ConfigReader.get_property('qq_conf', 'auto_reply_groups').split(';')
     global_config.MEMBER_ROOM_MSG_GROUPS = ConfigReader.get_property('qq_conf', 'member_room_msg_groups').split(';')
     global_config.MEMBER_ROOM_COMMENT_GROUPS = ConfigReader.\
         get_property('qq_conf', 'member_room_comment_groups').split(';')
+    auto_reply_groups = qq_handler.list_group(global_config.AUTO_REPLY_GROUPS)
+    member_room_msg_groups = qq_handler.list_group(global_config.MEMBER_ROOM_MSG_GROUPS)
+    member_room_comment_groups = qq_handler.list_group(global_config.MEMBER_ROOM_COMMENT_GROUPS)
+    pocket48_handler.member_room_msg_groups = member_room_msg_groups
+    pocket48_handler.member_room_comment_groups = member_room_comment_groups
+    pocket48_handler.auto_reply_groups = auto_reply_groups
 
     member_name = ConfigReader.get_property('root', 'member_name')
     global_config.ROOM_ID = ConfigReader.get_member_room_number(member_name)
+    global_config.MEMBER_ID = ConfigReader.get_property('live', member_name)
 
     global_config.JIZI_KEYWORDS = ConfigReader.get_property('profile', 'jizi_keywords').split(';')
     global_config.JIZI_LINK = ConfigReader.get_property('profile', 'jizi_link').split(';')
@@ -224,4 +232,13 @@ def get_room_msgs(bot):
 
     end_t = time.time()
     DEBUG('执行时间: %s', end_t-start_t)
+
+
+@qqbotsched(minute='*')
+def get_member_lives(bot):
+    global qq_handler, pocket48_handler
+
+    r = pocket48_handler.get_member_live_msg()
+    pocket48_handler.parse_member_live(r, global_config.MEMBER_ID)
+
 

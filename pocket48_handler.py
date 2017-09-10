@@ -22,6 +22,41 @@ class Pocket48Handler:
         self.member_room_comment_msg_groups = member_room_comment_msg_groups
         self.member_room_msg_ids = []
         self.member_room_comment_ids = []
+        self.member_live_ids = set()
+
+    def get_member_live_msg(self):
+        """
+        获取所有直播间信息
+        :return:
+        """
+        url = 'https://plive.48.cn/livesystem/api/live/v1/memberLivePage'
+        header = {
+            'os': 'android',
+            'User-Agent': 'Mobile_Pocket',
+            'IMEI': '863526430773465',
+            'token': '1HMD6/i9yO4b2myk2c7K9seuVtXP+QCpqxRpB8ja8dQDLWR0RXXobiz87FeoVYYYOY4eAF9ifbM=',
+            'version': '4.1.2',
+            'Content-Type': 'application/json;charset=utf-8',
+            'Content-Length': '89',
+            'Host': 'plive.48.cn',
+            'Connection': 'Keep-Alive',
+            'Accept-Encoding': 'gzip',
+            'Cache-Control': 'no-cache'
+        }
+        params = {
+            "giftUpdTime": 1503766100000,
+            "groupId": 0,  # SNH48 Group所有人
+            "lastTime": 0,
+            "limit": 50,
+            "memberId": 0,
+            "type": 0
+        }
+        try:
+            response = requests.post(url, data=json.dumps(params), headers=header, verify=False)
+        except Exception as e:
+            ERROR('获取成员直播失败')
+            ERROR(e)
+        return response.text
 
     def get_member_room_msg(self, room_id):
         """
@@ -160,6 +195,43 @@ class Pocket48Handler:
             ERROR(e)
         return response.text
 
+    def parse_member_live(self, response, member_id):
+        """
+        对直播列表进行处理，找到正在直播的指定成员
+        :param member_id:
+        :param response:
+        :return:
+        """
+        rsp_json = json.loads(response)
+        if 'liveList' not in rsp_json.keys():
+            return
+        live_list = rsp_json['content']["liveList"]
+        msg = ''
+        for live in live_list:
+            live_id = live['liveId']
+            if live['memberId'] == member_id and live_id not in self.member_live_ids:
+                start_time = self.convert_timestamp_to_timestr(live['startTime'])
+                stream_path = live['streamPath']  # 流地址
+                sub_title = live['subTitle']  # 直播名称
+                type = live['liveType']
+                if type == 1:  # 露脸直播
+                    msg += '你的小宝贝儿开露脸直播了: %s\n开始时间: %s' % (sub_title, start_time)
+                elif type == 2:  # 电台直播
+                    msg += '你的小宝贝儿开电台直播了: %s\n开始时间: %s' % (sub_title, start_time)
+                self.member_live_ids.add(live_id)
+        if msg and len(self.member_room_msg_groups) > 0:
+            QQHandler.send_to_groups(self.member_room_msg_groups, msg)
+
+    def convert_timestamp_to_timestr(self, timestamp):
+        """
+        将13位时间戳转换为字符串
+        :param timestamp:
+        :return:
+        """
+        timeArray = time.localtime(timestamp / 1000)
+        time_str = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
+        return time_str
+
     def is_member(self, role):
         """
         判断是否为成员
@@ -217,4 +289,7 @@ class Pocket48Handler:
 
 
 if __name__ == '__main__':
-    pass
+    handler = Pocket48Handler([], [], [])
+    response = handler.get_member_live_msg()
+    handler.parse_member_live(response, 417317)
+    # print handler.convert_timestamp_to_timestr(1504970619679)
