@@ -203,13 +203,16 @@ class Pocket48Handler:
         :return:
         """
         rsp_json = json.loads(response)
+        # 当前没有人在直播
         if 'liveList' not in rsp_json.keys():
+            DEBUG('当前没有人在直播')
             return
         live_list = rsp_json['content']["liveList"]
         msg = ''
         for live in live_list:
             live_id = live['liveId']
             if live['memberId'] == member_id and live_id not in self.member_live_ids:
+                DEBUG('[直播]member_id: %s, live_id: %', member_id, live_id)
                 start_time = self.convert_timestamp_to_timestr(live['startTime'])
                 stream_path = live['streamPath']  # 流地址
                 sub_title = live['subTitle']  # 直播名称
