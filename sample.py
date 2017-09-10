@@ -97,7 +97,7 @@ def onStartupComplete(bot):
     # member_room_msg_groups = qq_handler.list_group(global_config.MEMBER_ROOM_MSG_GROUPS)
     # member_room_comment_groups = qq_handler.list_group(global_config.MEMBER_ROOM_COMMENT_GROUPS)
 
-    pocket48_handler.init_msg_queues(global_config.ROOM_ID)
+    # pocket48_handler.init_msg_queues(global_config.ROOM_ID)
 
 
 def onUpdate(bot, tinfo):
@@ -193,8 +193,11 @@ def update_conf(bot):
     DEBUG('auto_reply_groups: %s', ','.join(global_config.AUTO_REPLY_GROUPS))
 
     member_name = ConfigReader.get_property('root', 'member_name')
-    global_config.ROOM_ID = ConfigReader.get_member_room_number(member_name)
-    global_config.MEMBER_ID = ConfigReader.get_property('live', member_name)
+    if global_config.MEMBER_NAME == '' or member_name != global_config.MEMBER_NAME:
+        global_config.ROOM_ID = ConfigReader.get_member_room_number(member_name)
+        global_config.MEMBER_ID = ConfigReader.get_property('live', member_name)
+        pocket48_handler.init_msg_queues(global_config.ROOM_ID)
+        global_config.MEMBER_NAME = member_name
     DEBUG('当前监控的成员是: %s, 房间ID: %s, member_id: %s', member_name, global_config.ROOM_ID, global_config.MEMBER_ID)
 
     global_config.JIZI_KEYWORDS = ConfigReader.get_property('profile', 'jizi_keywords').split(';')

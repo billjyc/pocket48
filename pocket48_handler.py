@@ -66,7 +66,7 @@ class Pocket48Handler:
         """
         url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/chat'
         params = {
-            "roomId": room_id, "lastTime": 0, "limit": 20
+            "roomId": room_id, "lastTime": 0, "limit": 10
         }
         try:
             r = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
