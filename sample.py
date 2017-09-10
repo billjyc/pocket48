@@ -182,15 +182,21 @@ def update_conf(bot):
     global_config.MEMBER_ROOM_MSG_GROUPS = ConfigReader.get_property('qq_conf', 'member_room_msg_groups').split(';')
     global_config.MEMBER_ROOM_COMMENT_GROUPS = ConfigReader.\
         get_property('qq_conf', 'member_room_comment_groups').split(';')
+    global_config.MEMBER_LIVE_GROUPS = ConfigReader.get_property('qq_conf', 'member_live_groups').split(';')
+
     auto_reply_groups = qq_handler.list_group(global_config.AUTO_REPLY_GROUPS)
     member_room_msg_groups = qq_handler.list_group(global_config.MEMBER_ROOM_MSG_GROUPS)
     member_room_comment_groups = qq_handler.list_group(global_config.MEMBER_ROOM_COMMENT_GROUPS)
+    member_live_groups = qq_handler.list_group(global_config.MEMBER_LIVE_GROUPS)
     pocket48_handler.member_room_msg_groups = member_room_msg_groups
     pocket48_handler.member_room_comment_groups = member_room_comment_groups
     pocket48_handler.auto_reply_groups = auto_reply_groups
+    pocket48_handler.member_live_groups = member_live_groups
+
     DEBUG('member_room_msg_groups: %s', ','.join(global_config.MEMBER_ROOM_MSG_GROUPS))
-    DEBUG('member_room_comment_groups: %s', ','.join(global_config.MEMBER_ROOM_COMMENT_GROUPS ))
+    DEBUG('member_room_comment_groups: %s', ','.join(global_config.MEMBER_ROOM_COMMENT_GROUPS))
     DEBUG('auto_reply_groups: %s', ','.join(global_config.AUTO_REPLY_GROUPS))
+    DEBUG('member_live_groups: %s', ','.join(global_config.MEMBER_LIVE_GROUPS))
 
     member_name = ConfigReader.get_property('root', 'member_name')
     if global_config.MEMBER_NAME == '' or member_name != global_config.MEMBER_NAME:

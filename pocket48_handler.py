@@ -15,11 +15,13 @@ sys.setdefaultencoding('utf8')
 
 
 class Pocket48Handler:
-    def __init__(self, auto_reply_groups, member_room_msg_groups, member_room_comment_msg_groups):
+    def __init__(self, auto_reply_groups, member_room_msg_groups, member_room_comment_msg_groups,
+                 member_live_groups):
         self.last_monitor_time = -1
         self.auto_reply_groups = auto_reply_groups
         self.member_room_msg_groups = member_room_msg_groups
         self.member_room_comment_msg_groups = member_room_comment_msg_groups
+        self.member_live_groups = member_live_groups
         self.member_room_msg_ids = []
         self.member_room_comment_ids = []
         self.member_live_ids = []
@@ -238,8 +240,8 @@ class Pocket48Handler:
                     msg += '你的小宝贝儿开电台直播了: %s\n开始时间: %s' % (sub_title, start_time)
                 self.member_live_ids.append(live_id)
         DEBUG(msg)
-        if msg and len(self.member_room_msg_groups) > 0:
-            QQHandler.send_to_groups(self.member_room_msg_groups, msg)
+        if msg and len(self.member_live_groups) > 0:
+            QQHandler.send_to_groups(self.member_live_groups, msg)
 
     def convert_timestamp_to_timestr(self, timestamp):
         """
