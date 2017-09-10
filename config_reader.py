@@ -10,7 +10,6 @@ class ConfigReader:
 
     @classmethod
     def read_conf(cls):
-        cls.conf = ConfigParser.ConfigParser()
         cls.conf.read('conf.ini')
 
     @classmethod
