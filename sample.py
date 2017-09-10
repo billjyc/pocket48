@@ -194,6 +194,7 @@ def update_conf(bot):
 
     member_name = ConfigReader.get_property('root', 'member_name')
     if global_config.MEMBER_NAME == '' or member_name != global_config.MEMBER_NAME:
+        INFO('监控成员变更!')
         global_config.ROOM_ID = ConfigReader.get_member_room_number(member_name)
         global_config.MEMBER_ID = ConfigReader.get_property('live', member_name)
         pocket48_handler.init_msg_queues(global_config.ROOM_ID)
