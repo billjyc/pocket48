@@ -222,7 +222,7 @@ class Pocket48Handler:
             DEBUG('memberId is in live: %s', str(live['memberId'] == member_id))
             DEBUG('member_live_ids list: %s', ','.join(self.member_live_ids))
             DEBUG('live_id is in member_live_ids: %s', str(live_id in self.member_live_ids))
-            if live['memberId'] == member_id and live_id not in self.member_live_ids:
+            if live['memberId'] == int(member_id) and live_id not in self.member_live_ids:
                 DEBUG('[被监控成员正在直播]member_id: %s, live_id: %', member_id, live_id)
                 start_time = self.convert_timestamp_to_timestr(live['startTime'])
                 stream_path = live['streamPath']  # 流地址

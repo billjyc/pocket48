@@ -176,6 +176,8 @@ def update_conf(bot):
     """
     global pocket48_handler
     DEBUG('读取配置文件')
+
+    ConfigReader.read_conf()
     global_config.AUTO_REPLY_GROUPS = ConfigReader.get_property('qq_conf', 'auto_reply_groups').split(';')
     global_config.MEMBER_ROOM_MSG_GROUPS = ConfigReader.get_property('qq_conf', 'member_room_msg_groups').split(';')
     global_config.MEMBER_ROOM_COMMENT_GROUPS = ConfigReader.\

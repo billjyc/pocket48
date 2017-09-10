@@ -9,6 +9,10 @@ class ConfigReader:
     conf.read('conf.ini')
 
     @classmethod
+    def read_conf(cls):
+        cls.conf.read('conf.ini')
+
+    @classmethod
     def get_member_room_number(cls, name):
         return cls.conf.get('juju_room', name)
 
