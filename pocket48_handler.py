@@ -217,7 +217,8 @@ class Pocket48Handler:
         for live in live_list:
             live_id = live['liveId']
             # print '直播人: %s' % live['memberId']
-            DEBUG('直播人: %s', live['memberId'])
+            DEBUG('直播人(response): %s, 类型: %s', live['memberId'], type(member_id))
+            DEBUG('member_id(参数): %s, 类型: %s', member_id, type(member_id))
             DEBUG('memberId is in live: %s', str(live['memberId'] == member_id))
             DEBUG('member_live_ids list: %s', ','.join(self.member_live_ids))
             DEBUG('live_id is in member_live_ids: %s', str(live_id in self.member_live_ids))
@@ -226,10 +227,10 @@ class Pocket48Handler:
                 start_time = self.convert_timestamp_to_timestr(live['startTime'])
                 stream_path = live['streamPath']  # 流地址
                 sub_title = live['subTitle']  # 直播名称
-                type = live['liveType']
-                if type == 1:  # 露脸直播
+                live_type = live['liveType']
+                if live_type == 1:  # 露脸直播
                     msg += '你的小宝贝儿开露脸直播了: %s\n开始时间: %s' % (sub_title, start_time)
-                elif type == 2:  # 电台直播
+                elif live_type == 2:  # 电台直播
                     msg += '你的小宝贝儿开电台直播了: %s\n开始时间: %s' % (sub_title, start_time)
                 self.member_live_ids.append(live_id)
         DEBUG(msg)
