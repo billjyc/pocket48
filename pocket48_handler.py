@@ -52,11 +52,11 @@ class Pocket48Handler:
             "type": 0
         }
         try:
-            response = requests.post(url, data=json.dumps(params), headers=header, verify=False)
+            r = requests.post(url, data=json.dumps(params), headers=header, verify=False)
         except Exception as e:
             ERROR('获取成员直播失败')
             ERROR(e)
-        return response.text
+        return r.text
 
     def get_member_room_msg(self, room_id):
         """
@@ -66,14 +66,14 @@ class Pocket48Handler:
         """
         url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/chat'
         params = {
-            "roomId": room_id, "lastTime": 0, "limit": 10
+            "roomId": room_id, "lastTime": 0, "limit": 20
         }
         try:
-            response = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
+            r = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
         except Exception as e:
             ERROR('获取成员消息失败')
             ERROR(e)
-        return response.text
+        return r.text
 
     def init_msg_queues(self, room_id):
         """
@@ -135,7 +135,7 @@ class Pocket48Handler:
                 member_msg = extInfo['messageText']
                 fanpai_msg = extInfo['faipaiContent']
                 fanpai_id = extInfo['faipaiName']
-                message += '【翻牌】[%s]-%s\n【被翻牌】冯晓菲的%s:%s\n' % (msg['msgTimeStr'], member_msg, fanpai_id, fanpai_msg)
+                message += '【翻牌】[%s]-%s\n【被翻牌】%s:%s\n' % (msg['msgTimeStr'], member_msg, fanpai_id, fanpai_msg)
             else:
                 is_json = self.check_json_format(msg['bodys'])
                 bodys = json.loads(msg['bodys'])
@@ -185,15 +185,15 @@ class Pocket48Handler:
         """
         url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/comment'
         params = {
-            "roomId": room_id, "lastTime": 0, "limit": 10
+            "roomId": room_id, "lastTime": 0, "limit": 20
         }
         # 收到响应
         try:
-            response = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
+            r = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
         except Exception as e:
             ERROR('获取房间评论失败')
             ERROR(e)
-        return response.text
+        return r.text
 
     def parse_member_live(self, response, member_id):
         """
@@ -217,13 +217,13 @@ class Pocket48Handler:
         for live in live_list:
             live_id = live['liveId']
             # print '直播人: %s' % live['memberId']
-            DEBUG('直播人(response): %s, 类型: %s', live['memberId'], type(live['memberId']))
-            DEBUG('member_id(参数): %s, 类型: %s', member_id, type(member_id))
-            DEBUG('memberId is in live: %s', str(live['memberId'] == member_id))
-            DEBUG('member_live_ids list: %s', ','.join(self.member_live_ids))
-            DEBUG('live_id is in member_live_ids: %s', str(live_id in self.member_live_ids))
+            # DEBUG('直播人(response): %s, 类型: %s', live['memberId'], type(live['memberId']))
+            # DEBUG('member_id(参数): %s, 类型: %s', member_id, type(member_id))
+            DEBUG('memberId %s is in live: %s', member_id, str(live['memberId'] == member_id))
+            # DEBUG('member_live_ids list: %s', ','.join(self.member_live_ids))
+            # DEBUG('live_id is in member_live_ids: %s', str(live_id in self.member_live_ids))
             if live['memberId'] == int(member_id) and live_id not in self.member_live_ids:
-                DEBUG('[被监控成员正在直播]member_id: %s, live_id: %', member_id, live_id)
+                # DEBUG('[被监控成员正在直播]member_id: %s, live_id: %', member_id, live_id)
                 start_time = self.convert_timestamp_to_timestr(live['startTime'])
                 stream_path = live['streamPath']  # 流地址
                 sub_title = live['subTitle']  # 直播名称
