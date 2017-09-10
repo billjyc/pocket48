@@ -229,6 +229,7 @@ class Pocket48Handler:
                 elif type == 2:  # 电台直播
                     msg += '你的小宝贝儿开电台直播了: %s\n开始时间: %s' % (sub_title, start_time)
                 self.member_live_ids.append(live_id)
+        DEBUG(msg)
         if msg and len(self.member_room_msg_groups) > 0:
             QQHandler.send_to_groups(self.member_room_msg_groups, msg)
 

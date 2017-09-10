@@ -97,7 +97,6 @@ def onStartupComplete(bot):
     # member_room_msg_groups = qq_handler.list_group(global_config.MEMBER_ROOM_MSG_GROUPS)
     # member_room_comment_groups = qq_handler.list_group(global_config.MEMBER_ROOM_COMMENT_GROUPS)
 
-
     pocket48_handler.init_msg_queues(global_config.ROOM_ID)
 
 
@@ -187,6 +186,9 @@ def update_conf(bot):
     pocket48_handler.member_room_msg_groups = member_room_msg_groups
     pocket48_handler.member_room_comment_groups = member_room_comment_groups
     pocket48_handler.auto_reply_groups = auto_reply_groups
+    DEBUG('member_room_msg_groups: %s', ','.join(global_config.MEMBER_ROOM_MSG_GROUPS))
+    DEBUG('member_room_comment_groups: %s', ','.join(global_config.MEMBER_ROOM_COMMENT_GROUPS ))
+    DEBUG('auto_reply_groups: %s', ','.join(global_config.AUTO_REPLY_GROUPS))
 
     member_name = ConfigReader.get_property('root', 'member_name')
     global_config.ROOM_ID = ConfigReader.get_member_room_number(member_name)
