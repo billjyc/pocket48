@@ -84,6 +84,7 @@ class Pocket48Handler:
         try:
             self.member_room_msg_ids = []
             self.member_room_comment_ids = []
+            self.member_live_ids = []
 
             r1 = self.get_member_room_msg(room_id)
             r2 = self.get_member_room_comment(room_id)
