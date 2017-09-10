@@ -213,11 +213,13 @@ class Pocket48Handler:
         DEBUG('当前正在直播的人数: %d', len(live_list))
         # print '当前正在直播的人数: %d' % len(live_list)
         msg = ''
+        DEBUG('直播ID列表: %s', ','.join(self.member_live_ids))
         for live in live_list:
             live_id = live['liveId']
-            # print live['memberId']
+            # print '直播人: %s' % live['memberId']
+            DEBUG('直播人: %s', live['memberId'])
             if live['memberId'] == member_id and live_id not in self.member_live_ids:
-                DEBUG('[直播]member_id: %s, live_id: %', member_id, live_id)
+                DEBUG('[被监控成员正在直播]member_id: %s, live_id: %', member_id, live_id)
                 start_time = self.convert_timestamp_to_timestr(live['startTime'])
                 stream_path = live['streamPath']  # 流地址
                 sub_title = live['subTitle']  # 直播名称
@@ -299,5 +301,5 @@ class Pocket48Handler:
 if __name__ == '__main__':
     handler = Pocket48Handler([], [], [])
     response = handler.get_member_live_msg()
-    handler.parse_member_live(response, 417317)
+    handler.parse_member_live(response, 35)
     # print handler.convert_timestamp_to_timestr(1504970619679)
