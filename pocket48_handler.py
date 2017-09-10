@@ -217,7 +217,7 @@ class Pocket48Handler:
         for live in live_list:
             live_id = live['liveId']
             # print '直播人: %s' % live['memberId']
-            DEBUG('直播人(response): %s, 类型: %s', live['memberId'], type(member_id))
+            DEBUG('直播人(response): %s, 类型: %s', live['memberId'], type(live['memberId']))
             DEBUG('member_id(参数): %s, 类型: %s', member_id, type(member_id))
             DEBUG('memberId is in live: %s', str(live['memberId'] == member_id))
             DEBUG('member_live_ids list: %s', ','.join(self.member_live_ids))
