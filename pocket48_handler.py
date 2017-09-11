@@ -222,10 +222,12 @@ class Pocket48Handler:
         DEBUG('直播ID列表: %s', ','.join(self.member_live_ids))
         for live in live_list:
             live_id = live['liveId']
+            DEBUG(live.keys())
             # print '直播人: %s' % live['memberId']
             # DEBUG('直播人(response): %s, 类型: %s', live['memberId'], type(live['memberId']))
             # DEBUG('member_id(参数): %s, 类型: %s', member_id, type(member_id))
             DEBUG('memberId %s is in live', live['memberId'])
+            # DEBUG('live url: %s', live['url'])
             # DEBUG('member_live_ids list: %s', ','.join(self.member_live_ids))
             # DEBUG('live_id is in member_live_ids: %s', str(live_id in self.member_live_ids))
             if live['memberId'] == int(member_id) and live_id not in self.member_live_ids:
