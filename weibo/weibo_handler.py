@@ -59,7 +59,7 @@ class WeiboMonitor:
                 self.echoMsg('Info', 'Login successful! UserId:' + json.loads(r.text)['data']['uid'])
             else:
                 self.echoMsg('Error', 'Logon failure!')
-                sys.exit()
+                # sys.exit()
         except Exception as e:
             self.echoMsg('Error', e)
             # sys.exit()
