@@ -225,11 +225,11 @@ class Pocket48Handler:
             # print '直播人: %s' % live['memberId']
             # DEBUG('直播人(response): %s, 类型: %s', live['memberId'], type(live['memberId']))
             # DEBUG('member_id(参数): %s, 类型: %s', member_id, type(member_id))
-            DEBUG('memberId %s is in live: %s', member_id, str(live['memberId'] == int(member_id)))
+            DEBUG('memberId %s is in live', live['memberId'])
             # DEBUG('member_live_ids list: %s', ','.join(self.member_live_ids))
             # DEBUG('live_id is in member_live_ids: %s', str(live_id in self.member_live_ids))
             if live['memberId'] == int(member_id) and live_id not in self.member_live_ids:
-                # DEBUG('[被监控成员正在直播]member_id: %s, live_id: %', member_id, live_id)
+                DEBUG('[被监控成员正在直播]member_id: %s, live_id: %', member_id, live_id)
                 start_time = self.convert_timestamp_to_timestr(live['startTime'])
                 stream_path = live['streamPath']  # 流地址
                 sub_title = live['subTitle']  # 直播名称

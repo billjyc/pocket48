@@ -62,7 +62,7 @@ class WeiboMonitor:
                 sys.exit()
         except Exception as e:
             self.echoMsg('Error', e)
-            sys.exit()
+            # sys.exit()
 
     """
         @   Class self  :
@@ -93,7 +93,7 @@ class WeiboMonitor:
             self.echoMsg('Info', 'Has %d id(s)' % len(self.itemIds))
         except Exception as e:
             self.echoMsg('Error', e)
-            sys.exit()
+            # sys.exit()
 
     """
         @   Class self  :
@@ -123,7 +123,7 @@ class WeiboMonitor:
             self.echoMsg('Info', '微博队列共有 %d 条' % len(self.itemIds))
         except Exception as e:
             self.echoMsg('Error', e)
-            sys.exit()
+            # sys.exit()
 
     """
         @   String level   : Info/Error
