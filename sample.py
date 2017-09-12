@@ -224,7 +224,7 @@ def update_conf(bot):
     global_config.AT_AUTO_REPLY = ConfigReader.get_property('profile', 'at_auto_reply').split(';')
 
 
-@qqbotsched(second='*/30')
+@qqbotsched(second='*/60')
 def get_room_msgs(bot):
     start_t = time.time()
     global qq_handler, pocket48_handler
@@ -249,7 +249,7 @@ def get_room_msgs(bot):
     DEBUG('执行时间: %s', end_t-start_t)
 
 
-@qqbotsched(minute='*')
+@qqbotsched(minute='*', second='40')
 def get_member_lives(bot):
     global qq_handler, pocket48_handler
 

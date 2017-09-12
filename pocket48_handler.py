@@ -174,9 +174,14 @@ class Pocket48Handler:
 
             if msg_id in self.member_room_comment_ids:
                 continue
-            DEBUG('房间评论')
             self.member_room_comment_ids.append(msg_id)
-            message = ('【房间评论】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])) + message
+            if extInfo['contentType'] == 1:  # 普通评论
+                DEBUG('房间评论')
+                message = ('【房间评论】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])) + message
+            elif extInfo['contentType'] == 3:  # 房间礼物
+                DEBUG('礼物')
+            else:
+                DEBUG('其他类型评论')
 
         INFO('message: %s', message)
         if message and len(self.member_room_comment_msg_groups) > 0:
