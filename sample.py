@@ -193,10 +193,10 @@ def update_conf(bot):
     pocket48_handler.auto_reply_groups = auto_reply_groups
     pocket48_handler.member_live_groups = member_live_groups
 
-    DEBUG('member_room_msg_groups: %s', ','.join(global_config.MEMBER_ROOM_MSG_GROUPS))
-    DEBUG('member_room_comment_groups: %s', ','.join(global_config.MEMBER_ROOM_COMMENT_GROUPS))
-    DEBUG('auto_reply_groups: %s', ','.join(global_config.AUTO_REPLY_GROUPS))
-    DEBUG('member_live_groups: %s', ','.join(global_config.MEMBER_LIVE_GROUPS))
+    DEBUG('member_room_msg_groups: %s, length: %d', ','.join(global_config.MEMBER_ROOM_MSG_GROUPS), len(pocket48_handler.member_room_msg_groups))
+    DEBUG('member_room_comment_groups: %s, length: %d', ','.join(global_config.MEMBER_ROOM_COMMENT_GROUPS), len(pocket48_handler.member_room_comment_groups))
+    DEBUG('auto_reply_groups: %s, length: %d', ','.join(global_config.AUTO_REPLY_GROUPS), len(pocket48_handler.auto_reply_groups))
+    DEBUG('member_live_groups: %s, length: %d', ','.join(global_config.MEMBER_LIVE_GROUPS), len(member_live_groups))
 
     member_name = ConfigReader.get_property('root', 'member_name')
     if global_config.MEMBER_NAME == '' or member_name != global_config.MEMBER_NAME:
