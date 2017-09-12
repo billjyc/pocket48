@@ -184,6 +184,7 @@ class Pocket48Handler:
                 DEBUG('其他类型评论')
 
         INFO('message: %s', message)
+        DEBUG('length of comment groups: %d', len(self.member_room_comment_msg_groups))
         if message and len(self.member_room_comment_msg_groups) > 0:
             QQHandler.send_to_groups(self.member_room_comment_msg_groups, message)
         DEBUG('房间评论队列: %s', len(self.member_room_comment_ids))
