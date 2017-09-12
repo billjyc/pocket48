@@ -135,20 +135,20 @@ class Pocket48Handler:
             DEBUG('extInfo.keys():' + ','.join(extInfo.keys()))
             if 'text' in extInfo.keys():  # 普通消息
                 DEBUG('普通消息')
-                message += '【成员消息】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
+                message = ('【成员消息】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])) + msg
             elif 'messageText' in extInfo.keys():  # 翻牌消息
                 DEBUG('翻牌')
                 member_msg = extInfo['messageText']
                 fanpai_msg = extInfo['faipaiContent']
                 fanpai_id = extInfo['faipaiName']
-                message += '【翻牌】[%s]-%s\n【被翻牌】%s:%s\n' % (msg['msgTimeStr'], member_msg, fanpai_id, fanpai_msg)
+                message = ('【翻牌】[%s]-%s\n【被翻牌】%s:%s\n' % (msg['msgTimeStr'], member_msg, fanpai_id, fanpai_msg)) + msg
             else:
                 is_json = self.check_json_format(msg['bodys'])
                 bodys = json.loads(msg['bodys'])
                 if 'url' in bodys.keys():
                     url = bodys['url']
                     DEBUG('图片')
-                    message += '【图片】[%s]-%s\n' % (msg['msgTimeStr'], url)
+                    message = ('【图片】[%s]-%s\n' % (msg['msgTimeStr'], url)) + msg
                 else:
                     DEBUG('房间语音')
 
@@ -176,7 +176,7 @@ class Pocket48Handler:
                 continue
             DEBUG('房间评论')
             self.member_room_comment_ids.append(msg_id)
-            message += '【房间评论】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])
+            message = ('【房间评论】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])) + msg
 
         INFO('message: %s', message)
         if message and len(self.member_room_comment_msg_groups) > 0:
