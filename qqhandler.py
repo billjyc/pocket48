@@ -4,6 +4,8 @@ from qqbot import _bot as bot
 
 from qqbot.utf8logger import DEBUG, INFO, ERROR
 
+import time
+
 
 class QQHandler:
     def __init__(self):
@@ -50,6 +52,7 @@ class QQHandler:
     def send_to_groups(cls, groups, message):
         for group in groups:
             bot.SendTo(group, message)
+            time.sleep(2)
 
 
 if __name__ == '__main__':
