@@ -165,7 +165,7 @@ class Pocket48Handler:
         """
         rsp_json = json.loads(response)
         msgs = rsp_json['content']['data']
-
+        DEBUG(response)
         message = ''
         for msg in msgs:
             extInfo = json.loads(msg['extInfo'])
