@@ -120,37 +120,37 @@ class Pocket48Handler:
         message = ''
         for msg in msgs:
             extInfo = json.loads(msg['extInfo'])
-            # platform = extInfo['platform']
-            msg_id = msg['msgidClient']
+            msg_id = msg['msgidClient']  # 消息id
 
-            # bodys = json.loads(msg['bodys'])
-            # temp_timestamp = self.convert_timestamp(self.last_monitor_time)
-            # if self.last_monitor_time < 0 or msg['msgTime'] < temp_timestamp:
-            #     break
-            # 判断是否为成员
             if msg_id in self.member_room_msg_ids:
                 continue
+
             DEBUG('成员消息')
             self.member_room_msg_ids.append(msg_id)
+
             DEBUG('extInfo.keys():' + ','.join(extInfo.keys()))
-            if 'text' in extInfo.keys():  # 普通消息
-                DEBUG('普通消息')
-                message = ('【成员消息】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])) + message
-            elif 'messageText' in extInfo.keys():  # 翻牌消息
-                DEBUG('翻牌')
-                member_msg = extInfo['messageText']
-                fanpai_msg = extInfo['faipaiContent']
-                fanpai_id = extInfo['faipaiName']
-                message = ('【翻牌】[%s]-%s\n【被翻牌】%s:%s\n' % (msg['msgTimeStr'], member_msg, fanpai_id, fanpai_msg)) + message
-            else:
-                is_json = self.check_json_format(msg['bodys'])
+            if msg['msgType'] == 0:  # 文字消息
+                if 'text' in extInfo.keys():  # 普通消息
+                    DEBUG('普通消息')
+                    message = ('【成员消息】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])) + message
+                elif 'messageText' in extInfo.keys():  # 翻牌消息
+                    DEBUG('翻牌')
+                    member_msg = extInfo['messageText']
+                    fanpai_msg = extInfo['faipaiContent']
+                    fanpai_id = extInfo['faipaiName']
+                    message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s:%s\n' % (msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_id, fanpai_msg)) + message
+            elif msg['msgType'] == 1:  # 图片消息
+                bodys = json.loads(msg['bodys'])
+                DEBUG('图片')
+                if 'url' in bodys.keys():
+                    url = bodys['url']
+                    message = ('【图片】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
+            elif msg['msgType'] == 2:  # 语音消息
+                DEBUG('语音消息')
                 bodys = json.loads(msg['bodys'])
                 if 'url' in bodys.keys():
                     url = bodys['url']
-                    DEBUG('图片')
-                    message = ('【图片】[%s]-%s\n' % (msg['msgTimeStr'], url)) + msg
-                else:
-                    DEBUG('房间语音')
+                    message = ('【语音】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
 
         if message and len(self.member_room_msg_groups) > 0:
             QQHandler.send_to_groups(self.member_room_msg_groups, message)
@@ -278,25 +278,6 @@ class Pocket48Handler:
         """
         return timestamp * 1000
 
-    def check_json_format(self, raw_msg):
-        """
-        判断给定字符串是不是符合json格式
-        :param raw_msg:
-        :return:
-        """
-        DEBUG('function: %s', __name__)
-        if isinstance(raw_msg, str):  # 首先判断变量是否为字符串
-            try:
-                json.loads(raw_msg, encoding='utf-8')
-            except ValueError, e:
-                ERROR(e)
-                return False
-            DEBUG('is json')
-            return True
-        else:
-            DEBUG('is not string')
-            return False
-
     def header_args(self):
         """
         构造请求头信息
@@ -320,6 +301,34 @@ class Pocket48Handler:
 
 if __name__ == '__main__':
     handler = Pocket48Handler([], [], [], [])
-    response = handler.get_member_live_msg()
-    handler.parse_member_live(response, 6432)
+    # response = handler.get_member_live_msg()
+    # handler.parse_member_live(response, 6432)
+
+    url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/hot'
+    data = {
+        "groupId": 10,
+        "needRootRoom": True,
+        "page": 1,
+        "topMemberIds": []
+    }
+    header = {
+        'Host': 'pjuju.48.cn',
+        'app-type': 'fans',
+        'Accept': '*/*',
+        'version': '4.1.6',
+        'os': 'ios',
+        'Accept-Encoding': 'gzip, deflate',
+        'Accept-Language': 'zh-Hans-CN;q=1',
+        'imei': '863526430773465',
+        'token': '',
+        'User-Agent': 'Mobile_Pocket',
+        'Content-Length': '60',
+        'Connection': 'keep-alive',
+        'Content-Type': 'application/json;charset=utf-8',
+    }
+    r = requests.post(url, data=json.dumps(data), headers=header, verify=False)
+    print r.text
+
+    r = handler.get_member_room_msg(5758972)
+    print r
     # print handler.convert_timestamp_to_timestr(1504970619679)
