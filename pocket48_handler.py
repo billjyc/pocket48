@@ -17,34 +17,61 @@ sys.setdefaultencoding('utf8')
 class Pocket48Handler:
     def __init__(self, auto_reply_groups, member_room_msg_groups, member_room_comment_msg_groups,
                  member_live_groups):
+        self.session = requests.session()
+        self.token = '0'
+        self.is_login = False
+
         self.last_monitor_time = -1
         self.auto_reply_groups = auto_reply_groups
         self.member_room_msg_groups = member_room_msg_groups
         self.member_room_comment_msg_groups = member_room_comment_msg_groups
         self.member_live_groups = member_live_groups
+
         self.member_room_msg_ids = []
         self.member_room_comment_ids = []
         self.member_live_ids = []
+
+    def login(self, username, password):
+        """
+        登录
+        :param username:
+        :param password:
+        :return:
+        """
+        if username is None or password is None:
+            ERROR('用户名或密码为空')
+            return
+        login_url = 'https://puser.48.cn/usersystem/api/user/v1/login/phone'
+        params = {
+            'latitude': '0',
+            'longitude': '0',
+            'password': str(self.password),
+            'account': str(self.phonenum),
+        }
+        res = self.session.post(login_url, json=params).json()
+        # 登录成功
+        if res['status'] == 200:
+            self.token = res['content']['token']
+            self.is_login = True
+            return True
+        else:
+            ERROR('登录失败')
+        return False
+
+    def logout(self):
+        """
+        登出
+        :return:
+        """
 
     def get_member_live_msg(self):
         """
         获取所有直播间信息
         :return:
         """
+        # if not self.is_login:
+        #     ERROR('尚未登录')
         url = 'https://plive.48.cn/livesystem/api/live/v1/memberLivePage'
-        header = {
-            'os': 'android',
-            'User-Agent': 'Mobile_Pocket',
-            'IMEI': '863526430773465',
-            'token': '1HMD6/i9yO4b2myk2c7K9seuVtXP+QCpqxRpB8ja8dQDLWR0RXXobiz87FeoVYYYOY4eAF9ifbM=',
-            'version': '4.1.2',
-            'Content-Type': 'application/json;charset=utf-8',
-            'Content-Length': '89',
-            'Host': 'plive.48.cn',
-            'Connection': 'Keep-Alive',
-            'Accept-Encoding': 'gzip',
-            'Cache-Control': 'no-cache'
-        }
         params = {
             "giftUpdTime": 1503766100000,
             "groupId": 0,  # SNH48 Group所有人
@@ -54,7 +81,7 @@ class Pocket48Handler:
             "type": 0
         }
         try:
-            r = requests.post(url, data=json.dumps(params), headers=header, verify=False)
+            r = requests.post(url, data=json.dumps(params), headers=self.live_header_args(), verify=False)
         except Exception as e:
             ERROR('获取成员直播失败')
             ERROR(e)
@@ -66,12 +93,14 @@ class Pocket48Handler:
         :param room_id: 房间id
         :return:
         """
+        # if not self.is_login:
+        #     ERROR('尚未登录')
         url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/chat'
         params = {
             "roomId": room_id, "lastTime": 0, "limit": 10
         }
         try:
-            r = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
+            r = requests.post(url, data=json.dumps(params), headers=self.juju_header_args(), verify=False)
         except Exception as e:
             ERROR('获取成员消息失败')
             ERROR(e)
@@ -195,13 +224,15 @@ class Pocket48Handler:
         :param room_id: 房间id
         :return:
         """
+        # if not self.is_login:
+        #     ERROR('尚未登录')
         url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/comment'
         params = {
             "roomId": room_id, "lastTime": 0, "limit": 20
         }
         # 收到响应
         try:
-            r = requests.post(url, data=json.dumps(params), headers=self.header_args(), verify=False)
+            r = requests.post(url, data=json.dumps(params), headers=self.juju_header_args(), verify=False)
         except Exception as e:
             ERROR('获取房间评论失败')
             ERROR(e)
@@ -262,31 +293,37 @@ class Pocket48Handler:
         time_str = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
         return time_str
 
-    def is_member(self, role):
+    def live_header_args(self):
         """
-        判断是否为成员
-        :param role: 成员为1
-        :return:
-        """
-        return role == 1
-
-    def convert_timestamp(self, timestamp):
-        """
-        将10位时间戳转化为13位
-        :param timestamp:
-        :return:
-        """
-        return timestamp * 1000
-
-    def header_args(self):
-        """
-        构造请求头信息
+        构造直播请求头信息
         :return:
         """
         header = {
             'os': 'android',
             'User-Agent': 'Mobile_Pocket',
             'IMEI': '863526430773465',
+            # TODO: 替换为登录后获取的token
+            'token': '1HMD6/i9yO4b2myk2c7K9seuVtXP+QCpqxRpB8ja8dQDLWR0RXXobiz87FeoVYYYOY4eAF9ifbM=',
+            'version': '4.1.2',
+            'Content-Type': 'application/json;charset=utf-8',
+            'Content-Length': '89',
+            'Host': 'plive.48.cn',
+            'Connection': 'Keep-Alive',
+            'Accept-Encoding': 'gzip',
+            'Cache-Control': 'no-cache'
+        }
+        return header
+
+    def juju_header_args(self):
+        """
+        构造聚聚房间请求头信息
+        :return:
+        """
+        header = {
+            'os': 'android',
+            'User-Agent': 'Mobile_Pocket',
+            'IMEI': '863526430773465',
+            # TODO: 替换为登录后获取的token
             'token': '1HMD6/i9yO4b2myk2c7K9seuVtXP+QCpqxRpB8ja8dQDLWR0RXXobiz87FeoVYYYOY4eAF9ifbM=',
             'version': '4.1.2',
             'Content-Type': 'application/json;charset=utf-8',

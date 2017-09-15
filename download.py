@@ -25,6 +25,7 @@ class Download(threading.Thread):
             per = 100
         print '%.2f%%' % per
 
+    # TODO: 直播录制
     def run(self):
         while True:
             if not self.queue.empty():
