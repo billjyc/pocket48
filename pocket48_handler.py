@@ -297,7 +297,7 @@ class Pocket48Handler:
                 self.member_live_ids.append(live_id)
 
                 # 录制直播
-                self.download.setName(member_id + start_time)
+                self.download.setName(member_id + '_' + start_time)
                 self.live_urls.put(stream_path)
 
         DEBUG(msg)

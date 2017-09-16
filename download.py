@@ -39,7 +39,7 @@ class Download(threading.Thread):
                 with open(local_path, 'wb') as code:
                     code.write(r.content)
                 # urllib.urlretrieve(url, local_path, self.Schedule)
-                print 'thread writing finished...'
+                INFO('下载完成')
             else:
                 INFO('直播下载队列为空！')
             time.sleep(60)
