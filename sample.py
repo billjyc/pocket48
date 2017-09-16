@@ -85,6 +85,11 @@ def onStartupComplete(bot):
     global qq_handler, pocket48_handler
 
     pocket48_handler = Pocket48Handler([], [], [], [])
+
+    username = ConfigReader.get_property('user', 'username')
+    password = ConfigReader.get_property('user', 'password')
+    pocket48_handler.login(username, password)
+
     # 初始化QQHandler并更新联系人
     qq_handler = QQHandler()
     # 先更新配置
