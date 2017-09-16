@@ -7,6 +7,9 @@ from config_reader import ConfigReader
 import time
 from qqhandler import QQHandler
 from qqbot.utf8logger import INFO,ERROR,DEBUG
+from download import Download
+
+import Queue
 
 import sys
 
@@ -30,6 +33,10 @@ class Pocket48Handler:
         self.member_room_msg_ids = []
         self.member_room_comment_ids = []
         self.member_live_ids = []
+        self.live_urls = Queue.Queue(20)
+        self.download = Download(self.live_urls)
+        self.download.setDaemon(True)
+        self.download.start()
 
     def login(self, username, password):
         """
@@ -279,6 +286,11 @@ class Pocket48Handler:
                 elif live_type == 2:  # 电台直播
                     msg += '你的小宝贝儿开电台直播了: %s\n直播链接: %s\n开始时间: %s' % (sub_title, url, start_time)
                 self.member_live_ids.append(live_id)
+
+                # 录制直播
+                self.download.setName(member_id)
+                self.live_urls.put(stream_path)
+
         DEBUG(msg)
         if msg and len(self.member_live_groups) > 0:
             QQHandler.send_to_groups(self.member_live_groups, msg)

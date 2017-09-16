@@ -25,7 +25,6 @@ class Download(threading.Thread):
             per = 100
         print '%.2f%%' % per
 
-    # TODO: 直播录制
     def run(self):
         while True:
             if not self.queue.empty():
@@ -33,14 +32,15 @@ class Download(threading.Thread):
                 print self.name
                 url = self.queue.get()
                 ext = url.split('.')[-1]
-                print 'thread download start'
-                r = requests.get(url, verify=False)
-                print 'thread download finished...'
-                print 'thread writing start...'
                 file_name = self.name + '.' + ext
+                INFO('%s下载开始...', file_name)
+                r = requests.get(url, verify=False)
                 local_path = os.path.join('../', file_name)
-                urllib.urlretrieve(url, local_path, self.Schedule)
+                with open(local_path, 'wb') as code:
+                    code.write(r.content)
+                # urllib.urlretrieve(url, local_path, self.Schedule)
                 print 'thread writing finished...'
+            time.sleep(60)
 
 
 if __name__ == '__main__':
@@ -48,12 +48,16 @@ if __name__ == '__main__':
     queue = Queue.Queue(20)
 
     d = Download(queue)
+    d.setDaemon(True)
     d.start()
 
     url = 'https://mp4.48.cn/live/bbf8a902-2e5d-4fa1-9c09-5151145f7c90.mp4'
     url2 = 'http://2519.liveplay.myqcloud.com/live/2519_2996320.flv'
+    url3 = 'http://www.sina.com.cn'
+    d.setName('liuzengyan')
     queue.put(url)
-    queue.put(url2)
+    # queue.put(url2)
+    # queue.put(url3)
 
     while True:
         print 'main thread'
