@@ -30,16 +30,18 @@ class Download(threading.Thread):
             if not self.queue.empty():
                 DEBUG(self.name)
                 print self.name
-                url = self.queue.get()
-                ext = url.split('.')[-1]
+                live_url = self.queue.get()
+                ext = live_url.split('.')[-1]
                 file_name = self.name + '.' + ext
-                INFO('%s下载开始...', file_name)
-                r = requests.get(url, verify=False)
+                INFO('%s直播下载开始...', file_name)
+                r = requests.get(live_url, verify=False)
                 local_path = os.path.join('../', file_name)
                 with open(local_path, 'wb') as code:
                     code.write(r.content)
                 # urllib.urlretrieve(url, local_path, self.Schedule)
                 print 'thread writing finished...'
+            else:
+                INFO('直播下载队列为空！')
             time.sleep(60)
 
 
