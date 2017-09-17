@@ -170,6 +170,8 @@ class Pocket48Handler:
             QQHandler.send_to_groups(self.member_room_msg_lite_groups, msg)
             self.unread_msg_amount = 0
             INFO(msg)
+        else:
+            INFO('最近5分钟内没有未读消息')
 
     def parse_room_msg(self, response):
         """
