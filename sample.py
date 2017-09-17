@@ -245,12 +245,12 @@ def get_room_msgs(bot):
     r2 = pocket48_handler.get_member_room_comment(global_config.ROOM_ID)
     pocket48_handler.parse_room_comment(r2)
 
-    DEBUG('last_monitor_time: %s', pocket48_handler.last_monitor_time)
-    DEBUG('current time: %s', time.time())
-    if pocket48_handler.last_monitor_time < 0:
-        pocket48_handler.last_monitor_time = start_t
-    else:
-        pocket48_handler.last_monitor_time = pocket48_handler.last_monitor_time + 30
+    DEBUG('last_msg_time: %s', pocket48_handler.last_msg_time)
+    # DEBUG('current time: %s', time.time())
+    # if pocket48_handler.last_monitor_time < 0:
+    #     pocket48_handler.last_monitor_time = start_t
+    # else:
+    #     pocket48_handler.last_monitor_time = pocket48_handler.last_monitor_time + 30
 
     # 这里做一下时间戳同步
     # if pocket48_handler.last_monitor_time + 60 <= time.time():
