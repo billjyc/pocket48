@@ -165,7 +165,7 @@ class Pocket48Handler:
         发送成员房间消息（简易版，只发送未读消息数量）
         :return:
         """
-        if self.unread_msg_amount > 0:
+        if self.unread_msg_amount > 0 and len(self.member_room_msg_lite_groups) > 0:
             msg = '口袋房间中有%d条未读消息' % self.unread_msg_amount
             QQHandler.send_to_groups(self.member_room_msg_lite_groups, msg)
             self.unread_msg_amount = 0
