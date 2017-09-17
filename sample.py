@@ -232,6 +232,7 @@ def update_conf(bot):
     global_config.I_LOVE = ConfigReader.get_property('profile', 'i_love').split(';')
 
     global_config.AT_AUTO_REPLY = ConfigReader.get_property('profile', 'at_auto_reply').split(';')
+    global_config.ROOM_MSG_LITE_NOTIFY = ConfigReader.get_property('profile', 'room_msg_lite_notify')
 
 
 @qqbotsched(second='*/60')
@@ -267,9 +268,9 @@ def get_member_lives(bot):
     pocket48_handler.parse_member_live(r, global_config.MEMBER_ID)
 
 
-@qqbotsched(minute='*/5', second='30')
-def get_member_room_msg_lite(bot):
-    global pocket48_handler
-    pocket48_handler.get_member_room_msg_lite()
+# @qqbotsched(minute='*', second='30')
+# def get_member_room_msg_lite(bot):
+#     global pocket48_handler
+#     pocket48_handler.get_member_room_msg_lite()
 
 

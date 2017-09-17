@@ -9,6 +9,8 @@ from qqhandler import QQHandler
 from qqbot.utf8logger import INFO, ERROR, DEBUG
 from download import Download
 
+import global_config
+
 import Queue
 
 import sys
@@ -162,16 +164,20 @@ class Pocket48Handler:
 
     def get_member_room_msg_lite(self):
         """
-        发送成员房间消息（简易版，只发送未读消息数量）
+        发送成员房间消息（简易版，只提醒在房间里出现）
         :return:
         """
+        time_now = time.time()
         if self.unread_msg_amount > 0 and len(self.member_room_msg_lite_groups) > 0:
-            msg = '口袋房间中有%d条未读消息' % self.unread_msg_amount
-            QQHandler.send_to_groups(self.member_room_msg_lite_groups, msg)
-            self.unread_msg_amount = 0
-            INFO(msg)
+            # 距离上一次提醒时间超过10分钟且有未读消息
+            if self.last_monitor_time == -1 or time_now - self.last_monitor_time >= 10 * 60:
+                msg = global_config.ROOM_MSG_LITE_NOTIFY
+                QQHandler.send_to_groups(self.member_room_msg_lite_groups, msg)
+                self.unread_msg_amount = 0
+                INFO(msg)
+            self.last_monitor_time = time_now
         else:
-            INFO('最近5分钟内没有未读消息')
+            INFO('最近1分钟内没有未读消息')
 
     def parse_room_msg(self, response):
         """
@@ -221,6 +227,7 @@ class Pocket48Handler:
 
         if message and len(self.member_room_msg_groups) > 0:
             QQHandler.send_to_groups(self.member_room_msg_groups, message)
+            self.get_member_room_msg_lite()
         INFO('message: %s', message)
         DEBUG('成员消息队列: %s', len(self.member_room_msg_ids))
 
