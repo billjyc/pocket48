@@ -19,7 +19,7 @@ sys.setdefaultencoding('utf8')
 
 class Pocket48Handler:
     def __init__(self, auto_reply_groups, member_room_msg_groups, member_room_comment_msg_groups,
-                 member_live_groups):
+                 member_live_groups, member_room_msg_lite_groups):
         self.session = requests.session()
         self.token = '0'
         self.is_login = False
@@ -29,10 +29,14 @@ class Pocket48Handler:
         self.member_room_msg_groups = member_room_msg_groups
         self.member_room_comment_msg_groups = member_room_comment_msg_groups
         self.member_live_groups = member_live_groups
+        self.member_room_msg_lite_groups = member_room_msg_lite_groups
 
         self.member_room_msg_ids = []
         self.member_room_comment_ids = []
         self.member_live_ids = []
+
+        # 成员房间未读消息数量
+        self.unread_msg_amount = 0
 
         self.live_urls = Queue.Queue(20)
         self.download = Download(self.live_urls)
@@ -80,7 +84,7 @@ class Pocket48Handler:
         self.is_login = False
         self.token = '0'
 
-    def get_member_live_msg(self):
+    def get_member_live_msg(self, limit=50):
         """
         获取所有直播间信息
         :return:
@@ -92,7 +96,7 @@ class Pocket48Handler:
             "giftUpdTime": 1503766100000,
             "groupId": 0,  # SNH48 Group所有人
             "lastTime": 0,
-            "limit": 50,
+            "limit": limit,
             "memberId": 0,
             "type": 0
         }
@@ -103,9 +107,10 @@ class Pocket48Handler:
             ERROR(e)
         return r.text
 
-    def get_member_room_msg(self, room_id):
+    def get_member_room_msg(self, room_id, limit=20):
         """
         获取成员房间消息
+        :param limit:
         :param room_id: 房间id
         :return:
         """
@@ -113,7 +118,7 @@ class Pocket48Handler:
             ERROR('尚未登录')
         url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/chat'
         params = {
-            "roomId": room_id, "lastTime": 0, "limit": 10
+            "roomId": room_id, "lastTime": 0, "limit": limit
         }
         try:
             r = self.session.post(url, data=json.dumps(params), headers=self.juju_header_args(), verify=False)
@@ -133,6 +138,8 @@ class Pocket48Handler:
             self.member_room_comment_ids = []
             self.member_live_ids = []
 
+            self.unread_msg_amount = 0
+
             r1 = self.get_member_room_msg(room_id)
             r2 = self.get_member_room_comment(room_id)
 
@@ -148,9 +155,21 @@ class Pocket48Handler:
 
             DEBUG('成员消息队列: %s', len(self.member_room_msg_ids))
             DEBUG('房间评论队列: %s', len(self.member_room_comment_ids))
+            DEBUG('房间未读消息数量: %d', self.unread_msg_amount)
         except Exception as e:
             ERROR('初始化消息队列失败')
             ERROR(e)
+
+    def get_member_room_msg_lite(self):
+        """
+        发送成员房间消息（简易版，只发送未读消息数量）
+        :return:
+        """
+        if self.unread_msg_amount > 0:
+            msg = '口袋房间中有%d条未读消息' % self.unread_msg_amount
+            QQHandler.send_to_groups(self.member_room_msg_lite_groups, msg)
+            self.unread_msg_amount = 0
+            INFO(msg)
 
     def parse_room_msg(self, response):
         """
@@ -172,6 +191,7 @@ class Pocket48Handler:
 
             DEBUG('成员消息')
             self.member_room_msg_ids.append(msg_id)
+            self.unread_msg_amount += 1
 
             DEBUG('extInfo.keys():' + ','.join(extInfo.keys()))
             if msg['msgType'] == 0:  # 文字消息
@@ -234,9 +254,10 @@ class Pocket48Handler:
             QQHandler.send_to_groups(self.member_room_comment_msg_groups, message)
         DEBUG('房间评论队列: %s', len(self.member_room_comment_ids))
 
-    def get_member_room_comment(self, room_id):
+    def get_member_room_comment(self, room_id, limit=20):
         """
         获取成员房间的粉丝评论
+        :param limit:
         :param room_id: 房间id
         :return:
         """
@@ -244,7 +265,7 @@ class Pocket48Handler:
             ERROR('尚未登录')
         url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/comment'
         params = {
-            "roomId": room_id, "lastTime": 0, "limit": 20
+            "roomId": room_id, "lastTime": 0, "limit": limit
         }
         # 收到响应
         try:

@@ -179,7 +179,7 @@ def update_conf(bot):
     :param bot:
     :return:
     """
-    global pocket48_handler
+    global pocket48_handler, qq_handler
     DEBUG('读取配置文件')
 
     ConfigReader.read_conf()
@@ -188,20 +188,25 @@ def update_conf(bot):
     global_config.MEMBER_ROOM_COMMENT_GROUPS = ConfigReader.\
         get_property('qq_conf', 'member_room_comment_groups').split(';')
     global_config.MEMBER_LIVE_GROUPS = ConfigReader.get_property('qq_conf', 'member_live_groups').split(';')
+    global_config.MEMBER_ROOM_MSG_LITE_GROUPS = ConfigReader.get_property('qq_conf', 'member_room_comment_lite_groups').split(';')
 
     auto_reply_groups = qq_handler.list_group(global_config.AUTO_REPLY_GROUPS)
     member_room_msg_groups = qq_handler.list_group(global_config.MEMBER_ROOM_MSG_GROUPS)
     member_room_comment_msg_groups = qq_handler.list_group(global_config.MEMBER_ROOM_COMMENT_GROUPS)
     member_live_groups = qq_handler.list_group(global_config.MEMBER_LIVE_GROUPS)
+    member_room_msg_lite_groups = qq_handler.list_group(global_config.MEMBER_ROOM_MSG_LITE_GROUPS)
+
     pocket48_handler.member_room_msg_groups = member_room_msg_groups
     pocket48_handler.member_room_comment_msg_groups = member_room_comment_msg_groups
     pocket48_handler.auto_reply_groups = auto_reply_groups
     pocket48_handler.member_live_groups = member_live_groups
+    pocket48_handler.member_room_msg_lite_groups = member_room_msg_lite_groups
 
     DEBUG('member_room_msg_groups: %s, length: %d', ','.join(global_config.MEMBER_ROOM_MSG_GROUPS), len(pocket48_handler.member_room_msg_groups))
     DEBUG('member_room_comment_groups: %s, length: %d', ','.join(global_config.MEMBER_ROOM_COMMENT_GROUPS), len(pocket48_handler.member_room_comment_msg_groups))
     DEBUG('auto_reply_groups: %s, length: %d', ','.join(global_config.AUTO_REPLY_GROUPS), len(pocket48_handler.auto_reply_groups))
     DEBUG('member_live_groups: %s, length: %d', ','.join(global_config.MEMBER_LIVE_GROUPS), len(member_live_groups))
+    DEBUG('member_room_comment_lite_groups: %s, length: %d', ','.join(global_config.MEMBER_ROOM_MSG_LITE_GROUPS), len(pocket48_handler.member_room_msg_lite_groups))
 
     member_name = ConfigReader.get_property('root', 'member_name')
     if global_config.MEMBER_NAME == '' or member_name != global_config.MEMBER_NAME:
@@ -260,5 +265,11 @@ def get_member_lives(bot):
 
     r = pocket48_handler.get_member_live_msg()
     pocket48_handler.parse_member_live(r, global_config.MEMBER_ID)
+
+
+@qqbotsched(minute='*/5', second='30')
+def get_member_room_msg_lite(bot):
+    global pocket48_handler
+    pocket48_handler.get_member_room_msg_lite()
 
 
