@@ -306,14 +306,14 @@ class Pocket48Handler:
         DEBUG('当前正在直播的人数: %d', len(live_list))
         # print '当前正在直播的人数: %d' % len(live_list)
         msg = ''
-        DEBUG('直播ID列表: %s', ','.join(self.member_live_ids))
+        # DEBUG('直播ID列表: %s', ','.join(self.member_live_ids))
         for live in live_list:
             live_id = live['liveId']
             DEBUG(live.keys())
             # print '直播人: %s' % live['memberId']
             # DEBUG('直播人(response): %s, 类型: %s', live['memberId'], type(live['memberId']))
             # DEBUG('member_id(参数): %s, 类型: %s', member_id, type(member_id))
-            DEBUG('memberId %s is in live: %s', live['memberId'], live['title'])
+            DEBUG('memberId %s is in live: %s, live_id: %s', live['memberId'], live['title'], live_id)
             DEBUG('stream path: %s', live['streamPath'])
             # DEBUG('member_live_ids list: %s', ','.join(self.member_live_ids))
             # DEBUG('live_id is in member_live_ids: %s', str(live_id in self.member_live_ids))
@@ -331,7 +331,9 @@ class Pocket48Handler:
                 self.member_live_ids.append(live_id)
 
                 # 录制直播
-                self.download.setName(member_id + '_' + live['startTime'])
+                name = '%s_%s' % (member_id, live['startTime'])
+                # self.download.setName(name)
+                self.live_urls.put(name)
                 self.live_urls.put(stream_path)
 
         DEBUG(msg)
@@ -412,14 +414,15 @@ class Pocket48Handler:
 
 
 if __name__ == '__main__':
-    handler = Pocket48Handler([], [], [], [])
-    # response = handler.get_member_live_msg()
-    # handler.parse_member_live(response, 6432)
+    handler = Pocket48Handler([], [], [], [], [])
 
     handler.login('17011967934', '19930727')
 
-    r = handler.get_member_room_msg(5758972)
-    print r
-    r2 = handler.get_member_live_msg()
-    print r2
+    response = handler.get_member_live_msg()
+    handler.parse_member_live(response, 528331)
+
+    # r = handler.get_member_room_msg(5758972)
+    # print r
+    # r2 = handler.get_member_live_msg()
+    # print r2
     # print handler.convert_timestamp_to_timestr(1504970619679)

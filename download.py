@@ -28,11 +28,12 @@ class Download(threading.Thread):
     def run(self):
         while True:
             if not self.queue.empty():
-                DEBUG(self.name)
-                print self.name
+                # DEBUG(self.name)
+                # print self.name
+                name = self.queue.get()
                 live_url = self.queue.get()
                 ext = live_url.split('.')[-1]
-                file_name = self.name + '.' + ext
+                file_name = name + '.' + ext
                 INFO('%s直播下载开始...', file_name)
                 r = requests.get(live_url, verify=False)
                 local_path = os.path.join('../', file_name)
