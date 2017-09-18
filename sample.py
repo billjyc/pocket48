@@ -43,10 +43,10 @@ def onQQMessage(bot, contact, member, content):
     # DEBUG('contact: %s', contact.ctype)
 
     if contact.ctype == 'group' and contact.qq in global_config.AUTO_REPLY_GROUPS:
-        if content.startswith('-'):  # 以'-'开头才能触发自动回复
-            if '@ME' in content:  # 在群中@机器人
-                bot.SendTo(contact, member.name + '，' + random_str(global_config.AT_AUTO_REPLY))
-            elif content == '-version':
+        if '@ME' in content:  # 在群中@机器人
+            bot.SendTo(contact, member.name + '，' + random_str(global_config.AT_AUTO_REPLY))
+        elif content.startswith('-'):  # 以'-'开头才能触发自动回复
+            if content == '-version':
                 bot.SendTo(contact, 'QQbot-' + bot.conf.version)
             elif content == global_config.MEMBER_ATTR:  # 群消息输入成员缩写
                 bot.SendTo(contact, random_str(global_config.I_LOVE))
