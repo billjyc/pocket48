@@ -236,7 +236,7 @@ def update_conf(bot):
     global_config.AT_AUTO_REPLY = ConfigReader.get_property('profile', 'at_auto_reply').split(';')
     global_config.ROOM_MSG_LITE_NOTIFY = ConfigReader.get_property('profile', 'room_msg_lite_notify')
 
-    global_config.PERFORMANCE_NOTIFY = ConfigReader.get_property('profile', 'perfomance_notify')
+    global_config.PERFORMANCE_NOTIFY = ConfigReader.get_property('profile', 'performance_notify')
 
 
 @qqbotsched(second='*/60')
@@ -272,8 +272,8 @@ def get_member_lives(bot):
     pocket48_handler.parse_member_live(r, global_config.MEMBER_ID)
 
 
-# @qqbotsched(minute='25,55', hour='13,18,19', day_of_week='2-6')
-@qqbotsched(minute='*')
+# @qqbotsched(minute='*')
+@qqbotsched(minute='25,55', hour='13,18,19', day_of_week='2-6')
 def notify_performance(bot):
     INFO('检查公演日程')
     global pocket48_handler
