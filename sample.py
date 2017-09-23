@@ -2,7 +2,9 @@
 from qqbot import qqbotsched
 from qqbot.utf8logger import DEBUG, INFO, ERROR
 import time
+import json
 import random
+import utils
 
 from config_reader import ConfigReader
 from pocket48_handler import Pocket48Handler
@@ -234,6 +236,8 @@ def update_conf(bot):
     global_config.AT_AUTO_REPLY = ConfigReader.get_property('profile', 'at_auto_reply').split(';')
     global_config.ROOM_MSG_LITE_NOTIFY = ConfigReader.get_property('profile', 'room_msg_lite_notify')
 
+    global_config.PERFORMANCE_NOTIFY = ConfigReader.get_property('profile', 'perfomance_notify')
+
 
 @qqbotsched(second='*/60')
 def get_room_msgs(bot):
@@ -268,9 +272,15 @@ def get_member_lives(bot):
     pocket48_handler.parse_member_live(r, global_config.MEMBER_ID)
 
 
+# @qqbotsched(minute='25,55', hour='13,18,19', day_of_week='2-6')
+@qqbotsched(minute='*')
+def notify_performance(bot):
+    INFO('检查公演日程')
+    global pocket48_handler
+    pocket48_handler.notify_performance()
+
 # @qqbotsched(minute='*', second='30')
 # def get_member_room_msg_lite(bot):
 #     global pocket48_handler
 #     pocket48_handler.get_member_room_msg_lite()
-
 

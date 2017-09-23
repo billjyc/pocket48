@@ -14,6 +14,7 @@ import global_config
 import Queue
 
 import sys
+import utils
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -319,7 +320,7 @@ class Pocket48Handler:
             # DEBUG('live_id is in member_live_ids: %s', str(live_id in self.member_live_ids))
             if live['memberId'] == int(member_id) and live_id not in self.member_live_ids:
                 DEBUG('[被监控成员正在直播]member_id: %s, live_id: %', member_id, live_id)
-                start_time = self.convert_timestamp_to_timestr(live['startTime'])
+                start_time = utils.convert_timestamp_to_timestr(live['startTime'])
                 stream_path = live['streamPath']  # 流地址
                 sub_title = live['subTitle']  # 直播名称
                 live_type = live['liveType']
@@ -339,16 +340,6 @@ class Pocket48Handler:
         DEBUG(msg)
         if msg and len(self.member_live_groups) > 0:
             QQHandler.send_to_groups(self.member_live_groups, msg)
-
-    def convert_timestamp_to_timestr(self, timestamp):
-        """
-        将13位时间戳转换为字符串
-        :param timestamp:
-        :return:
-        """
-        timeArray = time.localtime(timestamp / 1000)
-        time_str = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
-        return time_str
 
     def login_header_args(self):
         """
@@ -412,14 +403,30 @@ class Pocket48Handler:
         }
         return header
 
+    def notify_performance(self):
+        f = open('data/schedule.json')
+
+        schedules = json.load(f)
+        for s in schedules['schedules']:
+            perform_time = utils.convert_timestr_to_timestamp(s['time'])
+            diff = perform_time - time.time()
+            if 0 < diff <= 10 * 60:
+                live_link = '\n'.join(global_config.LIVE_LINK)
+                live_msg = '直播传送门: %s' % live_link
+                notify_str = '%s\n公演: %s\n时间: %s\n队伍: %s\n%s' % (global_config.PERFORMANCE_NOTIFY, s['name'], s['time'], s['team'], live_msg)
+                INFO(notify_str)
+                QQHandler.send_to_groups(self.member_room_msg_lite_groups, notify_str)
+
 
 if __name__ == '__main__':
     handler = Pocket48Handler([], [], [], [], [])
 
-    handler.login('17011967934', '19930727')
+    handler.notify_performance()
 
-    response = handler.get_member_live_msg()
-    handler.parse_member_live(response, 528331)
+    # handler.login('17011967934', '19930727')
+    #
+    # response = handler.get_member_live_msg()
+    # handler.parse_member_live(response, 528331)
 
     # r = handler.get_member_room_msg(5758972)
     # print r
