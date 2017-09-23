@@ -26,7 +26,7 @@ def onStartupComplete(bot):
     weibo_monitor.getWBQueue(uid)
 
 
-@qqbotsched(second='*/10')
+@qqbotsched(second='*/15')
 def monitor_member_weibo(bot):
     global weibo_monitor, qq_handler
 

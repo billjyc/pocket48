@@ -239,7 +239,7 @@ def update_conf(bot):
     global_config.PERFORMANCE_NOTIFY = ConfigReader.get_property('profile', 'performance_notify')
 
 
-@qqbotsched(second='*/60')
+@qqbotsched(second='10', minute='*')
 def get_room_msgs(bot):
     start_t = time.time()
     global qq_handler, pocket48_handler
@@ -273,7 +273,7 @@ def get_member_lives(bot):
 
 
 # @qqbotsched(minute='*')
-@qqbotsched(minute='25,55', hour='13,18,19', day_of_week='2-6')
+@qqbotsched(second='30', minute='25,55', hour='13,18,19', day_of_week='2-6')
 def notify_performance(bot):
     INFO('检查公演日程')
     global pocket48_handler
