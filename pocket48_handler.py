@@ -229,6 +229,12 @@ class Pocket48Handler:
                 if 'url' in bodys.keys():
                     url = bodys['url']
                     message = ('【语音】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
+            elif msg['msgType'] == 3:  # 小视频
+                DEBUG('房间小视频')
+                bodys = json.loads(msg['bodys'])
+                if 'url' in bodys.keys():
+                    url = bodys['url']
+                    message = ('【小视频】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
 
         if message and len(self.member_room_msg_groups) > 0:
             QQHandler.send_to_groups(self.member_room_msg_groups, message)
