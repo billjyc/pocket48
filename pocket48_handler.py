@@ -21,6 +21,8 @@ sys.setdefaultencoding('utf8')
 
 
 class Pocket48Handler:
+    VERSION = '5.0.0'
+
     def __init__(self, auto_reply_groups, member_room_msg_groups, member_room_comment_msg_groups,
                  member_live_groups, member_room_msg_lite_groups):
         self.session = requests.session()
@@ -119,9 +121,10 @@ class Pocket48Handler:
         """
         if not self.is_login:
             ERROR('尚未登录')
-        url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/chat'
+        # url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/chat'
+        url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/mainpage'
         params = {
-            "roomId": room_id, "lastTime": 0, "limit": limit
+            "roomId": room_id, "lastTime": 0, "limit": limit, "chatType": 0
         }
         try:
             r = self.session.post(url, data=json.dumps(params), headers=self.juju_header_args(), verify=False)
@@ -202,21 +205,35 @@ class Pocket48Handler:
             if msg_id in self.member_room_msg_ids:
                 continue
 
+            if extInfo['role'] != 2:  # 口袋bug，会显示粉丝消息
+                continue
+
             DEBUG('成员消息')
             self.member_room_msg_ids.append(msg_id)
             self.unread_msg_amount += 1
 
+            message_object = extInfo['messageObject']
+
             DEBUG('extInfo.keys():' + ','.join(extInfo.keys()))
             if msg['msgType'] == 0:  # 文字消息
-                if 'text' in extInfo.keys():  # 普通消息
+                if message_object == 'text':  # 普通消息
                     DEBUG('普通消息')
                     message = ('【成员消息】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])) + message
-                elif 'messageText' in extInfo.keys():  # 翻牌消息
+                elif message_object == 'faipaiText':  # 翻牌消息
                     DEBUG('翻牌')
                     member_msg = extInfo['messageText']
                     fanpai_msg = extInfo['faipaiContent']
                     fanpai_id = extInfo['faipaiName']
                     message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s:%s\n' % (msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_id, fanpai_msg)) + message
+                # TODO: 直播可以直接在房间里监控
+                elif message_object == 'diantai':  # 电台直播
+                    DEBUG('电台直播')
+                    reference_content = extInfo['referenceContent']
+                    live_id = extInfo['referenceObjectId']
+                elif message_object == 'live':  # 露脸直播
+                    DEBUG('露脸直播')
+                    reference_content = extInfo['referenceContent']
+                    live_id = extInfo['referenceObjectId']
             elif msg['msgType'] == 1:  # 图片消息
                 bodys = json.loads(msg['bodys'])
                 DEBUG('图片')
@@ -256,6 +273,7 @@ class Pocket48Handler:
             extInfo = json.loads(msg['extInfo'])
             platform = extInfo['platform']
             msg_id = msg['msgidClient']
+            message_object = extInfo['messageObject']
 
             if msg_id in self.member_room_comment_ids:
                 continue
@@ -283,9 +301,10 @@ class Pocket48Handler:
         """
         if not self.is_login:
             ERROR('尚未登录')
-        url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/comment'
+        # url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/comment'
+        url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/boardpage'
         params = {
-            "roomId": room_id, "lastTime": 0, "limit": limit
+            "roomId": room_id, "lastTime": 0, "limit": limit, "isFirst": "true"
         }
         # 收到响应
         try:
@@ -357,7 +376,7 @@ class Pocket48Handler:
             'User-Agent': 'Mobile_Pocket',
             'IMEI': '863526430773465',
             'token': '0',
-            'version': '4.1.3',
+            'version': self.VERSION,
             'Content-Type': 'application/json;charset=utf-8',
             'Content-Length': '74',
             'Host': 'puser.48.cn',
@@ -376,9 +395,8 @@ class Pocket48Handler:
             'os': 'android',
             'User-Agent': 'Mobile_Pocket',
             'IMEI': '863526430773465',
-            # TODO: 替换为登录后获取的token
             'token': self.token,
-            'version': '4.1.3',
+            'version': self.VERSION,
             'Content-Type': 'application/json;charset=utf-8',
             'Content-Length': '89',
             'Host': 'plive.48.cn',
@@ -397,11 +415,10 @@ class Pocket48Handler:
             'os': 'android',
             'User-Agent': 'Mobile_Pocket',
             'IMEI': '863526430773465',
-            # TODO: 替换为登录后获取的token
             'token': self.token,
-            'version': '4.1.3',
+            'version': self.VERSION,
             'Content-Type': 'application/json;charset=utf-8',
-            'Content-Length': '42',
+            'Content-Length': '57',
             'Host': 'pjuju.48.cn',
             'Connection': 'Keep-Alive',
             'Accept-Encoding': 'gzip',
@@ -427,15 +444,17 @@ class Pocket48Handler:
 if __name__ == '__main__':
     handler = Pocket48Handler([], [], [], [], [])
 
-    handler.notify_performance()
+    # handler.notify_performance()
 
-    # handler.login('17011967934', '19930727')
-    #
+    handler.login('17011967934', '19930727')
+
     # response = handler.get_member_live_msg()
     # handler.parse_member_live(response, 528331)
 
-    # r = handler.get_member_room_msg(5758972)
-    # print r
-    # r2 = handler.get_member_live_msg()
-    # print r2
+    r = handler.get_member_room_msg(5780791)
+    print r
+    handler.parse_room_msg(r)
+    r2 = handler.get_member_room_comment(5780791)
+    print r2
+    handler.parse_room_comment(r2)
     # print handler.convert_timestamp_to_timestr(1504970619679)
