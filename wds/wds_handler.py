@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 
 import Queue
 import utils
+import global_config
 
 import sys
 
@@ -17,10 +18,30 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 
-class WDSHandler():
-    def __init__(self):
-        self.comment_queue = []
+class WDSHandler:
+    def __init__(self, wds_notify_groups):
+        self.comment_id_queue = []
         self.session = requests.session()
+        self.wds_notify_groups = wds_notify_groups
+
+    def init_comment_queues(self, moxi_id, pro_id):
+        """
+        初始化回复队列
+        :param moxi_id:
+        :param pro_id:
+        :return:
+        """
+        try:
+            self.comment_id_queue = []
+            r = self.monitor_wds_comment(moxi_id, pro_id)
+
+            for reply in r['des']:
+                reply_id = reply['reply_id']
+                self.comment_id_queue.append(reply_id)
+            DEBUG('微打赏评论队列: %d', len(self.comment_id_queue))
+        except Exception as e:
+            ERROR('初始化微打赏评论队列失败')
+            ERROR(e)
 
     def wds_header(self):
         """
@@ -31,15 +52,15 @@ class WDSHandler():
             'Accept': 'application/json',
             'Accept-Encoding': 'gzip, deflate, br',
             'Connection': 'keep-alive',
-            'Content-Length': '35',
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': '37',
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
             'Origin': 'https://wds.modian.com',
             'X-Requested-With': 'XMLHttpRequest',
             'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.104 Safari/537.36 Core/1.53.3408.400 QQBrowser/9.6.12028.40'
         }
         return header
 
-    def monitor_wds_comment(self, moxi_id, pro_id):
+    def monitor_wds_comment(self, page_num=1):
         """
         获取微打赏项目下的评论信息
         :param: moxi_id
@@ -48,15 +69,77 @@ class WDSHandler():
         """
         jizi_url = 'https://wds.modian.com/ajax_comment'
         params = {
-            'pageNum': 2,
-            'moxi_id': moxi_id,
-            'pro_id': pro_id
+            'pageNum': page_num,
+            'moxi_id': global_config.WDS_MOXI_ID,
+            'pro_id': global_config.WDS_PRO_ID
         }
         try:
             r = self.session.post(jizi_url, data=json.dumps(params), headers=self.wds_header(), verify=False)
         except Exception as e:
             ERROR('获取微打赏评论失败')
             ERROR(e)
+        r_json = r.json()
+        if int(r_json['status']) != 0:
+            ERROR('获取失败!')
+        return r.json()
+
+    def parse_wds_comment(self, r):
+        """
+        对评论进行处理
+        :param r:
+        :return:
+        """
+        des = r['des']
+        msg = ''
+        for reply in des:
+            reply_id = reply['reply_id']
+
+            if reply_id in self.comment_id_queue:
+                continue
+            self.comment_id_queue.append(reply_id)
+
+            pay_amount = reply['pay_amount']
+            if pay_amount == '':  # 去除单纯的评论
+                continue
+
+            user_info = reply['c_userinfo']
+            user_id = user_info['nickname']
+
+            sub_msg = '%s集资%s元\n' % (user_id, pay_amount)
+            msg += sub_msg
+
+        if msg and len(msg) > 0:
+            project_info = self.get_current_and_target()
+            msg += project_info
+            msg += '集资项目: %s, 集资链接: %s' % global_config.WDS_LINK
+            QQHandler.send_to_groups(self.wds_notify_groups, msg)
+            INFO('wds_message: %s', msg)
+        DEBUG('集资评论队列: %d', len(self.comment_id_queue))
+
+    def get_wds_rank(self, type0=1, page=2, page_size=20):
+        """
+        获取微打赏聚聚榜
+        :param pro_id:
+        :param type0:
+        :param page:
+        :param page_size:
+        :return:
+        """
+        jizi_url = 'https://wds.modian.com/ajax_backer_list'
+        params = {
+            'pro_id': global_config.WDS_PRO_ID,
+            'type': type0,
+            'page': page,
+            'pageSize': page_size
+        }
+        try:
+            r = self.session.post(jizi_url, data=json.dumps(params), headers=self.wds_header(), verify=False)
+        except Exception as e:
+            ERROR('获取微打赏评论失败')
+            ERROR(e)
+        r_json = r.json()
+        if int(r_json['status']) != 0:
+            ERROR('获取失败!')
         return r.json()
 
     def get_current_and_target(self):

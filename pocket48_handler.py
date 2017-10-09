@@ -256,7 +256,7 @@ class Pocket48Handler:
         if message and len(self.member_room_msg_groups) > 0:
             QQHandler.send_to_groups(self.member_room_msg_groups, message)
             self.get_member_room_msg_lite()
-        INFO('message: %s', message)
+            INFO('message: %s', message)
         DEBUG('成员消息队列: %s', len(self.member_room_msg_ids))
 
     def parse_room_comment(self, response):
