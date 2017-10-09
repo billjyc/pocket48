@@ -30,11 +30,19 @@ def update_wds_conf(bot):
     global_config.WDS_MOXI_ID = ConfigReader.get_property('wds', 'wds_moxi_id')
     global_config.WDS_PRO_ID = ConfigReader.get_property('wds', 'wds_pro_id')
 
-    global_config.JIZI_NOTIFY_GROUPS = ConfigReader.get_property('qq_conf', 'jizi_notify_groups')
+    DEBUG('wds link: %s', global_config.WDS_LINK)
+    DEBUG('wds title: %s', global_config.WDS_TITLE)
+    DEBUG('wds moxi id: %s', global_config.WDS_MOXI_ID)
+    DEBUG('wds pro id: %s', global_config.WDS_PRO_ID)
+
+    global_config.JIZI_NOTIFY_GROUPS = ConfigReader.get_property('qq_conf', 'jizi_notify_groups').split(';')
     wds_handler.wds_notify_groups = global_config.JIZI_NOTIFY_GROUPS
 
+    DEBUG('JIZI_NOTIFY_GROUPS: %s, length: %d', ','.join(global_config.JIZI_NOTIFY_GROUPS),
+          len(wds_handler.wds_notify_groups))
 
-@qqbotsched(second='50', minute='*/3')
+
+@qqbotsched(second='50', minute='*')
 def monitor_wds(bot):
     """
     监控微打赏
@@ -44,4 +52,5 @@ def monitor_wds(bot):
     global wds_handler
     DEBUG('监控微打赏')
     r = wds_handler.monitor_wds_comment()
+    DEBUG('response: %s', r.text)
     wds_handler.parse_wds_comment(r)
