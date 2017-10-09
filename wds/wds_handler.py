@@ -118,7 +118,7 @@ class WDSHandler:
         if msg and len(msg) > 0:
             project_info = self.get_current_and_target()
             msg += project_info
-            msg += '集资项目: %s, 集资链接: %s' % global_config.WDS_LINK
+            msg += '集资项目: %s, 集资链接: %s' % (global_config.WDS_TITLE, global_config.WDS_LINK)
             QQHandler.send_to_groups(self.wds_notify_groups, msg)
             INFO('wds_message: %s', msg)
         DEBUG('集资评论队列: %d', len(self.comment_id_queue))
