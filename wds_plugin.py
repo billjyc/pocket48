@@ -25,10 +25,15 @@ def update_wds_conf(bot):
 
     DEBUG('读取微打赏配置')
     ConfigReader.read_conf()
-    global_config.WDS_LINK = ConfigReader.get_property('wds', 'wds_link')
-    global_config.WDS_TITLE = ConfigReader.get_property('wds', 'wds_title')
-    global_config.WDS_MOXI_ID = ConfigReader.get_property('wds', 'wds_moxi_id')
-    global_config.WDS_PRO_ID = ConfigReader.get_property('wds', 'wds_pro_id')
+
+    wds_link = ConfigReader.get_property('wds', 'wds_link')
+
+    if global_config.WDS_LINK == '' or wds_link != global_config.WDS_LINK:
+        global_config.WDS_LINK = wds_link
+        global_config.WDS_TITLE = ConfigReader.get_property('wds', 'wds_title')
+        global_config.WDS_MOXI_ID = ConfigReader.get_property('wds', 'wds_moxi_id')
+        global_config.WDS_PRO_ID = ConfigReader.get_property('wds', 'wds_pro_id')
+        wds_handler.init_comment_queues()
 
     DEBUG('wds link: %s', global_config.WDS_LINK)
     DEBUG('wds title: %s', global_config.WDS_TITLE)
@@ -52,5 +57,4 @@ def monitor_wds(bot):
     global wds_handler
     DEBUG('监控微打赏')
     r = wds_handler.monitor_wds_comment()
-    DEBUG('response: %s', r.text)
     wds_handler.parse_wds_comment(r)

@@ -24,7 +24,7 @@ class WDSHandler:
         self.session = requests.session()
         self.wds_notify_groups = wds_notify_groups
 
-        self.init_comment_queues()
+        # self.init_comment_queues()
 
     def init_comment_queues(self):
         """
@@ -81,6 +81,7 @@ class WDSHandler:
         except Exception as e:
             ERROR('获取微打赏评论失败')
             ERROR(e)
+        DEBUG('response: %s', r.text)
         print r.text
         r_json = r.json()
         if int(r_json['status']) != 0:
@@ -94,6 +95,8 @@ class WDSHandler:
         :return:
         """
         des = r['des']
+        DEBUG(json.dumps(des))
+        DEBUG('LENGTH OF DES: %d', len(des))
         msg = ''
         for reply in des:
             reply_id = reply['reply_id']
@@ -144,6 +147,7 @@ class WDSHandler:
             ERROR(e)
         r_json = r.json()
         print r.text
+        DEBUG('response: %s', r.text)
         if int(r_json['status']) != 0:
             ERROR('获取失败!')
         return r_json
