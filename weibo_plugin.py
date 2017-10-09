@@ -26,6 +26,24 @@ def onStartupComplete(bot):
     weibo_monitor.getWBQueue(uid)
 
 
+@qqbotsched(minute='*')
+def update_weibo_conf(bot):
+    global weibo_monitor
+
+    DEBUG('读取微博配置')
+    global_config.MEMBER_WEIBO_GROUPS = ConfigReader.get_property('qq_conf', 'member_weibo_groups').split(';')
+
+    member_name = ConfigReader.get_property('root', 'member_name')
+    if global_config.MEMBER_NAME == '' or global_config.MEMBER_NAME != member_name:
+        DEBUG('微博监控成员变更')
+        global_config.MEMBER_NAME = member_name
+        uid = ConfigReader.get_property('weibo', member_name)
+        if uid != '':
+            weibo_monitor.getWBQueue(uid)
+        else:
+            INFO('没有微博UID')
+
+
 @qqbotsched(second='*/15')
 def monitor_member_weibo(bot):
     global weibo_monitor, qq_handler

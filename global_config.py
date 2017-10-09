@@ -9,6 +9,7 @@ MEMBER_WEIBO_GROUPS = []
 MEMBER_LIVE_GROUPS = []
 MEMBER_ROOM_MSG_LITE_GROUPS = []
 
+# 集资
 JIZI_KEYWORDS = []
 JIZI_LINK = []
 
@@ -25,4 +26,12 @@ I_LOVE = []
 
 AT_AUTO_REPLY = []
 ROOM_MSG_LITE_NOTIFY = ''
+
+# 公演直播提醒
 PERFORMANCE_NOTIFY = ''
+
+# 微打赏
+WDS_LINK = ''
+WDS_TITLE = ''
+WDS_MOXI_ID = ''
+WDS_PRO_ID = ''

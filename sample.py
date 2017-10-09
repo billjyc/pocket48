@@ -214,6 +214,8 @@ def update_conf(bot):
     if global_config.MEMBER_NAME == '' or member_name != global_config.MEMBER_NAME:
         INFO('监控成员变更!')
         global_config.ROOM_ID = ConfigReader.get_member_room_number(member_name)
+        if global_config.ROOM_ID == '':
+            DEBUG('该成员没有开通口袋房间！')
         global_config.MEMBER_ID = ConfigReader.get_property('live', member_name)
         pocket48_handler.init_msg_queues(global_config.ROOM_ID)
         global_config.MEMBER_NAME = member_name
