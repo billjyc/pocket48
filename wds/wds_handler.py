@@ -24,7 +24,9 @@ class WDSHandler:
         self.session = requests.session()
         self.wds_notify_groups = wds_notify_groups
 
-    def init_comment_queues(self, moxi_id, pro_id):
+        self.init_comment_queues()
+
+    def init_comment_queues(self):
         """
         初始化回复队列
         :param moxi_id:
@@ -33,7 +35,7 @@ class WDSHandler:
         """
         try:
             self.comment_id_queue = []
-            r = self.monitor_wds_comment(moxi_id, pro_id)
+            r = self.monitor_wds_comment()
 
             for reply in r['des']:
                 reply_id = reply['reply_id']
@@ -48,15 +50,15 @@ class WDSHandler:
         微打赏header信息
         """
         header = {
-            'Host': 'wds.modian.com',
-            'Accept': 'application/json',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Connection': 'keep-alive',
-            'Content-Length': '37',
-            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-            'Origin': 'https://wds.modian.com',
-            'X-Requested-With': 'XMLHttpRequest',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.104 Safari/537.36 Core/1.53.3408.400 QQBrowser/9.6.12028.40'
+            # 'Host': 'wds.modian.com',
+            # 'Accept': 'application/json',
+            # 'Accept-Encoding': 'gzip,deflate,br',
+            # 'Connection': 'keep-alive',
+            # 'Content-Length': '37',
+            # 'Content-Type': 'application/x-www-form-urlencoded',
+            # 'Origin': 'https://wds.modian.com',
+            # 'X-Requested-With': 'XMLHttpRequest',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.104 Safari/537.36 Core/1.53.3408.400 QQBrowser/9.6.12028.40',
         }
         return header
 
@@ -74,10 +76,12 @@ class WDSHandler:
             'pro_id': global_config.WDS_PRO_ID
         }
         try:
-            r = self.session.post(jizi_url, data=json.dumps(params), headers=self.wds_header(), verify=False)
+            # 注意，这里的param不用转换成json了，因为参数格式为x-www-form-urlencoded
+            r = self.session.post(jizi_url, params, headers=self.wds_header())
         except Exception as e:
             ERROR('获取微打赏评论失败')
             ERROR(e)
+        print r.text
         r_json = r.json()
         if int(r_json['status']) != 0:
             ERROR('获取失败!')
@@ -116,7 +120,7 @@ class WDSHandler:
             INFO('wds_message: %s', msg)
         DEBUG('集资评论队列: %d', len(self.comment_id_queue))
 
-    def get_wds_rank(self, type0=1, page=2, page_size=20):
+    def get_wds_rank(self, type0=1, page=1, page_size=50):
         """
         获取微打赏聚聚榜
         :param pro_id:
@@ -133,14 +137,16 @@ class WDSHandler:
             'pageSize': page_size
         }
         try:
-            r = self.session.post(jizi_url, data=json.dumps(params), headers=self.wds_header(), verify=False)
+            # 注意，这里的param不用转换成json了，因为参数格式为x-www-form-urlencoded
+            r = self.session.post(jizi_url, params, headers=self.wds_header())
         except Exception as e:
             ERROR('获取微打赏评论失败')
             ERROR(e)
         r_json = r.json()
+        print r.text
         if int(r_json['status']) != 0:
             ERROR('获取失败!')
-        return r.json()
+        return r_json
 
     def get_current_and_target(self):
         """
@@ -178,5 +184,8 @@ class WDSHandler:
 
 
 if __name__ == '__main__':
-    handler = WDSHandler()
-    handler.get_current_and_target()
+    global_config.WDS_PRO_ID = 7974
+    global_config.WDS_MOXI_ID = 17011
+    handler = WDSHandler([])
+    handler.monitor_wds_comment()
+    handler.get_wds_rank()
