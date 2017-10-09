@@ -90,7 +90,7 @@ class WDSHandler:
         except Exception as e:
             ERROR('获取微打赏评论失败')
             ERROR(e)
-        DEBUG('response: %s', r.text)
+        # DEBUG('response: %s', r.text)
         # print r.text
         r_json = r.json()
         if int(r_json['status']) != 0:
