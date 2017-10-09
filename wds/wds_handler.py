@@ -81,7 +81,7 @@ class WDSHandler:
         r_json = r.json()
         if int(r_json['status']) != 0:
             ERROR('获取失败!')
-        return r.json()
+        return r_json
 
     def parse_wds_comment(self, r):
         """
