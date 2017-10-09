@@ -33,7 +33,4 @@ ROOM_MSG_LITE_NOTIFY = ''
 PERFORMANCE_NOTIFY = ''
 
 # 微打赏
-WDS_LINK = ''
-WDS_TITLE = ''
-WDS_MOXI_ID = ''
-WDS_PRO_ID = ''
+WDS_ARRAY = []

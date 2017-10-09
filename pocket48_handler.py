@@ -20,6 +20,13 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 
+class Member:
+    def __init__(self, name, member_id, room_id):
+        self.name = name
+        self.member_id = member_id
+        self.room_id = room_id
+
+
 class Pocket48Handler:
     VERSION = '5.0.0'
 
