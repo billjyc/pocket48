@@ -91,7 +91,7 @@ class WDSHandler:
             ERROR('获取微打赏评论失败')
             ERROR(e)
         DEBUG('response: %s', r.text)
-        print r.text
+        # print r.text
         r_json = r.json()
         if int(r_json['status']) != 0:
             ERROR('获取失败!')
@@ -105,7 +105,7 @@ class WDSHandler:
         :return:
         """
         des = r['des']
-        DEBUG(json.dumps(des))
+        # DEBUG(json.dumps(des))
         DEBUG('LENGTH OF DES: %d', len(des))
         msg = ''
         for reply in des:
@@ -124,6 +124,7 @@ class WDSHandler:
             user_id = user_info['nickname']
 
             sub_msg = '感谢 %s 集资%s元\n' % (user_id, pay_amount)
+            INFO(sub_msg)
             msg += sub_msg
 
         if msg and len(msg) > 0:
@@ -132,7 +133,7 @@ class WDSHandler:
             msg += '集资项目: %s\n链接: %s' % (wds.title, wds.link)
             QQHandler.send_to_groups(self.wds_notify_groups, msg)
             INFO('wds_message: %s', msg)
-        DEBUG('集资评论队列: %d', len(comment_id_queue))
+            DEBUG('集资评论队列: %d', len(comment_id_queue))
 
     def get_wds_rank(self, wds, type0=1, page=1, page_size=50):
         """
