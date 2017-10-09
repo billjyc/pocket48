@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 MEMBER_NAME = ''
 ROOM_ID = 0
 MEMBER_ID = 0
