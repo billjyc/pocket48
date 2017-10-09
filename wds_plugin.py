@@ -15,8 +15,8 @@ def onStartupComplete(bot):
     # 启动完成时被调用
     # bot : QQBot 对象，提供 List/SendTo/GroupXXX/Stop/Restart 等接口，详见文档第五节
     global wds_handler
+    wds_handler = WDSHandler([])
     update_wds_conf(bot)
-    wds_handler = WDSHandler(global_config.JIZI_NOTIFY_GROUPS)
 
 
 @qqbotsched(minute='*', second="45")
