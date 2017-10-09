@@ -77,5 +77,6 @@ def monitor_wds(bot):
     """
     global wds_handler
     DEBUG('监控微打赏')
-    r = wds_handler.monitor_wds_comment()
-    wds_handler.parse_wds_comment(r)
+    for wds in global_config.WDS_ARRAY:
+        r = wds_handler.monitor_wds_comment(wds)
+        wds_handler.parse_wds_comment(r, wds)
