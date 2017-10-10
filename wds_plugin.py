@@ -21,7 +21,7 @@ def onStartupComplete(bot):
     update_wds_conf(bot)
 
 
-@qqbotsched(minute='*/15', second="45")
+@qqbotsched(hour='3', minute="15")
 def update_wds_conf(bot):
     global wds_handler, qq_handler
 
