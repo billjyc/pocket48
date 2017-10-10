@@ -9,21 +9,19 @@ from qqhandler import QQHandler
 
 
 wds_handler = None
-qq_handler = None
 
 
 def onStartupComplete(bot):
     # 启动完成时被调用
     # bot : QQBot 对象，提供 List/SendTo/GroupXXX/Stop/Restart 等接口，详见文档第五节
-    global wds_handler, qq_handler
+    global wds_handler
     wds_handler = WDSHandler([], [])
-    qq_handler = QQHandler()
     update_wds_conf(bot)
 
 
 @qqbotsched(hour='3', minute="15")
 def update_wds_conf(bot):
-    global wds_handler, qq_handler
+    global wds_handler
 
     DEBUG('读取微打赏配置')
     ConfigReader.read_conf()
@@ -61,7 +59,7 @@ def update_wds_conf(bot):
     wds_handler.init_comment_queues()
 
     global_config.JIZI_NOTIFY_GROUPS = ConfigReader.get_property('qq_conf', 'jizi_notify_groups').split(';')
-    wds_groups = qq_handler.list_group(global_config.JIZI_NOTIFY_GROUPS)
+    wds_groups = QQHandler.list_group(global_config.JIZI_NOTIFY_GROUPS)
     wds_handler.wds_notify_groups = wds_groups
 
     DEBUG('JIZI_NOTIFY_GROUPS: %s, length: %d', ','.join(global_config.JIZI_NOTIFY_GROUPS),

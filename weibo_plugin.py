@@ -8,14 +8,12 @@ from config_reader import ConfigReader
 import global_config
 
 weibo_monitor = None
-qq_handler = None
 
 
 def onStartupComplete(bot):
     # 启动完成时被调用
     # bot : QQBot 对象，提供 List/SendTo/GroupXXX/Stop/Restart 等接口，详见文档第五节
-    global weibo_monitor, qq_handler
-    qq_handler = QQHandler()
+    global weibo_monitor
 
     global_config.MEMBER_WEIBO_GROUPS = ConfigReader.get_property('qq_conf', 'member_weibo_groups').split(';')
     weibo_monitor = WeiboMonitor()
@@ -46,12 +44,12 @@ def update_weibo_conf(bot):
 
 @qqbotsched(second='*/15')
 def monitor_member_weibo(bot):
-    global weibo_monitor, qq_handler
+    global weibo_monitor
 
     newWB = weibo_monitor.startMonitor()
     if newWB is not None:
         DEBUG(newWB)
-        member_weibo_groups = qq_handler.list_group(global_config.MEMBER_WEIBO_GROUPS)
+        member_weibo_groups = QQHandler.list_group(global_config.MEMBER_WEIBO_GROUPS)
         message = '你的小宝贝儿发微博啦: %s\n发送时间: %s' % (global_config.WEIBO_LINK, newWB['created_at'])
         if newWB['created_at'] == '刚刚':
             QQHandler.send_to_groups(member_weibo_groups, message)

@@ -13,7 +13,6 @@ from qqhandler import QQHandler
 import global_config
 
 pocket48_handler = None
-qq_handler = None
 
 
 def onInit(bot):
@@ -84,7 +83,7 @@ def onStartupComplete(bot):
     # 启动完成时被调用
     # bot : QQBot 对象，提供 List/SendTo/GroupXXX/Stop/Restart 等接口，详见文档第五节
     DEBUG('%s.onStartupComplete', __name__)
-    global qq_handler, pocket48_handler
+    global pocket48_handler
 
     pocket48_handler = Pocket48Handler([], [], [], [], [])
 
@@ -92,19 +91,8 @@ def onStartupComplete(bot):
     password = ConfigReader.get_property('user', 'password')
     pocket48_handler.login(username, password)
 
-    # 初始化QQHandler并更新联系人
-    qq_handler = QQHandler()
     # 先更新配置
     update_conf(bot)
-
-    # qq_handler.update()
-
-    # 读取配置文件中的群号，进行处理，转化为QContact对象
-    # auto_reply_groups = qq_handler.list_group(global_config.AUTO_REPLY_GROUPS)
-    # member_room_msg_groups = qq_handler.list_group(global_config.MEMBER_ROOM_MSG_GROUPS)
-    # member_room_comment_groups = qq_handler.list_group(global_config.MEMBER_ROOM_COMMENT_GROUPS)
-
-    # pocket48_handler.init_msg_queues(global_config.ROOM_ID)
 
 
 def onUpdate(bot, tinfo):
@@ -181,7 +169,7 @@ def update_conf(bot):
     :param bot:
     :return:
     """
-    global pocket48_handler, qq_handler
+    global pocket48_handler
     DEBUG('读取配置文件')
 
     ConfigReader.read_conf()
@@ -192,11 +180,11 @@ def update_conf(bot):
     global_config.MEMBER_LIVE_GROUPS = ConfigReader.get_property('qq_conf', 'member_live_groups').split(';')
     global_config.MEMBER_ROOM_MSG_LITE_GROUPS = ConfigReader.get_property('qq_conf', 'member_room_comment_lite_groups').split(';')
 
-    auto_reply_groups = qq_handler.list_group(global_config.AUTO_REPLY_GROUPS)
-    member_room_msg_groups = qq_handler.list_group(global_config.MEMBER_ROOM_MSG_GROUPS)
-    member_room_comment_msg_groups = qq_handler.list_group(global_config.MEMBER_ROOM_COMMENT_GROUPS)
-    member_live_groups = qq_handler.list_group(global_config.MEMBER_LIVE_GROUPS)
-    member_room_msg_lite_groups = qq_handler.list_group(global_config.MEMBER_ROOM_MSG_LITE_GROUPS)
+    auto_reply_groups = QQHandler.list_group(global_config.AUTO_REPLY_GROUPS)
+    member_room_msg_groups = QQHandler.list_group(global_config.MEMBER_ROOM_MSG_GROUPS)
+    member_room_comment_msg_groups = QQHandler.list_group(global_config.MEMBER_ROOM_COMMENT_GROUPS)
+    member_live_groups = QQHandler.list_group(global_config.MEMBER_LIVE_GROUPS)
+    member_room_msg_lite_groups = QQHandler.list_group(global_config.MEMBER_ROOM_MSG_LITE_GROUPS)
 
     pocket48_handler.member_room_msg_groups = member_room_msg_groups
     pocket48_handler.member_room_comment_msg_groups = member_room_comment_msg_groups
@@ -244,7 +232,7 @@ def update_conf(bot):
 @qqbotsched(second='10', minute='*')
 def get_room_msgs(bot):
     start_t = time.time()
-    global qq_handler, pocket48_handler
+    global pocket48_handler
 
     r1 = pocket48_handler.get_member_room_msg(global_config.ROOM_ID)
     pocket48_handler.parse_room_msg(r1)
@@ -252,15 +240,6 @@ def get_room_msgs(bot):
     pocket48_handler.parse_room_comment(r2)
 
     DEBUG('last_msg_time: %s', pocket48_handler.last_msg_time)
-    # DEBUG('current time: %s', time.time())
-    # if pocket48_handler.last_monitor_time < 0:
-    #     pocket48_handler.last_monitor_time = start_t
-    # else:
-    #     pocket48_handler.last_monitor_time = pocket48_handler.last_monitor_time + 30
-
-    # 这里做一下时间戳同步
-    # if pocket48_handler.last_monitor_time + 60 <= time.time():
-    #     pocket48_handler.last_monitor_time = time.time()
 
     end_t = time.time()
     DEBUG('执行时间: %s', end_t-start_t)
@@ -268,7 +247,7 @@ def get_room_msgs(bot):
 
 @qqbotsched(minute='*', second='40')
 def get_member_lives(bot):
-    global qq_handler, pocket48_handler
+    global pocket48_handler
 
     r = pocket48_handler.get_member_live_msg()
     pocket48_handler.parse_member_live(r, global_config.MEMBER_ID)

@@ -11,10 +11,12 @@ class QQHandler:
     def __init__(self):
         pass
 
+    @classmethod
     def login(self, qq_number):
         bot.Login(['-u', qq_number])
 
-    def list_group(self, groups):
+    @classmethod
+    def list_group(cls, groups):
         """
         根据群号查询对应的QContact对象
         :param groups:
@@ -28,19 +30,43 @@ class QQHandler:
                     result.append(group[0])
                 else:
                     ERROR('没有搜索到对应的群号: %s', group_number)
+                    raise Exception('没有group number对应的群号')
         return result
 
-    def update(self):
+    @classmethod
+    def get_group_number(cls, group_number):
+        """
+        获取对应群的成员人数
+        :param group_number:
+        :return:
+        """
+        number = 0
+        if group_number:
+            group = bot.List('group', group_number)
+            if group:
+                g = group[0]
+                member_list = bot.List(g)
+                number = len(member_list)
+            else:
+                ERROR('没有搜索到对应的群号: %s', group_number)
+                raise Exception('没有group number对应的群号')
+        return number
+
+    @classmethod
+    def update(cls):
         bot.Update('buddy')
         bot.Update('group')
 
-    def restart(self):
+    @classmethod
+    def restart(cls):
         DEBUG('RESTART')
         bot.Restart()
 
-    def fresh_restart(self):
+    @classmethod
+    def fresh_restart(cls):
         bot.FreshRestart()
 
+    @classmethod
     def stop(self):
         bot.Stop()
 
