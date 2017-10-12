@@ -114,11 +114,13 @@ class WeiboMonitor:
                         returnDict['text'] = i['mblog']['text']
                         returnDict['source'] = i['mblog']['source']
                         returnDict['nickName'] = i['mblog']['user']['screen_name']
+                        DEBUG(i['mblog']['text'])
                         # if has photos
                         if i['mblog'].has_key('pics'):
                             returnDict['picUrls'] = []
                             for j in i['mblog']['pics']:
                                 returnDict['picUrls'].append(j['url'])
+                                DEBUG(j['url'])
                         return returnDict
             self.echoMsg('Info', '微博队列共有 %d 条' % len(self.itemIds))
         except Exception as e:

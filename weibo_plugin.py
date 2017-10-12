@@ -24,7 +24,7 @@ def onStartupComplete(bot):
     weibo_monitor.getWBQueue(uid)
 
 
-@qqbotsched(minute='*')
+@qqbotsched(minute='*/35')
 def update_weibo_conf(bot):
     global weibo_monitor
 
