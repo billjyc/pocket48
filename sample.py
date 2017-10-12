@@ -194,7 +194,7 @@ def update_conf(bot):
 
     # 初始化人数统计
     for group_number in global_config.MEMBER_ROOM_MSG_LITE_GROUPS:
-        global_config.GROUP_MEMBER_NUMBER[group_number] = 0
+        global_config.GROUP_MEMBER_NUM[group_number] = 0
 
     DEBUG('member_room_msg_groups: %s, length: %d', ','.join(global_config.MEMBER_ROOM_MSG_GROUPS), len(pocket48_handler.member_room_msg_groups))
     DEBUG('member_room_comment_groups: %s, length: %d', ','.join(global_config.MEMBER_ROOM_COMMENT_GROUPS), len(pocket48_handler.member_room_comment_msg_groups))
