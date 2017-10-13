@@ -272,6 +272,7 @@ def notify_group_number(bot):
     for g_number in global_config.MEMBER_ROOM_MSG_LITE_GROUPS:
         number = QQHandler.get_group_number(g_number)
         DEBUG('群%s: %d人', g_number, number)
+        DEBUG('global_config.GROUP_MEMBER_NUM: %d', global_config.GROUP_MEMBER_NUM[g_number])
         if 0 < global_config.GROUP_MEMBER_NUM[g_number] < number:
             INFO('有新人入群啦~')
 
