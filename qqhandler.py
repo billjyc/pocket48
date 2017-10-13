@@ -46,7 +46,7 @@ class QQHandler:
             if group:
                 g = group[0]
                 member_list = bot.List(g)
-                DEBUG(member_list)
+                # DEBUG(member_list)
                 number = len(member_list)
             else:
                 ERROR('没有搜索到对应的群号: %s', group_number)
