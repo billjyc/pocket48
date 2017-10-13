@@ -40,7 +40,6 @@ class QQHandler:
         :param group_number:
         :return:
         """
-        bot.Update('group')
         number = 0
         if group_number:
             group = bot.List('group', group_number)

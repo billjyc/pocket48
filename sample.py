@@ -268,6 +268,7 @@ def notify_performance(bot):
 @qqbotsched(second='35', minute='*')
 def notify_group_number(bot):
     INFO('检查群内人数')
+    QQHandler.update()
     for g_number in global_config.MEMBER_ROOM_MSG_LITE_GROUPS:
         number = QQHandler.get_group_number(g_number)
         DEBUG('群%s: %d人', g_number, number)
