@@ -40,12 +40,14 @@ class QQHandler:
         :param group_number:
         :return:
         """
+        bot.Update('group')
         number = 0
         if group_number:
             group = bot.List('group', group_number)
             if group:
                 g = group[0]
                 member_list = bot.List(g)
+                DEBUG(member_list)
                 number = len(member_list)
             else:
                 ERROR('没有搜索到对应的群号: %s', group_number)
