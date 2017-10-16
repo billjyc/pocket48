@@ -123,7 +123,7 @@ class WDSHandler:
             user_info = reply['c_userinfo']
             user_id = user_info['nickname']
 
-            sub_msg = '感谢 %s 集资%s元\n' % (user_id, pay_amount)
+            sub_msg = '感谢 %s 集资%s元, 灰灰爱你哟~\n' % (user_id, pay_amount)
             INFO(sub_msg)
             msg += sub_msg
 
