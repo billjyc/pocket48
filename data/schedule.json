@@ -1,7 +1,5 @@
 {
   "schedules": [
-    {"name": "第48区", "time": "2017-10-11 19:30:00", "team": "Team SII", "comment": ""},
-    {"name": "梦想的旗帜", "time": "2017-10-12 19:30:00", "team": "Team X", "comment": ""},
-    {"name": "梦想的旗帜", "time": "2017-10-14 19:00:00", "team": "Team X", "comment": ""}
+    {"name": "梦想的旗帜", "time": "2017-10-18 19:30:00", "team": "Team X", "comment": ""},
   ]
 }

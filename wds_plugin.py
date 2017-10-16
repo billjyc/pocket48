@@ -47,11 +47,15 @@ def update_wds_conf(bot):
     wds_titles = ConfigReader.get_property('wds', 'wds_title').split(';')
     wds_moxi_ids = ConfigReader.get_property('wds', 'wds_moxi_id').split(';')
     wds_pro_ids = ConfigReader.get_property('wds', 'wds_pro_id').split(';')
+    wds_need_display_rank = ConfigReader.get_property('wds', 'wds_need_display_rank').split(';')
 
     wds_len = len(wds_links)
 
     for i in range(wds_len):
-        wds = WDS(wds_links[i], wds_titles[i], wds_moxi_ids[i], wds_pro_ids[i])
+        if wds_need_display_rank[i].lower() == 'false':
+            wds = WDS(wds_links[i], wds_titles[i], wds_moxi_ids[i], wds_pro_ids[i], False)
+        elif wds_need_display_rank[i].lower() == 'true':
+            wds = WDS(wds_links[i], wds_titles[i], wds_moxi_ids[i], wds_pro_ids[i], True)
         global_config.WDS_ARRAY.append(wds)
 
     wds_handler.wds_array = global_config.WDS_ARRAY
