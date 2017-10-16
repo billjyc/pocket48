@@ -276,7 +276,7 @@ def notify_group_number(bot):
             INFO('有新人入群啦~')
 
             g_obj = QQHandler.list_group([g_number])
-            QQHandler.send_to_groups(g_obj, '欢迎~')
+            QQHandler.send_to_groups(g_obj, '机器人自动欢迎~')
         global_config.GROUP_MEMBER_NUM[g_number] = number
 
 # @qqbotsched(minute='*', second='30')
