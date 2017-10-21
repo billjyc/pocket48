@@ -15,10 +15,10 @@ sys.setdefaultencoding('utf8')
 
 
 class WDS:
-    def __init__(self, link, title, moxi_id, pro_id, need_display_rank=False):
+    def __init__(self, link, title, post_id, pro_id, need_display_rank=False):
         self.link = link
         self.title = title
-        self.moxi_id = moxi_id
+        self.post_id = post_id
         self.pro_id = pro_id
         self.need_display_rank = need_display_rank
 
@@ -80,10 +80,10 @@ class WDSHandler:
         获取微打赏项目下的评论信息
         :return:
         """
-        jizi_url = 'https://wds.modian.com/ajax_comment'
+        jizi_url = 'https://wds.modian.com/ajax/comment_list'
         params = {
             'pageNum': page_num,
-            'moxi_id': wds.moxi_id,
+            'post_id': wds.post_id,
             'pro_id': wds.pro_id
         }
         try:
@@ -97,7 +97,19 @@ class WDSHandler:
         r_json = r.json()
         if int(r_json['status']) != 0:
             ERROR('获取失败!')
-        return r_json
+        print r_json['data']['html']
+        return r_json['data']['html']
+
+    def parse_wds_comment2(self, r, wds):
+        """
+        对评论进行处理（微打赏接口变更，r变为html）
+        :param r:
+        :param wds:
+        :return:
+        """
+        soup = BeautifulSoup(r, 'lxml')
+        # TODO: 对html进行处理
+
 
     def parse_wds_comment(self, r, wds):
         """
@@ -225,8 +237,8 @@ class WDSHandler:
 
 
 if __name__ == '__main__':
-    wds1 = WDS('https://wds.modian.com/show_weidashang_pro/7974', '冯晓菲应援会10月日常集资企划', 17011, 7974)
-    wds2 = WDS('https://wds.modian.com/show_weidashang_pro/7975', 'SNH48-徐晨辰 第四届金曲大赏  第二弹', 17012, 7975)
+    wds1 = WDS('https://wds.modian.com/show_weidashang_pro/7974', '冯晓菲应援会10月日常集资企划', 17011, 7974, False)
+    wds2 = WDS('https://wds.modian.com/show_weidashang_pro/8303', '《暴走少女》冯晓菲应援会2017年第四届金曲大赏集资', 17526, 8303, False)
     wds_array = [wds1, wds2]
     handler = WDSHandler([], [])
     handler.wds_array = wds_array
