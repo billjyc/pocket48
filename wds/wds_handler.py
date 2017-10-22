@@ -126,7 +126,7 @@ class WDSHandler:
         for comment in comment_list:
             msg = ''
             comment_id = comment.find(class_='add-jubao').get('to_comid')
-            print comment_id
+            # print comment_id
 
             comment_id_queue = self.wds_queue_map[wds]
             if comment_id in comment_id_queue:
@@ -251,7 +251,7 @@ class WDSHandler:
             ERROR('获取微打赏评论失败')
             ERROR(e)
         r_json = r.json()
-        DEBUG('response: %s', r.text)
+        # DEBUG('response: %s', r.text)
         if int(r_json['status']) != 0:
             ERROR('获取失败!')
         return r_json['data']['html']
@@ -278,14 +278,11 @@ class WDSHandler:
         project_info = soup.find_all(class_="project-info")[0]
         support_num = project_info.find_all(class_="b")[0].find_all(name="span")[0].contents[0].strip()
         DEBUG('当前集资人数: %s', support_num)
-        print support_num
 
         current = project_info.find_all(class_="current")[0].find_all(name="span")[1].contents[1].strip()
         DEBUG('当前进度: %s元', current)
-        print current
         target = project_info.find_all(class_="target")[0].find_all(name="span")[1].contents[1].strip()
         DEBUG('目标金额: %s元', target)
-        print target
 
         return support_num, current, target
 
