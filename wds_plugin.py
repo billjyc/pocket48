@@ -70,7 +70,7 @@ def update_wds_conf(bot):
           len(wds_handler.wds_notify_groups))
 
 
-@qqbotsched(second='50', minute='*/3')
+@qqbotsched(second='50', minute='*')
 def monitor_wds(bot):
     """
     监控微打赏
