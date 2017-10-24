@@ -127,7 +127,6 @@ class WDSHandler:
         wds_rank_list = soup2.findAll(name='li')
 
         for comment in comment_list:
-            msg = ''
             comment_id = comment.find(class_='add-jubao').get('to_comid')
             # print comment_id
 
@@ -150,7 +149,7 @@ class WDSHandler:
                 if uid == user_id:
                     cur_rank = rank.find(class_='suport_ran').string
                     total_amount = rank.find(class_='money').string
-                    total_amount = re.findall(r"\d+\.?\d*", total_amount)[0]
+                    total_amount = total_amount.replace('¥ ', '')
 
                     if wds.need_display_rank is True:
                         rank_msg = "当前累计集资%s元，当前排名: %s\n" % (total_amount, cur_rank)
@@ -296,7 +295,7 @@ class WDSHandler:
 
 
 if __name__ == '__main__':
-    wds1 = WDS('https://wds.modian.com/show_weidashang_pro/7974', '冯晓菲应援会10月日常集资企划', 17011, 7974, False)
+    wds1 = WDS('https://wds.modian.com/show_weidashang_pro/8538', '冯晓菲应援会10月日常集资企划', 17896, 8538, False)
     wds2 = WDS('https://wds.modian.com/show_weidashang_pro/8303', '《暴走少女》冯晓菲应援会2017年第四届金曲大赏集资', 17526, 8303, False)
     wds_array = [wds1, wds2]
     handler = WDSHandler([], [])
