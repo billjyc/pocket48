@@ -137,7 +137,7 @@ class WDSHandler:
             nick_sup = comment.find(class_='nick_sup').string
             user_id = comment.find(class_='add-jubao').get('to_user')
 
-            msg = '感谢%s%s, 灰灰爱你哟~\n' % (nickname, nick_sup)
+            msg = '感谢 %s %s, 灰灰爱你哟~\n' % (nickname, nick_sup)
 
             rank_msg = ''
             for rank in wds_rank_list:
