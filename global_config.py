@@ -35,6 +35,7 @@ PERFORMANCE_NOTIFY = ''
 # 微打赏
 WDS_ARRAY = []
 WDS_PK_ARRAY = []
+WDS_NEED_DISPLAY_PK = False
 
 # 群内人数监控
 GROUP_MEMBER_NUM = {}

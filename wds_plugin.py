@@ -41,6 +41,11 @@ def update_wds_conf(bot):
     # DEBUG('wds pro id: %s', global_config.WDS_PRO_ID)
 
     # 微打赏集资PK链接数组初始化
+    wds_need_display_pk = ConfigReader.get_property('wds', 'wds_need_display_pk')
+    if wds_need_display_pk.lower() == 'false':
+        global_config.WDS_NEED_DISPLAY_PK = False
+    elif wds_need_display_pk.lower() == 'true':
+        global_config.WDS_NEED_DISPLAY_PK = True
     wds_pk_links = ConfigReader.get_property('wds', 'wds_pk_links').split(';')
     wds_pk_titles = ConfigReader.get_property('wds', 'wds_pk_titles').split(';')
 
@@ -99,6 +104,8 @@ def notify_wds_pk(bot):
     :param bot:
     :return:
     """
+    if global_config.WDS_NEED_DISPLAY_PK is False:
+        return
     global wds_handler
     # wds_handler = WDSHandler([], [])
     INFO('微打赏集资PK播报')
