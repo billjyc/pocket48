@@ -275,6 +275,8 @@ class WDSHandler:
         soup = BeautifulSoup(r.text, 'lxml')
         # print soup.prettify()
 
+        DEBUG('集资项目: %s', wds.title)
+        DEBUG('集资链接: %s', wds.link)
         project_info = soup.find_all(class_="project-info")[0]
         support_num = project_info.find_all(class_="b")[0].find_all(name="span")[0].contents[0].strip()
         DEBUG('当前集资人数: %s', support_num)
