@@ -16,12 +16,15 @@ sys.setdefaultencoding('utf8')
 
 
 class WDS:
-    def __init__(self, link, title, post_id, pro_id, need_display_rank=False):
+    def __init__(self, link, title, post_id, pro_id, need_display_rank=False, current=0.0, target=0.0, support_num=0):
         self.link = link
         self.title = title
         self.post_id = post_id
         self.pro_id = pro_id
         self.need_display_rank = need_display_rank
+        self.current = current
+        self.target = target
+        self.support_num = support_num
 
 
 class WDSHandler:
@@ -280,11 +283,14 @@ class WDSHandler:
         project_info = soup.find_all(class_="project-info")[0]
         support_num = project_info.find_all(class_="b")[0].find_all(name="span")[0].contents[0].strip()
         DEBUG('当前集资人数: %s', support_num)
+        wds.support_num = int(support_num.replace(',', ''))
 
         current = project_info.find_all(class_="current")[0].find_all(name="span")[1].contents[1].strip()
         DEBUG('当前进度: %s元', current)
+        wds.current = float(current.replace(',', ''))
         target = project_info.find_all(class_="target")[0].find_all(name="span")[1].contents[1].strip()
         DEBUG('目标金额: %s元', target)
+        wds.target = float(current.replace(',', ''))
 
         return support_num, current, target
 

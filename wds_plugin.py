@@ -40,6 +40,14 @@ def update_wds_conf(bot):
     # DEBUG('wds moxi id: %s', global_config.WDS_MOXI_ID)
     # DEBUG('wds pro id: %s', global_config.WDS_PRO_ID)
 
+    # 微打赏集资PK链接数组初始化
+    wds_pk_links = ConfigReader.get_property('wds', 'wds_pk_links').split(';')
+    wds_pk_titles = ConfigReader.get_property('wds', 'wds_pk_titles').split(';')
+
+    for i in range(len(wds_pk_links)):
+        wds = WDS(wds_pk_links[i], wds_pk_titles[i], '', '', False)
+        global_config.WDS_PK_ARRAY.append(wds)
+
     # 需要适应同时开多个链接的情况
     global_config.WDS_ARRAY = []
 
@@ -82,3 +90,44 @@ def monitor_wds(bot):
     for wds in global_config.WDS_ARRAY:
         r = wds_handler.monitor_wds_comment(wds)
         wds_handler.parse_wds_comment2(r, wds)
+
+
+@qqbotsched(hour='*')
+def notify_wds_pk(bot):
+    """
+    播报微打赏集资PK情况
+    :param bot:
+    :return:
+    """
+    global wds_handler
+    # wds_handler = WDSHandler([], [])
+    INFO('微打赏集资PK播报')
+
+    for wds in global_config.WDS_PK_ARRAY:
+        support_num, current, target = wds_handler.get_current_and_target(wds)
+
+    msg = '当前集资PK战况播报:\n'
+    sorted(global_config.WDS_PK_ARRAY, wds_pk_sort)
+
+    for i in range(len(global_config.WDS_PK_ARRAY)):
+        wds = global_config.WDS_PK_ARRAY[i]
+        sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i+1, wds.title, wds.current)
+        msg += sub_msg
+
+    INFO(msg)
+
+
+def wds_pk_sort(wds1, wds2):
+    if wds1.current < wds2.current:
+        return 1
+    elif wds1.current > wds2.current:
+        return -1
+    else:
+        return 0
+
+
+if __name__ == '__main__':
+    wds1 = WDS('https://wds.modian.com/show_weidashang_pro/8538', 'fxf', '', '')
+    wds2 = WDS('https://wds.modian.com/show_weidashang_pro/8536', 'yby', '', '')
+    global_config.WDS_PK_ARRAY = [wds1, wds2]
+    notify_wds_pk(None)
