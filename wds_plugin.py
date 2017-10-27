@@ -6,6 +6,7 @@ from config_reader import ConfigReader
 from wds.wds_handler import WDSHandler, WDS
 import global_config
 from qqhandler import QQHandler
+import json
 
 
 wds_handler = None
@@ -25,51 +26,53 @@ def update_wds_conf(bot):
 
     DEBUG('读取微打赏配置')
     ConfigReader.read_conf()
-
-    # wds_link = ConfigReader.get_property('wds', 'wds_link')
-    #
-    # if global_config.WDS_LINK == '' or wds_link != global_config.WDS_LINK:
-    #     global_config.WDS_LINK = wds_link
-    #     global_config.WDS_TITLE = ConfigReader.get_property('wds', 'wds_title')
-    #     global_config.WDS_MOXI_ID = ConfigReader.get_property('wds', 'wds_moxi_id')
-    #     global_config.WDS_PRO_ID = ConfigReader.get_property('wds', 'wds_pro_id')
-    #     wds_handler.init_comment_queues()
-    #
-    # DEBUG('wds link: %s', global_config.WDS_LINK)
-    # DEBUG('wds title: %s', global_config.WDS_TITLE)
-    # DEBUG('wds moxi id: %s', global_config.WDS_MOXI_ID)
-    # DEBUG('wds pro id: %s', global_config.WDS_PRO_ID)
+    wds_json = json.load(open("data/wds.json"))
 
     # 微打赏集资PK链接数组初始化
-    wds_need_display_pk = ConfigReader.get_property('wds', 'wds_need_display_pk')
-    if wds_need_display_pk.lower() == 'false':
-        global_config.WDS_NEED_DISPLAY_PK = False
-    elif wds_need_display_pk.lower() == 'true':
-        global_config.WDS_NEED_DISPLAY_PK = True
-    wds_pk_links = ConfigReader.get_property('wds', 'wds_pk_links').split(';')
-    wds_pk_titles = ConfigReader.get_property('wds', 'wds_pk_titles').split(';')
+    global_config.WDS_NEED_DISPLAY_PK = wds_json['wds_need_display_pk']
 
-    for i in range(len(wds_pk_links)):
-        wds = WDS(wds_pk_links[i], wds_pk_titles[i], '', '', False)
+    # wds_need_display_pk = ConfigReader.get_property('wds', 'wds_need_display_pk')
+    # if wds_need_display_pk.lower() == 'false':
+    #     global_config.WDS_NEED_DISPLAY_PK = False
+    # elif wds_need_display_pk.lower() == 'true':
+    #     global_config.WDS_NEED_DISPLAY_PK = True
+    for wds_pk_j in wds_json['wds_pk_activities']:
+        wds = WDS(wds_pk_j['wds_pk_link'], wds_pk_j['wds_pk_title'], '', '', False)
         global_config.WDS_PK_ARRAY.append(wds)
+
+    # wds_pk_links = ConfigReader.get_property('wds', 'wds_pk_links').split(';')
+    # wds_pk_titles = ConfigReader.get_property('wds', 'wds_pk_titles').split(';')
+    #
+    # for i in range(len(wds_pk_links)):
+    #     wds = WDS(wds_pk_links[i], wds_pk_titles[i], '', '', False)
+    #     global_config.WDS_PK_ARRAY.append(wds)
 
     # 需要适应同时开多个链接的情况
     global_config.WDS_ARRAY = []
 
-    wds_links = ConfigReader.get_property('wds', 'wds_link').split(';')
-    wds_titles = ConfigReader.get_property('wds', 'wds_title').split(';')
-    wds_moxi_ids = ConfigReader.get_property('wds', 'wds_moxi_id').split(';')
-    wds_pro_ids = ConfigReader.get_property('wds', 'wds_pro_id').split(';')
-    wds_need_display_rank = ConfigReader.get_property('wds', 'wds_need_display_rank').split(';')
-
-    wds_len = len(wds_links)
-
-    for i in range(wds_len):
-        if wds_need_display_rank[i].lower() == 'false':
-            wds = WDS(wds_links[i], wds_titles[i], wds_moxi_ids[i], wds_pro_ids[i], False)
-        elif wds_need_display_rank[i].lower() == 'true':
-            wds = WDS(wds_links[i], wds_titles[i], wds_moxi_ids[i], wds_pro_ids[i], True)
+    for wds_j in wds_json['monitor_activities']:
+        if wds_j['wds_need_display_rank'] is False:
+            wds = WDS(wds_j['wds_link'], wds_j['wds_title'], wds_j['wds_moxi_id'], wds_j['wds_pro_id'],
+                      False)
+        elif wds_j['wds_need_display_rank'] is True:
+            wds = WDS(wds_j['wds_link'], wds_j['wds_title'], wds_j['wds_moxi_id'], wds_j['wds_pro_id'],
+                      True)
         global_config.WDS_ARRAY.append(wds)
+
+    # wds_links = ConfigReader.get_property('wds', 'wds_link').split(';')
+    # wds_titles = ConfigReader.get_property('wds', 'wds_title').split(';')
+    # wds_moxi_ids = ConfigReader.get_property('wds', 'wds_moxi_id').split(';')
+    # wds_pro_ids = ConfigReader.get_property('wds', 'wds_pro_id').split(';')
+    # wds_need_display_rank = ConfigReader.get_property('wds', 'wds_need_display_rank').split(';')
+    #
+    # wds_len = len(wds_links)
+    #
+    # for i in range(wds_len):
+    #     if wds_need_display_rank[i].lower() == 'false':
+    #         wds = WDS(wds_links[i], wds_titles[i], wds_moxi_ids[i], wds_pro_ids[i], False)
+    #     elif wds_need_display_rank[i].lower() == 'true':
+    #         wds = WDS(wds_links[i], wds_titles[i], wds_moxi_ids[i], wds_pro_ids[i], True)
+    #     global_config.WDS_ARRAY.append(wds)
 
     wds_handler.wds_array = global_config.WDS_ARRAY
 
@@ -134,7 +137,8 @@ def wds_pk_sort(wds1, wds2):
 
 
 if __name__ == '__main__':
-    wds1 = WDS('https://wds.modian.com/show_weidashang_pro/8538', 'fxf', '', '')
-    wds2 = WDS('https://wds.modian.com/show_weidashang_pro/8536', 'yby', '', '')
-    global_config.WDS_PK_ARRAY = [wds1, wds2]
-    notify_wds_pk(None)
+    update_wds_conf(None)
+    # wds1 = WDS('https://wds.modian.com/show_weidashang_pro/8538', 'fxf', '', '')
+    # wds2 = WDS('https://wds.modian.com/show_weidashang_pro/8536', 'yby', '', '')
+    # global_config.WDS_PK_ARRAY = [wds1, wds2]
+    # notify_wds_pk(None)

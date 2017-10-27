@@ -1,5 +1,9 @@
 {
-  "冯晓菲": {
-    "pinyin": "fengxiaofei", "member_id": 6432, "room_id": 5780791, "weibo_uid": 5461287018
+  "fengxiaofei": {
+    "chinese_name": "冯晓菲",
+    "pinyin": "fengxiaofei",
+    "member_id": 6432,
+    "room_id": 5780791,
+    "weibo_uid": 5461287018
   }
 }
