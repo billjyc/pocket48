@@ -16,6 +16,9 @@
 <p>在conf.ini中修改内容，注意一定要按照格式来写，否则无法解析</p>
 
 
+<p>微打赏监控数据在data/wds.json中，monitor_activities为监控项目，wds_pk_activities为PK活动的项目</p>
+
+
 <p>配置完成之后，运行run-pocket48.sh即可</p>
 <p>第一次使用时会向邮箱中发送登录二维码，用手机QQ扫码登录即可</p>
 <p>每天上午10点钟需要扫码登录保持登录状态</p>

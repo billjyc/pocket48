@@ -3,7 +3,6 @@ from qqbot import qqbotsched
 from qqbot.utf8logger import DEBUG, INFO, ERROR
 import time
 import json
-import random
 import utils
 
 from config_reader import ConfigReader
@@ -45,12 +44,12 @@ def onQQMessage(bot, contact, member, content):
 
     if contact.ctype == 'group' and contact.qq in global_config.AUTO_REPLY_GROUPS:
         if '@ME' in content:  # 在群中@机器人
-            bot.SendTo(contact, member.name + '，' + random_str(global_config.AT_AUTO_REPLY))
+            bot.SendTo(contact, member.name + '，' + utils.random_str(global_config.AT_AUTO_REPLY))
         elif content.startswith('-'):  # 以'-'开头才能触发自动回复
             if content == '-version':
                 bot.SendTo(contact, 'QQbot-' + bot.conf.version)
             elif content == global_config.MEMBER_ATTR:  # 群消息输入成员缩写
-                bot.SendTo(contact, random_str(global_config.I_LOVE))
+                bot.SendTo(contact, utils.random_str(global_config.I_LOVE))
             elif content in global_config.JIZI_KEYWORDS:  # 集资链接
                 jizi_link = '\n'.join(global_config.JIZI_LINK)
                 bot.SendTo(contact, '集资链接: %s' % jizi_link)
@@ -150,10 +149,6 @@ def onExpire(bot):
     #       只可以访问配置信息 bot.conf
     # bot : QQBot 对象
     DEBUG('ON-EXPIRE')
-
-
-def random_str(strs):
-    return random.choice(strs)
 
 
 @qqbotsched(hour='10')

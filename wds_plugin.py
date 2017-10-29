@@ -28,24 +28,14 @@ def update_wds_conf(bot):
     ConfigReader.read_conf()
     wds_json = json.load(open("data/wds.json"))
 
+    global_config.WDS_POSTSCRIPTS = wds_json['wds_postscripts']
+
     # 微打赏集资PK链接数组初始化
     global_config.WDS_NEED_DISPLAY_PK = wds_json['wds_need_display_pk']
 
-    # wds_need_display_pk = ConfigReader.get_property('wds', 'wds_need_display_pk')
-    # if wds_need_display_pk.lower() == 'false':
-    #     global_config.WDS_NEED_DISPLAY_PK = False
-    # elif wds_need_display_pk.lower() == 'true':
-    #     global_config.WDS_NEED_DISPLAY_PK = True
     for wds_pk_j in wds_json['wds_pk_activities']:
         wds = WDS(wds_pk_j['wds_pk_link'], wds_pk_j['wds_pk_title'], '', '', False)
         global_config.WDS_PK_ARRAY.append(wds)
-
-    # wds_pk_links = ConfigReader.get_property('wds', 'wds_pk_links').split(';')
-    # wds_pk_titles = ConfigReader.get_property('wds', 'wds_pk_titles').split(';')
-    #
-    # for i in range(len(wds_pk_links)):
-    #     wds = WDS(wds_pk_links[i], wds_pk_titles[i], '', '', False)
-    #     global_config.WDS_PK_ARRAY.append(wds)
 
     # 需要适应同时开多个链接的情况
     global_config.WDS_ARRAY = []
@@ -58,21 +48,6 @@ def update_wds_conf(bot):
             wds = WDS(wds_j['wds_link'], wds_j['wds_title'], wds_j['wds_moxi_id'], wds_j['wds_pro_id'],
                       True)
         global_config.WDS_ARRAY.append(wds)
-
-    # wds_links = ConfigReader.get_property('wds', 'wds_link').split(';')
-    # wds_titles = ConfigReader.get_property('wds', 'wds_title').split(';')
-    # wds_moxi_ids = ConfigReader.get_property('wds', 'wds_moxi_id').split(';')
-    # wds_pro_ids = ConfigReader.get_property('wds', 'wds_pro_id').split(';')
-    # wds_need_display_rank = ConfigReader.get_property('wds', 'wds_need_display_rank').split(';')
-    #
-    # wds_len = len(wds_links)
-    #
-    # for i in range(wds_len):
-    #     if wds_need_display_rank[i].lower() == 'false':
-    #         wds = WDS(wds_links[i], wds_titles[i], wds_moxi_ids[i], wds_pro_ids[i], False)
-    #     elif wds_need_display_rank[i].lower() == 'true':
-    #         wds = WDS(wds_links[i], wds_titles[i], wds_moxi_ids[i], wds_pro_ids[i], True)
-    #     global_config.WDS_ARRAY.append(wds)
 
     wds_handler.wds_array = global_config.WDS_ARRAY
 

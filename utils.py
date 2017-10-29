@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
+import random
 
 
 def convert_timestamp_to_timestr(timestamp):
@@ -22,6 +23,10 @@ def convert_timestr_to_timestamp(time_str):
     """
     timestamp = time.mktime(time.strptime(time_str, "%Y-%m-%d %H:%M:%S"))
     return timestamp
+
+
+def random_str(strs):
+    return random.choice(strs)
 
 
 if __name__ == '__main__':

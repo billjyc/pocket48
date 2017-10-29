@@ -8,6 +8,8 @@ from bs4 import BeautifulSoup
 from qqbot.utf8logger import INFO, ERROR, DEBUG
 import time
 import re
+import utils
+import global_config
 
 from qqhandler import QQHandler
 
@@ -52,10 +54,6 @@ class WDSHandler:
             for i in range(len(self.wds_array)):
                 queue = self.comment_id_queues[i]
                 r = self.monitor_wds_comment(self.wds_array[i])
-
-                # for reply in r['des']:
-                #     reply_id = reply['reply_id']
-                #     queue.append(reply_id)
 
                 soup = BeautifulSoup(r, 'lxml')
                 comment_list = soup.findAll(name='li')
@@ -139,7 +137,7 @@ class WDSHandler:
             nick_sup = comment.find(class_='nick_sup').string
             user_id = comment.find(class_='add-jubao').get('to_user')
 
-            msg = '感谢 %s %s, 灰灰爱你哟~\n' % (nickname, nick_sup)
+            msg = '感谢 %s %s, %s\n' % (nickname, nick_sup, utils.random_str(global_config.WDS_POSTSCRIPTS))
 
             rank_msg = ''
             for rank in wds_rank_list:
@@ -167,67 +165,6 @@ class WDSHandler:
                 DEBUG('集资评论队列: %d', len(comment_id_queue))
 
             time.sleep(3)
-
-    # def parse_wds_comment(self, r, wds):
-    #     """
-    #     对评论进行处理
-    #     :param wds:
-    #     :param r:
-    #     :return:
-    #     """
-    #     des = r['des']
-    #     print des
-    #     # DEBUG(json.dumps(des))
-    #     DEBUG('LENGTH OF DES: %d', len(des))
-    #
-    #     support_num, current, target = self.get_current_and_target(wds)
-    #     project_info = '当前进度: %s元, 目标金额: %s元\n当前集资人数: %s\n' % (current, target, support_num)
-    #     wds_rank_list = self.get_wds_rank(wds, page_size=int(support_num))['data']
-    #
-    #     for reply in des:
-    #         msg = ''
-    #         reply_id = reply['reply_id']
-    #
-    #         comment_id_queue = self.wds_queue_map[wds]
-    #         if reply_id in comment_id_queue:
-    #             continue
-    #         comment_id_queue.append(reply_id)
-    #
-    #         pay_amount = reply['pay_amount']
-    #         if pay_amount == '':  # 去除单纯的评论
-    #             continue
-    #
-    #         user_info = reply['c_userinfo']
-    #         user_id = user_info['nickname']
-    #         uid = user_info['id']
-    #
-    #         cur_rank = 1
-    #
-    #         sub_msg = '感谢 %s 集资%s元, 灰灰爱你哟~\n' % (user_id, pay_amount)
-    #         rank_msg = ''
-    #         for rank in wds_rank_list:
-    #             if uid == rank["user_id"]:
-    #                 total_back_amount = rank["total_back_amount"]
-    #                 if wds.need_display_rank is True:
-    #                     rank_msg = "当前累计集资%.2f元，当前排名: %d\n" % (total_back_amount, cur_rank)
-    #                 else:
-    #                     rank_msg = "当前累计集资%.2f元\n" % total_back_amount
-    #                 break
-    #             cur_rank += 1
-    #
-    #         if rank_msg and len(rank_msg) > 0:
-    #             sub_msg += rank_msg
-    #         INFO(sub_msg)
-    #         msg += sub_msg
-    #
-    #         if msg and len(msg) > 0:
-    #             msg += project_info
-    #             msg += '集资项目: %s\n链接: %s' % (wds.title, wds.link)
-    #             QQHandler.send_to_groups(self.wds_notify_groups, msg)
-    #             INFO('wds_message: %s', msg)
-    #             DEBUG('集资评论队列: %d', len(comment_id_queue))
-    #
-    #         time.sleep(3)
 
     def get_wds_rank(self, wds, type0=1, page=1, page_size=50):
         """
