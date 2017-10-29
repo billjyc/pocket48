@@ -1,6 +1,5 @@
 {
   "schedules": [
-    {"name": "梦想的旗帜", "time": "2017-10-28 14:00:00", "team": "Team X", "comment": ""},
     {"name": "梦想的旗帜", "time": "2017-11-04 14:00:00", "team": "Team X", "comment": "冯晓菲生日公演"},
     {"name": "梦想的旗帜", "time": "2017-11-05 14:00:00", "team": "Team X", "comment": ""}
   ]
