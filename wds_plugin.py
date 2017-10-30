@@ -75,7 +75,7 @@ def monitor_wds(bot):
         wds_handler.parse_wds_comment2(r, wds)
 
 
-@qqbotsched(hour='*')
+@qqbotsched(hour='*', minute='17')
 def notify_wds_pk(bot):
     """
     播报微打赏集资PK情况
@@ -100,6 +100,7 @@ def notify_wds_pk(bot):
         msg += sub_msg
 
     INFO(msg)
+    QQHandler.send_to_groups(wds_handler.wds_notify_groups, msg)
 
 
 def wds_pk_sort(wds1, wds2):
