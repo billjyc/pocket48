@@ -1,7 +1,6 @@
 {
   "schedules": [
-    {"name": "第48区", "time": "2017-11-03 19:00:00", "team": "第48区", "comment": ""},
-    {"name": "梦想的旗帜", "time": "2017-11-04 14:00:00", "team": "Team X", "comment": "冯晓菲生日公演"},
-    {"name": "梦想的旗帜", "time": "2017-11-05 14:00:00", "team": "Team X", "comment": ""}
+    {"name": "梦想的旗帜", "time": "2017-11-12 19:00:00", "team": "Team X", "comment": "邵雪聪生日主题公演"},
+    {"name": "梦想的旗帜", "time": "2017-11-09 19:30:00", "team": "Team X", "comment": ""}
   ]
 }
