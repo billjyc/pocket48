@@ -151,7 +151,7 @@ def onExpire(bot):
     DEBUG('ON-EXPIRE')
 
 
-@qqbotsched(hour='10')
+@qqbotsched(hour='22')
 def restart_sche(bot):
     DEBUG('RESTART scheduled')
     bot.FreshRestart()
