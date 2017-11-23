@@ -31,3 +31,6 @@ def random_str(strs):
 
 if __name__ == '__main__':
     print convert_timestr_to_timestamp('2017-09-23 14:00:00')
+    strs = ['a', 'b', 'c']
+    print random_str(strs)
+

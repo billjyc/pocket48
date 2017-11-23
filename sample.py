@@ -224,7 +224,7 @@ def update_conf(bot):
     global_config.I_LOVE = ConfigReader.get_property('profile', 'i_love').split(';')
 
     global_config.AT_AUTO_REPLY = ConfigReader.get_property('profile', 'at_auto_reply').split(';')
-    global_config.ROOM_MSG_LITE_NOTIFY = ConfigReader.get_property('profile', 'room_msg_lite_notify')
+    global_config.ROOM_MSG_LITE_NOTIFY = ConfigReader.get_property('profile', 'room_msg_lite_notify').split(';')
 
     global_config.PERFORMANCE_NOTIFY = ConfigReader.get_property('profile', 'performance_notify')
 

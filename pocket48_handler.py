@@ -184,7 +184,7 @@ class Pocket48Handler:
             # 距离上一次提醒时间超过10分钟且有未读消息
             if self.last_msg_time < 0 or time_now - self.last_msg_time >= 10 * 60:
                 DEBUG('向大群发送简易版提醒')
-                msg = global_config.ROOM_MSG_LITE_NOTIFY
+                msg = utils.random_str(global_config.ROOM_MSG_LITE_NOTIFY)
                 QQHandler.send_to_groups(self.member_room_msg_lite_groups, msg)
                 INFO(msg)
                 self.unread_msg_amount = 0
