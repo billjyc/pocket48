@@ -1,7 +1,7 @@
 {
   "schedules": [
-    {"name": "梦想的旗帜", "time": "2017-11-12 19:00:00", "team": "Team X", "comment": "邵雪聪生日主题公演"},
-    {"name": "梦想的旗帜", "time": "2017-11-09 19:30:00", "team": "Team X", "comment": ""},
-    {"name": "梦想的旗帜", "time": "2017-11-16 19:30:00", "team": "Team X", "comment": ""}
+    {"name": "梦想的旗帜", "time": "2017-11-26 14:00:00", "team": "Team X", "comment": ""},
+    {"name": "梦想的旗帜", "time": "2017-12-01 19:30:00", "team": "Team X", "comment": ""},
+    {"name": "梦想的旗帜", "time": "2017-12-03 19:00:00", "team": "Team X", "comment": ""}
   ]
 }
