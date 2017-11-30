@@ -140,10 +140,11 @@ class WDSHandler:
             msg = '感谢 %s %s, %s\n' % (nickname, nick_sup, utils.random_str(global_config.WDS_POSTSCRIPTS))
 
             rank_msg = ''
+            DEBUG('WDS USER ID: %s', user_id)
             for rank in wds_rank_list:
                 user_a = rank.a['href']
                 uid = re.findall(r"\d+\.?\d*", user_a)[0]
-
+                DEBUG('user_a: %s, uid: %s', user_a, uid)
                 if uid == user_id:
                     cur_rank = rank.find(class_='suport_ran').string
                     total_amount = rank.find(class_='money').string
