@@ -114,15 +114,19 @@ class WDSHandler:
         :param wds:
         :return:
         """
+        PAGE_SIZE = 20
         soup = BeautifulSoup(r, 'lxml')
         # print soup.prettify()
         comment_list = soup.findAll(name='li')
         support_num, current, target = self.get_current_and_target(wds)
         project_info = '当前进度: %s元, 目标金额: %s元\n当前集资人数: %s\n' % (current, target, support_num)
 
-        soup2 = BeautifulSoup(self.get_wds_rank(wds, page_size=int(support_num)), 'lxml')
-        # print soup2.prettify()
-        wds_rank_list = soup2.findAll(name='li')
+        page_num = int(support_num) / PAGE_SIZE + 1
+        wds_rank_list = []
+        for i in range(page_num):
+            rank_html = self.get_wds_rank(wds, page=i+1)
+            soup2 = BeautifulSoup(rank_html, 'lxml')
+            wds_rank_list.extend(soup2.findAll(name='li'))
 
         for comment in comment_list:
             comment_id = comment.find(class_='add-jubao').get('to_comid')
@@ -167,7 +171,7 @@ class WDSHandler:
 
             time.sleep(3)
 
-    def get_wds_rank(self, wds, type0=1, page=1, page_size=50):
+    def get_wds_rank(self, wds, type0=1, page=1, page_size=20):
         """
         获取微打赏聚聚榜
         :param wds:
@@ -233,7 +237,7 @@ class WDSHandler:
 
 
 if __name__ == '__main__':
-    wds1 = WDS('https://wds.modian.com/show_weidashang_pro/8538', '冯晓菲应援会10月日常集资企划', 17896, 8538, False)
+    wds1 = WDS('https://wds.modian.com/show_weidashang_pro/9372', '冯晓菲《暗夜脚步声》集资活动2.0', 19274, 9372, False)
     wds2 = WDS('https://wds.modian.com/show_weidashang_pro/8303', '《暴走少女》冯晓菲应援会2017年第四届金曲大赏集资', 17526, 8303, False)
     wds_array = [wds1, wds2]
     handler = WDSHandler([], [])
