@@ -125,6 +125,8 @@ class WDSHandler:
         wds_rank_list = []
         for i in range(page_num):
             rank_html = self.get_wds_rank(wds, page=i+1)
+            if rank_html is None:
+                break
             soup2 = BeautifulSoup(rank_html, 'lxml')
             wds_rank_list.extend(soup2.findAll(name='li'))
 
@@ -196,8 +198,10 @@ class WDSHandler:
             ERROR(e)
         r_json = r.json()
         # DEBUG('response: %s', r.text)
-        if int(r_json['status']) != 0:
+        # 微打赏有bug，首页上和排名页上的人数不一致
+        if 'data' not in r_json or int(r_json['status']) != 0:
             ERROR('获取失败!')
+            return None
         return r_json['data']['html']
 
     def get_current_and_target(self, wds):
