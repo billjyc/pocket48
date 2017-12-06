@@ -119,7 +119,7 @@ class WDSHandler:
         # print soup.prettify()
         comment_list = soup.findAll(name='li')
         support_num, current, target = self.get_current_and_target(wds)
-        project_info = '当前进度: %s元, 目标金额: %s元\n当前集资人数: %s\n' % (current, target, support_num)
+        # project_info = '当前进度: %s元, 目标金额: %s元\n当前集资人数: %s\n' % (current, target, support_num)
 
         page_num = int(support_num) / PAGE_SIZE + 1
         wds_rank_list = []
@@ -129,6 +129,8 @@ class WDSHandler:
                 break
             soup2 = BeautifulSoup(rank_html, 'lxml')
             wds_rank_list.extend(soup2.findAll(name='li'))
+
+        project_info = '当前进度: %s元, 目标金额: %s元\n当前集资人数: %s\n' % (current, target, len(wds_rank_list))
 
         for comment in comment_list:
             comment_id = comment.find(class_='add-jubao').get('to_comid')
