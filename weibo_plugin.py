@@ -50,6 +50,6 @@ def monitor_member_weibo(bot):
     if newWB is not None:
         DEBUG(newWB)
         member_weibo_groups = QQHandler.list_group(global_config.MEMBER_WEIBO_GROUPS)
-        message = '你的小宝贝儿发微博啦: %s\n发送时间: %s' % (global_config.WEIBO_LINK, newWB['created_at'])
+        message = '你的小宝贝儿发微博啦: %s\n发送时间: %s' % (newWB['scheme'], newWB['created_at'])
         if newWB['created_at'] == '刚刚':
             QQHandler.send_to_groups(member_weibo_groups, message)

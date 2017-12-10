@@ -4,19 +4,14 @@
 # Action    : 微博监控
 # Desc      : 微博监控主模块
 
-import requests, json, sys
-from lxml import etree
-
-from config_reader import ConfigReader
-from qqbot.utf8logger import DEBUG, INFO, ERROR
+import json
+import requests
 import time
+import utils
+from qqbot.utf8logger import DEBUG, INFO
 
 
 class WeiboMonitor:
-    """
-        @   Class self  :
-    """
-
     def __init__(self, ):
         self.session = requests.session()
         self.reqHeaders = {
@@ -27,13 +22,13 @@ class WeiboMonitor:
             'Accept-Language': 'zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3'
         }
 
-    """
-        @   Class self  :
-        @   String userName  : The username of weibo.cn
-        @   String passWord  : The password of weibo.cn
-    """
-
     def login(self, userName, passWord):
+        """
+        登录微博
+        :param userName:
+        :param passWord:
+        :return:
+        """
         loginApi = 'https://passport.weibo.cn/sso/login'
         loginPostData = {
             'username': userName,
@@ -58,73 +53,75 @@ class WeiboMonitor:
             if r.status_code == 200 and json.loads(r.text)['retcode'] == 20000000:
                 self.echoMsg('Info', 'Login successful! UserId:' + json.loads(r.text)['data']['uid'])
             else:
-                self.echoMsg('Error', 'Logon failure!')
+                self.echoMsg('Error', 'Login failure!')
                 # sys.exit()
         except Exception as e:
             self.echoMsg('Error', e)
             # sys.exit()
 
-    """
-        @   Class self  :
-        @   String wbUserId  : The user you want to monitored
-    """
-
-    def getWBQueue(self, wbUserId):
+    def getWBQueue(self, weibo_user_id):
+        """
+        拿到用户的微博队列
+        :param weibo_user_id:
+        :return:
+        """
         # get user weibo containerid
-        userInfo = 'https://m.weibo.cn/api/container/getIndex?uid=%s&type=uid&value=%s' % (wbUserId, wbUserId)
+        user_info = 'https://m.weibo.cn/api/container/getIndex?uid=%s&type=uid&value=%s' % (weibo_user_id, weibo_user_id)
         try:
-            r = self.session.get(userInfo, headers=self.reqHeaders)
-            for i in r.json()['tabsInfo']['tabs']:
+            r = self.session.get(user_info, headers=self.reqHeaders)
+            for i in r.json()['data']['tabsInfo']['tabs']:
                 if i['tab_type'] == 'weibo':
-                    conId = i['containerid']
+                    con_id = i['containerid']
         except Exception as e:
             self.echoMsg('Error', e)
-            sys.exit()
+            print e
+            # sys.exit()
+
         # get user weibo index
-        self.weiboInfo = 'https://m.weibo.cn/api/container/getIndex?uid=%s&type=uid&value=%s&containerid=%s' % (
-        wbUserId, wbUserId, conId)
+        self.weibo_info = 'https://m.weibo.cn/api/container/getIndex?uid=%s&type=uid&value=%s&containerid=%s' % (
+            weibo_user_id, weibo_user_id, con_id)
         try:
-            r = self.session.get(self.weiboInfo, headers=self.reqHeaders)
+            r = self.session.get(self.weibo_info, headers=self.reqHeaders)
             self.itemIds = []  # WBQueue
-            for i in r.json()['cards']:
+            for i in r.json()['data']['cards']:
                 if i['card_type'] == 9:
                     self.itemIds.append(i['mblog']['id'])
             self.echoMsg('Info', 'Got weibos')
             self.echoMsg('Info', 'Has %d id(s)' % len(self.itemIds))
         except Exception as e:
             self.echoMsg('Error', e)
+            print e
             # sys.exit()
 
-    """
-        @   Class self  :
-    """
-
     def startMonitor(self, ):
-        returnDict = {}
+        return_dict = {}
         try:
-            r = self.session.get(self.weiboInfo, headers=self.reqHeaders)
-            for i in r.json()['cards']:
+            r = self.session.get(self.weibo_info, headers=self.reqHeaders)
+            for i in r.json()['data']['cards']:
                 # print i
                 if i['card_type'] == 9:
                     if str(i['mblog']['id']) not in self.itemIds:
                         self.itemIds.append(i['mblog']['id'])
                         self.echoMsg('Info', 'Got a new weibo')
                         # @ return returnDict dict
-                        returnDict['created_at'] = i['mblog']['created_at']
-                        returnDict['text'] = i['mblog']['text']
-                        returnDict['source'] = i['mblog']['source']
-                        returnDict['nickName'] = i['mblog']['user']['screen_name']
+                        return_dict['created_at'] = i['mblog']['created_at']
+                        return_dict['text'] = utils.filter_tags(i['mblog']['text'])
+                        return_dict['source'] = i['mblog']['source']
+                        return_dict['nickName'] = i['mblog']['user']['screen_name']
+                        return_dict['scheme'] = i['scheme']
                         DEBUG(i['mblog']['text'])
                         # if has photos
                         if i['mblog'].has_key('pics'):
-                            returnDict['picUrls'] = []
+                            return_dict['picUrls'] = []
                             for j in i['mblog']['pics']:
-                                returnDict['picUrls'].append(j['url'])
+                                return_dict['picUrls'].append(j['url'])
                                 DEBUG(j['url'])
-                        return returnDict
+
+                        return return_dict
             self.echoMsg('Info', '微博队列共有 %d 条' % len(self.itemIds))
         except Exception as e:
             self.echoMsg('Error', e)
+            print e
             # sys.exit()
 
     """
@@ -148,5 +145,5 @@ if __name__ == '__main__':
     while 1:
         newWB = handler.startMonitor()
         if newWB is not None:
-            print newWB
+            print newWB['text']
         time.sleep(3)
