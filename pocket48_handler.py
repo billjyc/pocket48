@@ -212,8 +212,8 @@ class Pocket48Handler:
             if msg_id in self.member_room_msg_ids:
                 continue
 
-            if extInfo['role'] != 2:  # 口袋bug，会显示粉丝消息
-                continue
+            # if extInfo['role'] != 2:  # 口袋bug，会显示粉丝消息
+            #     continue
 
             DEBUG('成员消息')
             self.member_room_msg_ids.append(msg_id)
