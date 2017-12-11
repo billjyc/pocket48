@@ -7,8 +7,7 @@ from bs4 import BeautifulSoup
 from qqbot.utf8logger import INFO, ERROR, DEBUG
 import time
 import re
-import utils
-from utils import global_config
+from utils import global_config, util
 
 from qq.qqhandler import QQHandler
 
@@ -144,7 +143,7 @@ class WDSHandler:
             nick_sup = comment.find(class_='nick_sup').string
             user_id = comment.find(class_='add-jubao').get('to_user')
 
-            msg = '感谢 %s %s, %s\n' % (nickname, nick_sup, utils.random_str(global_config.WDS_POSTSCRIPTS))
+            msg = '感谢 %s %s, %s\n' % (nickname, nick_sup, util.random_str(global_config.WDS_POSTSCRIPTS))
 
             rank_msg = ''
             DEBUG('WDS USER ID: %s', user_id)

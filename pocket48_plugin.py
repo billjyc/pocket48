@@ -2,13 +2,12 @@
 from qqbot import qqbotsched
 from qqbot.utf8logger import DEBUG, INFO, ERROR
 import time
-import utils
 
 from utils.config_reader import ConfigReader
 from pocket48.pocket48_handler import Pocket48Handler
 from qq.qqhandler import QQHandler
 
-from utils import global_config
+from utils import global_config, util
 
 pocket48_handler = None
 
@@ -43,12 +42,12 @@ def onQQMessage(bot, contact, member, content):
 
     if contact.ctype == 'group' and contact.qq in global_config.AUTO_REPLY_GROUPS:
         if '@ME' in content:  # 在群中@机器人
-            bot.SendTo(contact, member.name + '，' + utils.random_str(global_config.AT_AUTO_REPLY))
+            bot.SendTo(contact, member.name + '，' + util.random_str(global_config.AT_AUTO_REPLY))
         elif content.startswith('-'):  # 以'-'开头才能触发自动回复
             if content == '-version':
                 bot.SendTo(contact, 'QQbot-' + bot.conf.version)
             elif content == global_config.MEMBER_ATTR:  # 群消息输入成员缩写
-                bot.SendTo(contact, utils.random_str(global_config.I_LOVE))
+                bot.SendTo(contact, util.random_str(global_config.I_LOVE))
             elif content in global_config.JIZI_KEYWORDS:  # 集资链接
                 jizi_link = '\n'.join(global_config.JIZI_LINK)
                 bot.SendTo(contact, '集资链接: %s' % jizi_link)

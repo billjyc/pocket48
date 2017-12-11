@@ -7,7 +7,7 @@
 import json
 import requests
 import time
-import utils
+from utils import util
 from qqbot.utf8logger import DEBUG, INFO
 
 
@@ -105,7 +105,7 @@ class WeiboMonitor:
                         self.echoMsg('Info', 'Got a new weibo')
                         # @ return returnDict dict
                         return_dict['created_at'] = i['mblog']['created_at']
-                        return_dict['text'] = utils.filter_tags(i['mblog']['text'])
+                        return_dict['text'] = util.filter_tags(i['mblog']['text'])
                         return_dict['source'] = i['mblog']['source']
                         return_dict['nickName'] = i['mblog']['user']['screen_name']
                         return_dict['scheme'] = i['scheme']

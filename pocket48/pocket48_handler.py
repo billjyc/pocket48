@@ -8,12 +8,11 @@ from qq.qqhandler import QQHandler
 from qqbot.utf8logger import INFO, ERROR, DEBUG
 from utils.download import Download
 
-from utils import global_config
+from utils import global_config, util
 
 import Queue
 
 import sys
-import utils
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -183,7 +182,7 @@ class Pocket48Handler:
             # 距离上一次提醒时间超过10分钟且有未读消息
             if self.last_msg_time < 0 or time_now - self.last_msg_time >= 10 * 60:
                 DEBUG('向大群发送简易版提醒')
-                msg = utils.random_str(global_config.ROOM_MSG_LITE_NOTIFY)
+                msg = util.random_str(global_config.ROOM_MSG_LITE_NOTIFY)
                 QQHandler.send_to_groups(self.member_room_msg_lite_groups, msg)
                 INFO(msg)
                 self.unread_msg_amount = 0
@@ -351,7 +350,7 @@ class Pocket48Handler:
             # DEBUG('live_id is in member_live_ids: %s', str(live_id in self.member_live_ids))
             if live['memberId'] == int(member_id) and live_id not in self.member_live_ids:
                 DEBUG('[被监控成员正在直播]member_id: %s, live_id: %', member_id, live_id)
-                start_time = utils.convert_timestamp_to_timestr(live['startTime'])
+                start_time = util.convert_timestamp_to_timestr(live['startTime'])
                 stream_path = live['streamPath']  # 流地址
                 sub_title = live['subTitle']  # 直播名称
                 live_type = live['liveType']
@@ -437,7 +436,7 @@ class Pocket48Handler:
 
         schedules = json.load(f)
         for s in schedules['schedules']:
-            perform_time = utils.convert_timestr_to_timestamp(s['time'])
+            perform_time = util.convert_timestr_to_timestamp(s['time'])
             diff = perform_time - time.time()
             if 0 < diff <= 15 * 60:
                 live_link = '\n'.join(global_config.LIVE_LINK)
