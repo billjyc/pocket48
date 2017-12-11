@@ -16,7 +16,7 @@ def onStartupComplete(bot):
     # 启动完成时被调用
     # bot : QQBot 对象，提供 List/SendTo/GroupXXX/Stop/Restart 等接口，详见文档第五节
     global statistic_handler
-    statistic_handler = statistic_handler()
+    statistic_handler = StatisticHandler()
     update_wds_conf(bot)
 
 
