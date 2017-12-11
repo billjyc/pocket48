@@ -272,7 +272,7 @@ class Pocket48Handler:
         """
         rsp_json = json.loads(response)
         msgs = rsp_json['content']['data']
-        DEBUG(response)
+        DEBUG('parse room comment reponse: %s', response)
         message = ''
         for msg in msgs:
             extInfo = json.loads(msg['extInfo'])
@@ -327,7 +327,7 @@ class Pocket48Handler:
         :return:
         """
         rsp_json = json.loads(response)
-        DEBUG(rsp_json['content'].keys())
+        # DEBUG('keys of parse member live: %s', rsp_json['content'].keys())
         # 当前没有人在直播
         if 'liveList' not in rsp_json['content'].keys():
             # print 'no live'
@@ -340,7 +340,7 @@ class Pocket48Handler:
         # DEBUG('直播ID列表: %s', ','.join(self.member_live_ids))
         for live in live_list:
             live_id = live['liveId']
-            DEBUG(live.keys())
+            # DEBUG(live.keys())
             # print '直播人: %s' % live['memberId']
             # DEBUG('直播人(response): %s, 类型: %s', live['memberId'], type(live['memberId']))
             # DEBUG('member_id(参数): %s, 类型: %s', member_id, type(member_id))
@@ -443,7 +443,7 @@ class Pocket48Handler:
                 live_msg = '直播传送门: %s' % live_link
                 notify_str = '%s\n公演: %s\n时间: %s\n队伍: %s\n%s' % (
                 global_config.PERFORMANCE_NOTIFY, s['name'], s['time'], s['team'], live_msg)
-                INFO(notify_str)
+                INFO('notify str: %s', notify_str)
                 QQHandler.send_to_groups(self.member_room_msg_lite_groups, notify_str)
 
 

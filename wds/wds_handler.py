@@ -194,13 +194,13 @@ class WDSHandler:
             # 注意，这里的param不用转换成json了，因为参数格式为x-www-form-urlencoded
             r = self.session.post(jizi_url, params, headers=self.wds_header())
         except Exception as e:
-            ERROR('获取微打赏评论失败')
+            ERROR('获取微打赏排名失败')
             ERROR(e)
         r_json = r.json()
-        # DEBUG('response: %s', r.text)
+        DEBUG('response: %s', r.text)
         # 微打赏有bug，首页上和排名页上的人数不一致
         if 'data' not in r_json or int(r_json['status']) != 0:
-            ERROR('获取失败!')
+            ERROR('微打赏排名获取失败!')
             return None
         return r_json['data']['html']
 

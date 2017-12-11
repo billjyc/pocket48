@@ -51,9 +51,9 @@ class WeiboMonitor:
         try:
             r = self.session.post(loginApi, data=loginPostData, headers=self.reqHeaders)
             if r.status_code == 200 and json.loads(r.text)['retcode'] == 20000000:
-                self.echoMsg('Info', 'Login successful! UserId:' + json.loads(r.text)['data']['uid'])
+                self.echoMsg('Info', 'weibo Login successful! UserId:' + json.loads(r.text)['data']['uid'])
             else:
-                self.echoMsg('Error', 'Login failure!')
+                self.echoMsg('Error', 'weibo Login failure!')
                 # sys.exit()
         except Exception as e:
             self.echoMsg('Error', e)
@@ -87,7 +87,7 @@ class WeiboMonitor:
                 if i['card_type'] == 9:
                     self.itemIds.append(i['mblog']['id'])
             self.echoMsg('Info', 'Got weibos')
-            self.echoMsg('Info', 'Has %d id(s)' % len(self.itemIds))
+            self.echoMsg('Info', 'Has %d weibo id(s)' % len(self.itemIds))
         except Exception as e:
             self.echoMsg('Error', e)
             print e
