@@ -3,13 +3,12 @@
 import requests
 import json
 
-from config_reader import ConfigReader
 import time
-from qqhandler import QQHandler
+from qq.qqhandler import QQHandler
 from qqbot.utf8logger import INFO, ERROR, DEBUG
-from download import Download
+from utils.download import Download
 
-import global_config
+from utils import global_config
 
 import Queue
 
@@ -443,7 +442,8 @@ class Pocket48Handler:
             if 0 < diff <= 15 * 60:
                 live_link = '\n'.join(global_config.LIVE_LINK)
                 live_msg = '直播传送门: %s' % live_link
-                notify_str = '%s\n公演: %s\n时间: %s\n队伍: %s\n%s' % (global_config.PERFORMANCE_NOTIFY, s['name'], s['time'], s['team'], live_msg)
+                notify_str = '%s\n公演: %s\n时间: %s\n队伍: %s\n%s' % (
+                global_config.PERFORMANCE_NOTIFY, s['name'], s['time'], s['team'], live_msg)
                 INFO(notify_str)
                 QQHandler.send_to_groups(self.member_room_msg_lite_groups, notify_str)
 

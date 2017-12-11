@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from qqbot import qqbotsched
-from qqbot.utf8logger import DEBUG, INFO, ERROR
+from qqbot.utf8logger import DEBUG, INFO
 from weibo.weibo_handler import WeiboMonitor
-from qqhandler import QQHandler
-from config_reader import ConfigReader
-import global_config
+from qq.qqhandler import QQHandler
+from utils.config_reader import ConfigReader
+from utils import global_config
 
 weibo_monitor = None
 

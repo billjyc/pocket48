@@ -1,6 +1,5 @@
 # -*- coding:utf-8 -*-
 
-import json
 import sys
 
 import requests
@@ -9,9 +8,9 @@ from qqbot.utf8logger import INFO, ERROR, DEBUG
 import time
 import re
 import utils
-import global_config
+from utils import global_config
 
-from qqhandler import QQHandler
+from qq.qqhandler import QQHandler
 
 reload(sys)
 sys.setdefaultencoding('utf8')

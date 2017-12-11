@@ -2,14 +2,13 @@
 from qqbot import qqbotsched
 from qqbot.utf8logger import DEBUG, INFO, ERROR
 import time
-import json
 import utils
 
-from config_reader import ConfigReader
-from pocket48_handler import Pocket48Handler
-from qqhandler import QQHandler
+from utils.config_reader import ConfigReader
+from pocket48.pocket48_handler import Pocket48Handler
+from qq.qqhandler import QQHandler
 
-import global_config
+from utils import global_config
 
 pocket48_handler = None
 

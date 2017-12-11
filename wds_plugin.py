@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from qqbot import qqbotsched
-from qqbot.utf8logger import DEBUG, INFO, ERROR
-from config_reader import ConfigReader
+from qqbot.utf8logger import DEBUG, INFO
+from utils.config_reader import ConfigReader
 from wds.wds_handler import WDSHandler, WDS
-import global_config
-from qqhandler import QQHandler
+from utils import global_config
+from qq.qqhandler import QQHandler
 import json
 
 
