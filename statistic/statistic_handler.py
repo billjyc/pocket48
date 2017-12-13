@@ -23,6 +23,7 @@ class StatisticHandler:
     def __init__(self, db_path):
         self.session = requests.session()
         db_path = os.path.join(BASE_DIR, db_path)
+        DEBUG('db_path: %s', db_path)
         self.conn = sqlite3.connect(db_path)
         DEBUG('读取数据库成功')
 
