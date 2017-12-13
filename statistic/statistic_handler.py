@@ -34,21 +34,25 @@ class StatisticHandler:
         :return:
         """
         cursor = self.conn.cursor()
+        DEBUG('更新群信息')
         QQHandler.update()
 
         try:
             # 获取群号
+            DEBUG('获取成员群号')
             c = cursor.execute("""
                 select group_number from member WHERE member_name=?
             """, (member_name, ))
             group_number = c.fetchone()[0]
 
             number = QQHandler.get_group_number(group_number)
+            DEBUG('群%s人数: %s', group_number, number)
 
             # number = 800
             cur_date = util.convert_timestamp_to_timestr(time.time() * 1000)
+            DEBUG('记录时间: %s', cur_date)
 
-            DEBUG('统计：成员: %s, 群号: %s, 人数: %d, 时间: %s', member_name, group_number, number, cur_date)
+            DEBUG('统计：成员: %s, 群号: %s, 人数: %s, 时间: %s', member_name, group_number, number, cur_date)
             cursor.execute("""
             INSERT INTO `group` (`member_name`, `group_number`, `group_size`, `date`) VALUES
             (?, ?, ?, ?)

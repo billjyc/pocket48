@@ -28,7 +28,7 @@ def update_wds_conf(bot):
     ConfigReader.read_conf()
 
 
-@qqbotsched(minute='*')
+@qqbotsched(second='40')
 def record_data(bot):
     """
     记录数据
@@ -37,6 +37,7 @@ def record_data(bot):
     """
     global statistic_handler
     DEBUG('记录群人数数据')
+    DEBUG('member name: %s', global_config.MEMBER_NAME)
     statistic_handler.update_group_size(global_config.MEMBER_NAME)
 
 
