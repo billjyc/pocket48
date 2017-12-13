@@ -28,7 +28,7 @@ def update_wds_conf(bot):
     ConfigReader.read_conf()
 
 
-@qqbotsched(second='40')
+@qqbotsched(hour='3')
 def record_data(bot):
     """
     记录数据
