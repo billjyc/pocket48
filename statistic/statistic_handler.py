@@ -45,7 +45,7 @@ class StatisticHandler:
             """, (member_name, ))
             group_number = c.fetchone()[0]
             DEBUG('群号: %s', group_number)
-            number = QQHandler.get_group_number(group_number)
+            number = QQHandler.get_group_number(str(group_number))
             DEBUG('群%s人数: %s', group_number, number)
 
             # number = 800
