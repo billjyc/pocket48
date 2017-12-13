@@ -237,10 +237,10 @@ def get_room_msgs(bot):
     r2 = pocket48_handler.get_member_room_comment(global_config.ROOM_ID)
     pocket48_handler.parse_room_comment(r2)
 
-    DEBUG('last_msg_time: %s', pocket48_handler.last_msg_time)
+    # DEBUG('last_msg_time: %s', pocket48_handler.last_msg_time)
 
     end_t = time.time()
-    DEBUG('执行时间: %s', end_t-start_t)
+    DEBUG('获取房间消息 执行时间: %s', end_t-start_t)
 
 
 @qqbotsched(minute='*', second='40')

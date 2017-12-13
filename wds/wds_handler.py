@@ -197,7 +197,7 @@ class WDSHandler:
             ERROR('获取微打赏排名失败')
             ERROR(e)
         r_json = r.json()
-        DEBUG('response: %s', r.text)
+        # DEBUG('response: %s', r.text)
         # 微打赏有bug，首页上和排名页上的人数不一致
         if 'data' not in r_json or int(r_json['status']) != 0:
             ERROR('微打赏排名获取失败!')

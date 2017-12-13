@@ -272,7 +272,7 @@ class Pocket48Handler:
         """
         rsp_json = json.loads(response)
         msgs = rsp_json['content']['data']
-        DEBUG('parse room comment reponse: %s', response)
+        # DEBUG('parse room comment reponse: %s', response)
         message = ''
         for msg in msgs:
             extInfo = json.loads(msg['extInfo'])
