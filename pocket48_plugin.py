@@ -259,20 +259,20 @@ def notify_performance(bot):
     pocket48_handler.notify_performance()
 
 
-@qqbotsched(second='35', minute='*')
-def notify_group_number(bot):
-    INFO('检查群内人数')
-    QQHandler.update()
-    for g_number in global_config.MEMBER_ROOM_MSG_LITE_GROUPS:
-        number = QQHandler.get_group_number(g_number)
-        DEBUG('群%s: %d人', g_number, number)
-        DEBUG('global_config.GROUP_MEMBER_NUM: %d', global_config.GROUP_MEMBER_NUM[g_number])
-        if 0 < global_config.GROUP_MEMBER_NUM[g_number] < number:
-            INFO('有新人入群啦~')
-
-            g_obj = QQHandler.list_group([g_number])
-            QQHandler.send_to_groups(g_obj, '机器人自动欢迎~')
-        global_config.GROUP_MEMBER_NUM[g_number] = number
+# @qqbotsched(second='35', minute='*')
+# def notify_group_number(bot):
+#     INFO('检查群内人数')
+#     QQHandler.update()
+#     for g_number in global_config.MEMBER_ROOM_MSG_LITE_GROUPS:
+#         number = QQHandler.get_group_number(g_number)
+#         DEBUG('群%s: %d人', g_number, number)
+#         DEBUG('global_config.GROUP_MEMBER_NUM: %d', global_config.GROUP_MEMBER_NUM[g_number])
+#         if 0 < global_config.GROUP_MEMBER_NUM[g_number] < number:
+#             INFO('有新人入群啦~')
+#
+#             g_obj = QQHandler.list_group([g_number])
+#             QQHandler.send_to_groups(g_obj, '机器人自动欢迎~')
+#         global_config.GROUP_MEMBER_NUM[g_number] = number
 
 # @qqbotsched(minute='*', second='30')
 # def get_member_room_msg_lite(bot):

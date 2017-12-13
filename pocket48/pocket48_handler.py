@@ -48,10 +48,10 @@ class Pocket48Handler:
         # 成员房间未读消息数量
         self.unread_msg_amount = 0
 
-        self.live_urls = Queue.Queue(20)
-        self.download = Download(self.live_urls)
-        self.download.setDaemon(True)
-        self.download.start()
+        # self.live_urls = Queue.Queue(20)
+        # self.download = Download(self.live_urls)
+        # self.download.setDaemon(True)
+        # self.download.start()
 
     def login(self, username, password):
         """
@@ -362,10 +362,10 @@ class Pocket48Handler:
                 self.member_live_ids.append(live_id)
 
                 # 录制直播
-                name = '%s_%s' % (member_id, live['startTime'])
-                # self.download.setName(name)
-                self.live_urls.put(name)
-                self.live_urls.put(stream_path)
+                # name = '%s_%s' % (member_id, live['startTime'])
+                # # self.download.setName(name)
+                # self.live_urls.put(name)
+                # self.live_urls.put(stream_path)
 
         DEBUG(msg)
         if msg and len(self.member_live_groups) > 0:
