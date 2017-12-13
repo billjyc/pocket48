@@ -35,7 +35,7 @@ class StatisticHandler:
         """
         cursor = self.conn.cursor()
         DEBUG('更新群信息')
-        QQHandler.update()
+        # QQHandler.update()
 
         try:
             # 获取群号
@@ -44,7 +44,7 @@ class StatisticHandler:
                 select group_number from member WHERE member_name=?
             """, (member_name, ))
             group_number = c.fetchone()[0]
-
+            DEBUG('群号: %s', group_number)
             number = QQHandler.get_group_number(group_number)
             DEBUG('群%s人数: %s', group_number, number)
 
@@ -100,5 +100,5 @@ class StatisticHandler:
 
 if __name__ == "__main__":
     statistic_handler = StatisticHandler('statistics.db')
-    # statistic_handler.update_group_size('fengxiaofei')
-    statistic_handler.get_super_tag_size('fengxiaofei')
+    statistic_handler.update_group_size('fengxiaofei')
+    # statistic_handler.get_super_tag_size('fengxiaofei')
