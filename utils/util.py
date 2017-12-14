@@ -2,6 +2,8 @@
 import time
 import random
 import re
+import urllib
+import hashlib
 
 
 def convert_timestamp_to_timestr(timestamp):
@@ -84,8 +86,48 @@ def replace(s, re_exp, repl_string):
     return re_exp.sub(repl_string, s)
 
 
+def make_signature(post_fields):
+    """
+    生成调用微打赏接口所需的签名
+
+    PHP的例子：
+        $post_fields = $_POST;
+        ksort($post_fields);
+        $md5_string = http_build_query($post_fields);
+        $sign = substr(md5($md5_string), 5, 16);
+
+    :param post_fields: post请求的参数
+    :return:
+    """
+    post_fields_sorted = ksort(post_fields)
+    md5_string = urllib.urlencode(post_fields_sorted)
+    sign = hashlib.md5(md5_string).hexdigest()[5:16]
+    return sign
+
+
+def ksort(d):
+    return [(k, d[k]) for k in sorted(d.keys())]
+
+
 if __name__ == '__main__':
-    strs = filter_tags("""
-    test<span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_tu-65768ccc23.png\" style=\"width:1em;height:1em;\" alt=\"[吐]\"></span><span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_haha-bdd6ceb619.png\" style=\"width:1em;height:1em;\" alt=\"[哈哈]\"></span><span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_tu-65768ccc23.png\" style=\"width:1em;height:1em;\" alt=\"[吐]\"></span><span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/others/l_xin-8e9a1a0346.png\" style=\"width:1em;height:1em;\" alt=\"[心]\"></span><br/><a class='k' href='https://m.weibo.cn/k/test?from=feed'>#test#</a>
-    """)
-    print strs
+    # strs = filter_tags("""
+    # test<span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_tu-65768ccc23.png\" style=\"width:1em;height:1em;\" alt=\"[吐]\"></span><span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_haha-bdd6ceb619.png\" style=\"width:1em;height:1em;\" alt=\"[哈哈]\"></span><span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_tu-65768ccc23.png\" style=\"width:1em;height:1em;\" alt=\"[吐]\"></span><span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/others/l_xin-8e9a1a0346.png\" style=\"width:1em;height:1em;\" alt=\"[心]\"></span><br/><a class='k' href='https://m.weibo.cn/k/test?from=feed'>#test#</a>
+    # """)
+    # print strs
+    post_fields = {
+        "status": "0",
+        "message": "",
+        "data": [
+            {
+                "pro_id": "10250",
+                "pro_name": "【陪你远征，伴你同行】2018宮脇咲良总选举应援",
+                "goal": "31900",
+                "already_raised": 2101,
+                "end_time": "2018-01-01 03:19:00",
+                "pc_cover": "https://p.moimg.net/bbs_attachments/2017/12/11/20171211_1512945825_3643.jpg",
+                "mobile_cover": "https://p.moimg.net/bbs_attachments/2017/12/11/20171211_1512945825_6800.jpg"
+            }
+        ],
+        "mapi_query_time": 1513158638
+    }
+    print make_signature(post_fields)
