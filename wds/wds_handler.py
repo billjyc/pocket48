@@ -1,15 +1,15 @@
 # -*- coding:utf-8 -*-
 
+import re
 import sys
+import time
 
 import requests
 from bs4 import BeautifulSoup
 from qqbot.utf8logger import INFO, ERROR, DEBUG
-import time
-import re
-from utils import global_config, util
 
 from qq.qqhandler import QQHandler
+from utils import global_config, util
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -40,8 +40,6 @@ class WDSHandler:
     def init_comment_queues(self):
         """
         初始化回复队列
-        :param moxi_id:
-        :param pro_id:
         :return:
         """
         try:
@@ -69,14 +67,6 @@ class WDSHandler:
         微打赏header信息
         """
         header = {
-            # 'Host': 'wds.modian.com',
-            # 'Accept': 'application/json',
-            # 'Accept-Encoding': 'gzip,deflate,br',
-            # 'Connection': 'keep-alive',
-            # 'Content-Length': '37',
-            # 'Content-Type': 'application/x-www-form-urlencoded',
-            # 'Origin': 'https://wds.modian.com',
-            # 'X-Requested-With': 'XMLHttpRequest',
             'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.104 Safari/537.36 Core/1.53.3408.400 QQBrowser/9.6.12028.40',
         }
         return header
