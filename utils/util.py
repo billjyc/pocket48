@@ -123,7 +123,9 @@ if __name__ == '__main__':
         "pro_id": 10289,
         "page": 1,
     }
+    header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.104 Safari/537.36 Core/1.53.4033.400 QQBrowser/9.7.12622.400'}
     sign = make_signature(post_fields)
     post_fields['sign'] = sign
-    r = requests.post(url, data=post_fields)
+
+    r = requests.post(url, post_fields, headers=header)
     print r.text
