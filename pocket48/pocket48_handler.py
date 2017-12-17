@@ -26,7 +26,7 @@ class Member:
 
 
 class Pocket48Handler:
-    VERSION = '5.0.0'
+    VERSION = '5.1.0'
 
     def __init__(self, auto_reply_groups, member_room_msg_groups, member_room_comment_msg_groups,
                  member_live_groups, member_room_msg_lite_groups):
