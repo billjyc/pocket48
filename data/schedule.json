@@ -1,6 +1,5 @@
 {
   "schedules": [
-    {"name": "命运的X号", "time": "2017-12-24 14:00:00", "team": "Team X", "comment": ""},
-    {"name": "圣诞节特别公演", "time": "2017-12-24 19:00:00", "team": "联合公演", "comment": ""}
+    {"name": "命运的X号", "time": "2017-12-24 14:00:00", "team": "Team X", "comment": ""}
   ]
 }
