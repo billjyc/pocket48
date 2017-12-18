@@ -12,11 +12,17 @@ from utils import util
 
 from bs4 import BeautifulSoup
 
+import datetime
+import matplotlib.pyplot as plt
+from pylab import mpl
 
 reload(sys)
 sys.setdefaultencoding('utf8')
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+mpl.rcParams['font.sans-serif'] = ['FangSong']  # 指定默认字体
+mpl.rcParams['axes.unicode_minus'] = False  # 解决保存图像是负号'-'显示为方块的问题
 
 
 class StatisticHandler:
@@ -72,7 +78,7 @@ class StatisticHandler:
         cursor = self.conn.cursor()
 
         try:
-            # 获取群号
+            # 获取超话链接
             c = cursor.execute("""
                         select super_tag from member WHERE member_name=?
                     """, (member_name,))
@@ -86,19 +92,44 @@ class StatisticHandler:
 
             cur_date = util.convert_timestamp_to_timestr(time.time() * 1000)
 
-            DEBUG('统计：成员: %s, 超话: %s, 人数: %d, 时间: %s', member_name, super_tag, number, cur_date)
+            DEBUG('统计：成员: %s, 超话: %s, 人数: %d, 时间: %s', member_name, super_tag, fans_number, cur_date)
             cursor.execute("""
                     INSERT INTO `super_tag` (`member_name`, `link`, `size`, `date`) VALUES
                     (?, ?, ?, ?)
-                    """, (member_name, super_tag, number, cur_date))
+                    """, (member_name, super_tag, fans_number, cur_date))
             self.conn.commit()
         except Exception as e:
             ERROR(e)
         finally:
             cursor.close()
 
+    def draw_line_plot(self, x, y, title=''):
+        """
+        绘制折线图
+        :param x: 时间
+        :param y:
+        :return:
+        """
+        plt.figure()
+        plt.plot(x, y, marker='o', mec='r', mfc='w')
+        for a, b in zip(x, y):
+            plt.text(a, b+0.5, str(b))
+        plt.xlabel("日期")
+        plt.ylabel("人数")
+        plt.title(title)
+        plt.show()
+        plt.savefig("line_%s.png" % time.time())
+
 
 if __name__ == "__main__":
     statistic_handler = StatisticHandler('statistics.db')
-    statistic_handler.update_group_size('fengxiaofei')
+    cursor = statistic_handler.conn.cursor()
+    cursor.execute("""
+        select `date`, `group_size` from `group` LIMIT 30
+    """)
+    list2 = cursor.fetchall()
+    x = [datetime.date.strftime(datetime.datetime.strptime(i[0], '%Y-%m-%d %H:%M:%S').date(), '%Y-%m-%d') for i in list2]
+    y = [i[1] for i in list2]
+    statistic_handler.draw_line_plot(x, y, title='fengxiaofei应援群人数变化')
+    # statistic_handler.update_group_size('fengxiaofei')
     # statistic_handler.get_super_tag_size('fengxiaofei')
