@@ -228,8 +228,10 @@ class Pocket48Handler:
                     DEBUG('翻牌')
                     member_msg = extInfo['messageText']
                     fanpai_msg = extInfo['faipaiContent']
-                    fanpai_id = extInfo['faipaiName']
-                    message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s:%s\n' % (msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_id, fanpai_msg)) + message
+                    # fanpai_id = extInfo['faipaiName']
+                    # message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s:%s\n' % (msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_id, fanpai_msg)) + message
+                    message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s\n' % (
+                    msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_msg)) + message
                 # TODO: 直播可以直接在房间里监控
                 elif message_object == 'diantai':  # 电台直播
                     DEBUG('电台直播')
@@ -452,7 +454,7 @@ if __name__ == '__main__':
 
     # handler.notify_performance()
 
-    handler.login('17011967934', '19930727')
+    handler.login('*****', '*****')
 
     # response = handler.get_member_live_msg()
     # handler.parse_member_live(response, 528331)

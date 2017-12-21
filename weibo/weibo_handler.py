@@ -138,7 +138,7 @@ class WeiboMonitor:
 
 if __name__ == '__main__':
     handler = WeiboMonitor()
-    handler.login('hacker4043', 'jiaYICONG123')
+    handler.login('***', '****')
     # uid = ConfigReader.get_property('weibo', 'fengxiaofei')
     uid = 1134206783
     handler.getWBQueue(uid)
