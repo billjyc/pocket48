@@ -47,6 +47,10 @@ class Pocket48Handler:
 
         # 成员房间未读消息数量
         self.unread_msg_amount = 0
+        # 成员房间其他成员的未读消息数量
+        self.unread_other_member_msg_amount = 0
+
+        self.other_members_names = []
 
         # self.live_urls = Queue.Queue(20)
         # self.download = Download(self.live_urls)
@@ -178,6 +182,12 @@ class Pocket48Handler:
         """
         time_now = time.time()
         msg = ''
+
+        if self.unread_other_member_msg_amount > 0 and len(self.member_room_msg_lite_groups) > 0:
+            if self.last_msg_time < 0 or time_now - self.last_msg_time >= 10 * 60:
+                DEBUG('其他成员出现在房间中')
+                member_name = ', '.join(self.other_members_names)
+                QQHandler.send_to_groups(self.member_room_msg_groups, '%s来你们灰的房间里串门啦~' % member_name)
         if self.unread_msg_amount > 0 and len(self.member_room_msg_lite_groups) > 0:
             # 距离上一次提醒时间超过10分钟且有未读消息
             if self.last_msg_time < 0 or time_now - self.last_msg_time >= 10 * 60:
@@ -190,7 +200,7 @@ class Pocket48Handler:
                 DEBUG('不向大群发送简易版提醒')
             self.last_msg_time = time_now
         else:
-            INFO('最近1分钟内没有未读消息')
+            INFO('最近10分钟内没有未读消息')
 
     def parse_room_msg(self, response):
         """
@@ -210,12 +220,18 @@ class Pocket48Handler:
             if msg_id in self.member_room_msg_ids:
                 continue
 
-            # if extInfo['role'] != 2:  # 口袋bug，会显示粉丝消息
-            #     continue
+            if extInfo['role'] != 2:  # 其他成员的消息
+                self.unread_other_member_msg_amount += 1
+                member_name = extInfo['senderName']
+                if member_name == '你们的小可爱':
+                    member_name = 'YBY'
+                if member_name not in self.other_members_names:
+                    self.other_members_names.append(member_name)
+            else:
+                self.unread_msg_amount += 1
 
             DEBUG('成员消息')
             self.member_room_msg_ids.append(msg_id)
-            self.unread_msg_amount += 1
 
             message_object = extInfo['messageObject']
 
@@ -454,7 +470,7 @@ if __name__ == '__main__':
 
     # handler.notify_performance()
 
-    handler.login('*****', '*****')
+    handler.login('17011967934', '19930727')
 
     # response = handler.get_member_live_msg()
     # handler.parse_member_live(response, 528331)
