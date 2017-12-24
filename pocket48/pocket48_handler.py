@@ -187,7 +187,8 @@ class Pocket48Handler:
             if self.last_msg_time < 0 or time_now - self.last_msg_time >= 10 * 60:
                 DEBUG('其他成员出现在房间中')
                 member_name = ', '.join(self.other_members_names)
-                QQHandler.send_to_groups(self.member_room_msg_groups, '%s来你们灰的房间里串门啦~' % member_name)
+                QQHandler.send_to_groups(self.member_room_msg_lite_groups, '%s来你们灰的房间里串门啦~' % member_name)
+                self.unread_other_member_msg_amount = 0
         if self.unread_msg_amount > 0 and len(self.member_room_msg_lite_groups) > 0:
             # 距离上一次提醒时间超过10分钟且有未读消息
             if self.last_msg_time < 0 or time_now - self.last_msg_time >= 10 * 60:
@@ -470,7 +471,7 @@ if __name__ == '__main__':
 
     # handler.notify_performance()
 
-    handler.login('17011967934', '19930727')
+    handler.login('*', '*')
 
     # response = handler.get_member_live_msg()
     # handler.parse_member_live(response, 528331)
