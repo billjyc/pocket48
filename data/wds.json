@@ -1,17 +1,10 @@
 {
   "monitor_activities": [
     {
-      "wds_link": "https://wds.modian.com/show_weidashang_pro/8915",
-      "wds_title": "冯晓菲应援会《暗夜脚步声》集资链接",
-      "wds_moxi_id": 18505,
-      "wds_pro_id": 8915,
-      "wds_need_display_rank": false
-    },
-    {
-      "wds_link": "https://wds.modian.com/show_weidashang_pro/9372",
-      "wds_title": "冯晓菲《暗夜脚步声》集资活动2.0",
-      "wds_moxi_id": 19274,
-      "wds_pro_id": 9372,
+      "wds_link": "https://wds.modian.com/show_weidashang_pro/10201",
+      "wds_title": "冯晓菲应援会2018年日常集资1.0",
+      "wds_moxi_id": 20924,
+      "wds_pro_id": 10201,
       "wds_need_display_rank": false
     }
   ],
