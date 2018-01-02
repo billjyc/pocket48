@@ -190,7 +190,7 @@ class Pocket48Handler:
                 member_name = ', '.join(self.other_members_names)
                 QQHandler.send_to_groups(self.member_room_msg_lite_groups, '%s来你们灰的房间里串门啦~' % member_name)
                 self.unread_other_member_msg_amount = 0
-                self.last_other_member_msg_time = time_now
+            self.last_other_member_msg_time = time_now
         if self.unread_msg_amount > 0 and len(self.member_room_msg_lite_groups) > 0:
             # 距离上一次提醒时间超过10分钟且有未读消息
             if self.last_msg_time < 0 or time_now - self.last_msg_time >= 10 * 60:
