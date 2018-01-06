@@ -29,6 +29,7 @@ class QQHandler:
                 group_name = ConfigReader.get_group_name(group_number)
                 DEBUG('group number: %s, group_name: %s', group_number, group_name)
                 group = bot.List('group', group_name)
+                DEBUG(group)
                 if group:
                     result.append(group[0])
                 else:
@@ -82,6 +83,7 @@ class QQHandler:
 
     @classmethod
     def send_to_groups(cls, groups, message):
+        DEBUG('send to groups: %s', groups)
         for group in groups:
             bot.SendTo(group, message)
             time.sleep(2)
