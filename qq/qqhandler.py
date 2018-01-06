@@ -27,6 +27,7 @@ class QQHandler:
         for group_number in groups:
             if group_number:
                 group_name = ConfigReader.get_group_name(group_number)
+                DEBUG('group number: %s, group_name: %s', group_number, group_name)
                 group = bot.List('group', group_name)
                 if group:
                     result.append(group[0])

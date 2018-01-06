@@ -36,7 +36,7 @@ def onQQMessage(bot, contact, member, content):
     # contact : QContact 对象，消息的发送者
     # member  : QContact 对象，仅当本消息为 群或讨论组 消息时有效，代表实际发消息的成员
     # content : str 对象，消息内容
-    DEBUG('member: %s', str(getattr(member, 'uin')))
+    # DEBUG('member: %s', str(getattr(member, 'uin')))
     # DEBUG('content: %s', content)
     # DEBUG('contact: %s', contact.ctype)
 
