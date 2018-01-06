@@ -45,7 +45,9 @@ class QQHandler:
         """
         number = 0
         if group_number:
-            group = bot.List('group', group_number)
+            group_name = ConfigReader.get_group_name(group_number)
+            DEBUG('group number: %s, group_name: %s', group_number, group_name)
+            group = bot.List('group', group_name)
             if group:
                 g = group[0]
                 member_list = bot.List(g)
