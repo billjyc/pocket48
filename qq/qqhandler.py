@@ -5,6 +5,7 @@ from qqbot import _bot as bot
 from qqbot.utf8logger import DEBUG, INFO, ERROR
 
 import time
+from utils.config_reader import ConfigReader
 
 
 class QQHandler:
@@ -25,7 +26,8 @@ class QQHandler:
         result = []
         for group_number in groups:
             if group_number:
-                group = bot.List('group', group_number)
+                group_name = ConfigReader.get_group_name(group_number)
+                group = bot.List('group', group_name)
                 if group:
                     result.append(group[0])
                 else:
