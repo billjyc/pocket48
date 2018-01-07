@@ -8,7 +8,7 @@ import requests
 
 from qq.qqhandler import QQHandler
 from utils import util
-from log import my_logger
+from log.my_logger import logger as my_logger
 
 from bs4 import BeautifulSoup
 

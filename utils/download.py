@@ -6,7 +6,7 @@ import urllib
 from asyncio import Queue
 import os
 
-from log import my_logger
+from log.my_logger import logger as my_logger
 
 
 class Download(threading.Thread):

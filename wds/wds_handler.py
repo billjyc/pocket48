@@ -6,7 +6,7 @@ import time
 
 import requests
 from bs4 import BeautifulSoup
-from log import my_logger
+from log.my_logger import logger as my_logger
 
 from qq.qqhandler import QQHandler
 from utils import global_config, util
@@ -106,7 +106,7 @@ class WDSHandler:
         support_num, current, target = self.get_current_and_target(wds)
         # project_info = '当前进度: %s元, 目标金额: %s元\n当前集资人数: %s\n' % (current, target, support_num)
 
-        page_num = int(support_num) / PAGE_SIZE + 1
+        page_num = int(int(support_num) / PAGE_SIZE) + 1
         wds_rank_list = []
         for i in range(page_num):
             rank_html = self.get_wds_rank(wds, page=i+1)

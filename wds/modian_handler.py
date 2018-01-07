@@ -5,7 +5,8 @@
 import sys
 
 import requests
-from log import my_logger
+from log.my_logger import logger as my_logger
+
 import time
 from utils import global_config, util
 import hashlib

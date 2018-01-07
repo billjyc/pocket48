@@ -1,45 +1,35 @@
 # -*- coding: utf-8 -*-
 
-from qqbot import qqbotsched
-from qqbot.utf8logger import DEBUG
+from log.my_logger import logger as my_logger
+
 from utils.config_reader import ConfigReader
 from statistic.statistic_handler import StatisticHandler
 from utils import global_config
 from qq.qqhandler import QQHandler
 import json
+from utils.scheduler import scheduler
 
 
-statistic_handler = None
-
-
-def onStartupComplete(bot):
-    # 启动完成时被调用
-    # bot : QQBot 对象，提供 List/SendTo/GroupXXX/Stop/Restart 等接口，详见文档第五节
-    global statistic_handler
-    statistic_handler = StatisticHandler('statistics.db')
-    update_wds_conf(bot)
-
-
-@qqbotsched(hour='2', minute="45")
-def update_wds_conf(bot):
+@scheduler.scheduled_job('cron', minute='45', hour=2)
+def update_wds_conf():
     global statistic_handler
 
-    DEBUG('读取数据配置')
+    my_logger.debug('读取数据配置-statistic_plugin')
     ConfigReader.read_conf()
 
 
-@qqbotsched(hour='3')
-def record_data(bot):
+@scheduler.scheduled_job('cron', hour=3)
+def record_data():
     """
     记录数据
     :param bot:
     :return:
     """
     global statistic_handler
-    DEBUG('记录群人数数据')
-    DEBUG('member name: %s', global_config.MEMBER_NAME)
+    my_logger.debug('记录群人数数据')
+    my_logger.debug('member name: %s', global_config.MEMBER_NAME)
     statistic_handler.update_group_size(global_config.MEMBER_NAME)
 
 
-if __name__ == '__main__':
-    pass
+statistic_handler = StatisticHandler('statistics.db')
+update_wds_conf()

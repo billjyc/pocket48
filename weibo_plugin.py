@@ -1,55 +1,50 @@
 # -*- coding: utf-8 -*-
 
-from qqbot import qqbotsched
-from qqbot.utf8logger import DEBUG, INFO
+from log.my_logger import logger as my_logger
+
 from weibo.weibo_handler import WeiboMonitor
 from qq.qqhandler import QQHandler
 from utils.config_reader import ConfigReader
 from utils import global_config
 
-weibo_monitor = None
+from utils.scheduler import scheduler
 
 
-def onStartupComplete(bot):
-    # 启动完成时被调用
-    # bot : QQBot 对象，提供 List/SendTo/GroupXXX/Stop/Restart 等接口，详见文档第五节
+@scheduler.scheduled_job('cron', second='35')
+def update_weibo_conf():
     global weibo_monitor
 
-    global_config.MEMBER_WEIBO_GROUPS = ConfigReader.get_property('qq_conf', 'member_weibo_groups').split(';')
-    weibo_monitor = WeiboMonitor()
-    weibo_monitor.login('hacker4043', 'jiaYICONG123')
-    name = ConfigReader.get_property('root', 'member_name')
-    uid = ConfigReader.get_property('weibo', name)
-    # uid = 1134206783
-    weibo_monitor.getWBQueue(uid)
-
-
-@qqbotsched(minute='*/35')
-def update_weibo_conf(bot):
-    global weibo_monitor
-
-    DEBUG('读取微博配置')
+    my_logger.debug('读取微博配置')
     global_config.MEMBER_WEIBO_GROUPS = ConfigReader.get_property('qq_conf', 'member_weibo_groups').split(';')
 
     member_name = ConfigReader.get_property('root', 'member_name')
     if global_config.MEMBER_NAME == '' or global_config.MEMBER_NAME != member_name:
-        DEBUG('微博监控成员变更')
+        my_logger.debug('微博监控成员变更')
         global_config.MEMBER_NAME = member_name
         uid = ConfigReader.get_property('weibo', member_name)
         if uid != '':
             weibo_monitor.getWBQueue(uid)
         else:
-            INFO('没有微博UID')
+            my_logger.info('没有微博UID')
 
 
-@qqbotsched(second='*/15')
-def monitor_member_weibo(bot):
+@scheduler.scheduled_job('cron', minute='*', second='55')
+def monitor_member_weibo():
     global weibo_monitor
 
     newWB = weibo_monitor.startMonitor()
     if newWB is not None:
-        DEBUG(newWB)
-        member_weibo_groups = QQHandler.list_group(global_config.MEMBER_WEIBO_GROUPS)
+        my_logger.debug(newWB)
+        member_weibo_groups = global_config.MEMBER_WEIBO_GROUPS
         message = '你的小宝贝儿发微博啦: %s\n发送时间: %s' % (newWB['scheme'], newWB['created_at'])
         if newWB['created_at'] == '刚刚':
             QQHandler.send_to_groups(member_weibo_groups, message)
+
+
+global_config.MEMBER_WEIBO_GROUPS = ConfigReader.get_property('qq_conf', 'member_weibo_groups').split(';')
+weibo_monitor = WeiboMonitor()
+weibo_monitor.login('hacker4043', 'jiaYICONG123')
+name = ConfigReader.get_property('root', 'member_name')
+uid = ConfigReader.get_property('weibo', name)
+# uid = 1134206783
+weibo_monitor.getWBQueue(uid)

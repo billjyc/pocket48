@@ -44,3 +44,9 @@ class QQHandler:
     def send_to_groups(cls, groups, message):
         for group in groups:
             bot.send_group_msg(group_id=group, message=message)
+
+
+if __name__ == '__main__':
+    groups = ['483548995', '101724227']
+    group_list = QQHandler.get_group_list()
+    print('1')
