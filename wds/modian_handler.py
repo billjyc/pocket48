@@ -5,16 +5,13 @@
 import sys
 
 import requests
-from qqbot.utf8logger import INFO, ERROR, DEBUG
+from log import my_logger
 import time
 from utils import global_config, util
 import hashlib
 import urllib
 
 from qq.qqhandler import QQHandler
-
-reload(sys)
-sys.setdefaultencoding('utf8')
 
 
 class ModianEntity:

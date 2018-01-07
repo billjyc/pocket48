@@ -1,6 +1,6 @@
 from cqhttp import CQHttp, Error
 
-bot = CQHttp(api_root='http://112.74.183.47:5700', access_token='aslkfdjie32df', secret='abc')
+bot = CQHttp(api_root='http://127.0.0.1:5700', access_token='aslkfdjie32df', secret='abc')
 
 
 @bot.on_message('test')
@@ -33,4 +33,4 @@ def handle_group_request(context):
 
 
 if __name__ == '__main__':
-    bot.run(host='127.0.0.1', port=8089)
+    bot.run(host='127.0.0.1', port=8200)

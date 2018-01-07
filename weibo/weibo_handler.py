@@ -8,7 +8,7 @@ import json
 import requests
 import time
 from utils import util
-from qqbot.utf8logger import DEBUG, INFO
+from log import my_logger
 
 
 class WeiboMonitor:
@@ -74,7 +74,7 @@ class WeiboMonitor:
                     con_id = i['containerid']
         except Exception as e:
             self.echoMsg('Error', e)
-            print e
+            print(e)
             # sys.exit()
 
         # get user weibo index
@@ -90,7 +90,7 @@ class WeiboMonitor:
             self.echoMsg('Info', 'Has %d weibo id(s)' % len(self.itemIds))
         except Exception as e:
             self.echoMsg('Error', e)
-            print e
+            print(e)
             # sys.exit()
 
     def startMonitor(self, ):
@@ -109,19 +109,19 @@ class WeiboMonitor:
                         return_dict['source'] = i['mblog']['source']
                         return_dict['nickName'] = i['mblog']['user']['screen_name']
                         return_dict['scheme'] = i['scheme']
-                        DEBUG(i['mblog']['text'])
+                        my_logger.debug(i['mblog']['text'])
                         # if has photos
                         if i['mblog'].has_key('pics'):
                             return_dict['picUrls'] = []
                             for j in i['mblog']['pics']:
                                 return_dict['picUrls'].append(j['url'])
-                                DEBUG(j['url'])
+                                my_logger.debug(j['url'])
 
                         return return_dict
             self.echoMsg('Info', '微博队列共有 %d 条' % len(self.itemIds))
         except Exception as e:
             self.echoMsg('Error', e)
-            print e
+            print(e)
             # sys.exit()
 
     """
@@ -131,9 +131,9 @@ class WeiboMonitor:
 
     def echoMsg(self, level, msg):
         if level == 'Info':
-            INFO(msg)
+            my_logger.info(msg)
         elif level == 'Error':
-            DEBUG(msg)
+            my_logger.debug(msg)
 
 
 if __name__ == '__main__':
@@ -145,5 +145,5 @@ if __name__ == '__main__':
     while 1:
         newWB = handler.startMonitor()
         if newWB is not None:
-            print newWB['text']
+            print(newWB['text'])
         time.sleep(3)

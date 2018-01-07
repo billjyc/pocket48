@@ -103,9 +103,9 @@ def make_signature(post_fields):
     """
     post_fields_sorted = ksort(post_fields)
     md5_string = urllib.urlencode(post_fields_sorted) + '&p=das41aq6'
-    print md5_string
+    # print md5_string
     sign = hashlib.md5(md5_string).hexdigest()[5:21]
-    print sign
+    # print sign
     return sign
 
 
@@ -128,4 +128,4 @@ if __name__ == '__main__':
     post_fields['sign'] = sign
 
     r = requests.post(url, post_fields, headers=header)
-    print r.text
+    # print r.text

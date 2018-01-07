@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-import ConfigParser
+from configparser import ConfigParser
 
 
 class ConfigReader:
@@ -34,4 +34,4 @@ class ConfigReader:
 
 
 if __name__ == '__main__':
-    print ConfigReader.get_member_room_number('fengxiaofei')
+    print(ConfigReader.get_member_room_number('fengxiaofei'))

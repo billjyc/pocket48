@@ -6,13 +6,10 @@ import time
 
 import requests
 from bs4 import BeautifulSoup
-from qqbot.utf8logger import INFO, ERROR, DEBUG
+from log import my_logger
 
 from qq.qqhandler import QQHandler
 from utils import global_config, util
-
-reload(sys)
-sys.setdefaultencoding('utf8')
 
 
 class WDS:
@@ -59,8 +56,8 @@ class WDSHandler:
 
                 self.wds_queue_map[self.wds_array[i]] = queue
         except Exception as e:
-            ERROR('初始化微打赏评论队列失败')
-            ERROR(e)
+            my_logger.error('初始化微打赏评论队列失败')
+            my_logger.error(e)
 
     def wds_header(self):
         """
@@ -86,13 +83,13 @@ class WDSHandler:
             # 注意，这里的param不用转换成json了，因为参数格式为x-www-form-urlencoded
             r = self.session.post(jizi_url, params, headers=self.wds_header())
         except Exception as e:
-            ERROR('获取微打赏评论失败')
-            ERROR(e)
-        # DEBUG('response: %s', r.text)
+            my_logger.error('获取微打赏评论失败')
+            my_logger.error(e)
+        # my_logger.debug('response: %s', r.text)
         # print r.text
         r_json = r.json()
         if int(r_json['status']) != 0:
-            ERROR('获取失败!')
+            my_logger.error('获取失败!')
         return r_json['data']['html']
 
     def parse_wds_comment2(self, r, wds):
@@ -136,11 +133,11 @@ class WDSHandler:
             msg = '感谢 %s %s, %s\n' % (nickname, nick_sup, util.random_str(global_config.WDS_POSTSCRIPTS))
 
             rank_msg = ''
-            DEBUG('WDS USER ID: %s', user_id)
+            my_logger.debug('WDS USER ID: %s', user_id)
             for rank in wds_rank_list:
                 user_a = rank.a['href']
                 uid = re.findall(r"\d+\.?\d*", user_a)[0]
-                DEBUG('user_a: %s, uid: %s', user_a, uid)
+                my_logger.debug('user_a: %s, uid: %s', user_a, uid)
                 if uid == user_id:
                     cur_rank = rank.find(class_='suport_ran').string
                     total_amount = rank.find(class_='money').string
@@ -158,8 +155,8 @@ class WDSHandler:
                 msg += project_info
                 msg += '集资项目: %s\n链接: %s' % (wds.title, wds.link)
                 QQHandler.send_to_groups(self.wds_notify_groups, msg)
-                INFO('wds_message: %s', msg)
-                DEBUG('集资评论队列: %d', len(comment_id_queue))
+                my_logger.info('wds_message: %s', msg)
+                my_logger.debug('集资评论队列: %d', len(comment_id_queue))
 
             time.sleep(3)
 
@@ -184,13 +181,13 @@ class WDSHandler:
             # 注意，这里的param不用转换成json了，因为参数格式为x-www-form-urlencoded
             r = self.session.post(jizi_url, params, headers=self.wds_header())
         except Exception as e:
-            ERROR('获取微打赏排名失败')
-            ERROR(e)
+            my_logger.error('获取微打赏排名失败')
+            my_logger.error(e)
         r_json = r.json()
-        # DEBUG('response: %s', r.text)
+        # my_logger.debug('response: %s', r.text)
         # 微打赏有bug，首页上和排名页上的人数不一致
         if 'data' not in r_json or int(r_json['status']) != 0:
-            ERROR('微打赏排名获取失败!')
+            my_logger.error('微打赏排名获取失败!')
             return None
         return r_json['data']['html']
 
@@ -213,18 +210,18 @@ class WDSHandler:
         soup = BeautifulSoup(r.text, 'lxml')
         # print soup.prettify()
 
-        DEBUG('集资项目: %s', wds.title)
-        DEBUG('集资链接: %s', wds.link)
+        my_logger.debug('集资项目: %s', wds.title)
+        my_logger.debug('集资链接: %s', wds.link)
         project_info = soup.find_all(class_="project-info")[0]
         support_num = project_info.find_all(class_="b")[0].find_all(name="span")[0].contents[0].strip()
-        DEBUG('当前集资人数: %s', support_num)
+        my_logger.debug('当前集资人数: %s', support_num)
         wds.support_num = int(support_num.replace(',', ''))
 
         current = project_info.find_all(class_="current")[0].find_all(name="span")[1].contents[1].strip()
-        DEBUG('当前进度: %s元', current)
+        my_logger.debug('当前进度: %s元', current)
         wds.current = float(current.replace(',', ''))
         target = project_info.find_all(class_="target")[0].find_all(name="span")[1].contents[1].strip()
-        DEBUG('目标金额: %s元', target)
+        my_logger.debug('目标金额: %s元', target)
         wds.target = float(current.replace(',', ''))
 
         return support_num, current, target

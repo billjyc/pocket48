@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from qqbot import _bot as bot
-
-from qqbot.utf8logger import DEBUG, INFO, ERROR
+"""
+封装酷Q HTTP API
+https://richardchien.github.io/coolq-http-api/3.3/#/API
+"""
+from cool_http_server import bot
+from log.my_logger import logger
 
 import time
 
@@ -12,26 +15,20 @@ class QQHandler:
         pass
 
     @classmethod
-    def login(self, qq_number):
-        bot.Login(['-u', qq_number])
+    def get_login_info(cls):
+        """
+        获取登录号信息
+        :return:
+        """
+        login_info = bot.get_login_info()
+        logger.debug('login_info: %s', login_info)
+        return login_info
 
     @classmethod
-    def list_group(cls, groups):
-        """
-        根据群号查询对应的QContact对象
-        :param groups:
-        :return: list of QContact
-        """
-        result = []
-        for group_number in groups:
-            if group_number:
-                group = bot.List('group', group_number)
-                if group:
-                    result.append(group[0])
-                else:
-                    ERROR('没有搜索到对应的群号: %s', group_number)
-                    raise Exception('没有group number对应的群号')
-        return result
+    def get_group_list(cls):
+        group_list = bot.get_group_list()
+        logger.debug('group list: %s', group_list)
+        return group_list
 
     @classmethod
     def get_group_number(cls, group_number):
@@ -40,47 +37,10 @@ class QQHandler:
         :param group_number:
         :return:
         """
-        number = 0
-        if group_number:
-            group = bot.List('group', group_number)
-            if group:
-                g = group[0]
-                member_list = bot.List(g)
-                # DEBUG(member_list)
-                number = len(member_list)
-            else:
-                ERROR('没有搜索到对应的群号: %s', group_number)
-                raise Exception('没有group number对应的群号')
-        return number
-
-    @classmethod
-    def update(cls):
-        bot.Update('buddy')
-        bot.Update('group')
-
-    @classmethod
-    def restart(cls):
-        DEBUG('RESTART')
-        bot.Restart()
-
-    @classmethod
-    def fresh_restart(cls):
-        bot.FreshRestart()
-
-    @classmethod
-    def stop(self):
-        bot.Stop()
-
-    @classmethod
-    def send(cls, receiver, message):
-        bot.SendTo(receiver, message)
+        group_member_list = bot.get_group_member_list(group_id=group_number)
+        return len(group_member_list)
 
     @classmethod
     def send_to_groups(cls, groups, message):
         for group in groups:
-            bot.SendTo(group, message)
-            time.sleep(2)
-
-
-if __name__ == '__main__':
-    print bot.conf.qq
+            bot.send_group_msg(group_id=group, message=message)
