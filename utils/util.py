@@ -6,6 +6,7 @@ import urllib
 import hashlib
 import requests
 import json
+import base64
 
 
 def convert_timestamp_to_timestr(timestamp):
@@ -113,7 +114,18 @@ def ksort(d):
     return [(k, d[k]) for k in sorted(d.keys())]
 
 
+def save_image(img_url):
+    rsp = requests.get(img_url)
+
+    with open('1.jpg', 'wb') as f:
+        f.write(rsp.content)
+    print('done')
+
+
 if __name__ == '__main__':
+    save_image('https://nos.netease.com/nim/NDA5MzEwOA==/bmltYV8xNzc5NzQyNDlfMTUxNTAzODQyMzkyN182OGMzZTA2OS00NzUwLTQ2MWYtOWI3NC1jODNiNmMzMDhhMzM=')
+
+
     # strs = filter_tags("""
     # test<span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_tu-65768ccc23.png\" style=\"width:1em;height:1em;\" alt=\"[吐]\"></span><span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_haha-bdd6ceb619.png\" style=\"width:1em;height:1em;\" alt=\"[哈哈]\"></span><span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_tu-65768ccc23.png\" style=\"width:1em;height:1em;\" alt=\"[吐]\"></span><span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/others/l_xin-8e9a1a0346.png\" style=\"width:1em;height:1em;\" alt=\"[心]\"></span><br/><a class='k' href='https://m.weibo.cn/k/test?from=feed'>#test#</a>
     # """)

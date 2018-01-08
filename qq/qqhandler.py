@@ -47,6 +47,8 @@ class QQHandler:
 
 
 if __name__ == '__main__':
-    groups = ['483548995', '101724227']
+    groups = ['483548995']
     group_list = QQHandler.get_group_list()
+    QQHandler.send_to_groups(groups, '[CQ:image,file=1.jpg]')
+    QQHandler.send_to_groups(groups, '[CQ:music,type=qq,id=212628607]')
     print('1')
