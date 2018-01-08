@@ -38,7 +38,7 @@ class StatisticHandler:
         """
         cursor = self.conn.cursor()
         my_logger.debug('更新群信息')
-        QQHandler.update()
+        # QQHandler.update()
 
         try:
             # 获取群号
