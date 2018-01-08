@@ -13,13 +13,13 @@ from log.my_logger import logger as my_logger
 from bs4 import BeautifulSoup
 
 import datetime
-import matplotlib.pyplot as plt
-from pylab import mpl
+# import matplotlib.pyplot as plt
+# from pylab import mpl
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-mpl.rcParams['font.sans-serif'] = ['FangSong']  # 指定默认字体
-mpl.rcParams['axes.unicode_minus'] = False  # 解决保存图像是负号'-'显示为方块的问题
+# mpl.rcParams['font.sans-serif'] = ['FangSong']  # 指定默认字体
+# mpl.rcParams['axes.unicode_minus'] = False  # 解决保存图像是负号'-'显示为方块的问题
 
 
 class StatisticHandler:
@@ -100,22 +100,22 @@ class StatisticHandler:
         finally:
             cursor.close()
 
-    def draw_line_plot(self, x, y, title=''):
-        """
-        绘制折线图
-        :param x: 时间
-        :param y:
-        :return:
-        """
-        plt.figure()
-        plt.plot(x, y, marker='o', mec='r', mfc='w')
-        for a, b in zip(x, y):
-            plt.text(a, b+0.5, str(b))
-        plt.xlabel("日期")
-        plt.ylabel("人数")
-        plt.title(title)
-        plt.show()
-        plt.savefig("line_%s.png" % time.time())
+    # def draw_line_plot(self, x, y, title=''):
+    #     """
+    #     绘制折线图
+    #     :param x: 时间
+    #     :param y:
+    #     :return:
+    #     """
+    #     plt.figure()
+    #     plt.plot(x, y, marker='o', mec='r', mfc='w')
+    #     for a, b in zip(x, y):
+    #         plt.text(a, b+0.5, str(b))
+    #     plt.xlabel("日期")
+    #     plt.ylabel("人数")
+    #     plt.title(title)
+    #     plt.show()
+    #     plt.savefig("line_%s.png" % time.time())
 
 
 if __name__ == "__main__":
@@ -127,6 +127,6 @@ if __name__ == "__main__":
     list2 = cursor.fetchall()
     x = [datetime.date.strftime(datetime.datetime.strptime(i[0], '%Y-%m-%d %H:%M:%S').date(), '%Y-%m-%d') for i in list2]
     y = [i[1] for i in list2]
-    statistic_handler.draw_line_plot(x, y, title='fengxiaofei应援群人数变化')
+    # statistic_handler.draw_line_plot(x, y, title='fengxiaofei应援群人数变化')
     # statistic_handler.update_group_size('fengxiaofei')
     # statistic_handler.get_super_tag_size('fengxiaofei')
