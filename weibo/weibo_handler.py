@@ -66,7 +66,8 @@ class WeiboMonitor:
         :return:
         """
         # get user weibo containerid
-        user_info = 'https://m.weibo.cn/api/container/getIndex?uid=%s&type=uid&value=%s' % (weibo_user_id, weibo_user_id)
+        user_info = 'https://m.weibo.cn/api/container/getIndex?uid=%s&type=uid&value=%s' % (
+        weibo_user_id, weibo_user_id)
         try:
             r = self.session.get(user_info, headers=self.reqHeaders)
             for i in r.json()['data']['tabsInfo']['tabs']:
@@ -111,7 +112,7 @@ class WeiboMonitor:
                         return_dict['scheme'] = i['scheme']
                         my_logger.debug(i['mblog']['text'])
                         # if has photos
-                        if i['mblog'].has_key('pics'):
+                        if 'pics' in i['mblog']:
                             return_dict['picUrls'] = []
                             for j in i['mblog']['pics']:
                                 return_dict['picUrls'].append(j['url'])
