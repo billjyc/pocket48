@@ -10,7 +10,7 @@ from log.my_logger import logger as my_logger
 import time
 from utils import global_config, util
 import hashlib
-import urllib
+import urllib.parse
 
 from qq.qqhandler import QQHandler
 
@@ -55,40 +55,50 @@ class ModianHandler:
         :param modian_entity:
         :return:
         """
+        my_logger.info('查询项目订单, pro_id: %s', modian_entity.pro_id, modian_entity.title)
         api = 'https://wds.modian.com/api/project/orders'
         params = {
             'pro_id': modian_entity.pro_id,
             'page': page
         }
         r = requests.post(api, self.make_post_params(params), headers=self.modian_header()).json()
-        if r['status'] == 0:
+        if int(r['status'] == 0):
             # pro_name = r['data']['pro_name']
             orders = r['data']
+            my_logger.info('项目订单, page: %s, orders: %s', page, orders)
             return orders
         else:
             raise RuntimeError('获取项目订单查询失败')
 
-    def get_modian_rankings(self, modian_entity, type=1, page=1):
+    def get_modian_rankings(self, modian_entity, type0=1, page=1):
         """
         查询项目集资榜和打卡榜
-        :param type: 排名类型，1代表集资榜，2代表打卡榜
+        :param type0: 排名类型，1代表集资榜，2代表打卡榜
         :param modian_entity:
         :param page: 页号，每页默认返回20条
         :return:
         """
+        if type0 == 1:
+            my_logger.info('查询项目集资榜')
+        elif type0 == 2:
+            my_logger.info('查询项目打卡榜')
+        else:
+            my_logger.error('type0参数不合法')
+            raise RuntimeError('type0参数不合法！')
         api = 'https://wds.modian.com/api/project/orders'
         params = {
             'pro_id': modian_entity.pro_id,
-            'type': type,
+            'type': type0,
             'page': page
         }
         r = requests.post(api, self.make_post_params(params), headers=self.modian_header()).json()
-        if r['status'] == 0:
+        if int(r['status']) == 0:
             # pro_name = r['data']['pro_name']
             rankings = r['data']
+            my_logger.info('查询项目排名: %s', rankings)
             return rankings
         else:
-            raise RuntimeError('获取项目排名失败, type=%d', type)
+            raise RuntimeError('获取项目排名失败, type=%d', type0)
 
     def get_current_and_target(self, modian_entity):
         """
@@ -96,15 +106,18 @@ class ModianHandler:
         :param modian_entity:
         :return:
         """
+        my_logger.info('获取当前进度和总额: pro_id: %s', modian_entity.pro_id)
         api = 'https://wds.modian.com/api/project/detail'
         params = {
             'pro_id': modian_entity.pro_id
         }
         r = requests.post(api, self.make_post_params(params), headers=self.modian_header()).json()
-        if r['status'] == 0:
-            pro_name = r['data']['pro_name']
-            target = r['data']['goal']
-            current = r['data']['already_raised']
+        if int(r['status']) == 0:
+            data_json = r['data'][0]
+            pro_name = data_json['pro_name']
+            target = data_json['goal']
+            current = data_json['already_raised']
+            my_logger.info('目标: %s, 当前进度: %s', target, current)
             return target, current, pro_name
         else:
             raise RuntimeError('获取项目筹款结果查询失败')
@@ -127,16 +140,20 @@ class ModianHandler:
             $post_fields = $_POST;
             ksort($post_fields);
             $md5_string = http_build_query($post_fields);
-            $sign = substr(md5($md5_string), 5, 16);
+            $sign = substr(md5($md5_string), 5, 21);
 
         :param post_fields: post请求的参数
         :return:
         """
         post_fields_sorted = util.ksort(post_fields)
-        md5_string = urllib.urlencode(post_fields_sorted) + '&p=das41aq6'
-        sign = hashlib.md5(md5_string).hexdigest()[5:21]
+        md5_string = urllib.parse.urlencode(post_fields_sorted) + '&p=das41aq6'
+        sign = hashlib.md5(md5_string.encode('utf-8')).hexdigest()[5:21]
         return sign
 
 
 if __name__ == '__main__':
-    pass
+    modian1 = ModianEntity('https://zhongchou.modian.com/item/10358.html', 'SNH48江真仪生日应援集资1.0',
+                           10358)
+    modian_handler = ModianHandler(['483548995'], [modian1])
+    modian_handler.get_current_and_target(modian1)
+    modian_handler.get_modian_rankings(modian1, 1)
