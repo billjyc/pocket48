@@ -32,12 +32,14 @@ class ModianHandler:
         self.modian_notify_groups = modian_notify_groups
         self.modian_project_array = modian_project_array
 
-        self.wds_queue_map = {}
-        self.order_queues = []
+        self.modian_fetchtime_map = {}  # 各集资项目上次查询订单的时间
+        # self.order_queues = []
+        self.init_order_queues()
 
     def init_order_queues(self):
         # TODO: 初始化订单队列，用于发送集资播报
-        pass
+        for modian_entity in self.modian_project_array:
+            self.modian_fetchtime_map[modian_entity.pro_id] = -1
 
     def modian_header(self):
         """
@@ -55,20 +57,64 @@ class ModianHandler:
         :param modian_entity:
         :return:
         """
-        my_logger.info('查询项目订单, pro_id: %s', modian_entity.pro_id, modian_entity.title)
+        my_logger.info('查询项目订单, pro_id: %s', modian_entity.pro_id)
         api = 'https://wds.modian.com/api/project/orders'
         params = {
             'pro_id': modian_entity.pro_id,
             'page': page
         }
         r = requests.post(api, self.make_post_params(params), headers=self.modian_header()).json()
-        if int(r['status'] == 0):
-            # pro_name = r['data']['pro_name']
+        if int(r['status']) == 0:
             orders = r['data']
-            my_logger.info('项目订单, page: %s, orders: %s', page, orders)
+            my_logger.info('项目订单: page: %s, orders: %s', page, orders)
             return orders
         else:
             raise RuntimeError('获取项目订单查询失败')
+
+    def parse_order_details(self, orders, modian_entity):
+        time_tmp = time.time()
+        # 查询集资情况
+        target, current, pro_name = self.get_current_and_target(modian_entity)
+        rank_list = self.get_ranking_list(modian_entity, type0=1)
+        project_info = '当前进度: %s元, 目标金额: %s元\n当前集资人数: %s' % (current, target, len(rank_list))
+
+        modian_entity.current = current
+        modian_entity.title = pro_name
+        modian_entity.target = target
+        modian_entity.support_num = len(rank_list)
+
+        for order in orders:
+            user_id = order['user_id']
+            nickname = order['nickname']
+            pay_time = order['pay_time']
+            backer_money = order['backer_money']
+
+            if util.convert_timestr_to_timestamp(pay_time) < self.modian_fetchtime_map[modian_entity.pro_id]:
+                break
+
+            msg = '感谢 %s 支持了%s元, %s\n' % (nickname, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
+
+            # TODO：查询累计集资
+            if modian_entity.need_display_rank is True:
+                # TODO: 需要显示排名
+                pass
+            else:
+                pass
+            msg += '%s\n集资项目: %s\n链接: %s' % (project_info, pro_name, modian_entity.link)
+            my_logger.info(msg)
+            QQHandler.send_to_groups(self.modian_notify_groups, msg)
+        self.modian_fetchtime_map[modian_entity.pro_id] = time_tmp
+
+    def get_ranking_list(self, modian_entity, type0=1):
+        ranking_list = []
+        page = 1
+        while True:
+            rank_page = self.get_modian_rankings(modian_entity, type0, page)
+            if len(rank_page) > 0:
+                ranking_list.extend(rank_page)
+                page += 1
+            else:
+                return ranking_list
 
     def get_modian_rankings(self, modian_entity, type0=1, page=1):
         """
@@ -85,7 +131,7 @@ class ModianHandler:
         else:
             my_logger.error('type0参数不合法')
             raise RuntimeError('type0参数不合法！')
-        api = 'https://wds.modian.com/api/project/orders'
+        api = 'https://wds.modian.com/api/project/rankings'
         params = {
             'pro_id': modian_entity.pro_id,
             'type': type0,
@@ -152,8 +198,20 @@ class ModianHandler:
 
 
 if __name__ == '__main__':
+    global_config.MODIAN_POSTSCRIPTS = ['123', '333']
     modian1 = ModianEntity('https://zhongchou.modian.com/item/10358.html', 'SNH48江真仪生日应援集资1.0',
                            10358)
-    modian_handler = ModianHandler(['483548995'], [modian1])
-    modian_handler.get_current_and_target(modian1)
-    modian_handler.get_modian_rankings(modian1, 1)
+    modian2 = ModianEntity('https://zhongchou.modian.com/item/10506.html', 'SNH48-洪珮雲17岁生诞集资2.0',
+                           10506)
+    arrays = [modian1, modian2]
+    modian_handler = ModianHandler(['483548995'], arrays)
+    orders = modian_handler.query_project_orders(modian1)
+    modian_handler.parse_order_details(orders, modian1)
+
+    orders2 = modian_handler.query_project_orders(modian2)
+    modian_handler.parse_order_details(orders2, modian2)
+
+    sorted(arrays, key=lambda x: x.current, reverse=True)
+    pass
+    # modian_handler.get_current_and_target(modian1)
+    # modian_handler.get_modian_rankings(modian1, 1, page=4)
