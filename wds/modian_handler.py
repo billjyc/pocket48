@@ -39,7 +39,7 @@ class ModianHandler:
     def init_order_queues(self):
         # TODO: 初始化订单队列，用于发送集资播报
         for modian_entity in self.modian_project_array:
-            self.modian_fetchtime_map[modian_entity.pro_id] = -1
+            self.modian_fetchtime_map[modian_entity.pro_id] = time.time()
 
     def modian_header(self):
         """
