@@ -58,7 +58,7 @@ def monitor_modian():
     my_logger.debug('监控摩点集资情况')
     for modian in global_config.MODIAN_ARRAY:
         r = modian_handler.query_project_orders(modian)
-        modian_handler.parse_order_details(r)
+        modian_handler.parse_order_details(r, modian)
 
 
 @scheduler.scheduled_job('cron', minute='17', hour='*')
