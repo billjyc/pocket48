@@ -27,7 +27,7 @@ class StatisticHandler:
         self.session = requests.session()
         db_path = os.path.join(BASE_DIR, db_path)
         my_logger.debug('db_path: %s', db_path)
-        self.conn = sqlite3.connect(db_path)
+        self.conn = sqlite3.connect(db_path, check_same_thread=False)
         my_logger.debug('读取数据库成功')
 
     def update_group_size(self, member_name):
