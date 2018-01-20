@@ -456,7 +456,7 @@ class Pocket48Handler:
         return header
 
     def notify_performance(self):
-        f = open('data/schedule.json')
+        f = open('data/schedule.json', encoding='utf8')
 
         schedules = json.load(f)
         for s in schedules['schedules']:
@@ -482,10 +482,10 @@ if __name__ == '__main__':
     # response = handler.get_member_live_msg()
     # handler.parse_member_live(response, 528331)
 
-    r = handler.get_member_room_msg(5780791)
-    print(r)
+    r1 = handler.get_member_room_msg(5780791)
+    print(r1)
 
-    handler.parse_room_msg(r)
+    handler.parse_room_msg(r1)
     r2 = handler.get_member_room_comment(5780791)
     print(r2)
     handler.parse_room_comment(r2)
