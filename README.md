@@ -1,5 +1,5 @@
 # pocket48
-基于[cq-http-python-sdk](https://github.com/richardchien/cqhttp-python-sdk)制作
+基于[cq-http-python-sdk](https://github.com/richardchien/cqhttp-python-sdk)和Python3.6制作
 
 监控成员口袋48聚聚房间，微博和微打赏项目
 
