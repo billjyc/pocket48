@@ -1,5 +1,7 @@
 # pocket48
-基于[qqbot](https://github.com/pandolia/qqbot)制作
+纯属个人自娱自乐
+
+基于[qqbot](https://github.com/pandolia/qqbot)和Python2.7制作，
 
 监控成员口袋48聚聚房间，微博和微打赏项目
 
