@@ -51,7 +51,7 @@ def update_modian_conf():
 @scheduler.scheduled_job('cron', minute='*', second=50)
 def monitor_modian():
     """
-    监控微打赏
+    监控摩点
     :return:
     """
     global modian_handler
@@ -62,25 +62,25 @@ def monitor_modian():
 
 
 @scheduler.scheduled_job('cron', minute='17', hour='*')
-def notify_wds_pk():
+def notify_modian_pk():
     """
-    播报微打赏集资PK情况
+    播报摩点集资PK情况
     :return:
     """
-    if global_config.WDS_NEED_DISPLAY_PK is False:
+    if global_config.MODIAN_NEED_DISPLAY_PK is False:
         return
     global modian_handler
     # wds_handler = WDSHandler([], [])
     my_logger.info('摩点集资PK播报')
 
-    for modian_entity in global_config.WDS_PK_ARRAY:
+    for modian_entity in global_config.MODIAN_PK_ARRAY:
         target, current, pro_name = modian_handler.get_current_and_target(modian_entity)
 
     msg = '当前集资PK战况播报:\n'
-    sorted(global_config.WDS_PK_ARRAY, key=lambda x: x.current, reverse=True)
+    sorted(global_config.MODIAN_PK_ARRAY, key=lambda x: x.current, reverse=True)
 
-    for i in range(len(global_config.WDS_PK_ARRAY)):
-        wds = global_config.WDS_PK_ARRAY[i]
+    for i in range(len(global_config.MODIAN_PK_ARRAY)):
+        wds = global_config.MODIAN_PK_ARRAY[i]
         sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i+1, wds.title, wds.current)
         msg += sub_msg
 
