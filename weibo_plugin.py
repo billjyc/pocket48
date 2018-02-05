@@ -43,7 +43,7 @@ def monitor_member_weibo():
 
 global_config.MEMBER_WEIBO_GROUPS = ConfigReader.get_property('qq_conf', 'member_weibo_groups').split(';')
 weibo_monitor = WeiboMonitor()
-weibo_monitor.login('hacker4043', 'jiaYICONG124')
+weibo_monitor.login('***', '***')
 name = ConfigReader.get_property('root', 'member_name')
 uid = ConfigReader.get_property('weibo', name)
 # uid = 1134206783
