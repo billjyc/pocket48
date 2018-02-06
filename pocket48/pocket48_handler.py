@@ -19,7 +19,7 @@ class Member:
 
 
 class Pocket48Handler:
-    VERSION = '5.1.0'
+    VERSION = '5.2.0'
 
     def __init__(self, auto_reply_groups, member_room_msg_groups, member_room_comment_msg_groups,
                  member_live_groups, member_room_msg_lite_groups):
@@ -263,6 +263,13 @@ class Pocket48Handler:
                     logger.debug('露脸直播')
                     reference_content = extInfo['referenceContent']
                     live_id = extInfo['referenceObjectId']
+                elif message_object == 'idolFlip':
+                    logger.debug('翻牌功能')
+                    user_name = extInfo['idolFlipUserName']
+                    title = extInfo['idolFlipTitle']
+                    content = extInfo['idolFlipContent']
+                    message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s: %s\n' % (
+                        msg['msgTimeStr'], extInfo['senderName'], title, user_name, content)) + message
             elif msg['msgType'] == 1:  # 图片消息
                 bodys = json.loads(msg['bodys'])
                 logger.debug('图片')
