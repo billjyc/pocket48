@@ -1,18 +1,20 @@
 from cqhttp import CQHttp, Error
+from log.my_logger import logger
 
 bot = CQHttp(api_root='http://127.0.0.1:5700', access_token='aslkfdjie32df', secret='abc')
 
 
-@bot.on_message('test')
+@bot.on_message()
 def handle_msg(context):
     # 下面这句等价于 bot.send_private_msg(user_id=context['user_id'], message='你好呀，下面一条是你刚刚发的：')
     try:
-        # print('abcd')
-        bot.send(context, '你好呀，下面一条是你刚刚发的：')
+        message = context['message']
+        logger.info('收到一条消息: %s', message)
+        # bot.send(context, '你好呀，下面一条是你刚刚发的：')
     except Error:
         pass
-    return {'reply': context['message'],
-            'at_sender': False}  # 返回给 HTTP API 插件，走快速回复途径
+    # return {'reply': context['message'],
+    #         'at_sender': False}  # 返回给 HTTP API 插件，走快速回复途径
 
 
 @bot.on_event('group_increase')
@@ -22,6 +24,12 @@ def handle_group_increase(context):
     nickname = info['nickname']
     name = nickname if nickname else '新人'
     bot.send(context, message='欢迎{}～'.format(name))
+
+
+@bot.on_event('group_decrease')
+def handle_group_decrease(context):
+    user_id = context['user_id']
+    logger.info('有人退群，QQ号: %s', user_id)
 
 
 @bot.on_request('group')
