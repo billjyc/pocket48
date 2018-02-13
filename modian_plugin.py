@@ -7,6 +7,7 @@ from wds.modian_handler import ModianHandler, ModianEntity
 from utils import global_config
 from qq.qqhandler import QQHandler
 import json
+import time
 
 from utils.scheduler import scheduler
 
@@ -48,7 +49,7 @@ def update_modian_conf():
                     len(modian_handler.modian_notify_groups))
 
 
-@scheduler.scheduled_job('cron', minute='*', second=50)
+@scheduler.scheduled_job('cron', second='2,12,22,32,42,52')
 def monitor_modian():
     """
     监控摩点
@@ -57,8 +58,10 @@ def monitor_modian():
     global modian_handler
     my_logger.debug('监控摩点集资情况')
     for modian in global_config.MODIAN_ARRAY:
+        time0 = time.time()
         r = modian_handler.query_project_orders(modian)
         modian_handler.parse_order_details(r, modian)
+        my_logger.debug('查询摩点集资情况所消耗的时间为: %s秒', time.time() - time0)
 
 
 @scheduler.scheduled_job('cron', minute='17', hour='*')
