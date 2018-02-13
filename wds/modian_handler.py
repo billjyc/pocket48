@@ -96,7 +96,8 @@ class ModianHandler:
             msg = '感谢 %s 支持了%s元, %s\n' % (nickname, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
             daka_rank, support_days = self.find_user_daka_rank(daka_rank_list, nickname)
 
-            msg += '当前项目已打卡%s天\n' % support_days
+            if support_days:
+                msg += '当前项目已打卡%s天\n' % support_days
 
             if modian_entity.need_display_rank is True:
                 jizi_rank, backer_money = self.find_user_jizi_rank(jizi_rank_list, nickname)
@@ -168,9 +169,9 @@ class ModianHandler:
         """
         my_logger.info('找到用户名为%s的集资排名', user_name)
         for rank in ranking_list:
-            if rank['nickname'] == user_name:
+            if 'backer_money' in rank.keys() and rank['nickname'] == user_name:
                 return rank['rank'], rank['backer_money']
-        return None
+        return None, None
 
     def find_user_daka_rank(self, ranking_list, user_name):
         """
@@ -181,9 +182,9 @@ class ModianHandler:
         """
         my_logger.info('找到用户名为%s的打卡排名', user_name)
         for rank in ranking_list:
-            if rank['nickname'] == user_name:
+            if 'support_days' in rank.keys() and rank['nickname'] == user_name:
                 return rank['rank'], rank['support_days']
-        return None
+        return None, None
 
     def get_current_and_target(self, modian_entity):
         """
