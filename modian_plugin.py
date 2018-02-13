@@ -73,7 +73,7 @@ def update_ranking_list():
         modian_handler.jizi_rank_list = modian_handler.get_ranking_list(modian, type0=1)
     time.sleep(5)
     my_logger.debug('更新打卡榜')
-    for modian_handler in global_config.MODIAN_ARRAY:
+    for modian in global_config.MODIAN_ARRAY:
         modian_handler.daka_rank_list = modian_handler.get_ranking_list(modian, type0=2)
     my_logger.debug('更新排名榜单所用时间: %s', time.time() - time0)
 
