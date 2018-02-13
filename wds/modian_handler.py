@@ -216,6 +216,7 @@ class ModianHandler:
         """
         sign = self.__make_signature(post_fields)
         post_fields['sign'] = sign
+        my_logger.debug('post_fields: %s', post_fields)
         return post_fields
 
     def __make_signature(self, post_fields):
