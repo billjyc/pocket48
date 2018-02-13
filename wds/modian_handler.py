@@ -75,13 +75,14 @@ class ModianHandler:
         time_tmp = time.time()
         # 查询集资情况
         target, current, pro_name = self.get_current_and_target(modian_entity)
-        rank_list = self.get_ranking_list(modian_entity, type0=1)
-        project_info = '当前进度: %s元, 目标金额: %s元\n当前集资人数: %s' % (current, target, len(rank_list))
+        jizi_rank_list = self.get_ranking_list(modian_entity, type0=1)
+        daka_rank_list = self.get_ranking_list(modian_entity, type0=2)
+        project_info = '当前进度: %s元, 目标金额: %s元\n当前集资人数: %s' % (current, target, len(jizi_rank_list))
 
         modian_entity.current = current
         modian_entity.title = pro_name
         modian_entity.target = target
-        modian_entity.support_num = len(rank_list)
+        modian_entity.support_num = len(jizi_rank_list)
 
         for order in orders:
             user_id = order['user_id']
@@ -93,11 +94,13 @@ class ModianHandler:
                 break
 
             msg = '感谢 %s 支持了%s元, %s\n' % (nickname, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
+            daka_rank, support_days = self.find_user_daka_rank(daka_rank_list, nickname)
 
-            # TODO：查询累计集资
+            msg += '当前项目已打卡%s天\n' % support_days
+
             if modian_entity.need_display_rank is True:
-                # TODO: 需要显示排名
-                pass
+                jizi_rank, backer_money = self.find_user_jizi_rank(jizi_rank_list, nickname)
+                msg += '当前项目已集资%s元, 排名: %s' % (backer_money, jizi_rank)
             else:
                 pass
             msg += '%s\n集资项目: %s\n链接: %s' % (project_info, pro_name, modian_entity.link)
@@ -106,6 +109,16 @@ class ModianHandler:
         self.modian_fetchtime_map[modian_entity.pro_id] = time_tmp
 
     def get_ranking_list(self, modian_entity, type0=1):
+        """
+        获取排名所有的列表
+        :param modian_entity:
+        :param type0: 1为集资，2为打卡
+        :return:
+        """
+        if type0 == 1:
+            my_logger.info('获取所有集资排名')
+        elif type0 == 2:
+            my_logger.info('获取打卡天数排名')
         ranking_list = []
         page = 1
         while True:
@@ -145,6 +158,32 @@ class ModianHandler:
             return rankings
         else:
             raise RuntimeError('获取项目排名失败, type=%d', type0)
+
+    def find_user_jizi_rank(self, ranking_list, user_name):
+        """
+        在集资榜中找到用户的排名
+        :param ranking_list:
+        :param user_name:
+        :return:
+        """
+        my_logger.info('找到用户名为%s的集资排名', user_name)
+        for rank in ranking_list:
+            if rank['nickname'] == user_name:
+                return rank['rank'], rank['backer_money']
+        return None
+
+    def find_user_daka_rank(self, ranking_list, user_name):
+        """
+        在打卡榜中找到用户的排名
+        :param ranking_list:
+        :param user_name:
+        :return:
+        """
+        my_logger.info('找到用户名为%s的打卡排名', user_name)
+        for rank in ranking_list:
+            if rank['nickname'] == user_name:
+                return rank['rank'], rank['support_days']
+        return None
 
     def get_current_and_target(self, modian_entity):
         """
