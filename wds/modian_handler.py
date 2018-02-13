@@ -33,6 +33,8 @@ class ModianHandler:
         self.modian_project_array = modian_project_array
 
         self.modian_fetchtime_map = {}  # 各集资项目上次查询订单的时间
+        self.jizi_rank_list = []
+        self.daka_rank_list = []
         # self.order_queues = []
         self.init_order_queues()
 
@@ -75,14 +77,12 @@ class ModianHandler:
         time_tmp = time.time()
         # 查询集资情况
         target, current, pro_name = self.get_current_and_target(modian_entity)
-        jizi_rank_list = self.get_ranking_list(modian_entity, type0=1)
-        daka_rank_list = self.get_ranking_list(modian_entity, type0=2)
-        project_info = '当前进度: %s元, 目标金额: %s元\n当前集资人数: %s' % (current, target, len(jizi_rank_list))
+        project_info = '当前进度: %s元, 目标金额: %s元\n当前集资人数: %s' % (current, target, len(self.jizi_rank_list))
 
         modian_entity.current = current
         modian_entity.title = pro_name
         modian_entity.target = target
-        modian_entity.support_num = len(jizi_rank_list)
+        modian_entity.support_num = len(self.jizi_rank_list)
 
         for order in orders:
             user_id = order['user_id']
@@ -94,13 +94,13 @@ class ModianHandler:
                 break
 
             msg = '感谢 %s 支持了%s元, %s\n' % (nickname, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
-            daka_rank, support_days = self.find_user_daka_rank(daka_rank_list, nickname)
+            daka_rank, support_days = self.find_user_daka_rank(self.daka_rank_list, nickname)
 
             if support_days:
                 msg += '当前项目已打卡%s天\n' % support_days
 
             if modian_entity.need_display_rank is True:
-                jizi_rank, backer_money = self.find_user_jizi_rank(jizi_rank_list, nickname)
+                jizi_rank, backer_money = self.find_user_jizi_rank(self.jizi_rank_list, nickname)
                 msg += '当前项目已集资%s元, 排名: %s' % (backer_money, jizi_rank)
             else:
                 pass
@@ -116,10 +116,6 @@ class ModianHandler:
         :param type0: 1为集资，2为打卡
         :return:
         """
-        if type0 == 1:
-            my_logger.info('获取所有集资排名')
-        elif type0 == 2:
-            my_logger.info('获取打卡天数排名')
         ranking_list = []
         page = 1
         while True:
@@ -246,13 +242,16 @@ if __name__ == '__main__':
                            10506)
     arrays = [modian1, modian2]
     modian_handler = ModianHandler(['483548995'], arrays)
+    modian_handler.jizi_rank_list = modian_handler.get_ranking_list(modian1, 1)
+    time.sleep(5)
+    modian_handler.daka_rank_list = modian_handler.get_ranking_list(modian1, 2)
     orders = modian_handler.query_project_orders(modian1)
     modian_handler.parse_order_details(orders, modian1)
-
-    orders2 = modian_handler.query_project_orders(modian2)
-    modian_handler.parse_order_details(orders2, modian2)
-
-    sorted(arrays, key=lambda x: x.current, reverse=True)
-    pass
+    #
+    # orders2 = modian_handler.query_project_orders(modian2)
+    # modian_handler.parse_order_details(orders2, modian2)
+    #
+    # sorted(arrays, key=lambda x: x.current, reverse=True)
+    # pass
     # modian_handler.get_current_and_target(modian1)
-    # modian_handler.get_modian_rankings(modian1, 1, page=4)
+    modian_handler.get_modian_rankings(modian1, 2, page=1)
