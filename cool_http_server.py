@@ -9,6 +9,7 @@ def handle_msg(context):
     # 下面这句等价于 bot.send_private_msg(user_id=context['user_id'], message='你好呀，下面一条是你刚刚发的：')
     try:
         message = context['message']
+        group_id = context['group_id']
         logger.info('收到一条消息: %s', message)
         # bot.send(context, '你好呀，下面一条是你刚刚发的：')
     except Error:

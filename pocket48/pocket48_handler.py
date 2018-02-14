@@ -201,10 +201,11 @@ class Pocket48Handler:
                 msg = util.random_str(global_config.ROOM_MSG_LITE_NOTIFY)
                 QQHandler.send_to_groups(self.member_room_msg_lite_groups, msg)
                 logger.info(msg)
-                self.unread_msg_amount = 0
+
             else:
                 logger.debug('不向大群发送简易版提醒')
             self.last_msg_time = time_now
+            self.unread_msg_amount = 0
         else:
             logger.info('最近10分钟内没有未读消息')
 
