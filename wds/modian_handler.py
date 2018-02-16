@@ -155,8 +155,8 @@ class ModianHandler:
                     if fu_num[index] == 0:
                         pass
                     else:
-                        result_str += '%s*%s ' % (fu_list[index], str(fu_num[index]))
-                result_str += '~'
+                        fu_result_str += '%s*%s ' % (fu_list[index], str(fu_num[index]))
+                fu_result_str += '~'
             #集福结束
             
             if modian_entity.need_display_rank is True:
