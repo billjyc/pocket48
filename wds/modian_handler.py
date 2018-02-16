@@ -119,10 +119,7 @@ class ModianHandler:
                     result_list = None
                     pass
                 else:
-                    if not(backer_money < 50):
-                        drafts = 5
-                    else:
-                        drafts = int(backer_money // 10)
+                    drafts = int(backer_money // 10)
                 
                     for i in range(0,drafts):
                         start = 0
