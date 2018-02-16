@@ -137,11 +137,26 @@ class ModianHandler:
                 pass
             else:
                 fu_result_str = '\n恭喜抽到 '
-                for result_index in range(0,len(result_list)):
-                    if result_index == len(result_list)-1:
-                        fu_result_str += (result_list[result_index] + '~')
+                for item in result_list:
+                    if item == '爱国福':
+                        fu_num[0] += 1
+                    if item == '富强福':
+                        fu_num[1] += 1
+                    if item == '和谐福':
+                        fu_num[2] += 1
+                    if item == '友善福':
+                        fu_num[3] += 1
+                    if item == '敬业福':
+                        fu_num[4] += 1
+                    if item == '五福礼包':
+                        fu_num[5] += 1
+
+                for index in range(0,6):
+                    if fu_num[index] == 0:
+                        pass
                     else:
-                        fu_result_str += (result_list[result_index] + ',')
+                        result_str += '%s*%s ' % (fu_list[index], str(fu_num[index]))
+                result_str += '~'
             #集福结束
             
             if modian_entity.need_display_rank is True:
