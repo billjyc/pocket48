@@ -11,6 +11,7 @@ import time
 from utils import global_config, util
 import hashlib
 import urllib.parse
+import random
 
 from qq.qqhandler import QQHandler
 
@@ -98,13 +99,64 @@ class ModianHandler:
 
             if support_days:
                 msg += '当前项目已打卡%s天\n' % support_days
-
+            
+            # 集福
+            fu_switch = True #集福开关
+            fu_rate = [22,22,22,22,11,1] #五福概率，可调，合计需为100
+            fu_list = ['爱国福', '富强福', '和谐福', '友善福', '敬业福', '五福礼包']
+            
+            full_percentage = 0
+            result_list = []
+            drafts = 0
+            fu_result_str = ''
+            
+            for item in fu_rate:  
+                full_percentage += item
+            if not (full_percentage == 100):
+                raise RuntimeError('概率设置错误')
+            else:
+                if (backer_money*100) < 10.17:
+                    result_list = None
+                    pass
+                else:
+                    if not((backer_money*100) < 50):
+                        drafts = 5
+                    else:
+                        drafts = int((backer_money*100) // 10)
+                
+                    for i in range(0,drafts):
+                        start = 0
+                        rand = random.randint(1,sum(fu_rate))
+                        for index, item in enumerate(fu_rate):
+                            start += item
+                            if rand <= start:
+                                break
+                        result_list.append((fu_list[index]))
+            
+            if result_list == None:
+                pass
+            else:
+                fu_result_str = '\n恭喜抽到 '
+                for result_index in range(0,len(result_list)):
+                    if result_index == len(result_list)-1:
+                        fu_result_str += (result_list[result_index] + '~')
+                    else:
+                        fu_result_str += (result_list[result_index] + ',')
+            #集福结束
+            
             if modian_entity.need_display_rank is True:
                 jizi_rank, backer_money = self.find_user_jizi_rank(self.jizi_rank_list, nickname)
                 msg += '当前项目已集资%s元, 排名: %s' % (backer_money, jizi_rank)
             else:
                 pass
             msg += '%s\n集资项目: %s\n链接: %s' % (project_info, pro_name, modian_entity.link)
+            
+            #集福播报
+            if fu_switch:
+                msg += fu_result_str
+            else:
+                pass
+            
             my_logger.info(msg)
             QQHandler.send_to_groups(self.modian_notify_groups, msg)
         self.modian_fetchtime_map[modian_entity.pro_id] = time_tmp
