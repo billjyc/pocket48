@@ -104,7 +104,7 @@ class ModianHandler:
             fu_switch = True #集福开关
             fu_rate = [22,22,22,22,11,1] #五福概率，可调，合计需为100
             fu_list = ['爱国福', '富强福', '和谐福', '友善福', '敬业福', '五福礼包']
-            
+            fu_num = [0,0,0,0,0,0]
             full_percentage = 0
             result_list = []
             drafts = 0
