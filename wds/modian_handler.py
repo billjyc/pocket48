@@ -115,14 +115,14 @@ class ModianHandler:
             if not (full_percentage == 100):
                 raise RuntimeError('概率设置错误')
             else:
-                if backer_money < 10.17:
+                if (backer_money*100) < 10.17:
                     result_list = None
                     pass
                 else:
-                    if not(backer_money < 50):
+                    if not((backer_money*100) < 50):
                         drafts = 5
                     else:
-                        drafts = int(backer_money // 10)
+                        drafts = int((backer_money*100) // 10)
                 
                     for i in range(0,drafts):
                         start = 0
