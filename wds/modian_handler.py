@@ -11,6 +11,7 @@ import time
 from utils import global_config, util
 import hashlib
 import urllib.parse
+import random
 
 from qq.qqhandler import QQHandler
 
