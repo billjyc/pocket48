@@ -1,4 +1,6 @@
 # pocket48
+该分支已经废弃，请移步coolq分支
+
 纯属个人自娱自乐
 
 基于[qqbot](https://github.com/pandolia/qqbot)和Python2.7制作，基于酷Q的请参照coolq分支
