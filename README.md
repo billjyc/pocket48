@@ -11,7 +11,7 @@
 口袋48插件1分钟监听一次，微博插件1分钟监听一次，微打赏插件1分钟监听一次（可以自行调整）
 
 ### coolq配置
-* 具体使用请参照(https://richardchien.github.io/coolq-http-api/3.3/#/)
+* 具体使用请参照(https://richardchien.github.io/coolq-http-api)
 * 先启动coolq_http_server.py, 再启动main.py
  
 ### 口袋48和微博插件使用
