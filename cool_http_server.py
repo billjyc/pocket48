@@ -24,7 +24,7 @@ def handle_group_increase(context):
                                      user_id=context['user_id'])
     nickname = info['nickname']
     name = nickname if nickname else '新人'
-    bot.send(context, message='机器人快速欢迎{}～'.format(name))
+    bot.send(context, message='最快的机器人欢迎@{}～'.format(name))
 
 
 @bot.on_event('group_decrease')
