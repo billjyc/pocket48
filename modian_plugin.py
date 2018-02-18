@@ -3,7 +3,7 @@
 from log.my_logger import logger as my_logger
 
 from utils.config_reader import ConfigReader
-from wds.modian_handler import ModianHandler, ModianEntity
+from modian.modian_handler import ModianHandler, ModianEntity
 from utils import global_config
 from qq.qqhandler import QQHandler
 import json
