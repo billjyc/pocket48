@@ -101,59 +101,60 @@ class ModianHandler:
                 msg += '当前项目已打卡%s天\n' % support_days
             
             # 集福
-            fu_switch = True #集福开关
-            fu_rate = [22,22,22,22,11,1] #五福概率，可调，合计需为100
-            fu_list = ['爱国福', '富强福', '和谐福', '友善福', '敬业福', '五福礼包']
-            fu_num = [0,0,0,0,0,0]
-            full_percentage = 0
-            result_list = []
-            drafts = 0
-            fu_result_str = ''
-            
-            for item in fu_rate:  
-                full_percentage += item
-            if not (full_percentage == 100):
-                raise RuntimeError('概率设置错误')
-            else:
-                if backer_money < 10.17:
-                    result_list = None
-                    pass
-                else:
-                    drafts = int(backer_money // 10)
-                
-                    for i in range(0,drafts):
-                        start = 0
-                        rand = random.randint(1,sum(fu_rate))
-                        for index, item in enumerate(fu_rate):
-                            start += item
-                            if rand <= start:
-                                break
-                        result_list.append((fu_list[index]))
-            
-            if result_list == None:
-                pass
-            else:
-                fu_result_str = '\n恭喜抽到 '
-                for item in result_list:
-                    if item == '爱国福':
-                        fu_num[0] += 1
-                    if item == '富强福':
-                        fu_num[1] += 1
-                    if item == '和谐福':
-                        fu_num[2] += 1
-                    if item == '友善福':
-                        fu_num[3] += 1
-                    if item == '敬业福':
-                        fu_num[4] += 1
-                    if item == '五福礼包':
-                        fu_num[5] += 1
+            fu_switch = False #集福开关
+            if fu_switch:
+                fu_rate = [22,22,22,22,11,1] #五福概率，可调，合计需为100
+                fu_list = ['爱国福', '富强福', '和谐福', '友善福', '敬业福', '五福礼包']
+                fu_num = [0,0,0,0,0,0]
+                full_percentage = 0
+                result_list = []
+                drafts = 0
+                fu_result_str = ''
 
-                for index in range(0,6):
-                    if fu_num[index] == 0:
+                for item in fu_rate:  
+                    full_percentage += item
+                if not (full_percentage == 100):
+                    raise RuntimeError('概率设置错误')
+                else:
+                    if backer_money < 10.17:
+                        result_list = None
                         pass
                     else:
-                        fu_result_str += '%s*%s ' % (fu_list[index], str(fu_num[index]))
-                fu_result_str += '~'
+                        drafts = int(backer_money // 10)
+
+                        for i in range(0,drafts):
+                            start = 0
+                            rand = random.randint(1,sum(fu_rate))
+                            for index, item in enumerate(fu_rate):
+                                start += item
+                                if rand <= start:
+                                    break
+                            result_list.append((fu_list[index]))
+
+                if result_list == None:
+                    pass
+                else:
+                    fu_result_str = '\n恭喜抽到 '
+                    for item in result_list:
+                        if item == '爱国福':
+                            fu_num[0] += 1
+                        if item == '富强福':
+                            fu_num[1] += 1
+                        if item == '和谐福':
+                            fu_num[2] += 1
+                        if item == '友善福':
+                            fu_num[3] += 1
+                        if item == '敬业福':
+                            fu_num[4] += 1
+                        if item == '五福礼包':
+                            fu_num[5] += 1
+
+                    for index in range(0,6):
+                        if fu_num[index] == 0:
+                            pass
+                        else:
+                            fu_result_str += '%s*%s ' % (fu_list[index], str(fu_num[index]))
+                    fu_result_str += '~'
             #集福结束
             
             if modian_entity.need_display_rank is True:
