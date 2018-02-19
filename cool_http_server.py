@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from cqhttp import CQHttp, Error
 from log.my_logger import logger
 
