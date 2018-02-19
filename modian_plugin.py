@@ -95,18 +95,21 @@ def update_modian_conf():
         try:
             cursor = conn.cursor()
             c = cursor.execute("""
-                SELECT * FROM jiebang where pro_id=? and start_time <= datetime('now') and end_time >= datetime('now')
+                SELECT * FROM jiebang where pro_id=? and start_time <= datetime('now', 'localtime') 
+                and end_time >= datetime('now', 'localtime')
             """, (pro_id, ))
             rst = c.fetchall()
             for jiebang in rst:
                 jiebang_entity = ModianJiebangEntity(jiebang[0], jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
                                               jiebang[6], jiebang[7])
                 global_config.MODIAN_JIEBANG_ACTIVITIES[pro_id].append(jiebang_entity)
+
         except Exception as e:
             my_logger.error('读取正在进行中的接棒活动出现错误！')
             my_logger.error(e)
         finally:
             cursor.close()
+    my_logger.debug(global_config.MODIAN_JIEBANG_ACTIVITIES)
     conn.close()
 
 
