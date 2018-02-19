@@ -17,18 +17,12 @@ def update_weibo_conf():
     my_logger.debug('读取微博配置')
     global_config.MEMBER_WEIBO_GROUPS = ConfigReader.get_property('qq_conf', 'member_weibo_groups').split(';')
 
-    member_name = ConfigReader.get_property('root', 'member_name')
-    if global_config.CUR_MEMBER is None or member_name != global_config.CUR_MEMBER['pinyin']:
-        my_logger.debug('微博监控成员变更')
-        # global_config.MEMBER_NAME = member_name
-        global_config.CUR_MEMBER = global_config.MEMBER_JSON[member_name]
-        # uid = ConfigReader.get_property('weibo', member_name)
-        uid = global_config.CUR_MEMBER['weibo_uid']
-        my_logger.debug('weibo uid: %s', uid)
-        if uid != 0:
-            weibo_monitor.getWBQueue(uid)
-        else:
-            my_logger.error('微博UID填写错误，请检查')
+    uid = global_config.CUR_MEMBER['weibo_uid']
+    my_logger.debug('weibo uid: %s', uid)
+    if uid != 0:
+        weibo_monitor.getWBQueue(uid)
+    else:
+        my_logger.error('微博UID填写错误，请检查')
 
 
 @scheduler.scheduled_job('cron', minute='*', second='55')
