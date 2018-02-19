@@ -3,11 +3,13 @@
 from log.my_logger import logger as my_logger
 
 from utils.config_reader import ConfigReader
-from modian.modian_handler import ModianHandler, ModianEntity
+from modian.modian_handler import ModianHandler, ModianEntity, ModianJiebangEntity
 from utils import global_config
 from qq.qqhandler import QQHandler
+import sqlite3
 import json
 import time
+from utils import util
 
 from utils.scheduler import scheduler
 
@@ -47,6 +49,65 @@ def update_modian_conf():
 
     my_logger.debug('JIZI_NOTIFY_GROUPS: %s, length: %d', ','.join(global_config.JIZI_NOTIFY_GROUPS),
                     len(modian_handler.modian_notify_groups))
+
+    # 接棒活动更新，读取json文件中的内容，更新到数据库中
+    my_logger.debug('接棒活动更新，读取json文件中的内容，更新到数据库中')
+    jiebang_json = json.load(open('data/modian_jiebang.json', encoding='utf8'))['activities']
+    conn = sqlite3.connect('data/modian.db', check_same_thread=False)
+    for activity in jiebang_json:
+        name = activity['jiebang_name']
+        try:
+            cursor = conn.cursor()
+            c = cursor.execute("""
+                select * from jiebang WHERE name=?
+            """, (name, ))
+            rst = c.fetchall()
+            if len(rst) == 1:
+                cursor.execute("""
+                    UPDATE jiebang SET name=?, pro_id=?, start_time=?, end_time=?, target_stick_num=?, min_stick_amount=?
+                    WHERE name=?
+                """, (name, activity['pro_id'], activity['start_time'], activity['end_time'],
+                      activity['target_stick_num'], activity['min_stick_amount'], name))
+                conn.commit()
+            elif len(rst) == 0:
+                cursor.execute("""
+                                    INSERT INTO jiebang (name, pro_id, current_stick_num, last_record_time, start_time, 
+                                    end_time, target_stick_num, min_stick_amount) VALUES
+                                    (?, ?, ?, ?, ?, ?, ?, ?)
+                                """, (
+                name, activity['pro_id'], 0, util.convert_timestamp_to_timestr(time.time()*1000),
+                    activity['start_time'], activity['end_time'], activity['target_stick_num'], activity['min_stick_amount']))
+                conn.commit()
+            else:
+                raise RuntimeError('接棒活动名称错误！')
+        except Exception as e:
+            my_logger.error('读取modian.db出现错误')
+            my_logger.error(e)
+        finally:
+            cursor.close()
+
+    # 读取正在进行中的接棒活动
+    my_logger.debug('读取正在进行中的接棒活动')
+    global_config.MODIAN_JIEBANG_ACTIVITIES = {}
+    for modian in global_config.MODIAN_ARRAY:
+        pro_id = modian.pro_id
+        global_config.MODIAN_JIEBANG_ACTIVITIES[pro_id] = []
+        try:
+            cursor = conn.cursor()
+            c = cursor.execute("""
+                SELECT * FROM jiebang where pro_id=? and start_time <= datetime('now') and end_time >= datetime('now')
+            """, (pro_id, ))
+            rst = c.fetchall()
+            for jiebang in rst:
+                jiebang_entity = ModianJiebangEntity(jiebang[0], jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
+                                              jiebang[6], jiebang[7])
+                global_config.MODIAN_JIEBANG_ACTIVITIES[pro_id].append(jiebang_entity)
+        except Exception as e:
+            my_logger.error('读取正在进行中的接棒活动出现错误！')
+            my_logger.error(e)
+        finally:
+            cursor.close()
+    conn.close()
 
 
 @scheduler.scheduled_job('cron', second='10,30,50')

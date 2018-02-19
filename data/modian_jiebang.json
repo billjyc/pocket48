@@ -3,13 +3,10 @@
     {
       "jiebang_name": "限时活动名称",
       "pro_id": "10999",
-      "last_time": "2017-10-25 19:30:00",
-      "current_stick_num": 0,
       "target_stick_num": 100,
-      "last_record_time": "2017-10-26 11:00:00",
-      "min_stick_amount": 10.00,
-      "start_time": "2017-10-25 18:30:00",
-      "end_time": "2017-10-26 18:00:00"
+      "min_stick_amount": 1,
+      "start_time": "2018-02-19 15:30:00",
+      "end_time": "2017-02-26 18:00:00"
     }
   ]
 }

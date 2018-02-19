@@ -12,6 +12,7 @@ from utils import global_config, util
 import hashlib
 import urllib.parse
 import random
+import sqlite3
 
 from qq.qqhandler import QQHandler
 
@@ -25,6 +26,19 @@ class ModianEntity:
         self.current = current
         self.target = target
         self.support_num = support_num
+
+
+class ModianJiebangEntity:
+    def __init__(self, name, pro_id, current_stick_num, last_record_time, start_time, end_time, target_stick_num,
+                 min_stick_amount):
+        self.name = name
+        self.pro_id = pro_id
+        self.current_stick_num = current_stick_num
+        self.last_record_time = last_record_time
+        self.start_time = start_time
+        self.end_time = end_time
+        self.target_stick_num = target_stick_num
+        self.min_stick_amount = min_stick_amount
 
 
 class ModianHandler:
@@ -76,6 +90,7 @@ class ModianHandler:
 
     def parse_order_details(self, orders, modian_entity):
         time_tmp = time.time()
+        jiebang_activities = global_config.MODIAN_JIEBANG_ACTIVITIES[modian_entity.pro_id]
         # 查询集资情况
         target, current, pro_name = self.get_current_and_target(modian_entity)
         project_info = '当前进度: %s元, 目标金额: %s元\n当前集资人数: %s' % (current, target, len(self.jizi_rank_list))
@@ -155,6 +170,18 @@ class ModianHandler:
             #             fu_result_str += '%s*%s ' % (fu_list[index], str(fu_num[index]))
             #     fu_result_str += '~'
             # 集福结束
+
+            # 接棒相关
+            my_logger.debug('接棒情况更新')
+
+            for jiebang in jiebang_activities:
+                my_logger.debug('接棒活动详情: %s', jiebang)
+                if backer_money >= jiebang.min_stick_amount:
+                    jiebang.current_stick_num += 1
+                    jiebang.last_record_time = util.convert_timestamp_to_timestr(time.time()*1000)
+                    test_msg = '接棒活动: %s, 当前第%s棒, 目标%s棒\n' \
+                               % (jiebang.name, jiebang.current_stick_num, jiebang.target_stick_num)
+                    QQHandler.send_to_groups(['483548995'], test_msg)
             
             if modian_entity.need_display_rank is True:
                 jizi_rank, backer_money = self.find_user_jizi_rank(self.jizi_rank_list, nickname)
@@ -163,7 +190,7 @@ class ModianHandler:
                 pass
             msg += '%s\n集资项目: %s\n链接: %s' % (project_info, pro_name, modian_entity.link)
             
-            #集福播报
+            # 集福播报
             # if fu_switch:
             #     msg += fu_result_str
             # else:
@@ -172,6 +199,19 @@ class ModianHandler:
             my_logger.info(msg)
             QQHandler.send_to_groups(self.modian_notify_groups, msg)
         self.modian_fetchtime_map[modian_entity.pro_id] = time_tmp
+        # 更新接棒的数据库
+        conn = sqlite3.connect('data/modian.db', check_same_thread=False)
+        cursor = conn.cursor()
+        try:
+            for jiebang in jiebang_activities:
+                cursor.execute("""
+                    UPDATE jiebang SET current_stick_num=?, last_record_time=? WHERE name=?
+                """, (jiebang.current_stick_num, jiebang_activities.last_record_time, jiebang.name))
+        except Exception as e:
+            my_logger.error(e)
+        finally:
+            cursor.close()
+        conn.close()
 
     def get_ranking_list(self, modian_entity, type0=1):
         """
