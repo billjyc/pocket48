@@ -206,7 +206,7 @@ class ModianHandler:
             for jiebang in jiebang_activities:
                 cursor.execute("""
                     UPDATE jiebang SET current_stick_num=?, last_record_time=? WHERE name=?
-                """, (jiebang.current_stick_num, jiebang_activities.last_record_time, jiebang.name))
+                """, (jiebang.current_stick_num, jiebang.last_record_time, jiebang.name))
         except Exception as e:
             my_logger.error(e)
         finally:
