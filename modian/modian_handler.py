@@ -211,6 +211,7 @@ class ModianHandler:
                 cursor.execute("""
                     UPDATE jiebang SET current_stick_num=?, last_record_time=? WHERE name=?
                 """, (jiebang.current_stick_num, jiebang.last_record_time, jiebang.name))
+                conn.commit()
         except Exception as e:
             my_logger.error(e)
         finally:

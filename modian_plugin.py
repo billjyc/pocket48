@@ -63,6 +63,7 @@ def update_modian_conf():
             """, (name, ))
             rst = c.fetchall()
             if len(rst) == 1:
+                my_logger.debug('len(rst)==1')
                 cursor.execute("""
                     UPDATE jiebang SET name=?, pro_id=?, start_time=?, end_time=?, target_stick_num=?, min_stick_amount=?
                     WHERE name=?
@@ -70,6 +71,7 @@ def update_modian_conf():
                       activity['target_stick_num'], activity['min_stick_amount'], name))
                 conn.commit()
             elif len(rst) == 0:
+                my_logger.debug('len(rst)==0')
                 cursor.execute("""
                                     INSERT INTO jiebang (name, pro_id, current_stick_num, last_record_time, start_time, 
                                     end_time, target_stick_num, min_stick_amount) VALUES
