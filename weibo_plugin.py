@@ -24,7 +24,8 @@ def update_weibo_conf():
         global_config.CUR_MEMBER = global_config.MEMBER_JSON[member_name]
         # uid = ConfigReader.get_property('weibo', member_name)
         uid = global_config.CUR_MEMBER['weibo_uid']
-        if uid != '' and uid != 0:
+        my_logger.debug('weibo uid: %s', uid)
+        if uid != 0:
             weibo_monitor.getWBQueue(uid)
         else:
             my_logger.error('微博UID填写错误，请检查')
