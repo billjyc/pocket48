@@ -95,6 +95,7 @@ class WeiboMonitor:
             # sys.exit()
 
     def startMonitor(self, ):
+        my_logger.debug('weibo handler: start monitor')
         return_dict = {}
         try:
             r = self.session.get(self.weibo_info, headers=self.reqHeaders)
@@ -119,10 +120,11 @@ class WeiboMonitor:
                                 my_logger.debug(j['url'])
 
                         return return_dict
-            self.echoMsg('Info', '微博队列共有 %d 条' % len(self.itemIds))
+            my_logger.info('微博队列共有 %d 条' % len(self.itemIds))
+            # self.echoMsg('Info', '微博队列共有 %d 条' % len(self.itemIds))
         except Exception as e:
-            self.echoMsg('Error', e)
-            print(e)
+            my_logger.error(e)
+            # print(e)
             # sys.exit()
 
     """

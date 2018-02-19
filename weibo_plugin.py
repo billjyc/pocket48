@@ -42,7 +42,9 @@ def monitor_member_weibo():
         if newWB['created_at'] == '刚刚':
             QQHandler.send_to_groups(member_weibo_groups, message)
 
+
 weibo_monitor = WeiboMonitor()
+update_weibo_conf()
 
 
 if __name__ == '__main__':
