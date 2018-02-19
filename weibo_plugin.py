@@ -42,11 +42,14 @@ def monitor_member_weibo():
         if newWB['created_at'] == '刚刚':
             QQHandler.send_to_groups(member_weibo_groups, message)
 
-
-global_config.MEMBER_WEIBO_GROUPS = ConfigReader.get_property('qq_conf', 'member_weibo_groups').split(';')
 weibo_monitor = WeiboMonitor()
-weibo_monitor.login('***', '***')
-name = ConfigReader.get_property('root', 'member_name')
-uid = ConfigReader.get_property('weibo', name)
-# uid = 1134206783
-weibo_monitor.getWBQueue(uid)
+
+
+if __name__ == '__main__':
+    # global_config.MEMBER_WEIBO_GROUPS = ConfigReader.get_property('qq_conf', 'member_weibo_groups').split(';')
+    # weibo_monitor.login('***', '***')
+    # name = ConfigReader.get_property('root', 'member_name')
+    # uid = ConfigReader.get_property('weibo', name)
+    # # uid = 1134206783
+    # weibo_monitor.getWBQueue(uid)
+    pass
