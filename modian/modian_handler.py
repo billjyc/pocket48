@@ -204,7 +204,10 @@ class ModianHandler:
         conn = sqlite3.connect('data/modian.db', check_same_thread=False)
         cursor = conn.cursor()
         try:
+            my_logger.debug('更新接棒活动信息:')
             for jiebang in jiebang_activities:
+                my_logger.debug('current_stick_num: %s, last_record_time: %s, name: %s',
+                                jiebang.current_stick_num, jiebang.last_record_time, jiebang.name)
                 cursor.execute("""
                     UPDATE jiebang SET current_stick_num=?, last_record_time=? WHERE name=?
                 """, (jiebang.current_stick_num, jiebang.last_record_time, jiebang.name))
