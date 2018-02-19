@@ -95,11 +95,16 @@ def update_modian_conf():
         try:
             cursor = conn.cursor()
             c = cursor.execute("""
-                SELECT * FROM jiebang where pro_id=? and start_time <= datetime('now', 'localtime') 
-                and end_time >= datetime('now', 'localtime')
+                SELECT name, pro_id, current_stick_num, last_record_time, 
+                    start_time, end_time, target_stick_num, min_stick_amount
+                FROM jiebang where pro_id=? and start_time <= datetime('now', 'localtime') 
+                    and end_time >= datetime('now', 'localtime')
             """, (pro_id, ))
             rst = c.fetchall()
             for jiebang in rst:
+                my_logger.debug('jiebang: %s, %s, %s, %s, %s, %s, %s, %s',
+                                jiebang[0], jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
+                                              jiebang[6], jiebang[7])
                 jiebang_entity = ModianJiebangEntity(jiebang[0], jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
                                               jiebang[6], jiebang[7])
                 global_config.MODIAN_JIEBANG_ACTIVITIES[pro_id].append(jiebang_entity)
