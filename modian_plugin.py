@@ -49,7 +49,7 @@ def update_modian_conf():
                     len(modian_handler.modian_notify_groups))
 
 
-@scheduler.scheduled_job('cron', second='9,19,29,39,49,59')
+@scheduler.scheduled_job('cron', second='10,30,50')
 def monitor_modian():
     """
     监控摩点

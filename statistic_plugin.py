@@ -27,8 +27,8 @@ def record_data():
     """
     global statistic_handler
     my_logger.debug('记录群人数数据')
-    my_logger.debug('member name: %s', global_config.MEMBER_NAME)
-    statistic_handler.update_group_size(global_config.MEMBER_NAME)
+    my_logger.debug('member name: %s', global_config.CUR_MEMBER['chinese_name'])
+    statistic_handler.update_group_size(global_config.CUR_MEMBER['pinyin'])
 
 
 statistic_handler = StatisticHandler('statistics.db')

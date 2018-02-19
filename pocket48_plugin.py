@@ -8,6 +8,7 @@ from qq.qqhandler import QQHandler
 
 from utils import global_config, util
 from utils.scheduler import scheduler
+import json
 
 
 def onQQMessage(bot, contact, member, content):
@@ -80,27 +81,27 @@ def update_conf():
     pocket48_handler.member_live_groups = member_live_groups
     pocket48_handler.member_room_msg_lite_groups = member_room_msg_lite_groups
 
-    # 初始化人数统计
-    for group_number in global_config.MEMBER_ROOM_MSG_LITE_GROUPS:
-        if group_number not in global_config.GROUP_MEMBER_NUM.keys():
-            global_config.GROUP_MEMBER_NUM[group_number] = 0
-
     my_logger.debug('member_room_msg_groups: %s, length: %d', ','.join(global_config.MEMBER_ROOM_MSG_GROUPS), len(pocket48_handler.member_room_msg_groups))
     my_logger.debug('member_room_comment_groups: %s, length: %d', ','.join(global_config.MEMBER_ROOM_COMMENT_GROUPS), len(pocket48_handler.member_room_comment_msg_groups))
     my_logger.debug('auto_reply_groups: %s, length: %d', ','.join(global_config.AUTO_REPLY_GROUPS), len(pocket48_handler.auto_reply_groups))
     my_logger.debug('member_live_groups: %s, length: %d', ','.join(global_config.MEMBER_LIVE_GROUPS), len(member_live_groups))
     my_logger.debug('member_room_comment_lite_groups: %s, length: %d', ','.join(global_config.MEMBER_ROOM_MSG_LITE_GROUPS), len(pocket48_handler.member_room_msg_lite_groups))
 
+    my_logger.debug('读取成员信息')
+
     member_name = ConfigReader.get_property('root', 'member_name')
-    if global_config.MEMBER_NAME == '' or member_name != global_config.MEMBER_NAME:
+    if global_config.CUR_MEMBER is None or member_name != global_config.CUR_MEMBER['pinyin']:
         my_logger.info('监控成员变更!')
-        global_config.ROOM_ID = ConfigReader.get_member_room_number(member_name)
-        if global_config.ROOM_ID == '':
-            my_logger.error('该成员没有开通口袋房间！')
-        global_config.MEMBER_ID = ConfigReader.get_property('live', member_name)
-        pocket48_handler.init_msg_queues(global_config.ROOM_ID)
-        global_config.MEMBER_NAME = member_name
-    my_logger.debug('当前监控的成员是: %s, 房间ID: %s, member_id: %s', member_name, global_config.ROOM_ID, global_config.MEMBER_ID)
+        # global_config.ROOM_ID = ConfigReader.get_member_room_number(member_name)
+        global_config.CUR_MEMBER = global_config.MEMBER_JSON[member_name]
+        # global_config.ROOM_ID = global_config.MEMBER_JSON[member_name]['room_id']
+        # if global_config.ROOM_ID == '':
+        #     my_logger.error('该成员没有开通口袋房间！')
+        # global_config.MEMBER_ID = ConfigReader.get_property('live', member_name)
+        # global_config.MEMBER_ID = global_config.MEMBER_JSON[member_name]['member_id']
+        pocket48_handler.init_msg_queues(global_config.CUR_MEMBER['room_id'])
+        # global_config.MEMBER_NAME = member_name
+    my_logger.debug('当前监控的成员是: %s', global_config.CUR_MEMBER)
 
     global_config.JIZI_KEYWORDS = ConfigReader.get_property('profile', 'jizi_keywords').split(';')
     global_config.JIZI_LINK = ConfigReader.get_property('profile', 'jizi_link').split(';')
@@ -127,9 +128,9 @@ def get_room_msgs():
     start_t = time.time()
     global pocket48_handler
 
-    r1 = pocket48_handler.get_member_room_msg(global_config.ROOM_ID)
+    r1 = pocket48_handler.get_member_room_msg(global_config.CUR_MEMBER['room_id'])
     pocket48_handler.parse_room_msg(r1)
-    r2 = pocket48_handler.get_member_room_comment(global_config.ROOM_ID)
+    r2 = pocket48_handler.get_member_room_comment(global_config.CUR_MEMBER['room_id'])
     pocket48_handler.parse_room_comment(r2)
 
     # my_logger.debug('last_msg_time: %s', pocket48_handler.last_msg_time)
@@ -143,7 +144,7 @@ def get_member_lives():
     global pocket48_handler
 
     r = pocket48_handler.get_member_live_msg()
-    pocket48_handler.parse_member_live(r, global_config.MEMBER_ID)
+    pocket48_handler.parse_member_live(r, global_config.CUR_MEMBER['member_id'])
 
 
 @scheduler.scheduled_job('cron', second=30, minute='20,50', hour='13,18,19', day_of_week='2-6')
@@ -175,4 +176,5 @@ password = ConfigReader.get_property('user', 'password')
 pocket48_handler.login(username, password)
 
 # 先更新配置
+global_config.MEMBER_JSON = json.load(open('data/member.json', encoding='utf8'))
 update_conf()

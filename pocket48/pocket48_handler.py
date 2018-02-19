@@ -12,10 +12,12 @@ from utils import global_config, util
 
 
 class Member:
-    def __init__(self, name, member_id, room_id):
+    def __init__(self, name, member_id, room_id, weibo_uid=0, pinyin=''):
         self.name = name
         self.member_id = member_id
         self.room_id = room_id
+        self.weibo_uid = weibo_uid
+        self.pinyin = pinyin
 
 
 class Pocket48Handler:

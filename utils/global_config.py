@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
-MEMBER_NAME = ''
-ROOM_ID = 0
-MEMBER_ID = 0
+# MEMBER_NAME = ''
+# ROOM_ID = 0
+# MEMBER_ID = 0
+CUR_MEMBER = None
+
+# 所有成员的个人信息
+MEMBER_JSON = {}
 
 # QQ群
 AUTO_REPLY_GROUPS = []
@@ -33,17 +37,8 @@ ROOM_MSG_LITE_NOTIFY = ''
 # 公演直播提醒
 PERFORMANCE_NOTIFY = ''
 
-# 微打赏
-WDS_ARRAY = []
-WDS_PK_ARRAY = []
-WDS_NEED_DISPLAY_PK = False
-WDS_POSTSCRIPTS = []
-
 # 摩点
 MODIAN_ARRAY = []
 MODIAN_PK_ARRAY = []
 MODIAN_NEED_DISPLAY_PK = False
 MODIAN_POSTSCRIPTS = []
-
-# 群内人数监控
-GROUP_MEMBER_NUM = {}
