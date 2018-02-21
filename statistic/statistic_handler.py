@@ -28,6 +28,32 @@ class StatisticHandler:
         db_path = os.path.join(BASE_DIR, db_path)
         my_logger.debug('db_path: %s', db_path)
         self.conn = sqlite3.connect(db_path, check_same_thread=False)
+        cursor = self.conn.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS member (
+                member_name  VARCHAR( 100 ),
+                group_number INT,
+                group_size   INT,
+                date         DATE 
+            );
+        """)
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS member ( 
+            member_id    INT,
+            member_name  VARCHAR,
+            group_number INT,
+            super_tag    VARCHAR( 500 ) 
+        );
+        """)
+        cursor.execute("""
+        CREATE TABLE super_tag ( 
+            member_name VARCHAR( 100 ),
+            link        VARCHAR( 500 ),
+            size        INT,
+            date        DATE 
+        );
+        """)
+        cursor.close()
         my_logger.debug('读取数据库成功')
 
     def update_group_size(self, member_name):
