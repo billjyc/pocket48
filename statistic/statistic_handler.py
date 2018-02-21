@@ -46,7 +46,7 @@ class StatisticHandler:
         );
         """)
         cursor.execute("""
-        CREATE TABLE super_tag ( 
+        CREATE TABLE IF NOT EXISTS super_tag ( 
             member_name VARCHAR( 100 ),
             link        VARCHAR( 500 ),
             size        INT,
