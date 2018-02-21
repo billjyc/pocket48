@@ -106,7 +106,7 @@ class ModianHandler:
             pay_time = order['pay_time']
             backer_money = order['backer_money']
 
-            if util.convert_timestr_to_timestamp(pay_time) < self.modian_fetchtime_map[modian_entity.pro_id]:
+            if util.convert_timestr_to_timestamp(pay_time) < int(self.modian_fetchtime_map[modian_entity.pro_id]):
                 break
 
             msg = '感谢 %s 支持了%s元, %s\n' % (nickname, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
