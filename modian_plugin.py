@@ -61,7 +61,7 @@ def update_modian_conf():
         pro_id = activity['pro_id']
         end_time = activity['end_time']
         if util.convert_timestr_to_timestamp(end_time) > time.time():
-            flag = ModianFlagEntity(activity['name'], activity['pro_id'], activity['target_flag_amount'],
+            flag = ModianFlagEntity(activity['flag_name'], activity['pro_id'], activity['target_flag_amount'],
                                     activity['end_time'], activity['remark'])
             global_config.MODIAN_FLAG_ACTIVITIES[pro_id].append(flag)
     my_logger.debug('MODIAN_FLAG_ACTIVITIES: %s', global_config.MODIAN_FLAG_ACTIVITIES)
