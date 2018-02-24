@@ -196,16 +196,18 @@ class ModianHandler:
 
             # flag相关
             my_logger.debug('flag情况更新')
+            flag_test_msgs = ''
             for flag in flag_activities:
-                my_logger.debug('flag活动详情: %s', flag.name)
-                my_logger.debug('flag金额: %s, 结束时间: %s', flag.target_flag_amount, flag.end_time)
+                my_logger.debug('Flag活动详情: %s', flag.name)
+                my_logger.debug('Flag金额: %s, 结束时间: %s', flag.target_flag_amount, flag.end_time)
                 diff = flag.target_flag_amount - current
-                test_msg = 'flag活动名称: %s, 目标金额: %s\n' % (flag.name, flag.target_flag_amount)
+                flag_test_msgs += 'Flag活动名称: %s,目标金额: %s元\n' % (flag.name, flag.target_flag_amount)
                 if diff > 0:
-                    test_msg += '距离目标还差%s元，继续加油！' % diff
+                    flag_test_msgs += '距离目标还差%s元，继续加油！' % round(diff, 2)
+                    QQHandler.send_to_groups(['483548995'], flag_test_msgs)
                 else:
-                    test_msg += '已经达成目标，干得漂亮~'
-                QQHandler.send_to_groups(['483548995'], test_msg)
+                    flag_test_msgs += '已经达成目标，干得漂亮~'
+                # QQHandler.send_to_groups(['483548995'], test_msg)
             
             if modian_entity.need_display_rank is True:
                 jizi_rank, backer_money = self.find_user_jizi_rank(self.jizi_rank_list, nickname)
