@@ -201,7 +201,7 @@ class ModianHandler:
                 my_logger.debug('Flag活动详情: %s', flag.name)
                 my_logger.debug('Flag金额: %s, 结束时间: %s', flag.target_flag_amount, flag.end_time)
                 diff = flag.target_flag_amount - current
-                test_msgs = 'Flag活动名称: %s,目标金额: %s元, ' % (flag.name, flag.target_flag_amount)
+                test_msgs = 'Flag活动名称: 【%s】, 目标金额: %s元, ' % (flag.name, flag.target_flag_amount)
                 if diff > 0:
                     test_msgs += '距离目标还差%s元，继续加油！\n' % round(diff, 2)
                     flag_test_msgs += test_msgs
