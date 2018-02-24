@@ -63,7 +63,7 @@ def update_modian_conf():
         if util.convert_timestr_to_timestamp(end_time) > time.time():
             flag = ModianFlagEntity(activity['flag_name'], activity['pro_id'], activity['target_flag_amount'],
                                     activity['end_time'], activity['remark'])
-            global_config.MODIAN_FLAG_ACTIVITIES[pro_id].append(flag)
+            global_config.MODIAN_FLAG_ACTIVITIES[int(pro_id)].append(flag)
     my_logger.debug('MODIAN_FLAG_ACTIVITIES: %s', global_config.MODIAN_FLAG_ACTIVITIES)
 
     # 接棒活动更新，读取json文件中的内容，更新到数据库中
