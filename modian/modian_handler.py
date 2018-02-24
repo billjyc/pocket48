@@ -41,6 +41,15 @@ class ModianJiebangEntity:
         self.min_stick_amount = min_stick_amount
 
 
+class ModianFlagEntity:
+    def __init__(self, name, pro_id, target_flag_amount, end_time, remark):
+        self.name = name
+        self.pro_id = pro_id
+        self.target_flag_amount = target_flag_amount
+        self.end_time = end_time
+        self.remark = remark
+
+
 class ModianHandler:
     def __init__(self, modian_notify_groups, modian_project_array):
         self.session = requests.session()
@@ -91,6 +100,7 @@ class ModianHandler:
     def parse_order_details(self, orders, modian_entity):
         time_tmp = time.time()
         jiebang_activities = global_config.MODIAN_JIEBANG_ACTIVITIES[modian_entity.pro_id]
+        flag_activities = global_config.MODIAN_FLAG_ACTIVITIES[modian_entity.pro_id]
         # 查询集资情况
         target, current, pro_name = self.get_current_and_target(modian_entity)
         project_info = '当前进度: %s元, 目标金额: %s元\n当前集资人数: %s' % (current, target, len(self.jizi_rank_list))
@@ -180,9 +190,22 @@ class ModianHandler:
                 if backer_money >= jiebang.min_stick_amount:
                     jiebang.current_stick_num += 1
                     jiebang.last_record_time = util.convert_timestamp_to_timestr(time.time()*1000)
-                    test_msg = '接棒活动: %s, 当前第%s棒, 目标%s棒\n' \
+                    test_msg = '接棒活动: %s, 当前第%s棒, 目标%s棒' \
                                % (jiebang.name, jiebang.current_stick_num, jiebang.target_stick_num)
                     QQHandler.send_to_groups(['483548995'], test_msg)
+
+            # flag相关
+            my_logger.debug('flag情况更新')
+            for flag in flag_activities:
+                my_logger.debug('flag活动详情: %s', flag.name)
+                my_logger.debug('flag金额: %s, 结束时间: %s', flag.target_flag_amount, flag.end_time)
+                diff = flag.target_flag_amount - current
+                test_msg = 'flag活动名称: %s, 目标金额: %s\n' % (flag.name, flag.target_flag_amount)
+                if diff > 0:
+                    test_msg += '距离目标还差%s元，继续加油！' % diff
+                else:
+                    test_msg += '已经达成目标，干得漂亮~'
+                QQHandler.send_to_groups(['483548995'], test_msg)
             
             if modian_entity.need_display_rank is True:
                 jizi_rank, backer_money = self.find_user_jizi_rank(self.jizi_rank_list, nickname)

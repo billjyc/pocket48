@@ -3,7 +3,7 @@
 from log.my_logger import logger as my_logger
 
 from utils.config_reader import ConfigReader
-from modian.modian_handler import ModianHandler, ModianEntity, ModianJiebangEntity
+from modian.modian_handler import ModianHandler, ModianEntity, ModianJiebangEntity, ModianFlagEntity
 from utils import global_config
 from qq.qqhandler import QQHandler
 import sqlite3
@@ -17,6 +17,7 @@ from utils.scheduler import scheduler
 @scheduler.scheduled_job('cron', minute='*/15')
 def update_modian_conf():
     global modian_handler
+    time0 = time.time()
     my_logger.info('读取摩点配置')
     ConfigReader.read_conf()
     modian_json = json.load(open("data/modian.json", encoding='utf8'))
@@ -49,6 +50,21 @@ def update_modian_conf():
 
     my_logger.debug('JIZI_NOTIFY_GROUPS: %s, length: %d', ','.join(global_config.JIZI_NOTIFY_GROUPS),
                     len(modian_handler.modian_notify_groups))
+
+    my_logger.debug('读取正在进行中的flag活动')
+    global_config.MODIAN_FLAG_ACTIVITIES = {}
+    flag_json = json.load(open('data/modian_flag.json', encoding='utf8'))['activities']
+    for modian in global_config.MODIAN_ARRAY:
+        pro_id = modian.pro_id
+        global_config.MODIAN_FLAG_ACTIVITIES[pro_id] = []
+    for activity in flag_json:
+        pro_id = activity['pro_id']
+        end_time = activity['end_time']
+        if util.convert_timestr_to_timestamp(end_time) > time.time():
+            flag = ModianFlagEntity(activity['name'], activity['pro_id'], activity['target_flag_amount'],
+                                    activity['end_time'], activity['remark'])
+            global_config.MODIAN_FLAG_ACTIVITIES[pro_id].append(flag)
+    my_logger.debug('MODIAN_FLAG_ACTIVITIES: %s', global_config.MODIAN_FLAG_ACTIVITIES)
 
     # 接棒活动更新，读取json文件中的内容，更新到数据库中
     my_logger.debug('接棒活动更新，读取json文件中的内容，更新到数据库中')
@@ -118,6 +134,7 @@ def update_modian_conf():
             cursor.close()
     my_logger.debug(global_config.MODIAN_JIEBANG_ACTIVITIES)
     conn.close()
+    my_logger.debug('读取摩点配置耗时: %s秒', time.time() - time0)
 
 
 @scheduler.scheduled_job('cron', second='10,30,50')

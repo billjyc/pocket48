@@ -1,1 +1,9 @@
 *.db
+.idea/codeStyles/
+.idea/dbnavigator.xml
+.idea/workspace.xml
+qq/__init__.pyc
+qq/qqhandler.pyc
+utils/__init__.pyc
+utils/util.pyc
+venv/
