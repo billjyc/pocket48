@@ -192,6 +192,7 @@ class ModianHandler:
                     jiebang.last_record_time = util.convert_timestamp_to_timestr(time.time()*1000)
                     test_msg = '接棒活动: %s, 当前第%s棒, 目标%s棒' \
                                % (jiebang.name, jiebang.current_stick_num, jiebang.target_stick_num)
+                    my_logger.debug(test_msg)
                     QQHandler.send_to_groups(['483548995'], test_msg)
 
             # flag相关
@@ -207,6 +208,7 @@ class ModianHandler:
                     flag_test_msgs += test_msgs
                 else:
                     test_msgs += '已经达成目标，干得漂亮~'
+            my_logger.debug(flag_test_msgs)
             QQHandler.send_to_groups(['483548995'], flag_test_msgs)
             
             if modian_entity.need_display_rank is True:
@@ -236,12 +238,13 @@ class ModianHandler:
                 cursor.execute("""
                     UPDATE jiebang SET current_stick_num=?, last_record_time=? WHERE name=?
                 """, (jiebang.current_stick_num, jiebang.last_record_time, jiebang.name))
-                conn.commit()
+
         except Exception as e:
             my_logger.error(e)
         finally:
+            conn.commit()
             cursor.close()
-        conn.close()
+            conn.close()
 
     def get_ranking_list(self, modian_entity, type0=1):
         """
