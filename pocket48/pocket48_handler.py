@@ -9,6 +9,8 @@ from log.my_logger import logger
 from qq.qqhandler import QQHandler
 
 from utils import global_config, util
+import os
+import sqlite3
 
 
 class Member:
@@ -47,6 +49,23 @@ class Pocket48Handler:
 
         self.other_members_names = []
         self.last_other_member_msg_time = -1
+
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        db_path = os.path.join(base_dir, 'statistic', 'statistics.db')
+        self.conn = sqlite3.connect(db_path, check_same_thread=False)
+        cursor = self.conn.cursor()
+
+        cursor.execute("""
+                CREATE TABLE IF NOT EXISTS room_message (
+                    message_id   VARCHAR,
+                    type         INTEGER,
+                    user_id      INTEGER,
+                    user_name    VARCHAR,
+                    message_time DATETIME,
+                    content      VARCHAR
+                );
+                """)
+        cursor.close()
 
         # self.live_urls = Queue.Queue(20)
         # self.download = Download(self.live_urls)
@@ -220,83 +239,114 @@ class Pocket48Handler:
         logger.debug('parse room msg response: %s', response)
         rsp_json = json.loads(response)
         msgs = rsp_json['content']['data']
+        cursor = self.conn.cursor()
 
         message = ''
-        for msg in msgs:
-            extInfo = json.loads(msg['extInfo'])
-            msg_id = msg['msgidClient']  # 消息id
+        try:
+            for msg in msgs:
+                extInfo = json.loads(msg['extInfo'])
+                msg_id = msg['msgidClient']  # 消息id
 
-            if msg_id in self.member_room_msg_ids:
-                continue
+                if msg_id in self.member_room_msg_ids:
+                    continue
 
-            if extInfo['role'] != 2:  # 其他成员的消息
-                self.unread_other_member_msg_amount += 1
-                member_name = extInfo['senderName']
-                if member_name == '你们的小可爱':
-                    member_name = 'YBY'
-                if member_name not in self.other_members_names:
-                    self.other_members_names.append(member_name)
-            else:
-                self.unread_msg_amount += 1
+                if extInfo['role'] != 2:  # 其他成员的消息
+                    self.unread_other_member_msg_amount += 1
+                    member_name = extInfo['senderName']
+                    if member_name == '你们的小可爱':
+                        member_name = 'YBY'
+                    if member_name not in self.other_members_names:
+                        self.other_members_names.append(member_name)
+                else:
+                    self.unread_msg_amount += 1
 
-            logger.debug('成员消息')
-            self.member_room_msg_ids.append(msg_id)
+                logger.debug('成员消息')
+                self.member_room_msg_ids.append(msg_id)
 
-            message_object = extInfo['messageObject']
+                message_object = extInfo['messageObject']
 
-            logger.debug('extInfo.keys():' + ','.join(extInfo.keys()))
-            if msg['msgType'] == 0:  # 文字消息
-                if message_object == 'text':  # 普通消息
-                    logger.debug('普通消息')
-                    message = ('【成员消息】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])) + message
-                elif message_object == 'faipaiText':  # 翻牌消息
-                    logger.debug('翻牌')
-                    member_msg = extInfo['messageText']
-                    fanpai_msg = extInfo['faipaiContent']
-                    # fanpai_id = extInfo['faipaiName']
-                    # message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s:%s\n' % (msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_id, fanpai_msg)) + message
-                    message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s\n' % (
-                    msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_msg)) + message
-                # TODO: 直播可以直接在房间里监控
-                elif message_object == 'diantai':  # 电台直播
-                    logger.debug('电台直播')
-                    reference_content = extInfo['referenceContent']
-                    live_id = extInfo['referenceObjectId']
-                elif message_object == 'live':  # 露脸直播
-                    logger.debug('露脸直播')
-                    reference_content = extInfo['referenceContent']
-                    live_id = extInfo['referenceObjectId']
-                elif message_object == 'idolFlip':
-                    logger.debug('翻牌功能')
-                    user_name = extInfo['idolFlipUserName']
-                    title = extInfo['idolFlipTitle']
-                    content = extInfo['idolFlipContent']
-                    message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s: %s\n' % (
-                        msg['msgTimeStr'], extInfo['senderName'], title, user_name, content)) + message
-            elif msg['msgType'] == 1:  # 图片消息
-                bodys = json.loads(msg['bodys'])
-                logger.debug('图片')
-                if 'url' in bodys.keys():
-                    url = bodys['url']
-                    message = ('【图片】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
-            elif msg['msgType'] == 2:  # 语音消息
-                logger.debug('语音消息')
-                bodys = json.loads(msg['bodys'])
-                if 'url' in bodys.keys():
-                    url = bodys['url']
-                    message = ('【语音】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
-            elif msg['msgType'] == 3:  # 小视频
-                logger.debug('房间小视频')
-                bodys = json.loads(msg['bodys'])
-                if 'url' in bodys.keys():
-                    url = bodys['url']
-                    message = ('【小视频】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
+                logger.debug('extInfo.keys():' + ','.join(extInfo.keys()))
+                if msg['msgType'] == 0:  # 文字消息
+                    if message_object == 'text':  # 普通消息
+                        logger.debug('普通消息')
+                        message = ('【成员消息】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])) + message
+                        cursor.execute("""
+                            INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
+                            (?, ?, ?, ?, ?)
+                        """, (msg_id, 100, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], extInfo['text']))
+                    elif message_object == 'faipaiText':  # 翻牌消息
+                        logger.debug('翻牌')
+                        member_msg = extInfo['messageText']
+                        fanpai_msg = extInfo['faipaiContent']
+                        # fanpai_id = extInfo['faipaiName']
+                        # message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s:%s\n' % (msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_id, fanpai_msg)) + message
+                        message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s\n' % (
+                        msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_msg)) + message
+                        cursor.execute("""
+                                        INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
+                                        (?, ?, ?, ?, ?)
+                                """, (msg_id, 101, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], member_msg))
+                    # TODO: 直播可以直接在房间里监控
+                    elif message_object == 'diantai':  # 电台直播
+                        logger.debug('电台直播')
+                        reference_content = extInfo['referenceContent']
+                        live_id = extInfo['referenceObjectId']
+                    elif message_object == 'live':  # 露脸直播
+                        logger.debug('露脸直播')
+                        reference_content = extInfo['referenceContent']
+                        live_id = extInfo['referenceObjectId']
+                    elif message_object == 'idolFlip':
+                        logger.debug('翻牌功能')
+                        user_name = extInfo['idolFlipUserName']
+                        title = extInfo['idolFlipTitle']
+                        content = extInfo['idolFlipContent']
+                        message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s: %s\n' % (
+                            msg['msgTimeStr'], extInfo['senderName'], title, user_name, content)) + message
+                        cursor.execute("""
+                            INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
+                            (?, ?, ?, ?, ?)
+                            """, (msg_id, 105, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], content))
+                elif msg['msgType'] == 1:  # 图片消息
+                    bodys = json.loads(msg['bodys'])
+                    logger.debug('图片')
+                    if 'url' in bodys.keys():
+                        url = bodys['url']
+                        message = ('【图片】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
+                        cursor.execute("""
+                           INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
+                                                            (?, ?, ?, ?, ?)
+                        """, (msg_id, 200, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], url))
+                elif msg['msgType'] == 2:  # 语音消息
+                    logger.debug('语音消息')
+                    bodys = json.loads(msg['bodys'])
+                    if 'url' in bodys.keys():
+                        url = bodys['url']
+                        message = ('【语音】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
+                        cursor.execute("""
+                            INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
+                                                       (?, ?, ?, ?, ?)
+                         """, (msg_id, 201, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], url))
+                elif msg['msgType'] == 3:  # 小视频
+                    logger.debug('房间小视频')
+                    bodys = json.loads(msg['bodys'])
+                    if 'url' in bodys.keys():
+                        url = bodys['url']
+                        message = ('【小视频】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
+                        cursor.execute("""
+                         INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
+                                        (?, ?, ?, ?, ?)
+                        """, (msg_id, 202, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], url))
 
-        if message and len(self.member_room_msg_groups) > 0:
-            QQHandler.send_to_groups(self.member_room_msg_groups, message)
-            self.get_member_room_msg_lite()
-            logger.info('message: %s', message)
-        logger.debug('成员消息队列: %s', len(self.member_room_msg_ids))
+            if message and len(self.member_room_msg_groups) > 0:
+                QQHandler.send_to_groups(self.member_room_msg_groups, message)
+                self.get_member_room_msg_lite()
+                logger.info('message: %s', message)
+            logger.debug('成员消息队列: %s', len(self.member_room_msg_ids))
+        except Exception as e:
+            logger.error(e)
+        finally:
+            self.conn.commit()
+            cursor.close()
 
     def parse_room_comment(self, response):
         """
@@ -482,6 +532,11 @@ class Pocket48Handler:
 
 
 if __name__ == '__main__':
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    db_path = os.path.join(base_dir, 'statistic', 'statistics.db')
+    print(db_path)
+    print(os.path.exists(db_path))
+
     bot.send_group_msg(group_id=483548995, message='test')
     handler = Pocket48Handler([], [], [], [], [])
 
