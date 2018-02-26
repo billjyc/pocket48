@@ -296,11 +296,11 @@ class Pocket48Handler:
                         reference_content = extInfo['referenceContent']
                         live_id = extInfo['referenceObjectId']
                     elif message_object == 'idolFlip':
-                        logger.debug('翻牌功能')
+                        logger.debug('付费翻牌功能')
                         user_name = extInfo['idolFlipUserName']
                         title = extInfo['idolFlipTitle']
                         content = extInfo['idolFlipContent']
-                        message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s: %s\n' % (
+                        message = ('【付费翻牌】[%s]-%s: %s\n【被翻牌】%s: %s\n' % (
                             msg['msgTimeStr'], extInfo['senderName'], title, user_name, content)) + message
                         cursor.execute("""
                             INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
@@ -347,6 +347,13 @@ class Pocket48Handler:
         finally:
             self.conn.commit()
             cursor.close()
+
+    def parse_idol_flip(self, question_id, answer_id, source):
+        url = 'https://ppayqa.48.cn/idolanswersystem/api/idolanswer/v1/question_answer/detail'
+        params = {
+            "questionId": question_id, "answerId": answer_id, "questionFlipSource": source
+        }
+        res = self.session.post(url, json=params, headers=self.juju_header_args()).json()
 
     def parse_room_comment(self, response):
         """
@@ -500,6 +507,7 @@ class Pocket48Handler:
         构造聚聚房间请求头信息
         :return:
         """
+        logger.debug('token: %s', self.token)
         header = {
             'os': 'android',
             'User-Agent': 'Mobile_Pocket',
