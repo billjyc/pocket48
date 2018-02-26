@@ -245,7 +245,7 @@ class Pocket48Handler:
         try:
             for msg in msgs:
                 extInfo = json.loads(msg['extInfo'])
-                msg_id = msg['msgidClient']  # 消息id
+                msg_id = msg['msgidClient']   # 消息id
 
                 if msg_id in self.member_room_msg_ids:
                     continue
@@ -272,7 +272,7 @@ class Pocket48Handler:
                         message = ('【成员消息】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])) + message
                         cursor.execute("""
                             INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
-                            (?, ?, ?, ?, ?)
+                            (?, ?, ?, ?, ?, ?)
                         """, (msg_id, 100, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], extInfo['text']))
                     elif message_object == 'faipaiText':  # 翻牌消息
                         logger.debug('翻牌')
@@ -284,7 +284,7 @@ class Pocket48Handler:
                         msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_msg)) + message
                         cursor.execute("""
                                         INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
-                                        (?, ?, ?, ?, ?)
+                                        (?, ?, ?, ?, ?, ?)
                                 """, (msg_id, 101, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], member_msg))
                     # TODO: 直播可以直接在房间里监控
                     elif message_object == 'diantai':  # 电台直播
@@ -304,7 +304,7 @@ class Pocket48Handler:
                             msg['msgTimeStr'], extInfo['senderName'], title, user_name, content)) + message
                         cursor.execute("""
                             INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
-                            (?, ?, ?, ?, ?)
+                            (?, ?, ?, ?, ?, ?)
                             """, (msg_id, 105, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], content))
                 elif msg['msgType'] == 1:  # 图片消息
                     bodys = json.loads(msg['bodys'])
@@ -314,7 +314,7 @@ class Pocket48Handler:
                         message = ('【图片】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
                         cursor.execute("""
                            INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
-                                                            (?, ?, ?, ?, ?)
+                                                            (?, ?, ?, ?, ?, ?)
                         """, (msg_id, 200, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], url))
                 elif msg['msgType'] == 2:  # 语音消息
                     logger.debug('语音消息')
@@ -324,7 +324,7 @@ class Pocket48Handler:
                         message = ('【语音】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
                         cursor.execute("""
                             INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
-                                                       (?, ?, ?, ?, ?)
+                                                       (?, ?, ?, ?, ?, ?)
                          """, (msg_id, 201, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], url))
                 elif msg['msgType'] == 3:  # 小视频
                     logger.debug('房间小视频')
@@ -334,7 +334,7 @@ class Pocket48Handler:
                         message = ('【小视频】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
                         cursor.execute("""
                          INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
-                                        (?, ?, ?, ?, ?)
+                                        (?, ?, ?, ?, ?, ?)
                         """, (msg_id, 202, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], url))
 
             if message and len(self.member_room_msg_groups) > 0:
