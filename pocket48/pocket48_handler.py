@@ -582,7 +582,7 @@ if __name__ == '__main__':
 
     # handler.notify_performance()
 
-    handler.login('17011967934', '19930727')
+    handler.login('*', '*')
 
     # response = handler.get_member_live_msg()
     # handler.parse_member_live(response, 528331)
