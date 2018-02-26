@@ -1,6 +1,5 @@
 import pocket48_plugin
 import statistic_plugin
-# import wds_plugin
 import weibo_plugin
 import modian_plugin
 

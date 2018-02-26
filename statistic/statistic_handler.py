@@ -30,7 +30,7 @@ class StatisticHandler:
         self.conn = sqlite3.connect(db_path, check_same_thread=False)
         cursor = self.conn.cursor()
         cursor.execute("""
-            CREATE TABLE IF NOT EXISTS member (
+            CREATE TABLE IF NOT EXISTS group (
                 member_name  VARCHAR( 100 ),
                 group_number INT,
                 group_size   INT,
@@ -64,7 +64,6 @@ class StatisticHandler:
         """
         cursor = self.conn.cursor()
         my_logger.debug('更新群信息')
-        # QQHandler.update()
 
         try:
             # 获取群号
