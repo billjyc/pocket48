@@ -300,12 +300,18 @@ class Pocket48Handler:
                         user_name = extInfo['idolFlipUserName']
                         title = extInfo['idolFlipTitle']
                         content = extInfo['idolFlipContent']
-                        message = ('【付费翻牌】[%s]-%s: %s\n【被翻牌】%s: %s\n' % (
-                            msg['msgTimeStr'], extInfo['senderName'], title, user_name, content)) + message
+
+                        question_id = extInfo['idolFlipQuestionId']
+                        answer_id = extInfo['idolFlipAnswerId']
+                        source = extInfo['idolFlipSource']
+                        answer = self.parse_idol_flip(question_id, answer_id, source)
+
+                        message = ('【问】%s: %s\n【答】%s: %s\n%s' % (
+                            user_name, content, extInfo['senderName'], answer, msg['msgTimeStr'])) + message
                         cursor.execute("""
                             INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
                             (?, ?, ?, ?, ?, ?)
-                            """, (msg_id, 105, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], content))
+                            """, (msg_id, 105, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], answer))
                 elif msg['msgType'] == 1:  # 图片消息
                     bodys = json.loads(msg['bodys'])
                     logger.debug('图片')
@@ -351,9 +357,11 @@ class Pocket48Handler:
     def parse_idol_flip(self, question_id, answer_id, source):
         url = 'https://ppayqa.48.cn/idolanswersystem/api/idolanswer/v1/question_answer/detail'
         params = {
-            "questionId": question_id, "answerId": answer_id, "questionFlipSource": source
+            "questionId": question_id, "answerId": answer_id, "idolFlipSource": source
         }
-        res = self.session.post(url, json=params, headers=self.juju_header_args()).json()
+
+        res = self.session.post(url, data=json.dumps(params), headers=self.idol_flip_header_args()).json()
+        return res['content']['answer']
 
     def parse_room_comment(self, response):
         """
@@ -523,6 +531,25 @@ class Pocket48Handler:
         }
         return header
 
+    def idol_flip_header_args(self):
+        """
+        构造收费翻牌请求头信息
+        :return:
+        """
+        logger.debug('token: %s', self.token)
+        header = {
+            'os': 'android',
+            'User-Agent': 'Mobile_Pocket',
+            'IMEI': '863526430773465',
+            'token': self.token,
+            'version': self.VERSION,
+            'Content-Type': 'application/json;charset=utf-8',
+            'Host': 'ppayqa.48.cn',
+            'Connection': 'Keep-Alive',
+            'Accept-Encoding': 'gzip',
+        }
+        return header
+
     def notify_performance(self):
         f = open('data/schedule.json', encoding='utf8')
 
@@ -545,7 +572,12 @@ if __name__ == '__main__':
     print(db_path)
     print(os.path.exists(db_path))
 
-    bot.send_group_msg(group_id=483548995, message='test')
+    params = {
+        "questionId": 10513, "answerId": 7675, "questionFlipSource": 2
+    }
+    a = json.dumps(params)
+
+    # bot.send_group_msg(group_id=483548995, message='test')
     handler = Pocket48Handler([], [], [], [], [])
 
     # handler.notify_performance()
@@ -555,11 +587,14 @@ if __name__ == '__main__':
     # response = handler.get_member_live_msg()
     # handler.parse_member_live(response, 528331)
 
-    r1 = handler.get_member_room_msg(5780791)
+    r1 = handler.get_member_room_msg(5777252)
     print(r1)
 
-    handler.parse_room_msg(r1)
-    r2 = handler.get_member_room_comment(5780791)
-    print(r2)
-    handler.parse_room_comment(r2)
+    r3 = handler.parse_idol_flip(10513, 7675, 2)
+    print(r3)
+
+    # handler.parse_room_msg(r1)
+    # r2 = handler.get_member_room_comment(5780791)
+    # print(r2)
+    # handler.parse_room_comment(r2)
     # print handler.convert_timestamp_to_timestr(1504970619679)
