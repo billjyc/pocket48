@@ -62,7 +62,8 @@ class Pocket48Handler:
                     user_id      INTEGER,
                     user_name    VARCHAR,
                     message_time DATETIME,
-                    content      VARCHAR
+                    content      VARCHAR,
+                    fans_comment VARCHAR
                 );
                 """)
         cursor.close()
@@ -283,9 +284,9 @@ class Pocket48Handler:
                         message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s\n' % (
                         msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_msg)) + message
                         cursor.execute("""
-                                        INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
-                                        (?, ?, ?, ?, ?, ?)
-                                """, (msg_id, 101, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], member_msg))
+                                        INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content, fans_comment) VALUES
+                                        (?, ?, ?, ?, ?, ?, ?)
+                                """, (msg_id, 101, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], member_msg, fanpai_msg))
                     # TODO: 直播可以直接在房间里监控
                     elif message_object == 'diantai':  # 电台直播
                         logger.debug('电台直播')
@@ -309,9 +310,9 @@ class Pocket48Handler:
                         message = ('【问】%s: %s\n【答】%s: %s\n%s' % (
                             user_name, content, extInfo['senderName'], answer, msg['msgTimeStr'])) + message
                         cursor.execute("""
-                            INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
-                            (?, ?, ?, ?, ?, ?)
-                            """, (msg_id, 105, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], answer))
+                            INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content, fans_comment) VALUES
+                            (?, ?, ?, ?, ?, ?, ?)
+                            """, (msg_id, 105, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], answer, user_name + ': ' + content))
                 elif msg['msgType'] == 1:  # 图片消息
                     bodys = json.loads(msg['bodys'])
                     logger.debug('图片')
