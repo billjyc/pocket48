@@ -13,6 +13,7 @@ import hashlib
 import urllib.parse
 import random
 import sqlite3
+import uuid
 
 from qq.qqhandler import QQHandler
 
@@ -56,16 +57,29 @@ class ModianHandler:
         self.modian_notify_groups = modian_notify_groups
         self.modian_project_array = modian_project_array
 
-        self.modian_fetchtime_map = {}  # 各集资项目上次查询订单的时间
+        # self.modian_fetchtime_map = {}  # 各集资项目上次查询订单的时间
         self.jizi_rank_list = []
         self.daka_rank_list = []
-        # self.order_queues = []
+        self.order_queues = {}
         self.init_order_queues()
 
     def init_order_queues(self):
         # TODO: 初始化订单队列，用于发送集资播报
         for modian_entity in self.modian_project_array:
-            self.modian_fetchtime_map[modian_entity.pro_id] = time.time()
+            # self.modian_fetchtime_map[modian_entity.pro_id] = time.time()
+            try:
+                my_logger.info('初始化%s的订单队列', modian_entity.pro_id)
+                self.order_queues[modian_entity.pro_id] = set()
+                orders = self.query_project_orders(modian_entity)
+                for order in orders:
+                    user_id = order['user_id']
+                    pay_time = order['pay_time']
+
+                    oid = uuid.uuid3(uuid.NAMESPACE_OID, str(user_id) + pay_time)
+                    self.order_queues[modian_entity.pro_id].add(oid)
+            except Exception as e:
+                my_logger.error('初始化订单队列失败！')
+                my_logger.error(e)
 
     def modian_header(self):
         """
@@ -98,7 +112,7 @@ class ModianHandler:
             raise RuntimeError('获取项目订单查询失败')
 
     def parse_order_details(self, orders, modian_entity):
-        time_tmp = time.time()
+        # time_tmp = time.time()
         jiebang_activities = global_config.MODIAN_JIEBANG_ACTIVITIES[modian_entity.pro_id]
         flag_activities = global_config.MODIAN_FLAG_ACTIVITIES[modian_entity.pro_id]
         # 查询集资情况
@@ -116,8 +130,12 @@ class ModianHandler:
             pay_time = order['pay_time']
             backer_money = order['backer_money']
 
-            if util.convert_timestr_to_timestamp(pay_time) < int(self.modian_fetchtime_map[modian_entity.pro_id]):
+            oid = uuid.uuid3(uuid.NAMESPACE_OID, str(user_id) + pay_time)
+            my_logger.debug('oid: %s', oid)
+            if oid in self.order_queues[modian_entity.pro_id]:
                 break
+            # if util.convert_timestr_to_timestamp(pay_time) < int(self.modian_fetchtime_map[modian_entity.pro_id]):
+            #     break
 
             msg = '感谢 %s 支持了%s元, %s\n' % (nickname, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
             daka_rank, support_days = self.find_user_daka_rank(self.daka_rank_list, nickname)
@@ -235,7 +253,8 @@ class ModianHandler:
             
             my_logger.info(msg)
             QQHandler.send_to_groups(self.modian_notify_groups, msg)
-        self.modian_fetchtime_map[modian_entity.pro_id] = time_tmp
+            self.order_queues[modian_entity.pro_id].add(oid)
+        # self.modian_fetchtime_map[modian_entity.pro_id] = time_tmp
         # 更新接棒的数据库
         conn = sqlite3.connect('data/modian.db', check_same_thread=False)
         cursor = conn.cursor()
@@ -381,6 +400,13 @@ class ModianHandler:
 
 
 if __name__ == '__main__':
+    user_id = '123456'
+    back_time = '2018-02-28 12:00'
+    oid = uuid.uuid3(uuid.NAMESPACE_OID, user_id+back_time)
+    oid2 = uuid.uuid3(uuid.NAMESPACE_OID, user_id+back_time)
+
+    print(oid == oid2)
+
     global_config.MODIAN_POSTSCRIPTS = ['123', '333']
     modian1 = ModianEntity('https://zhongchou.modian.com/item/10358.html', 'SNH48江真仪生日应援集资1.0',
                            10358)
