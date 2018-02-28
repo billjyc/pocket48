@@ -216,6 +216,7 @@ class ModianHandler:
                                % (jiebang.name, jiebang.current_stick_num, jiebang.target_stick_num)
                     my_logger.debug(test_msg)
                     if len(test_msg) > 0:
+                        msg += test_msg
                         QQHandler.send_to_groups(['483548995'], test_msg)
 
             # flag相关
