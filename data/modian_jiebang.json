@@ -1,12 +1,12 @@
 {
   "activities": [
     {
-      "jiebang_name": "限时活动名称",
+      "jiebang_name": "特别接棒活动",
       "pro_id": "10999",
-      "target_stick_num": 200,
-      "min_stick_amount": 1.00,
-      "start_time": "2018-02-19 15:30:00",
-      "end_time": "2018-02-24 18:00:00"
+      "target_stick_num": 48,
+      "min_stick_amount": 10.17,
+      "start_time": "2018-02-28 10:30:00",
+      "end_time": "2018-02-28 19:30:00"
     }
   ]
 }
