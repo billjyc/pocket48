@@ -116,6 +116,7 @@ def update_modian_conf():
                 """, (name, activity['pro_id'], activity['start_time'], activity['end_time'],
                       activity['target_stick_num'], activity['min_stick_amount'], current_stick_num, name))
                 conn.commit()
+                my_logger.debug('%s接棒数修正完成，当前棒数:%s', activity['pro_id'], current_stick_num)
             elif len(rst) == 0:
                 my_logger.debug('len(rst)==0')
                 cursor.execute("""
