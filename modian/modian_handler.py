@@ -57,16 +57,13 @@ class ModianHandler:
         self.modian_notify_groups = modian_notify_groups
         self.modian_project_array = modian_project_array
 
-        # self.modian_fetchtime_map = {}  # 各集资项目上次查询订单的时间
         self.jizi_rank_list = []
         self.daka_rank_list = []
         self.order_queues = {}
         self.init_order_queues()
 
     def init_order_queues(self):
-        # TODO: 初始化订单队列，用于发送集资播报
         for modian_entity in self.modian_project_array:
-            # self.modian_fetchtime_map[modian_entity.pro_id] = time.time()
             try:
                 my_logger.info('初始化%s的订单队列', modian_entity.pro_id)
                 self.order_queues[modian_entity.pro_id] = set()
@@ -134,8 +131,6 @@ class ModianHandler:
             my_logger.debug('oid: %s', oid)
             if oid in self.order_queues[modian_entity.pro_id]:
                 break
-            # if util.convert_timestr_to_timestamp(pay_time) < int(self.modian_fetchtime_map[modian_entity.pro_id]):
-            #     break
 
             msg = '感谢 %s 支持了%s元, %s\n' % (nickname, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
             daka_rank, support_days = self.find_user_daka_rank(self.daka_rank_list, nickname)
@@ -206,14 +201,16 @@ class ModianHandler:
                 my_logger.debug('接棒活动详情: %s', jiebang.name)
                 my_logger.debug('集资金额: %s, 接棒最小金额: %s', backer_money, jiebang.min_stick_amount)
                 if backer_money >= jiebang.min_stick_amount:
+                    stick_num = self.compute_stick_num(jiebang.min_stick_amount, backer_money)
+                    jiebang.current_stick_num += stick_num
                     # 冯晓菲应援会特别定制，10.17算1棒，但是在20以上就按10元1棒计算
-                    if jiebang.min_stick_amount == 10.17:
-                        if 10.17 <= backer_money < 20:
-                            jiebang.current_stick_num += 1
-                        elif backer_money >= 20:
-                            jiebang.current_stick_num += int(backer_money // 10)
-                    else:
-                        jiebang.current_stick_num += int(backer_money // jiebang.min_stick_amount)
+                    # if jiebang.min_stick_amount == 10.17:
+                    #     if 10.17 <= backer_money < 20:
+                    #         jiebang.current_stick_num += 1
+                    #     elif backer_money >= 20:
+                    #         jiebang.current_stick_num += int(backer_money // 10)
+                    # else:
+                    #     jiebang.current_stick_num += int(backer_money // jiebang.min_stick_amount)
                     jiebang.last_record_time = util.convert_timestamp_to_timestr(time.time()*1000)
                     test_msg = '接棒活动: %s, 当前第%s棒, 目标%s棒' \
                                % (jiebang.name, jiebang.current_stick_num, jiebang.target_stick_num)
@@ -254,7 +251,7 @@ class ModianHandler:
             my_logger.info(msg)
             QQHandler.send_to_groups(self.modian_notify_groups, msg)
             self.order_queues[modian_entity.pro_id].add(oid)
-        # self.modian_fetchtime_map[modian_entity.pro_id] = time_tmp
+
         # 更新接棒的数据库
         conn = sqlite3.connect('data/modian.db', check_same_thread=False)
         cursor = conn.cursor()
@@ -273,6 +270,24 @@ class ModianHandler:
             conn.commit()
             cursor.close()
             conn.close()
+
+    def compute_stick_num(self, min_stick_num, backer_money):
+        """
+        计算接棒活动中的棒数
+        :param min_stick_num: 接棒最小金额
+        :param backer_money: 集资金额
+        :return:
+        """
+        rst = 0
+        # 冯晓菲应援会特别定制，10.17算1棒，但是在20以上就按10元1棒计算
+        if min_stick_num == 10.17:
+            if 10.17 <= backer_money < 20:
+                rst = 1
+            elif backer_money >= 20:
+                rst = int(backer_money // 10)
+        else:
+            rst = int(backer_money // min_stick_num)
+        return rst
 
     def get_ranking_list(self, modian_entity, type0=1):
         """

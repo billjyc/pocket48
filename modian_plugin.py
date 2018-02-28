@@ -80,11 +80,34 @@ def update_modian_conf():
             rst = c.fetchall()
             if len(rst) == 1:
                 my_logger.debug('len(rst)==1')
+
+                # 修正当前接棒数
+                my_logger.debug('修正当前接棒数')
+                start_time = util.convert_timestr_to_timestamp(activity['start_time'])
+                current_stick_num = 0
+                cur_page = 1
+                while True:
+                    finish_find = False
+                    orders = modian_handler.query_project_orders(activity['pro_id'], cur_page)
+                    if len(orders) <= 0:
+                        break
+
+                    for order in orders:
+                        order_time = util.convert_timestr_to_timestamp(order['pay_time'])
+                        if order_time < start_time:
+                            finish_find = True
+                            break
+                        current_stick_num += modian_handler.compute_stick_num(activity['min_stick_amount'], order['backer_money'])
+                    if finish_find is True:
+                        break
+                    cur_page += 1
+
                 cursor.execute("""
-                    UPDATE jiebang SET name=?, pro_id=?, start_time=?, end_time=?, target_stick_num=?, min_stick_amount=?
+                    UPDATE jiebang SET name=?, pro_id=?, start_time=?, end_time=?, 
+                    target_stick_num=?, min_stick_amount=?, current_stick_num=?
                     WHERE name=?
                 """, (name, activity['pro_id'], activity['start_time'], activity['end_time'],
-                      activity['target_stick_num'], activity['min_stick_amount'], name))
+                      activity['target_stick_num'], activity['min_stick_amount'], current_stick_num, name))
                 conn.commit()
             elif len(rst) == 0:
                 my_logger.debug('len(rst)==0')
@@ -152,7 +175,7 @@ def monitor_modian():
         my_logger.debug('查询摩点集资情况所消耗的时间为: %s秒', time.time() - time0)
 
 
-@scheduler.scheduled_job('cron', second='1,11,21,31,41,51')
+@scheduler.scheduled_job('cron', second='15,35,55')
 def update_ranking_list():
     time0 = time.time()
     global modian_handler
