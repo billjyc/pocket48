@@ -189,10 +189,13 @@ class ModianHandler:
                 my_logger.debug('集资金额: %s, 接棒最小金额: %s', backer_money, jiebang.min_stick_amount)
                 if backer_money >= jiebang.min_stick_amount:
                     # 冯晓菲应援会特别定制，10.17算1棒，但是在20以上就按10元1棒计算
-                    if 10.17 <= backer_money < 20:
-                        jiebang.current_stick_num += 1
-                    elif backer_money >= 20:
-                        jiebang.current_stick_num += int(backer_money // 10)
+                    if jiebang.min_stick_amount == 10.17:
+                        if 10.17 <= backer_money < 20:
+                            jiebang.current_stick_num += 1
+                        elif backer_money >= 20:
+                            jiebang.current_stick_num += int(backer_money // 10)
+                    else:
+                        jiebang.current_stick_num += int(backer_money // jiebang.min_stick_amount)
                     jiebang.last_record_time = util.convert_timestamp_to_timestr(time.time()*1000)
                     test_msg = '接棒活动: %s, 当前第%s棒, 目标%s棒' \
                                % (jiebang.name, jiebang.current_stick_num, jiebang.target_stick_num)
