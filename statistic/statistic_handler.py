@@ -31,29 +31,26 @@ class StatisticHandler:
             self.conn = sqlite3.connect(db_path, check_same_thread=False)
             cursor = self.conn.cursor()
             cursor.execute("""
-                CREATE TABLE IF NOT EXISTS group (
+                CREATE TABLE IF NOT EXISTS 'group' (
                     member_name  VARCHAR( 100 ),
                     group_number INT,
                     group_size   INT,
                     date         DATE 
-                );
-            """)
+                );""")
             cursor.execute("""
-            CREATE TABLE IF NOT EXISTS member ( 
-                member_id    INT,
-                member_name  VARCHAR,
-                group_number INT,
-                super_tag    VARCHAR( 500 ) 
-            );
-            """)
+                CREATE TABLE IF NOT EXISTS 'member' ( 
+                    member_id    INT,
+                    member_name  VARCHAR,
+                    group_number INT,
+                    super_tag    VARCHAR( 500 ) 
+                );""")
             cursor.execute("""
-            CREATE TABLE IF NOT EXISTS super_tag ( 
+            CREATE TABLE IF NOT EXISTS 'super_tag' ( 
                 member_name VARCHAR( 100 ),
                 link        VARCHAR( 500 ),
                 size        INT,
                 date        DATE 
-            );
-            """)
+            );""")
         except Exception as e:
             my_logger.error(e)
         finally:
