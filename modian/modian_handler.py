@@ -198,7 +198,7 @@ class ModianHandler:
             my_logger.debug('接棒情况更新')
 
             for jiebang in jiebang_activities:
-                my_logger.debug('接棒活动详情: %s', jiebang.name)
+                my_logger.debug('接棒活动详情: 【%s】', jiebang.name)
                 my_logger.debug('集资金额: %s, 接棒最小金额: %s', backer_money, jiebang.min_stick_amount)
                 if backer_money >= jiebang.min_stick_amount:
                     stick_num = self.compute_stick_num(jiebang.min_stick_amount, backer_money)
@@ -212,10 +212,11 @@ class ModianHandler:
                     # else:
                     #     jiebang.current_stick_num += int(backer_money // jiebang.min_stick_amount)
                     jiebang.last_record_time = util.convert_timestamp_to_timestr(time.time()*1000)
-                    test_msg = '接棒活动: %s, 当前第%s棒, 目标%s棒' \
+                    test_msg = '接棒活动: 【%s】, 当前第%s棒, 目标%s棒\n' \
                                % (jiebang.name, jiebang.current_stick_num, jiebang.target_stick_num)
                     my_logger.debug(test_msg)
-                    QQHandler.send_to_groups(['483548995'], test_msg)
+                    if len(test_msg) > 0:
+                        QQHandler.send_to_groups(['483548995'], test_msg)
 
             # flag相关
             my_logger.debug('flag情况更新')
