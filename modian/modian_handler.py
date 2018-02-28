@@ -217,7 +217,8 @@ class ModianHandler:
                     test_msgs += '已经达成目标，干得漂亮~'
             my_logger.debug(flag_test_msgs)
             if len(flag_test_msgs) > 0:
-                QQHandler.send_to_groups(['483548995'], flag_test_msgs)
+                # QQHandler.send_to_groups(['483548995'], flag_test_msgs)
+                msg += flag_test_msgs
             
             if modian_entity.need_display_rank is True:
                 jizi_rank, backer_money = self.find_user_jizi_rank(self.jizi_rank_list, nickname)
