@@ -86,9 +86,16 @@ def update_modian_conf():
                 start_time = util.convert_timestr_to_timestamp(activity['start_time'])
                 current_stick_num = 0
                 cur_page = 1
+                entity = None
+                for modian_entity in global_config.MODIAN_ARRAY:
+                    pro_id = modian_entity.pro_id
+                    if str(pro_id) == str(activity['pro_id']):
+                        entity = modian_entity
+                        break
                 while True:
                     finish_find = False
-                    orders = modian_handler.query_project_orders(activity['pro_id'], cur_page)
+
+                    orders = modian_handler.query_project_orders(entity, cur_page)
                     if len(orders) <= 0:
                         break
 
