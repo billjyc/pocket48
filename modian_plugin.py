@@ -71,6 +71,9 @@ def update_modian_conf():
     jiebang_json = json.load(open('data/modian_jiebang.json', encoding='utf8'))['activities']
     conn = sqlite3.connect('data/modian.db', check_same_thread=False)
     for activity in jiebang_json:
+        end_time = activity['end_time']
+        if util.convert_timestr_to_timestamp(end_time) < time.time():
+            continue
         name = activity['jiebang_name']
         try:
             cursor = conn.cursor()
