@@ -307,8 +307,9 @@ class Pocket48Handler:
                         source = extInfo['idolFlipSource']
                         answer = self.parse_idol_flip(question_id, answer_id, source)
 
-                        message = ('【问】%s: %s\n【答】%s: %s\n%s' % (
+                        message = ('【问】%s: %s\n【答】%s: %s\n翻牌时间: %s\n' % (
                             user_name, content, extInfo['senderName'], answer, msg['msgTimeStr'])) + message
+                        QQHandler.send_to_groups(['108323016'], message)
                         cursor.execute("""
                             INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content, fans_comment) VALUES
                             (?, ?, ?, ?, ?, ?, ?)
