@@ -92,15 +92,8 @@ def update_conf():
     member_name = ConfigReader.get_property('root', 'member_name')
     if global_config.CUR_MEMBER is None or member_name != global_config.CUR_MEMBER['pinyin']:
         my_logger.info('监控成员变更!')
-        # global_config.ROOM_ID = ConfigReader.get_member_room_number(member_name)
         global_config.CUR_MEMBER = global_config.MEMBER_JSON[member_name]
-        # global_config.ROOM_ID = global_config.MEMBER_JSON[member_name]['room_id']
-        # if global_config.ROOM_ID == '':
-        #     my_logger.error('该成员没有开通口袋房间！')
-        # global_config.MEMBER_ID = ConfigReader.get_property('live', member_name)
-        # global_config.MEMBER_ID = global_config.MEMBER_JSON[member_name]['member_id']
         pocket48_handler.init_msg_queues(global_config.CUR_MEMBER['room_id'])
-        # global_config.MEMBER_NAME = member_name
     my_logger.debug('当前监控的成员是: %s', global_config.CUR_MEMBER)
 
     global_config.JIZI_KEYWORDS = ConfigReader.get_property('profile', 'jizi_keywords').split(';')
@@ -132,8 +125,6 @@ def get_room_msgs():
     pocket48_handler.parse_room_msg(r1)
     r2 = pocket48_handler.get_member_room_comment(global_config.CUR_MEMBER['room_id'])
     pocket48_handler.parse_room_comment(r2)
-
-    # my_logger.debug('last_msg_time: %s', pocket48_handler.last_msg_time)
 
     end_t = time.time()
     my_logger.debug('获取房间消息 执行时间: %s', end_t-start_t)
@@ -176,5 +167,5 @@ password = ConfigReader.get_property('user', 'password')
 pocket48_handler.login(username, password)
 
 # 先更新配置
-global_config.MEMBER_JSON = json.load(open('data/member.json', encoding='utf8'))
+
 update_conf()

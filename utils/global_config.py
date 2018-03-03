@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-# MEMBER_NAME = ''
-# ROOM_ID = 0
-# MEMBER_ID = 0
 CUR_MEMBER = None
+POCKET48_VERSION = ''
+IMEI = ''
 
 # 所有成员的个人信息
 MEMBER_JSON = {}

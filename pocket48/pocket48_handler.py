@@ -23,7 +23,6 @@ class Member:
 
 
 class Pocket48Handler:
-    VERSION = '5.2.0'
 
     def __init__(self, auto_reply_groups, member_room_msg_groups, member_room_comment_msg_groups,
                  member_live_groups, member_room_msg_lite_groups):
@@ -463,12 +462,6 @@ class Pocket48Handler:
                     msg += '你的小宝贝儿开电台直播了: %s\n直播链接: %s\n开始时间: %s' % (sub_title, url, start_time)
                 self.member_live_ids.append(live_id)
 
-                # 录制直播
-                # name = '%s_%s' % (member_id, live['startTime'])
-                # # self.download.setName(name)
-                # self.live_urls.put(name)
-                # self.live_urls.put(stream_path)
-
         logger.debug(msg)
         if msg and len(self.member_live_groups) > 0:
             QQHandler.send_to_groups(self.member_live_groups, msg)
@@ -481,15 +474,14 @@ class Pocket48Handler:
         header = {
             'os': 'android',
             'User-Agent': 'Mobile_Pocket',
-            'IMEI': '863526430773465',
+            'IMEI': global_config.IMEI,
             'token': '0',
-            'version': self.VERSION,
+            'version': global_config.POCKET48_VERSION,
             'Content-Type': 'application/json;charset=utf-8',
-            'Content-Length': '74',
+            # 'Content-Length': '74',
             'Host': 'puser.48.cn',
             'Connection': 'Keep-Alive',
-            'Accept-Encoding': 'gzip',
-            'Cache-Control': 'no-cache'
+            'Accept-Encoding': 'gzip'
         }
         return header
 
@@ -501,15 +493,14 @@ class Pocket48Handler:
         header = {
             'os': 'android',
             'User-Agent': 'Mobile_Pocket',
-            'IMEI': '863526430773465',
+            'IMEI': global_config.IMEI,
             'token': self.token,
-            'version': self.VERSION,
+            'version': global_config.POCKET48_VERSION,
             'Content-Type': 'application/json;charset=utf-8',
-            'Content-Length': '89',
             'Host': 'plive.48.cn',
             'Connection': 'Keep-Alive',
-            'Accept-Encoding': 'gzip',
-            'Cache-Control': 'no-cache'
+            'Accept-Encoding': 'gzip'
+            # 'Cache-Control': 'no-cache'
         }
         return header
 
@@ -522,15 +513,14 @@ class Pocket48Handler:
         header = {
             'os': 'android',
             'User-Agent': 'Mobile_Pocket',
-            'IMEI': '863526430773465',
+            'IMEI': global_config.IMEI,
             'token': self.token,
-            'version': self.VERSION,
+            'version': global_config.POCKET48_VERSION,
             'Content-Type': 'application/json;charset=utf-8',
-            'Content-Length': '57',
             'Host': 'pjuju.48.cn',
             'Connection': 'Keep-Alive',
-            'Accept-Encoding': 'gzip',
-            'Cache-Control': 'no-cache'
+            'Accept-Encoding': 'gzip'
+            # 'Cache-Control': 'no-cache'
         }
         return header
 
@@ -543,13 +533,13 @@ class Pocket48Handler:
         header = {
             'os': 'android',
             'User-Agent': 'Mobile_Pocket',
-            'IMEI': '863526430773465',
+            'IMEI': global_config.IMEI,
             'token': self.token,
-            'version': self.VERSION,
+            'version': global_config.POCKET48_VERSION,
             'Content-Type': 'application/json;charset=utf-8',
             'Host': 'ppayqa.48.cn',
             'Connection': 'Keep-Alive',
-            'Accept-Encoding': 'gzip',
+            'Accept-Encoding': 'gzip'
         }
         return header
 
