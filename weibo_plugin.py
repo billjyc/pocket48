@@ -8,9 +8,10 @@ from utils.config_reader import ConfigReader
 from utils import global_config
 
 from utils.scheduler import scheduler
+import time
 
 
-@scheduler.scheduled_job('cron', second='35')
+# @scheduler.scheduled_job('cron', second='35')
 def update_weibo_conf():
     global weibo_monitor
 
@@ -43,10 +44,12 @@ update_weibo_conf()
 
 
 if __name__ == '__main__':
-    # global_config.MEMBER_WEIBO_GROUPS = ConfigReader.get_property('qq_conf', 'member_weibo_groups').split(';')
-    # weibo_monitor.login('***', '***')
-    # name = ConfigReader.get_property('root', 'member_name')
+    global_config.MEMBER_WEIBO_GROUPS = ConfigReader.get_property('qq_conf', 'member_weibo_groups').split(';')
+    # weibo_monitor.login('*', '*')
+    name = ConfigReader.get_property('root', 'member_name')
     # uid = ConfigReader.get_property('weibo', name)
-    # # uid = 1134206783
-    # weibo_monitor.getWBQueue(uid)
-    pass
+    uid = 1134206783
+    weibo_monitor.getWBQueue(uid)
+    while True:
+        monitor_member_weibo()
+        time.sleep(5)
