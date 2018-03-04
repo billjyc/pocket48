@@ -130,7 +130,7 @@ class ModianHandler:
             oid = uuid.uuid3(uuid.NAMESPACE_OID, str(user_id) + pay_time)
             my_logger.debug('oid: %s', oid)
             if oid in self.order_queues[modian_entity.pro_id]:
-                break
+                continue
 
             msg = '感谢 %s 支持了%s元, %s\n' % (nickname, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
             daka_rank, support_days = self.find_user_daka_rank(self.daka_rank_list, nickname)
