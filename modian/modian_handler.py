@@ -107,7 +107,8 @@ class ModianHandler:
             my_logger.info('项目订单: page: %s, orders: %s', page, orders)
             if len(orders) == 0 and page == 1:
                 my_logger.debug('请求订单失败，再请求一次')
-                orders = requests.post(api, self.make_post_params(params), headers=self.modian_header()).json()['data']
+                r2 = requests.post(api, self.make_post_params(params), headers=self.modian_header()).json()
+                orders = r2['data']
                 my_logger.debug('type of orders: %s, len(orders): %s', type(orders), len(orders))
             return orders
         else:
