@@ -63,15 +63,20 @@ class ModianHandler:
         # self.init_order_queues()
 
     def init_order_queues(self):
-        my_logger.info('初始化订单队列')
         for modian_entity in self.modian_project_array:
             try:
                 my_logger.info('初始化%s的订单队列', modian_entity.pro_id)
                 self.order_queues[modian_entity.pro_id] = set()
                 orders = self.query_project_orders(modian_entity)
-                if len(orders) == 0:
-                    my_logger.debug('请求订单失败，再请求一次')
-                    orders = self.query_project_orders(modian_entity)
+                retry_time = 0
+                while retry_time < 5:
+                    retry_time += 1
+                    if len(orders) == 0:
+                        my_logger.debug('请求订单失败，第%s次重试', retry_time)
+                        orders = self.query_project_orders(modian_entity)
+                    else:
+                        break
+
                 for order in orders:
                     user_id = order['user_id']
                     pay_time = order['pay_time']
