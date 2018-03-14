@@ -69,6 +69,9 @@ class ModianHandler:
                 my_logger.info('初始化%s的订单队列', modian_entity.pro_id)
                 self.order_queues[modian_entity.pro_id] = set()
                 orders = self.query_project_orders(modian_entity)
+                if len(orders) == 0:
+                    my_logger.debug('请求订单失败，再请求一次')
+                    orders = self.query_project_orders(modian_entity)
                 for order in orders:
                     user_id = order['user_id']
                     pay_time = order['pay_time']
@@ -105,11 +108,11 @@ class ModianHandler:
         if int(r['status']) == 0:
             orders = r['data']
             my_logger.info('项目订单: page: %s, orders: %s', page, orders)
-            if len(orders) == 0 and page == 1:
-                my_logger.debug('请求订单失败，再请求一次')
-                r2 = requests.post(api, self.make_post_params(params), headers=self.modian_header()).json()
-                orders = r2['data']
-                my_logger.debug('type of orders: %s, len(orders): %s', type(orders), len(orders))
+            # if len(orders) == 0 and page == 1:
+            #     my_logger.debug('请求订单失败，再请求一次')
+            #     r2 = requests.post(api, self.make_post_params(params), headers=self.modian_header()).json()
+            #     orders = r2['data']
+            #     my_logger.debug('type of orders: %s, len(orders): %s', type(orders), len(orders))
             return orders
         else:
             raise RuntimeError('获取项目订单查询失败')
