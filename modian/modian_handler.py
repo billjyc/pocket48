@@ -108,6 +108,7 @@ class ModianHandler:
             if len(orders) == 0 and page == 1:
                 my_logger.debug('请求订单失败，再请求一次')
                 orders = requests.post(api, self.make_post_params(params), headers=self.modian_header()).json()['data']
+                my_logger.debug('type of orders: %s, len(orders): %s', type(orders), len(orders))
             return orders
         else:
             raise RuntimeError('获取项目订单查询失败')
