@@ -129,6 +129,7 @@ class ModianHandler:
 
             oid = uuid.uuid3(uuid.NAMESPACE_OID, str(user_id) + pay_time)
             my_logger.debug('oid: %s', oid)
+            my_logger.debug('size of order %s queue: %s', modian_entity.pro_id, len(self.order_queues[modian_entity.pro_id]))
             if oid in self.order_queues[modian_entity.pro_id]:
                 continue
 
