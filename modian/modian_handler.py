@@ -63,6 +63,7 @@ class ModianHandler:
         self.init_order_queues()
 
     def init_order_queues(self):
+        my_logger.info('初始化订单队列')
         for modian_entity in self.modian_project_array:
             try:
                 my_logger.info('初始化%s的订单队列', modian_entity.pro_id)
