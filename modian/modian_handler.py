@@ -60,7 +60,7 @@ class ModianHandler:
         self.jizi_rank_list = []
         self.daka_rank_list = []
         self.order_queues = {}
-        self.init_order_queues()
+        # self.init_order_queues()
 
     def init_order_queues(self):
         my_logger.info('初始化订单队列')
@@ -105,6 +105,9 @@ class ModianHandler:
         if int(r['status']) == 0:
             orders = r['data']
             my_logger.info('项目订单: page: %s, orders: %s', page, orders)
+            if len(orders) == 0 and page == 1:
+                my_logger.debug('请求订单失败，再请求一次')
+                orders = requests.post(api, self.make_post_params(params), headers=self.modian_header()).json()['data']
             return orders
         else:
             raise RuntimeError('获取项目订单查询失败')
