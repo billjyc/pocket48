@@ -123,6 +123,8 @@ class ModianHandler:
             raise RuntimeError('获取项目订单查询失败')
 
     def parse_order_details(self, orders, modian_entity):
+        if len(self.order_queues[modian_entity.pro_id]) == 0:
+            return
         # time_tmp = time.time()
         jiebang_activities = global_config.MODIAN_JIEBANG_ACTIVITIES[modian_entity.pro_id]
         flag_activities = global_config.MODIAN_FLAG_ACTIVITIES[modian_entity.pro_id]
