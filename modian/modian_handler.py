@@ -124,6 +124,7 @@ class ModianHandler:
 
     def parse_order_details(self, orders, modian_entity):
         if len(self.order_queues[modian_entity.pro_id]) == 0:
+            my_logger.debug('订单队列为空')
             return
         # time_tmp = time.time()
         jiebang_activities = global_config.MODIAN_JIEBANG_ACTIVITIES[modian_entity.pro_id]
