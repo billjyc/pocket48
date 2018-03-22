@@ -263,7 +263,8 @@ class ModianHandler:
             
             my_logger.info(msg)
             if global_config.USING_COOLQ_PRO is True:
-                msg += '\n[CQ:image, https://wx1.sinaimg.cn/mw690/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]'
+                my_logger.debug('使用酷Q PRO发送图片')
+                msg += '\n[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]'
             QQHandler.send_to_groups(self.modian_notify_groups, msg)
             self.order_queues[modian_entity.pro_id].add(oid)
 
