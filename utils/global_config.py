@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+USING_COOLQ_PRO=False
+
 CUR_MEMBER = None
 POCKET48_VERSION = ''
 IMEI = ''

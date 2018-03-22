@@ -34,6 +34,10 @@ def random_str(strs):
     return random.choice(strs)
 
 
+def build_cq_images(img_url):
+    return '[CQ:image, file=%s]' % img_url
+
+
 # 过滤HTML中的标签
 # 将HTML中标签等信息去掉
 # @param htmlstr HTML字符串.

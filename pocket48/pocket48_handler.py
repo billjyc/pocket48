@@ -319,17 +319,24 @@ class Pocket48Handler:
                     logger.debug('图片')
                     if 'url' in bodys.keys():
                         url = bodys['url']
-                        message = ('【图片】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
+                        if global_config.USING_COOLQ_PRO is True:
+                            message = ('【图片】[%s]-%s: [CQ:image, file=%s]\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
+                        else:
+                            message = ('【图片】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
                         cursor.execute("""
                            INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
                                                             (?, ?, ?, ?, ?, ?)
                         """, (msg_id, 200, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], url))
+
                 elif msg['msgType'] == 2:  # 语音消息
                     logger.debug('语音消息')
                     bodys = json.loads(msg['bodys'])
                     if 'url' in bodys.keys():
                         url = bodys['url']
-                        message = ('【语音】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
+                        if global_config.USING_COOLQ_PRO is True:
+                            message = ('【语音】[%s]-%s: [CQ:record, file=%s]\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
+                        else:
+                            message = ('【语音】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
                         cursor.execute("""
                             INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
                                                        (?, ?, ?, ?, ?, ?)

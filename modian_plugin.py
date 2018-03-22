@@ -14,7 +14,7 @@ from utils import util
 from utils.scheduler import scheduler
 
 
-@scheduler.scheduled_job('cron', minute='*/5')
+@scheduler.scheduled_job('cron', minute='*/15')
 def update_modian_conf():
     global modian_handler
     time0 = time.time()
