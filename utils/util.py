@@ -35,7 +35,7 @@ def random_str(strs):
 
 
 def build_cq_images(img_url):
-    return '[CQ:image, file=%s]' % img_url
+    return '[CQ:image,file=%s]' % img_url
 
 
 # 过滤HTML中的标签
