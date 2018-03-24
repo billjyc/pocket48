@@ -1,0 +1,40 @@
+{
+  "min_amount": 1,
+  "cards": [
+    {
+      "id": 1,
+      "name": "卡1",
+      "url": "https://wx3.sinaimg.cn/mw1024/86ceb1eegy1fphzcu5d0dj20m80rs0v9.jpg",
+      "level": 1,
+      "weight": 20
+    },
+    {
+      "id": 2,
+      "name": "卡2",
+      "url": "https://wx3.sinaimg.cn/mw1024/86ceb1eegy1foesj651qbj20rs0rsjub.jpg",
+      "level": 1,
+      "weight": 10
+    },
+    {
+      "id": 3,
+      "name": "卡3",
+      "url": "https://wx2.sinaimg.cn/mw1024/86ceb1eegy1fmsbwgl8z5j20jg0rsgnq.jpg",
+      "level": 1,
+      "weight": 10
+    },
+    {
+      "id": 4,
+      "name": "卡4",
+      "url": "https://wx3.sinaimg.cn/mw1024/86ceb1eegy1fmk7qml9ylj20k00dcjs6.jpg",
+      "level": 1,
+      "weight": 40
+    },
+    {
+      "id": 5,
+      "name": "卡5",
+      "url": "https://wx4.sinaimg.cn/mw1024/86ceb1eegy1fm6bvswhm6j20rs0rsdhj.jpg",
+      "level": 1,
+      "weight": 20
+    }
+  ]
+}

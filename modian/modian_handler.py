@@ -14,6 +14,7 @@ import urllib.parse
 import random
 import sqlite3
 import uuid
+from modian.modian_card_draw import CardDrawHandler, Card
 
 from qq.qqhandler import QQHandler
 
@@ -59,7 +60,10 @@ class ModianHandler:
 
         self.jizi_rank_list = []
         self.daka_rank_list = []
+
+        self.card_draw_handler = CardDrawHandler()
         self.order_queues = {}
+
         # self.init_order_queues()
 
     def init_order_queues(self):
@@ -113,11 +117,6 @@ class ModianHandler:
         if int(r['status']) == 0:
             orders = r['data']
             my_logger.info('项目订单: page: %s, orders: %s', page, orders)
-            # if len(orders) == 0 and page == 1:
-            #     my_logger.debug('请求订单失败，再请求一次')
-            #     r2 = requests.post(api, self.make_post_params(params), headers=self.modian_header()).json()
-            #     orders = r2['data']
-            #     my_logger.debug('type of orders: %s, len(orders): %s', type(orders), len(orders))
             return orders
         else:
             raise RuntimeError('获取项目订单查询失败')
@@ -219,7 +218,7 @@ class ModianHandler:
                 my_logger.debug('接棒活动详情: 【%s】', jiebang.name)
                 my_logger.debug('集资金额: %s, 接棒最小金额: %s', backer_money, jiebang.min_stick_amount)
                 if backer_money >= jiebang.min_stick_amount:
-                    stick_num = self.compute_stick_num(jiebang.min_stick_amount, backer_money)
+                    stick_num = util.compute_stick_num(jiebang.min_stick_amount, backer_money)
                     jiebang.current_stick_num += stick_num
                     
                     jiebang.last_record_time = util.convert_timestamp_to_timestr(time.time()*1000)
@@ -260,7 +259,23 @@ class ModianHandler:
             #     msg += fu_result_str
             # else:
             #     pass
-            
+
+            # 抽卡播报
+            cards_msg = ''
+            if global_config.MODIAN_CARD_DRAW:
+                cards_msg += '恭喜抽中'
+                cards = self.card_draw_handler.draw(user_id, nickname, backer_money, pay_time)
+                for k, v in cards.items():
+                    cards_msg += '%s*%d,' % (k.name, v)
+                my_logger.debug(cards_msg)
+                cards_msg += '\n'
+                # 加上图片
+                for k, v in cards.items():
+                    if global_config.USING_COOLQ_PRO is True:
+                        cards_msg += '[CQ:image,file=%s]' % k.url
+                if cards_msg:
+                    QQHandler.send_to_groups(['483548995'], cards_msg)
+
             my_logger.info(msg)
             if global_config.USING_COOLQ_PRO is True:
                 my_logger.debug('使用酷Q PRO发送图片')
@@ -286,24 +301,6 @@ class ModianHandler:
             conn.commit()
             cursor.close()
             conn.close()
-
-    def compute_stick_num(self, min_stick_num, backer_money):
-        """
-        计算接棒活动中的棒数
-        :param min_stick_num: 接棒最小金额
-        :param backer_money: 集资金额
-        :return:
-        """
-        rst = 0
-        # 冯晓菲应援会特别定制，10.17算1棒，但是在20以上就按10元1棒计算
-        if min_stick_num == 10.17:
-            if 10.17 <= backer_money < 20:
-                rst = 1
-            elif backer_money >= 20:
-                rst = int(backer_money // 10)
-        else:
-            rst = int(backer_money // min_stick_num)
-        return rst
 
     def get_ranking_list(self, modian_entity, type0=1):
         """

@@ -5,8 +5,8 @@ from log.my_logger import logger
 
 
 class MySQLUtil:
-    def __init__(self):
-        self.conn = self.getConn()
+    def __init__(self, host, port, user, passwd, db):
+        self.conn = self.getConn(host, port, user, passwd, db)
 
     def getConn(self, host, port, user, passwd, db, charset="utf8"):
         logger.debug('获取数据库连接')
@@ -47,6 +47,12 @@ class MySQLUtil:
 
     def close(self):
         self.conn.close()
+
+
+if __name__ == '__main__':
+    mysql_util = MySQLUtil('localhost', 3306, 'root', 'root', 'card_draw')
+    rst = mysql_util.select('select * from card')
+    print(rst)
 
 
 

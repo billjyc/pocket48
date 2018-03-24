@@ -30,6 +30,9 @@ def update_modian_conf():
     for modian_pk_j in modian_json['modian_pk_activities']:
         global_config.MODIAN_PK_ARRAY.append(modian_pk_j)
 
+    # 是否需要开启抽卡功能
+    global_config.MODIAN_CARD_DRAW = modian_json['modian_need_card_draw']
+
     # 需要适应同时开多个链接的情况
     global_config.MODIAN_ARRAY = []
 

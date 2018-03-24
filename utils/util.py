@@ -126,6 +126,47 @@ def save_image(img_url):
     print('done')
 
 
+def compute_stick_num(min_stick_num, backer_money):
+    """
+    计算接棒活动中的棒数
+    :param min_stick_num: 接棒最小金额
+    :param backer_money: 集资金额
+    :return:
+    """
+    rst = 0
+    # 冯晓菲应援会特别定制，10.17算1棒，但是在20以上就按10元1棒计算
+    if min_stick_num == 10.17:
+        if 10.17 <= backer_money < 20:
+            rst = 1
+        elif backer_money >= 20:
+            rst = int(backer_money // 10)
+    else:
+        rst = int(backer_money // min_stick_num)
+    return rst
+
+
+def weight_choice(candidate, weight):
+    """
+    加权随机抽选
+    :param candidate:
+    :param weight: 权重
+    :return: index of candidate
+    """
+    if len(candidate) != len(weight):
+        raise RuntimeError('候选数组和权重数组的长度不一致！')
+    weight_sum = sum(weight)
+
+    if weight_sum != 100:
+        raise RuntimeError('权重设置有误，权重之和不为100')
+
+    t = random.randint(0, weight_sum - 1)
+    for i, val in enumerate(weight):
+        t -= val
+        if t < 0:
+            return i
+    return 0
+
+
 if __name__ == '__main__':
     save_image('https://nos.netease.com/nim/NDA5MzEwOA==/bmltYV8xNzc5NzQyNDlfMTUxNTAzODQyMzkyN182OGMzZTA2OS00NzUwLTQ2MWYtOWI3NC1jODNiNmMzMDhhMzM=')
 
