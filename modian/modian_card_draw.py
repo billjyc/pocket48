@@ -42,7 +42,7 @@ class CardDrawHandler:
             # 更新数据库中的卡牌信息
             self.mysql_util.query("""
                         INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (%s,'%s','%s',%s)  ON DUPLICATE KEY
-                                                UPDATE `name`='%s', `url`=%s, `level`=%s
+                                                UPDATE `name`='%s', `url`='%s', `level`=%s
                         """ % (card.id, card.name, card.url, card.level, card.name, card.url, card.level))
             self.cards.append(card)
             if card_j['level'] == 1:
