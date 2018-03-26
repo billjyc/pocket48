@@ -96,21 +96,27 @@ def update_conf():
         pocket48_handler.init_msg_queues(global_config.CUR_MEMBER['room_id'])
     my_logger.debug('当前监控的成员是: %s', global_config.CUR_MEMBER)
 
-    global_config.JIZI_KEYWORDS = ConfigReader.get_property('profile', 'jizi_keywords').split(';')
-    global_config.JIZI_LINK = ConfigReader.get_property('profile', 'jizi_link').split(';')
+    # 自动回复数据
+    global_config.AUTO_REPLY = {}
+    items = ConfigReader.get_section('auto_reply')
+    for k, v in items:
+        global_config[k] = v
 
-    global_config.WEIBO_KEYWORDS = ConfigReader.get_property('profile', 'weibo_keywords').split(';')
-    global_config.GONGYAN_KEYWORDS = ConfigReader.get_property('profile', 'gongyan_keywords').split(';')
-    global_config.LIVE_LINK=ConfigReader.get_property('profile', 'live_link').split(';')
-    global_config.LIVE_SCHEDULE = ConfigReader.get_property('profile', 'live_schedule').split(';')
-
-    global_config.WEIBO_LINK = ConfigReader.get_property('profile', 'weibo_link')
-    global_config.SUPER_TAG = ConfigReader.get_property('profile', 'super_tag')
-
-    global_config.MEMBER_ATTR = ConfigReader.get_property('profile', 'member_attr')
-    global_config.I_LOVE = ConfigReader.get_property('profile', 'i_love').split(';')
-
-    global_config.AT_AUTO_REPLY = ConfigReader.get_property('profile', 'at_auto_reply').split(';')
+    # global_config.JIZI_KEYWORDS = ConfigReader.get_property('profile', 'jizi_keywords').split(';')
+    # global_config.JIZI_LINK = ConfigReader.get_property('profile', 'jizi_link').split(';')
+    #
+    # global_config.WEIBO_KEYWORDS = ConfigReader.get_property('profile', 'weibo_keywords').split(';')
+    # global_config.GONGYAN_KEYWORDS = ConfigReader.get_property('profile', 'gongyan_keywords').split(';')
+    # global_config.LIVE_LINK=ConfigReader.get_property('profile', 'live_link').split(';')
+    # global_config.LIVE_SCHEDULE = ConfigReader.get_property('profile', 'live_schedule').split(';')
+    #
+    # global_config.WEIBO_LINK = ConfigReader.get_property('profile', 'weibo_link')
+    # global_config.SUPER_TAG = ConfigReader.get_property('profile', 'super_tag')
+    #
+    # global_config.MEMBER_ATTR = ConfigReader.get_property('profile', 'member_attr')
+    # global_config.I_LOVE = ConfigReader.get_property('profile', 'i_love').split(';')
+    #
+    # global_config.AT_AUTO_REPLY = ConfigReader.get_property('profile', 'at_auto_reply').split(';')
     global_config.ROOM_MSG_LITE_NOTIFY = ConfigReader.get_property('profile', 'room_msg_lite_notify').split(';')
 
     global_config.PERFORMANCE_NOTIFY = ConfigReader.get_property('profile', 'performance_notify')
@@ -143,21 +149,6 @@ def notify_performance():
     my_logger.info('检查公演日程')
     global pocket48_handler
     pocket48_handler.notify_performance()
-
-
-# @scheduler.scheduled_job('cron', minute='*', second=35)
-# def notify_group_number():
-#     my_logger.info('检查群内人数')
-#     for g_number in global_config.MEMBER_ROOM_MSG_LITE_GROUPS:
-#         number = QQHandler.get_group_number(g_number)
-#         my_logger.debug('群%s: %d人', g_number, number)
-#         my_logger.debug('global_config.GROUP_MEMBER_NUM: %d', global_config.GROUP_MEMBER_NUM[g_number])
-#         if 0 < global_config.GROUP_MEMBER_NUM[g_number] < number:
-#             my_logger.info('有新人入群啦~')
-#
-#             g_obj = [g_number]
-#             QQHandler.send_to_groups(g_obj, '机器人自动欢迎~')
-#         global_config.GROUP_MEMBER_NUM[g_number] = number
 
 
 pocket48_handler = Pocket48Handler([], [], [], [], [])

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from cqhttp import CQHttp, Error
 from log.my_logger import logger
+from utils import global_config
 
 bot = CQHttp(api_root='http://127.0.0.1:5700', access_token='aslkfdjie32df', secret='abc')
 
@@ -12,6 +13,11 @@ def handle_msg(context):
         message = context['message']
         group_id = context['group_id']
         logger.info('收到一条消息: %s', message)
+
+        for k, v in global_config.AUTO_REPLY.items():
+            if k in message:
+                logger.info('命中关键词: %s', k)
+                bot.send(context, v)
         # bot.send(context, '你好呀，下面一条是你刚刚发的：')
     except Error:
         pass
@@ -27,6 +33,16 @@ def handle_group_increase(context):
     name = nickname if nickname else '新人'
     # bot.send(context, message='最快的机器人欢迎@{}～'.format(name))
     bot.send(context, message='最快的机器人欢迎[CQ:at,qq={}]'.format(context['user_id']))
+    if context['group_id'] == int('101724227'):
+        bot.send(context, message="""
+欢迎加入SNH48-冯晓菲应援会，今天的机长是灰灰
+为了更好的了解灰灰，给灰灰应援～
+冯晓菲剧场应援群：499121036
+B站补档推荐up主：冯晓菲的后置摄像头，冯晓菲甜甜的wink
+网易云电台：冯晓菲的地上波
+欢迎关注微博：@SNH48-冯晓菲应援会
+@冯晓菲的萝卜养护中心
+        """)
 
 
 @bot.on_event('group_decrease')

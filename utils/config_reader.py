@@ -34,9 +34,18 @@ class ConfigReader:
     def get_property(cls, root, name):
         return cls.conf.get(root, name)
 
+    @classmethod
+    def get_section(cls, section):
+        return cls.conf.items(section)
+
 
 if __name__ == '__main__':
     ConfigReader.read_conf()
     se_list = ConfigReader.conf.sections()
+    items = ConfigReader.conf.items('auto_reply')
+    print(items)
+    item_dict = {}
+    for k, v in items:
+        item_dict[k] = v
     print(se_list)
     print(ConfigReader.get_qq_number('member_room_msg_groups'))
