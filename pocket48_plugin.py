@@ -11,46 +11,6 @@ from utils.scheduler import scheduler
 import json
 
 
-def onQQMessage(bot, contact, member, content):
-    # 当收到 QQ 消息时被调用
-    # bot     : QQBot 对象，提供 List/SendTo/GroupXXX/Stop/Restart 等接口，详见文档第五节
-    # contact : QContact 对象，消息的发送者
-    # member  : QContact 对象，仅当本消息为 群或讨论组 消息时有效，代表实际发消息的成员
-    # content : str 对象，消息内容
-    my_logger.debug('member: %s', str(getattr(member, 'uin')))
-    # my_logger.debug('content: %s', content)
-    # my_logger.debug('contact: %s', contact.ctype)
-
-    if contact.ctype == 'group' and contact.qq in global_config.AUTO_REPLY_GROUPS:
-        if '@ME' in content:  # 在群中@机器人
-            bot.SendTo(contact, member.name + '，' + util.random_str(global_config.AT_AUTO_REPLY))
-        elif content.startswith('-'):  # 以'-'开头才能触发自动回复
-            if content == '-version':
-                bot.SendTo(contact, 'QQbot-' + bot.conf.version)
-            elif content == global_config.MEMBER_ATTR:  # 群消息输入成员缩写
-                bot.SendTo(contact, util.random_str(global_config.I_LOVE))
-            elif content in global_config.JIZI_KEYWORDS:  # 集资链接
-                jizi_link = '\n'.join(global_config.JIZI_LINK)
-                bot.SendTo(contact, '集资链接: %s' % jizi_link)
-            elif content in global_config.WEIBO_KEYWORDS:  # 微博关键词
-                weibo_link = global_config.WEIBO_LINK
-                super_tag = global_config.SUPER_TAG
-                bot.SendTo(contact, '微博: %s\n超级话题: %s' % (weibo_link, super_tag))
-            elif content in global_config.GONGYAN_KEYWORDS:  # 公演关键词
-                live_link = '\n'.join(global_config.LIVE_LINK)
-                # strs = ConfigReader.get_property('profile', 'live_schedule').split(';')
-                live_schedule = '\n'.join(global_config.LIVE_SCHEDULE)
-                msg = '直播传送门: %s\n本周安排: %s' % (live_link, live_schedule)
-                bot.SendTo(contact, msg)
-            elif content in ['-统计']:
-                histogram = ConfigReader.get_property('profile', 'histogram')
-                msg = '公演统计链接: %s' % histogram
-                bot.SendTo(contact, msg)
-            else:  # 无法识别命令
-                no_such_command = ConfigReader.get_property('profile', 'no_such_command')
-                bot.SendTo(contact, no_such_command)
-
-
 @scheduler.scheduled_job('cron', minute='*')
 def update_conf():
     """
@@ -97,15 +57,15 @@ def update_conf():
     my_logger.debug('当前监控的成员是: %s', global_config.CUR_MEMBER)
 
     # 自动回复数据
-    my_logger.debug('构造自动回复数据')
-    global_config.AUTO_REPLY = {}
-    items = ConfigReader.get_section('auto_reply')
-    my_logger.debug('items: %s', items)
-    for k, v in items:
-        my_logger.debug('k: %s, v: %s', k, v)
-        global_config.AUTO_REPLY[k] = v
-        my_logger.debug('k in global_config.AUTO_REPLY: %s', k in global_config.AUTO_REPLY)
-    my_logger.debug(global_config.AUTO_REPLY)
+    # my_logger.debug('构造自动回复数据')
+    # global_config.AUTO_REPLY = {}
+    # items = ConfigReader.get_section('auto_reply')
+    # my_logger.debug('items: %s', items)
+    # for k, v in items:
+    #     my_logger.debug('k: %s, v: %s', k, v)
+    #     global_config.AUTO_REPLY[k] = v
+    #     my_logger.debug('k in global_config.AUTO_REPLY: %s', k in global_config.AUTO_REPLY)
+    # my_logger.debug(global_config.AUTO_REPLY)
 
     # global_config.JIZI_KEYWORDS = ConfigReader.get_property('profile', 'jizi_keywords').split(';')
     # global_config.JIZI_LINK = ConfigReader.get_property('profile', 'jizi_link').split(';')

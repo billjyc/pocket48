@@ -1,9 +1,17 @@
 # -*- coding: utf-8 -*-
 from cqhttp import CQHttp, Error
 from log.my_logger import logger
-from utils import global_config
+from utils.config_reader import ConfigReader
 
 bot = CQHttp(api_root='http://127.0.0.1:5700', access_token='aslkfdjie32df', secret='abc')
+AUTO_REPLY = {}
+items = ConfigReader.get_section('auto_reply')
+logger.debug('items: %s', items)
+for k, v in items:
+    logger.debug('k: %s, v: %s', k, v)
+    AUTO_REPLY[k] = v
+    logger.debug('k in global_config.AUTO_REPLY: %s', k in AUTO_REPLY)
+    logger.debug(AUTO_REPLY)
 
 
 @bot.on_message()
@@ -13,9 +21,9 @@ def handle_msg(context):
         message = context['message']
         group_id = context['group_id']
         logger.info('收到一条消息: %s', message)
-        logger.info(global_config.AUTO_REPLY)
+        logger.info(AUTO_REPLY)
 
-        for k, v in global_config.AUTO_REPLY.items():
+        for k, v in AUTO_REPLY.items():
             if k in message:
                 logger.info('命中关键词: %s', k)
                 bot.send(context, v)
