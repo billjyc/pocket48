@@ -21,10 +21,11 @@ def handle_msg(context):
         message = context['message']
         group_id = context['group_id']
         user_id = context['user_id']
+        logger.info('收到一条消息: 群: %s, 发送人: %s, %s', group_id, user_id, message)
         if user_id == context['self_id']:
             logger.debug('不处理自己发送的消息')
             return
-        logger.info('收到一条消息: %s', message)
+
         logger.info(AUTO_REPLY)
 
         for k, v in AUTO_REPLY.items():
