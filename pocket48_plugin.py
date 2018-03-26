@@ -100,7 +100,7 @@ def update_conf():
     global_config.AUTO_REPLY = {}
     items = ConfigReader.get_section('auto_reply')
     for k, v in items:
-        global_config[k] = v
+        global_config.AUTO_REPLY[k] = v
 
     # global_config.JIZI_KEYWORDS = ConfigReader.get_property('profile', 'jizi_keywords').split(';')
     # global_config.JIZI_LINK = ConfigReader.get_property('profile', 'jizi_link').split(';')
