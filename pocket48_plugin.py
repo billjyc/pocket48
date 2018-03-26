@@ -102,7 +102,9 @@ def update_conf():
     items = ConfigReader.get_section('auto_reply')
     my_logger.debug('items: %s', items)
     for k, v in items:
+        my_logger.debug('k: %s, v: %s', k, v)
         global_config.AUTO_REPLY[k] = v
+        my_logger.debug('k in global_config.AUTO_REPLY: %s', k in global_config.AUTO_REPLY)
     my_logger.debug(global_config.AUTO_REPLY)
 
     # global_config.JIZI_KEYWORDS = ConfigReader.get_property('profile', 'jizi_keywords').split(';')
