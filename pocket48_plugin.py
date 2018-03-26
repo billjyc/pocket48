@@ -97,10 +97,13 @@ def update_conf():
     my_logger.debug('当前监控的成员是: %s', global_config.CUR_MEMBER)
 
     # 自动回复数据
+    my_logger.debug('构造自动回复数据')
     global_config.AUTO_REPLY = {}
     items = ConfigReader.get_section('auto_reply')
+    my_logger.debug('items: %s', items)
     for k, v in items:
         global_config.AUTO_REPLY[k] = v
+    my_logger.debug(global_config.AUTO_REPLY)
 
     # global_config.JIZI_KEYWORDS = ConfigReader.get_property('profile', 'jizi_keywords').split(';')
     # global_config.JIZI_LINK = ConfigReader.get_property('profile', 'jizi_link').split(';')

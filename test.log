@@ -1,0 +1,279 @@
+[2018-02-26 17:00:15,392] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-02-26 17:00:15,974] [INFO] [pocket48_handler.py - login - line: 101] 登录成功, 用户名: 17011967934
+[2018-02-26 17:00:15,975] [INFO] [pocket48_handler.py - login - line: 102] TOKEN: TE8kNEbp2/8b2myk2c7K9seuVtXP+QCpgXJ6sM35nJfpa5U2ikAmi8iw6+VZ9ss3OY4eAF9ifbM=
+[2018-02-26 17:00:15,975] [DEBUG] [pocket48_handler.py - juju_header_args - line: 510] token: TE8kNEbp2/8b2myk2c7K9seuVtXP+QCpgXJ6sM35nJfpa5U2ikAmi8iw6+VZ9ss3OY4eAF9ifbM=
+[2018-02-26 17:05:00,550] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-02-26 17:05:01,148] [INFO] [pocket48_handler.py - login - line: 101] 登录成功, 用户名: 17011967934
+[2018-02-26 17:05:01,148] [INFO] [pocket48_handler.py - login - line: 102] TOKEN: ExtH0EfIKHcb2myk2c7K9seuVtXP+QCpykQzhf/N/afLm5yTHDoXk3uuN5gFAb9DOY4eAF9ifbM=
+[2018-02-26 17:05:01,150] [DEBUG] [pocket48_handler.py - juju_header_args - line: 515] token: ExtH0EfIKHcb2myk2c7K9seuVtXP+QCpykQzhf/N/afLm5yTHDoXk3uuN5gFAb9DOY4eAF9ifbM=
+[2018-02-26 17:05:01,311] [DEBUG] [pocket48_handler.py - juju_header_args - line: 515] token: ExtH0EfIKHcb2myk2c7K9seuVtXP+QCpykQzhf/N/afLm5yTHDoXk3uuN5gFAb9DOY4eAF9ifbM=
+[2018-02-26 17:05:37,993] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-02-26 17:05:38,496] [INFO] [pocket48_handler.py - login - line: 101] 登录成功, 用户名: 17011967934
+[2018-02-26 17:05:38,496] [INFO] [pocket48_handler.py - login - line: 102] TOKEN: Hm7LW5QhOiQb2myk2c7K9seuVtXP+QCpgjON5ZrZWGhe7bIrQNrWPMhkJqVtyhSXOY4eAF9ifbM=
+[2018-02-26 17:05:38,496] [DEBUG] [pocket48_handler.py - juju_header_args - line: 515] token: Hm7LW5QhOiQb2myk2c7K9seuVtXP+QCpgjON5ZrZWGhe7bIrQNrWPMhkJqVtyhSXOY4eAF9ifbM=
+[2018-02-26 17:05:38,661] [DEBUG] [pocket48_handler.py - juju_header_args - line: 515] token: Hm7LW5QhOiQb2myk2c7K9seuVtXP+QCpgjON5ZrZWGhe7bIrQNrWPMhkJqVtyhSXOY4eAF9ifbM=
+[2018-02-26 17:10:25,039] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-02-26 17:10:50,572] [INFO] [pocket48_handler.py - login - line: 101] 登录成功, 用户名: 17011967934
+[2018-02-26 17:10:50,572] [INFO] [pocket48_handler.py - login - line: 102] TOKEN: F7j1GdBJ9XIb2myk2c7K9seuVtXP+QCpLSJth841TB+JbJ50gYnBuobycfu2MqcdOY4eAF9ifbM=
+[2018-02-26 17:10:50,572] [DEBUG] [pocket48_handler.py - juju_header_args - line: 516] token: F7j1GdBJ9XIb2myk2c7K9seuVtXP+QCpLSJth841TB+JbJ50gYnBuobycfu2MqcdOY4eAF9ifbM=
+[2018-02-26 17:10:50,723] [DEBUG] [pocket48_handler.py - juju_header_args - line: 516] token: F7j1GdBJ9XIb2myk2c7K9seuVtXP+QCpLSJth841TB+JbJ50gYnBuobycfu2MqcdOY4eAF9ifbM=
+[2018-02-26 17:11:43,849] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-02-26 17:11:55,350] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-02-26 17:11:58,086] [INFO] [pocket48_handler.py - login - line: 101] 登录成功, 用户名: 17011967934
+[2018-02-26 17:11:58,087] [INFO] [pocket48_handler.py - login - line: 102] TOKEN: c34hMJ8hMlcb2myk2c7K9seuVtXP+QCpOaD3+5MrOqc81pAZEc+49dxQb8kdMhHtOY4eAF9ifbM=
+[2018-02-26 17:11:58,088] [DEBUG] [pocket48_handler.py - juju_header_args - line: 516] token: c34hMJ8hMlcb2myk2c7K9seuVtXP+QCpOaD3+5MrOqc81pAZEc+49dxQb8kdMhHtOY4eAF9ifbM=
+[2018-02-26 17:11:58,254] [DEBUG] [pocket48_handler.py - juju_header_args - line: 516] token: c34hMJ8hMlcb2myk2c7K9seuVtXP+QCpOaD3+5MrOqc81pAZEc+49dxQb8kdMhHtOY4eAF9ifbM=
+[2018-02-26 17:12:28,964] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-02-26 17:12:33,825] [INFO] [pocket48_handler.py - login - line: 101] 登录成功, 用户名: 17011967934
+[2018-02-26 17:12:33,827] [INFO] [pocket48_handler.py - login - line: 102] TOKEN: cTIHvsORsVwb2myk2c7K9seuVtXP+QCpM+Ov1XMw/RULOMp6yBhqnzn2tHeFsEx1OY4eAF9ifbM=
+[2018-02-26 17:12:33,827] [DEBUG] [pocket48_handler.py - juju_header_args - line: 516] token: cTIHvsORsVwb2myk2c7K9seuVtXP+QCpM+Ov1XMw/RULOMp6yBhqnzn2tHeFsEx1OY4eAF9ifbM=
+[2018-02-26 17:13:02,902] [DEBUG] [pocket48_handler.py - juju_header_args - line: 516] token: cTIHvsORsVwb2myk2c7K9seuVtXP+QCpM+Ov1XMw/RULOMp6yBhqnzn2tHeFsEx1OY4eAF9ifbM=
+[2018-02-26 17:49:04,043] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-02-26 17:49:04,608] [INFO] [pocket48_handler.py - login - line: 101] 登录成功, 用户名: 17011967934
+[2018-02-26 17:49:04,608] [INFO] [pocket48_handler.py - login - line: 102] TOKEN: mTZ6H//ZEGcb2myk2c7K9seuVtXP+QCp848n7MgVwc9KKZkOCi9Yj+WfkBc6YdnZOY4eAF9ifbM=
+[2018-02-26 17:49:04,609] [DEBUG] [pocket48_handler.py - juju_header_args - line: 516] token: mTZ6H//ZEGcb2myk2c7K9seuVtXP+QCp848n7MgVwc9KKZkOCi9Yj+WfkBc6YdnZOY4eAF9ifbM=
+[2018-02-26 17:49:04,860] [DEBUG] [pocket48_handler.py - juju_header_args - line: 516] token: mTZ6H//ZEGcb2myk2c7K9seuVtXP+QCp848n7MgVwc9KKZkOCi9Yj+WfkBc6YdnZOY4eAF9ifbM=
+[2018-02-26 19:03:42,144] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-02-26 19:03:42,833] [INFO] [pocket48_handler.py - login - line: 101] 登录成功, 用户名: 17011967934
+[2018-02-26 19:03:42,833] [INFO] [pocket48_handler.py - login - line: 102] TOKEN: OFf3Lz9yYZ8b2myk2c7K9seuVtXP+QCpytumuELrdx6quq4ljRGqQAw2S/jbo6exOY4eAF9ifbM=
+[2018-02-26 19:03:42,835] [DEBUG] [pocket48_handler.py - juju_header_args - line: 516] token: OFf3Lz9yYZ8b2myk2c7K9seuVtXP+QCpytumuELrdx6quq4ljRGqQAw2S/jbo6exOY4eAF9ifbM=
+[2018-02-26 19:03:43,001] [DEBUG] [pocket48_handler.py - idol_flip_header_args - line: 537] token: OFf3Lz9yYZ8b2myk2c7K9seuVtXP+QCpytumuELrdx6quq4ljRGqQAw2S/jbo6exOY4eAF9ifbM=
+[2018-02-26 19:07:54,063] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-02-26 19:07:54,710] [INFO] [pocket48_handler.py - login - line: 101] 登录成功, 用户名: 17011967934
+[2018-02-26 19:07:54,710] [INFO] [pocket48_handler.py - login - line: 102] TOKEN: 7A+QIV3go/Qb2myk2c7K9seuVtXP+QCpQOSFcStTYVQoSK4JuzbjMsYVMctbDKTNOY4eAF9ifbM=
+[2018-02-26 19:07:54,710] [DEBUG] [pocket48_handler.py - juju_header_args - line: 516] token: 7A+QIV3go/Qb2myk2c7K9seuVtXP+QCpQOSFcStTYVQoSK4JuzbjMsYVMctbDKTNOY4eAF9ifbM=
+[2018-02-26 19:07:54,880] [DEBUG] [pocket48_handler.py - idol_flip_header_args - line: 537] token: 7A+QIV3go/Qb2myk2c7K9seuVtXP+QCpQOSFcStTYVQoSK4JuzbjMsYVMctbDKTNOY4eAF9ifbM=
+[2018-02-26 19:08:14,689] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-02-26 19:08:15,182] [INFO] [pocket48_handler.py - login - line: 101] 登录成功, 用户名: 17011967934
+[2018-02-26 19:08:15,184] [INFO] [pocket48_handler.py - login - line: 102] TOKEN: I3KIWxjyoQcb2myk2c7K9seuVtXP+QCpKdgX3xQ9mMF5KImD1j1jaCLKvhw/BjXQOY4eAF9ifbM=
+[2018-02-26 19:08:15,184] [DEBUG] [pocket48_handler.py - juju_header_args - line: 516] token: I3KIWxjyoQcb2myk2c7K9seuVtXP+QCpKdgX3xQ9mMF5KImD1j1jaCLKvhw/BjXQOY4eAF9ifbM=
+[2018-02-26 19:08:15,332] [DEBUG] [pocket48_handler.py - idol_flip_header_args - line: 537] token: I3KIWxjyoQcb2myk2c7K9seuVtXP+QCpKdgX3xQ9mMF5KImD1j1jaCLKvhw/BjXQOY4eAF9ifbM=
+[2018-02-26 19:09:18,055] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-02-26 19:09:18,593] [INFO] [pocket48_handler.py - login - line: 101] 登录成功, 用户名: 17011967934
+[2018-02-26 19:09:18,593] [INFO] [pocket48_handler.py - login - line: 102] TOKEN: b0tPv8tM26ob2myk2c7K9seuVtXP+QCpvr93Wg9BZQl78IzVJzQAsGUUJvXeyomMOY4eAF9ifbM=
+[2018-02-26 19:09:18,595] [DEBUG] [pocket48_handler.py - juju_header_args - line: 516] token: b0tPv8tM26ob2myk2c7K9seuVtXP+QCpvr93Wg9BZQl78IzVJzQAsGUUJvXeyomMOY4eAF9ifbM=
+[2018-02-26 19:09:18,737] [DEBUG] [pocket48_handler.py - idol_flip_header_args - line: 537] token: b0tPv8tM26ob2myk2c7K9seuVtXP+QCpvr93Wg9BZQl78IzVJzQAsGUUJvXeyomMOY4eAF9ifbM=
+[2018-02-28 12:53:56,346] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-02-28 12:55:10,594] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 11:06:42,015] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 11:06:42,016] [DEBUG] [mysql_util.py - getConn - line: 12] 获取数据库连接
+[2018-03-24 11:06:42,071] [INFO] [mysql_util.py - select - line: 20] 查询: select * from card
+[2018-03-24 12:55:14,904] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 12:56:02,372] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 12:56:02,658] [INFO] [modian_card_draw.py - draw - line: 38] 抽卡: user_id: 123, nickname: billjyc, backer_money: 10, pay_time: 2018-03-24 12:54:00
+[2018-03-24 12:56:02,659] [INFO] [modian_card_draw.py - draw - line: 53] 共抽卡10张
+[2018-03-24 12:56:19,130] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 12:56:19,320] [INFO] [modian_card_draw.py - draw - line: 38] 抽卡: user_id: 123, nickname: billjyc, backer_money: 10, pay_time: 2018-03-24 12:54:00
+[2018-03-24 12:56:19,320] [INFO] [modian_card_draw.py - draw - line: 50] 集资未达到标准，无法抽卡
+[2018-03-24 12:56:35,721] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 12:56:35,934] [INFO] [modian_card_draw.py - draw - line: 38] 抽卡: user_id: 123, nickname: billjyc, backer_money: 10.17, pay_time: 2018-03-24 12:54:00
+[2018-03-24 12:56:35,935] [INFO] [modian_card_draw.py - draw - line: 53] 共抽卡1张
+[2018-03-24 12:56:48,208] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 12:56:48,389] [INFO] [modian_card_draw.py - draw - line: 38] 抽卡: user_id: 123, nickname: billjyc, backer_money: 15, pay_time: 2018-03-24 12:54:00
+[2018-03-24 12:56:48,389] [INFO] [modian_card_draw.py - draw - line: 53] 共抽卡1张
+[2018-03-24 12:56:54,246] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 12:56:54,432] [INFO] [modian_card_draw.py - draw - line: 38] 抽卡: user_id: 123, nickname: billjyc, backer_money: 20, pay_time: 2018-03-24 12:54:00
+[2018-03-24 12:56:54,432] [INFO] [modian_card_draw.py - draw - line: 53] 共抽卡2张
+[2018-03-24 12:57:00,067] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 12:57:00,247] [INFO] [modian_card_draw.py - draw - line: 38] 抽卡: user_id: 123, nickname: billjyc, backer_money: 101.7, pay_time: 2018-03-24 12:54:00
+[2018-03-24 12:57:00,248] [INFO] [modian_card_draw.py - draw - line: 53] 共抽卡10张
+[2018-03-24 12:57:57,501] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 12:57:57,718] [INFO] [modian_card_draw.py - draw - line: 38] 抽卡: user_id: 123, nickname: billjyc, backer_money: 101.7, pay_time: 2018-03-24 12:54:00
+[2018-03-24 12:57:57,718] [INFO] [modian_card_draw.py - draw - line: 53] 共抽卡10张
+[2018-03-24 12:58:04,094] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 12:58:04,272] [INFO] [modian_card_draw.py - draw - line: 38] 抽卡: user_id: 123, nickname: billjyc, backer_money: 11.11, pay_time: 2018-03-24 12:54:00
+[2018-03-24 12:58:04,272] [INFO] [modian_card_draw.py - draw - line: 53] 共抽卡1张
+[2018-03-24 13:13:07,023] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 13:13:07,284] [DEBUG] [mysql_util.py - getConn - line: 12] 获取数据库连接
+[2018-03-24 13:17:09,631] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 13:17:09,962] [DEBUG] [mysql_util.py - getConn - line: 12] 获取数据库连接
+[2018-03-24 13:17:09,976] [INFO] [modian_card_draw.py - draw - line: 40] 抽卡: user_id: 123, nickname: billjyc, backer_money: 100.1, pay_time: 2018-03-24 12:54:00
+[2018-03-24 13:17:09,977] [INFO] [modian_card_draw.py - draw - line: 55] 共抽卡10张
+[2018-03-24 13:17:09,977] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                        INSERT INTO `supporter` (`id`, `name`) VALUES (billjyc, 123)  ON DUPLICATE KEY
+                            UPDATE `name`=VALUES(`name`)
+                    
+[2018-03-24 13:17:09,980] [ERROR] [mysql_util.py - query - line: 43] 数据库操作出现错误: (1054, "Unknown column 'billjyc' in 'field list'")
+[2018-03-24 13:18:20,581] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 13:18:20,801] [DEBUG] [mysql_util.py - getConn - line: 12] 获取数据库连接
+[2018-03-24 13:18:20,816] [INFO] [modian_card_draw.py - draw - line: 40] 抽卡: user_id: 123, nickname: billjyc, backer_money: 100.1, pay_time: 2018-03-24 12:54:00
+[2018-03-24 13:18:20,816] [INFO] [modian_card_draw.py - draw - line: 55] 共抽卡10张
+[2018-03-24 13:18:20,816] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                        INSERT INTO `supporter` (`id`, `name`) VALUES (123, billjyc)  ON DUPLICATE KEY
+                            UPDATE `name`=VALUES(`name`)
+                    
+[2018-03-24 13:18:20,819] [ERROR] [mysql_util.py - query - line: 43] 数据库操作出现错误: (1054, "Unknown column 'billjyc' in 'field list'")
+[2018-03-24 13:19:00,467] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 13:19:00,721] [DEBUG] [mysql_util.py - getConn - line: 12] 获取数据库连接
+[2018-03-24 13:19:00,741] [INFO] [modian_card_draw.py - draw - line: 40] 抽卡: user_id: 123, nickname: billjyc, backer_money: 100.1, pay_time: 2018-03-24 12:54:00
+[2018-03-24 13:19:00,741] [INFO] [modian_card_draw.py - draw - line: 55] 共抽卡10张
+[2018-03-24 13:19:00,741] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                        INSERT INTO `supporter` (`id`, `name`) VALUES (123, billjyc)  ON DUPLICATE KEY
+                            UPDATE `name`=billjyc
+                    
+[2018-03-24 13:19:00,745] [ERROR] [mysql_util.py - query - line: 43] 数据库操作出现错误: (1054, "Unknown column 'billjyc' in 'field list'")
+[2018-03-24 13:19:53,944] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 13:19:54,188] [DEBUG] [mysql_util.py - getConn - line: 12] 获取数据库连接
+[2018-03-24 13:19:54,202] [INFO] [modian_card_draw.py - draw - line: 40] 抽卡: user_id: 123, nickname: billjyc, backer_money: 100.1, pay_time: 2018-03-24 12:54:00
+[2018-03-24 13:19:54,202] [INFO] [modian_card_draw.py - draw - line: 55] 共抽卡10张
+[2018-03-24 13:19:54,202] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                        INSERT INTO `supporter` (`id`, `name`) VALUES (123, 'billjyc')  ON DUPLICATE KEY
+                            UPDATE `name`='billjyc'
+                    
+[2018-03-24 13:20:26,584] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 13:20:26,809] [DEBUG] [mysql_util.py - getConn - line: 12] 获取数据库连接
+[2018-03-24 13:20:26,826] [INFO] [modian_card_draw.py - draw - line: 40] 抽卡: user_id: 123, nickname: billjyc1, backer_money: 100.1, pay_time: 2018-03-24 12:54:00
+[2018-03-24 13:20:26,826] [INFO] [modian_card_draw.py - draw - line: 55] 共抽卡10张
+[2018-03-24 13:20:26,826] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                        INSERT INTO `supporter` (`id`, `name`) VALUES (123, 'billjyc1')  ON DUPLICATE KEY
+                            UPDATE `name`='billjyc1'
+                    
+[2018-03-24 13:21:02,177] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 13:21:02,616] [DEBUG] [mysql_util.py - getConn - line: 12] 获取数据库连接
+[2018-03-24 13:21:02,649] [INFO] [modian_card_draw.py - draw - line: 40] 抽卡: user_id: 123, nickname: billjyc1, backer_money: 100.1, pay_time: 2018-03-24 12:54:00
+[2018-03-24 13:21:02,649] [INFO] [modian_card_draw.py - draw - line: 55] 共抽卡10张
+[2018-03-24 13:21:02,650] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                        INSERT INTO `supporter` (`id`, `name`) VALUES (123, 'billjyc1')  ON DUPLICATE KEY
+                            UPDATE `name`='billjyc1'
+                    
+[2018-03-24 13:21:17,512] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 13:21:17,739] [DEBUG] [mysql_util.py - getConn - line: 12] 获取数据库连接
+[2018-03-24 13:21:17,754] [INFO] [modian_card_draw.py - draw - line: 40] 抽卡: user_id: 123, nickname: billjyc1, backer_money: 100.1, pay_time: 2018-03-24 12:54:00
+[2018-03-24 13:21:17,755] [INFO] [modian_card_draw.py - draw - line: 55] 共抽卡10张
+[2018-03-24 13:21:17,755] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                        INSERT INTO `supporter` (`id`, `name`) VALUES (123, 'billjyc1')  ON DUPLICATE KEY
+                            UPDATE `name`='billjyc1'
+                    
+[2018-03-24 13:22:42,526] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 13:22:42,743] [DEBUG] [mysql_util.py - getConn - line: 12] 获取数据库连接
+[2018-03-24 13:22:42,760] [INFO] [modian_card_draw.py - draw - line: 40] 抽卡: user_id: 123, nickname: billjyc1, backer_money: 100.1, pay_time: 2018-03-24 12:54:00
+[2018-03-24 13:22:42,760] [INFO] [modian_card_draw.py - draw - line: 55] 共抽卡10张
+[2018-03-24 13:22:42,761] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                        INSERT INTO `supporter` (`id`, `name`) VALUES (123, 'billjyc1')  ON DUPLICATE KEY
+                            UPDATE `name`='billjyc1'
+                    
+[2018-03-24 13:22:42,764] [INFO] [mysql_util.py - query - line: 37] mysql语句: INSERT INTO `draw_record` (`supporter_id`, `card_id`, `draw_time`) VALUES (123, 3, '2018-03-24 12:54:00'),(123, 1, '2018-03-24 12:54:00'),(123, 5, '2018-03-24 12:54:00'),(123, 4, '2018-03-24 12:54:00'),(123, 4, '2018-03-24 12:54:00'),(123, 5, '2018-03-24 12:54:00'),(123, 5, '2018-03-24 12:54:00'),(123, 3, '2018-03-24 12:54:00'),(123, 4, '2018-03-24 12:54:00'),(123, 4, '2018-03-24 12:54:00')
+[2018-03-24 13:39:27,292] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 13:39:27,913] [DEBUG] [mysql_util.py - getConn - line: 12] 获取数据库连接
+[2018-03-24 13:39:27,949] [INFO] [modian_card_draw.py - draw - line: 40] 抽卡: user_id: 123, nickname: billjyc1, backer_money: 100.1, pay_time: 2018-03-24 12:54:00
+[2018-03-24 13:39:27,950] [INFO] [modian_card_draw.py - draw - line: 48] 共抽卡100张
+[2018-03-24 13:39:27,950] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                        INSERT INTO `supporter` (`id`, `name`) VALUES (123, 'billjyc1')  ON DUPLICATE KEY
+                            UPDATE `name`='billjyc1'
+                    
+[2018-03-24 13:40:36,738] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 13:40:37,166] [DEBUG] [mysql_util.py - getConn - line: 12] 获取数据库连接
+[2018-03-24 13:40:37,215] [INFO] [modian_card_draw.py - draw - line: 43] 抽卡: user_id: 123, nickname: billjyc1, backer_money: 100.1, pay_time: 2018-03-24 12:54:00
+[2018-03-24 13:40:37,216] [INFO] [modian_card_draw.py - draw - line: 51] 共抽卡100张
+[2018-03-24 13:40:37,216] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                        INSERT INTO `supporter` (`id`, `name`) VALUES (123, 'billjyc1')  ON DUPLICATE KEY
+                            UPDATE `name`='billjyc1'
+                    
+[2018-03-24 13:43:08,910] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 13:43:09,167] [DEBUG] [mysql_util.py - getConn - line: 12] 获取数据库连接
+[2018-03-24 13:43:09,183] [INFO] [modian_card_draw.py - draw - line: 43] 抽卡: user_id: 123, nickname: billjyc1, backer_money: 100.1, pay_time: 2018-03-24 12:54:00
+[2018-03-24 13:43:09,184] [INFO] [modian_card_draw.py - draw - line: 51] 共抽卡100张
+[2018-03-24 13:43:09,184] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                        INSERT INTO `supporter` (`id`, `name`) VALUES (123, 'billjyc1')  ON DUPLICATE KEY
+                            UPDATE `name`='billjyc1'
+                    
+[2018-03-24 13:48:26,687] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 13:48:26,954] [DEBUG] [mysql_util.py - getConn - line: 12] 获取数据库连接
+[2018-03-24 13:48:26,968] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (1,'卡1','https://wx3.sinaimg.cn/mw1024/86ceb1eegy1fphzcu5d0dj20m80rs0v9.jpg',1)  ON DUPLICATE KEY
+                                        UPDATE `name`='卡1', `url`=https://wx3.sinaimg.cn/mw1024/86ceb1eegy1fphzcu5d0dj20m80rs0v9.jpg, `level`=1
+                
+[2018-03-24 13:48:26,969] [ERROR] [mysql_util.py - query - line: 43] 数据库操作出现错误: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '://wx3.sinaimg.cn/mw1024/86ceb1eegy1fphzcu5d0dj20m80rs0v9.jpg, `level`=1' at line 2")
+[2018-03-24 13:48:26,969] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (2,'卡2','https://wx3.sinaimg.cn/mw1024/86ceb1eegy1foesj651qbj20rs0rsjub.jpg',1)  ON DUPLICATE KEY
+                                        UPDATE `name`='卡2', `url`=https://wx3.sinaimg.cn/mw1024/86ceb1eegy1foesj651qbj20rs0rsjub.jpg, `level`=1
+                
+[2018-03-24 13:48:26,970] [ERROR] [mysql_util.py - query - line: 43] 数据库操作出现错误: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '://wx3.sinaimg.cn/mw1024/86ceb1eegy1foesj651qbj20rs0rsjub.jpg, `level`=1' at line 2")
+[2018-03-24 13:48:26,970] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (3,'卡3','https://wx2.sinaimg.cn/mw1024/86ceb1eegy1fmsbwgl8z5j20jg0rsgnq.jpg',1)  ON DUPLICATE KEY
+                                        UPDATE `name`='卡3', `url`=https://wx2.sinaimg.cn/mw1024/86ceb1eegy1fmsbwgl8z5j20jg0rsgnq.jpg, `level`=1
+                
+[2018-03-24 13:48:26,970] [ERROR] [mysql_util.py - query - line: 43] 数据库操作出现错误: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '://wx2.sinaimg.cn/mw1024/86ceb1eegy1fmsbwgl8z5j20jg0rsgnq.jpg, `level`=1' at line 2")
+[2018-03-24 13:48:26,971] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (4,'卡4','https://wx3.sinaimg.cn/mw1024/86ceb1eegy1fmk7qml9ylj20k00dcjs6.jpg',1)  ON DUPLICATE KEY
+                                        UPDATE `name`='卡4', `url`=https://wx3.sinaimg.cn/mw1024/86ceb1eegy1fmk7qml9ylj20k00dcjs6.jpg, `level`=1
+                
+[2018-03-24 13:48:26,971] [ERROR] [mysql_util.py - query - line: 43] 数据库操作出现错误: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '://wx3.sinaimg.cn/mw1024/86ceb1eegy1fmk7qml9ylj20k00dcjs6.jpg, `level`=1' at line 2")
+[2018-03-24 13:48:26,971] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (5,'卡5','https://wx4.sinaimg.cn/mw1024/86ceb1eegy1fm6bvswhm6j20rs0rsdhj.jpg',1)  ON DUPLICATE KEY
+                                        UPDATE `name`='卡5', `url`=https://wx4.sinaimg.cn/mw1024/86ceb1eegy1fm6bvswhm6j20rs0rsdhj.jpg, `level`=1
+                
+[2018-03-24 13:48:26,971] [ERROR] [mysql_util.py - query - line: 43] 数据库操作出现错误: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '://wx4.sinaimg.cn/mw1024/86ceb1eegy1fm6bvswhm6j20rs0rsdhj.jpg, `level`=1' at line 2")
+[2018-03-24 13:48:26,971] [INFO] [modian_card_draw.py - draw - line: 51] 抽卡: user_id: 123, nickname: billjyc1, backer_money: 100.1, pay_time: 2018-03-24 12:54:00
+[2018-03-24 13:48:26,972] [INFO] [modian_card_draw.py - draw - line: 59] 共抽卡100张
+[2018-03-24 13:48:26,972] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                        INSERT INTO `supporter` (`id`, `name`) VALUES (123, 'billjyc1')  ON DUPLICATE KEY
+                            UPDATE `name`='billjyc1'
+                    
+[2018-03-24 13:49:13,880] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 13:49:14,194] [DEBUG] [mysql_util.py - getConn - line: 12] 获取数据库连接
+[2018-03-24 13:49:14,221] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (1,'卡1','https://wx3.sinaimg.cn/mw1024/86ceb1eegy1fphzcu5d0dj20m80rs0v9.jpg',1)  ON DUPLICATE KEY
+                                        UPDATE `name`='卡1', `url`=https://wx3.sinaimg.cn/mw1024/86ceb1eegy1fphzcu5d0dj20m80rs0v9.jpg, `level`=1
+                
+[2018-03-24 13:49:14,223] [ERROR] [mysql_util.py - query - line: 43] 数据库操作出现错误: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '://wx3.sinaimg.cn/mw1024/86ceb1eegy1fphzcu5d0dj20m80rs0v9.jpg, `level`=1' at line 2")
+[2018-03-24 13:49:14,225] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (2,'卡2','https://wx3.sinaimg.cn/mw1024/86ceb1eegy1foesj651qbj20rs0rsjub.jpg',1)  ON DUPLICATE KEY
+                                        UPDATE `name`='卡2', `url`=https://wx3.sinaimg.cn/mw1024/86ceb1eegy1foesj651qbj20rs0rsjub.jpg, `level`=1
+                
+[2018-03-24 13:49:14,227] [ERROR] [mysql_util.py - query - line: 43] 数据库操作出现错误: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '://wx3.sinaimg.cn/mw1024/86ceb1eegy1foesj651qbj20rs0rsjub.jpg, `level`=1' at line 2")
+[2018-03-24 13:49:14,228] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (3,'卡3','https://wx2.sinaimg.cn/mw1024/86ceb1eegy1fmsbwgl8z5j20jg0rsgnq.jpg',1)  ON DUPLICATE KEY
+                                        UPDATE `name`='卡3', `url`=https://wx2.sinaimg.cn/mw1024/86ceb1eegy1fmsbwgl8z5j20jg0rsgnq.jpg, `level`=1
+                
+[2018-03-24 13:49:14,229] [ERROR] [mysql_util.py - query - line: 43] 数据库操作出现错误: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '://wx2.sinaimg.cn/mw1024/86ceb1eegy1fmsbwgl8z5j20jg0rsgnq.jpg, `level`=1' at line 2")
+[2018-03-24 13:49:14,230] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (4,'卡4','https://wx3.sinaimg.cn/mw1024/86ceb1eegy1fmk7qml9ylj20k00dcjs6.jpg',1)  ON DUPLICATE KEY
+                                        UPDATE `name`='卡4', `url`=https://wx3.sinaimg.cn/mw1024/86ceb1eegy1fmk7qml9ylj20k00dcjs6.jpg, `level`=1
+                
+[2018-03-24 13:49:14,231] [ERROR] [mysql_util.py - query - line: 43] 数据库操作出现错误: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '://wx3.sinaimg.cn/mw1024/86ceb1eegy1fmk7qml9ylj20k00dcjs6.jpg, `level`=1' at line 2")
+[2018-03-24 13:49:14,232] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (5,'卡5','https://wx4.sinaimg.cn/mw1024/86ceb1eegy1fm6bvswhm6j20rs0rsdhj.jpg',1)  ON DUPLICATE KEY
+                                        UPDATE `name`='卡5', `url`=https://wx4.sinaimg.cn/mw1024/86ceb1eegy1fm6bvswhm6j20rs0rsdhj.jpg, `level`=1
+                
+[2018-03-24 13:49:14,232] [ERROR] [mysql_util.py - query - line: 43] 数据库操作出现错误: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '://wx4.sinaimg.cn/mw1024/86ceb1eegy1fm6bvswhm6j20rs0rsdhj.jpg, `level`=1' at line 2")
+[2018-03-24 13:49:14,233] [INFO] [modian_card_draw.py - draw - line: 51] 抽卡: user_id: 123, nickname: billjyc1, backer_money: 2, pay_time: 2018-03-24 12:54:00
+[2018-03-24 13:49:14,233] [INFO] [modian_card_draw.py - draw - line: 59] 共抽卡2张
+[2018-03-24 13:49:14,233] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                        INSERT INTO `supporter` (`id`, `name`) VALUES (123, 'billjyc1')  ON DUPLICATE KEY
+                            UPDATE `name`='billjyc1'
+                    
+[2018-03-24 13:49:40,098] [DEBUG] [my_logger.py - <module> - line: 14] abcdefg
+[2018-03-24 13:49:40,360] [DEBUG] [mysql_util.py - getConn - line: 12] 获取数据库连接
+[2018-03-24 13:49:40,374] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (1,'卡1','https://wx3.sinaimg.cn/mw1024/86ceb1eegy1fphzcu5d0dj20m80rs0v9.jpg',1)  ON DUPLICATE KEY
+                                        UPDATE `name`='卡1', `url`=https://wx3.sinaimg.cn/mw1024/86ceb1eegy1fphzcu5d0dj20m80rs0v9.jpg, `level`=1
+                
+[2018-03-24 13:49:40,376] [ERROR] [mysql_util.py - query - line: 43] 数据库操作出现错误: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '://wx3.sinaimg.cn/mw1024/86ceb1eegy1fphzcu5d0dj20m80rs0v9.jpg, `level`=1' at line 2")
+[2018-03-24 13:49:40,376] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (2,'卡2','https://wx3.sinaimg.cn/mw1024/86ceb1eegy1foesj651qbj20rs0rsjub.jpg',1)  ON DUPLICATE KEY
+                                        UPDATE `name`='卡2', `url`=https://wx3.sinaimg.cn/mw1024/86ceb1eegy1foesj651qbj20rs0rsjub.jpg, `level`=1
+                
+[2018-03-24 13:49:40,377] [ERROR] [mysql_util.py - query - line: 43] 数据库操作出现错误: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '://wx3.sinaimg.cn/mw1024/86ceb1eegy1foesj651qbj20rs0rsjub.jpg, `level`=1' at line 2")
+[2018-03-24 13:49:40,377] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (3,'卡3','https://wx2.sinaimg.cn/mw1024/86ceb1eegy1fmsbwgl8z5j20jg0rsgnq.jpg',1)  ON DUPLICATE KEY
+                                        UPDATE `name`='卡3', `url`=https://wx2.sinaimg.cn/mw1024/86ceb1eegy1fmsbwgl8z5j20jg0rsgnq.jpg, `level`=1
+                
+[2018-03-24 13:49:40,377] [ERROR] [mysql_util.py - query - line: 43] 数据库操作出现错误: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '://wx2.sinaimg.cn/mw1024/86ceb1eegy1fmsbwgl8z5j20jg0rsgnq.jpg, `level`=1' at line 2")
+[2018-03-24 13:49:40,378] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (4,'卡4','https://wx3.sinaimg.cn/mw1024/86ceb1eegy1fmk7qml9ylj20k00dcjs6.jpg',1)  ON DUPLICATE KEY
+                                        UPDATE `name`='卡4', `url`=https://wx3.sinaimg.cn/mw1024/86ceb1eegy1fmk7qml9ylj20k00dcjs6.jpg, `level`=1
+                
+[2018-03-24 13:49:40,378] [ERROR] [mysql_util.py - query - line: 43] 数据库操作出现错误: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '://wx3.sinaimg.cn/mw1024/86ceb1eegy1fmk7qml9ylj20k00dcjs6.jpg, `level`=1' at line 2")
+[2018-03-24 13:49:40,378] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (5,'卡5','https://wx4.sinaimg.cn/mw1024/86ceb1eegy1fm6bvswhm6j20rs0rsdhj.jpg',1)  ON DUPLICATE KEY
+                                        UPDATE `name`='卡5', `url`=https://wx4.sinaimg.cn/mw1024/86ceb1eegy1fm6bvswhm6j20rs0rsdhj.jpg, `level`=1
+                
+[2018-03-24 13:49:40,379] [ERROR] [mysql_util.py - query - line: 43] 数据库操作出现错误: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '://wx4.sinaimg.cn/mw1024/86ceb1eegy1fm6bvswhm6j20rs0rsdhj.jpg, `level`=1' at line 2")
+[2018-03-24 13:49:40,379] [INFO] [modian_card_draw.py - draw - line: 51] 抽卡: user_id: 123, nickname: billjyc1, backer_money: 2, pay_time: 2018-03-24 12:54:00
+[2018-03-24 13:49:40,379] [INFO] [modian_card_draw.py - draw - line: 59] 共抽卡2张
+[2018-03-24 13:49:40,379] [INFO] [mysql_util.py - query - line: 37] mysql语句: 
+                        INSERT INTO `supporter` (`id`, `name`) VALUES (123, 'billjyc1')  ON DUPLICATE KEY
+                            UPDATE `name`='billjyc1'
+                    
+[2018-03-24 13:49:40,380] [INFO] [mysql_util.py - query - line: 37] mysql语句: INSERT INTO `draw_record` (`supporter_id`, `card_id`, `draw_time`) VALUES (123, 2, '2018-03-24 12:54:00'),(123, 4, '2018-03-24 12:54:00')

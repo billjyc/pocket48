@@ -47,5 +47,6 @@ if __name__ == '__main__':
     item_dict = {}
     for k, v in items:
         item_dict[k] = v
+    print(item_dict)
     print(se_list)
     print(ConfigReader.get_qq_number('member_room_msg_groups'))
