@@ -13,6 +13,7 @@ def handle_msg(context):
         message = context['message']
         group_id = context['group_id']
         logger.info('收到一条消息: %s', message)
+        logger.info(global_config.AUTO_REPLY)
 
         for k, v in global_config.AUTO_REPLY.items():
             if k in message:
