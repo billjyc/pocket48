@@ -28,6 +28,9 @@ class Card:
 class CardDrawHandler:
     def __init__(self):
         self.mysql_util = MySQLUtil('localhost', 3306, 'root', 'Jyc@1993', 'card_draw')
+        # self.read_config()
+
+    def read_config(self):
         config_path = os.path.join(BASE_DIR, 'data/card_draw.json')
         card_draw_json = json.load(open(config_path, encoding='utf8'))
         self.min_amount = card_draw_json['min_amount']
@@ -38,9 +41,9 @@ class CardDrawHandler:
             card = Card(card_j['id'], card_j['name'], card_j['url'], card_j['level'])
             # 更新数据库中的卡牌信息
             self.mysql_util.query("""
-                INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (%s,'%s','%s',%s)  ON DUPLICATE KEY
-                                        UPDATE `name`='%s', `url`=%s, `level`=%s
-                """ % (card.id, card.name, card.url, card.level, card.name, card.url, card.level))
+                        INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (%s,'%s','%s',%s)  ON DUPLICATE KEY
+                                                UPDATE `name`='%s', `url`='%s', `level`=%s
+                        """ % (card.id, card.name, card.url, card.level, card.name, card.url, card.level))
             self.cards.append(card)
             if card_j['level'] == 1:
                 self.weight.append(card_j['weight'])
