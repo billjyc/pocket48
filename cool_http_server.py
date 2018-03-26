@@ -18,6 +18,7 @@ def handle_msg(context):
             if k in message:
                 logger.info('命中关键词: %s', k)
                 bot.send(context, v)
+                break
         # bot.send(context, '你好呀，下面一条是你刚刚发的：')
     except Error:
         pass
