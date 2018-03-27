@@ -29,7 +29,7 @@ def handle_msg(context):
         logger.info(AUTO_REPLY)
 
         for k, v in AUTO_REPLY.items():
-            if k in message:
+            if k in message.lower():
                 logger.info('命中关键词: %s', k)
                 bot.send(context, v)
                 break
