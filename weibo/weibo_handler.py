@@ -73,6 +73,7 @@ class WeiboMonitor:
             for i in r.json()['data']['tabsInfo']['tabs']:
                 if i['tab_type'] == 'weibo':
                     con_id = i['containerid']
+                    # TODO: 拿不到con_id
         except Exception as e:
             self.echoMsg('Error', e)
             print(e)

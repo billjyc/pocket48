@@ -15,7 +15,7 @@ if using_pro == 'yes':
 
 import pocket48_plugin
 import statistic_plugin
-import weibo_plugin
+# import weibo_plugin
 import modian_plugin
 
 scheduler.start()
