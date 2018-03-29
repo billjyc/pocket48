@@ -48,16 +48,16 @@ def handle_group_increase(context):
     name = nickname if nickname else '新人'
     # bot.send(context, message='最快的机器人欢迎@{}～'.format(name))
     bot.send(context, message='最快的机器人欢迎[CQ:at,qq={}]'.format(context['user_id']))
-    if context['group_id'] == int('101724227'):
-        bot.send(context, message="""
-欢迎加入SNH48-冯晓菲应援会，今天的机长是灰灰
-为了更好的了解灰灰，给灰灰应援～
-冯晓菲剧场应援群：499121036
-B站补档推荐up主：冯晓菲的后置摄像头，冯晓菲甜甜的wink
-网易云电台：冯晓菲的地上波
-欢迎关注微博：@SNH48-冯晓菲应援会
-@冯晓菲的萝卜养护中心
-        """)
+#     if context['group_id'] == int('101724227'):
+#         bot.send(context, message="""
+# 欢迎加入SNH48-冯晓菲应援会，今天的机长是灰灰
+# 为了更好的了解灰灰，给灰灰应援～
+# 冯晓菲剧场应援群：499121036
+# B站补档推荐up主：冯晓菲的后置摄像头，冯晓菲甜甜的wink
+# 网易云电台：冯晓菲的地上波
+# 欢迎关注微博：@SNH48-冯晓菲应援会
+# @冯晓菲的萝卜养护中心
+#         """)
 
 
 @bot.on_event('group_decrease')

@@ -118,6 +118,9 @@ class ModianHandler:
             orders = r['data']
             my_logger.info('项目订单: page: %s, orders: %s', page, orders)
             return orders
+        if int(r['status']) == 2:  # 该页没有订单
+            my_logger.info('项目订单: page: %s, 数据为空', page)
+            return []
         else:
             raise RuntimeError('获取项目订单查询失败')
 
@@ -268,7 +271,7 @@ class ModianHandler:
                 for k, v in cards.items():
                     cards_msg += '%s*%d,' % (k.name, v)
                 my_logger.debug(cards_msg)
-                cards_msg += '\n'
+                cards_msg = cards_msg[:-1] + '\n'
                 # 加上图片
                 for k, v in cards.items():
                     if global_config.USING_COOLQ_PRO is True:
@@ -346,6 +349,8 @@ class ModianHandler:
             rankings = r['data']
             my_logger.info('查询项目排名: %s', rankings)
             return rankings
+        elif int(r['status'] == 2):
+            return []
         else:
             raise RuntimeError('获取项目排名失败, type=%d', type0)
 

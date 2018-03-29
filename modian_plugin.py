@@ -172,6 +172,7 @@ def update_modian_conf():
             cursor.close()
     my_logger.debug(global_config.MODIAN_JIEBANG_ACTIVITIES)
     conn.close()
+
     my_logger.debug('读取摩点配置耗时: %s秒', time.time() - time0)
 
 
