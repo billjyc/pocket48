@@ -3,84 +3,84 @@
   "cards": [
     {
       "id": 1,
-      "name": "超凶",
+      "name": "（甜系）超凶",
       "url": "https://wx4.sinaimg.cn/mw690/8a300cd8gy1fpw03hrpffj2046046t8o.jpg",
       "level": 1,
       "weight": 9
     },
     {
       "id": 2,
-      "name": "可怜",
+      "name": "（甜系）可怜",
       "url": "https://wx4.sinaimg.cn/mw690/8a300cd8gy1fpw03hrn3uj2046046mx4.jpg",
       "level": 1,
       "weight": 9
     },
     {
       "id": 3,
-      "name": "可爱",
+      "name": "（甜系）可爱",
       "url": "https://wx4.sinaimg.cn/mw690/8a300cd8gy1fpw03hscqoj20460460sw.jpg",
       "level": 1,
       "weight": 9
     },
     {
       "id": 4,
-      "name": "皮一下",
+      "name": "（甜系）皮一下",
       "url": "https://wx2.sinaimg.cn/mw690/8a300cd8gy1fpw03hrpzcj2046046jre.jpg",
       "level": 1,
       "weight": 9
     },
     {
       "id": 5,
-      "name": "羞羞",
+      "name": "（甜系）羞羞",
       "url": "https://wx1.sinaimg.cn/mw690/8a300cd8gy1fpw03hr313j2046046dfu.jpg",
       "level": 1,
       "weight": 9
     },
     {
       "id": 6,
-      "name": "打我呀",
+      "name": "（恶搞系）打我呀",
       "url": "https://wx4.sinaimg.cn/mw690/8a300cd8gy1fpw04goli3j204604674c.jpg",
       "level": 1,
       "weight": 9
     },
     {
       "id": 7,
-      "name": "低头",
+      "name": "（恶搞系）低头",
       "url": "https://wx1.sinaimg.cn/mw690/8a300cd8gy1fpw04gou6gj2046046dft.jpg",
       "level": 1,
       "weight": 9
     },
     {
       "id": 8,
-      "name": "要事情",
+      "name": "（恶搞系）要事情",
       "url": "https://wx2.sinaimg.cn/mw690/8a300cd8gy1fpw04gpjzbj2046046jrg.jpg",
       "level": 1,
       "weight": 9
     },
     {
       "id": 9,
-      "name": "痴汉",
+      "name": "（恶搞系）痴汉",
       "url": "https://wx3.sinaimg.cn/mw690/8a300cd8gy1fpw04gpmw9j2046046mx5.jpg",
       "level": 1,
       "weight": 9
     },
     {
       "id": 10,
-      "name": "垃圾桶",
+      "name": "（恶搞系）垃圾桶",
       "url": "https://wx3.sinaimg.cn/mw690/8a300cd8gy1fpw04gqlpdj204608cmxa.jpg",
       "level": 1,
       "weight": 9
     },
     {
       "id": 11,
-      "name": "恶搞+1",
+      "name": "（恶搞系）恶搞+1",
       "url": "http://wx1.sinaimg.cn/large/439a9f3fly1fpw1plt8xug208c08c0x1.gif",
       "level": 1,
       "weight": 5
     },
     {
       "id": 12,
-      "name": "甜+!",
+      "name": "（甜系）甜+!",
       "url": "http://wx1.sinaimg.cn/mw690/439a9f3fly1fpw1plvdgbg203o05a7mh.gif",
       "level": 1,
       "weight": 5
