@@ -220,6 +220,8 @@ class Pocket48Handler:
             if self.last_msg_time < 0 or time_now - self.last_msg_time >= 10 * 60:
                 logger.debug('向大群发送简易版提醒')
                 msg = util.random_str(global_config.ROOM_MSG_LITE_NOTIFY)
+                if global_config.USING_COOLQ_PRO:
+                    msg += '[CQ:image,file=http://wx3.sinaimg.cn/large/789c06f9gy1fq4dl21j0rj20k00k0jsl.jpg]'
                 QQHandler.send_to_groups(self.member_room_msg_lite_groups, msg)
                 logger.info(msg)
 
