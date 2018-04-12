@@ -136,12 +136,12 @@ def compute_stick_num(min_stick_num, backer_money):
     """
     rst = 0
     # 冯晓菲应援会特别定制，10.17算1棒，但是在20以上就按10元1棒计算
-    if min_stick_num == 10.17:
-        if 10.17 <= backer_money < 20:
-            rst = 1
-        elif backer_money >= 20:
-            rst = int(backer_money // 10)
-    elif min_stick_num == 27.5:
+    # if min_stick_num == 10.17:
+    #     if 10.17 <= backer_money < 20:
+    #         rst = 1
+    #     elif backer_money >= 20:
+    #         rst = int(backer_money // 10)
+    if min_stick_num == 27.5:
         if 27.5 <= backer_money < 54:
             rst = 1
         elif backer_money >= 54:
