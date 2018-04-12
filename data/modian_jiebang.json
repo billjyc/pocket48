@@ -7,6 +7,30 @@
       "min_stick_amount": 27.5,
       "start_time": "2018-04-12 20:00:00",
       "end_time": "2018-04-14 21:59:59"
+    },
+    {
+      "jiebang_name": "正义的坑坑哒: 今晚到达66棒，追101.7",
+      "pro_id": "13566",
+      "target_stick_num": 66,
+      "min_stick_amount": 27.5,
+      "start_time": "2018-04-12 20:00:00",
+      "end_time": "2018-04-12 23:59:59"
+    },
+    {
+      "jiebang_name": "弓长长长长: 满88棒，追101.7",
+      "pro_id": "13566",
+      "target_stick_num": 88,
+      "min_stick_amount": 27.5,
+      "start_time": "2018-04-12 20:00:00",
+      "end_time": "2018-04-14 21:59:59"
+    },
+    {
+      "jiebang_name": "修恩: 满100棒，追10棒",
+      "pro_id": "13566",
+      "target_stick_num": 100,
+      "min_stick_amount": 27.5,
+      "start_time": "2018-04-12 20:00:00",
+      "end_time": "2018-04-14 21:59:59"
     }
   ]
 }
