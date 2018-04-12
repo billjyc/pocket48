@@ -7,6 +7,7 @@ import hashlib
 import requests
 import json
 import base64
+import urllib.parse
 
 
 def convert_timestamp_to_timestr(timestamp):
@@ -107,7 +108,7 @@ def make_signature(post_fields):
     :return:
     """
     post_fields_sorted = ksort(post_fields)
-    md5_string = urllib.urlencode(post_fields_sorted) + '&p=das41aq6'
+    md5_string = urllib.parse.urlencode(post_fields_sorted) + '&p=das41aq6'
     # print md5_string
     sign = hashlib.md5(md5_string).hexdigest()[5:21]
     # print sign
@@ -140,6 +141,11 @@ def compute_stick_num(min_stick_num, backer_money):
             rst = 1
         elif backer_money >= 20:
             rst = int(backer_money // 10)
+    elif min_stick_num == 27.5:
+        if 27.5 <= backer_money < 54:
+            rst = 1
+        elif backer_money >= 54:
+            rst = int(backer_money // 27)
     else:
         rst = int(backer_money // min_stick_num)
     return rst

@@ -1,12 +1,12 @@
 {
   "activities": [
     {
-      "jiebang_name": " 橘子：满100棒追101.7",
-      "pro_id": "10999",
-      "target_stick_num": 100,
-      "min_stick_amount": 10.17,
-      "start_time": "2018-02-28 10:29:00",
-      "end_time": "2018-02-28 19:30:00"
+      "jiebang_name": "三周年公演特别接棒活动",
+      "pro_id": "13566",
+      "target_stick_num": 275,
+      "min_stick_amount": 27.5,
+      "start_time": "2018-04-12 20:00:00",
+      "end_time": "2018-04-14 21:59:59"
     }
   ]
 }
