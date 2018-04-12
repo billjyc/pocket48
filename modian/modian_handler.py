@@ -225,8 +225,8 @@ class ModianHandler:
                     jiebang.current_stick_num += stick_num
                     
                     jiebang.last_record_time = util.convert_timestamp_to_timestr(time.time()*1000)
-                    test_msg = '接棒活动: 【%s】, 当前第%s棒, 目标%s棒\n' \
-                               % (jiebang.name, jiebang.current_stick_num, jiebang.target_stick_num)
+                    test_msg = '接棒活动: 【%s】, 当前第%s棒, 目标%s棒, 每棒金额%s元\n' \
+                               % (jiebang.name, jiebang.current_stick_num, jiebang.target_stick_num, jiebang.min_stick_amount)
                     my_logger.debug(test_msg)
                     if len(test_msg) > 0:
                         msg += test_msg
