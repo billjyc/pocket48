@@ -9,36 +9,44 @@
       "end_time": "2018-04-14 21:59:59"
     },
     {
-      "jiebang_name": "正义的坑坑哒: 今晚到达66棒，追101.7",
+      "jiebang_name": "12：满150棒，追加150元",
       "pro_id": "13566",
-      "target_stick_num": 66,
+      "target_stick_num": 150,
       "min_stick_amount": 27.5,
       "start_time": "2018-04-12 20:00:00",
-      "end_time": "2018-04-12 23:59:59"
+      "end_time": "2018-04-14 21:59:59"
     },
     {
-      "jiebang_name": "弓长长长长: 满88棒，追101.7",
+      "jiebang_name": "正义的坑坑哒：满166棒追加101.7元",
       "pro_id": "13566",
-      "target_stick_num": 88,
+      "target_stick_num": 166,
       "min_stick_amount": 27.5,
       "start_time": "2018-04-12 20:00:00",
-      "end_time": "2018-04-12 21:59:59"
+      "end_time": "2018-04-14 21:59:59"
     },
     {
-      "jiebang_name": "修恩: 满100棒，追10棒",
+      "jiebang_name": "淅沥沥：满200棒，追加101.7元",
       "pro_id": "13566",
-      "target_stick_num": 100,
+      "target_stick_num": 200,
       "min_stick_amount": 27.5,
       "start_time": "2018-04-12 20:00:00",
-      "end_time": "2018-04-12 21:59:59"
+      "end_time": "2018-04-14 21:59:59"
     },
     {
-      "jiebang_name": "爆米花: 满100棒，追加500元",
+      "jiebang_name": "丘比：满275棒，追加550元",
       "pro_id": "13566",
-      "target_stick_num": 100,
+      "target_stick_num": 275,
       "min_stick_amount": 27.5,
       "start_time": "2018-04-12 20:00:00",
-      "end_time": "2018-04-12 21:59:59"
+      "end_time": "2018-04-14 21:59:59"
+    },
+    {
+      "jiebang_name": "北婶：满275棒，追加550元",
+      "pro_id": "13566",
+      "target_stick_num": 275,
+      "min_stick_amount": 27.5,
+      "start_time": "2018-04-12 20:00:00",
+      "end_time": "2018-04-14 21:59:59"
     }
   ]
 }
