@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from log.my_logger import logger as my_logger
+from log.my_logger import statistic_logger as my_logger
 
 from utils.config_reader import ConfigReader
 from statistic.statistic_handler import StatisticHandler

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import time
 
-from log.my_logger import logger as my_logger
+from log.my_logger import pocket48_logger as my_logger
 from utils.config_reader import ConfigReader
 from pocket48.pocket48_handler import Pocket48Handler
 from qq.qqhandler import QQHandler
@@ -56,32 +56,6 @@ def update_conf():
         pocket48_handler.init_msg_queues(global_config.CUR_MEMBER['room_id'])
     my_logger.debug('当前监控的成员是: %s', global_config.CUR_MEMBER)
 
-    # 自动回复数据
-    # my_logger.debug('构造自动回复数据')
-    # global_config.AUTO_REPLY = {}
-    # items = ConfigReader.get_section('auto_reply')
-    # my_logger.debug('items: %s', items)
-    # for k, v in items:
-    #     my_logger.debug('k: %s, v: %s', k, v)
-    #     global_config.AUTO_REPLY[k] = v
-    #     my_logger.debug('k in global_config.AUTO_REPLY: %s', k in global_config.AUTO_REPLY)
-    # my_logger.debug(global_config.AUTO_REPLY)
-
-    # global_config.JIZI_KEYWORDS = ConfigReader.get_property('profile', 'jizi_keywords').split(';')
-    # global_config.JIZI_LINK = ConfigReader.get_property('profile', 'jizi_link').split(';')
-    #
-    # global_config.WEIBO_KEYWORDS = ConfigReader.get_property('profile', 'weibo_keywords').split(';')
-    # global_config.GONGYAN_KEYWORDS = ConfigReader.get_property('profile', 'gongyan_keywords').split(';')
-    # global_config.LIVE_LINK=ConfigReader.get_property('profile', 'live_link').split(';')
-    # global_config.LIVE_SCHEDULE = ConfigReader.get_property('profile', 'live_schedule').split(';')
-    #
-    # global_config.WEIBO_LINK = ConfigReader.get_property('profile', 'weibo_link')
-    # global_config.SUPER_TAG = ConfigReader.get_property('profile', 'super_tag')
-    #
-    # global_config.MEMBER_ATTR = ConfigReader.get_property('profile', 'member_attr')
-    # global_config.I_LOVE = ConfigReader.get_property('profile', 'i_love').split(';')
-    #
-    # global_config.AT_AUTO_REPLY = ConfigReader.get_property('profile', 'at_auto_reply').split(';')
     global_config.ROOM_MSG_LITE_NOTIFY = ConfigReader.get_property('profile', 'room_msg_lite_notify').split(';')
 
     global_config.PERFORMANCE_NOTIFY = ConfigReader.get_property('profile', 'performance_notify')

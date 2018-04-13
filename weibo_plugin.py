@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from log.my_logger import logger as my_logger
+from log.my_logger import weibo_logger as my_logger
 
 from weibo.weibo_handler import WeiboMonitor
 from qq.qqhandler import QQHandler

@@ -5,7 +5,7 @@
 import sys
 
 import requests
-from log.my_logger import logger as my_logger
+from log.my_logger import modian_logger as my_logger
 
 import time
 from utils import global_config, util
@@ -139,6 +139,8 @@ class ModianHandler:
         modian_entity.title = pro_name
         modian_entity.target = target
         modian_entity.support_num = len(self.jizi_rank_list)
+        my_logger.debug('size of order %s queue: %s', modian_entity.pro_id,
+                        len(self.order_queues[modian_entity.pro_id]))
 
         for order in orders:
             user_id = order['user_id']
@@ -148,7 +150,7 @@ class ModianHandler:
 
             oid = uuid.uuid3(uuid.NAMESPACE_OID, str(user_id) + pay_time)
             my_logger.debug('oid: %s', oid)
-            my_logger.debug('size of order %s queue: %s', modian_entity.pro_id, len(self.order_queues[modian_entity.pro_id]))
+
             if oid in self.order_queues[modian_entity.pro_id]:
                 continue
 
@@ -230,7 +232,7 @@ class ModianHandler:
                     my_logger.debug(test_msg)
                     if len(test_msg) > 0:
                         msg += test_msg
-                        QQHandler.send_to_groups(['483548995'], test_msg)
+                        # QQHandler.send_to_groups(['483548995'], test_msg)
 
             # flag相关
             my_logger.debug('flag情况更新')
@@ -333,9 +335,9 @@ class ModianHandler:
         :return:
         """
         if type0 == 1:
-            my_logger.info('查询项目集资榜')
+            my_logger.info('查询项目集资榜, page=%s', page)
         elif type0 == 2:
-            my_logger.info('查询项目打卡榜')
+            my_logger.info('查询项目打卡榜, page=%s', page)
         else:
             my_logger.error('type0参数不合法')
             raise RuntimeError('type0参数不合法！')
@@ -349,7 +351,7 @@ class ModianHandler:
         if int(r['status']) == 0:
             # pro_name = r['data']['pro_name']
             rankings = r['data']
-            my_logger.info('查询项目排名: %s', rankings)
+            # my_logger.info('查询项目排名: %s', rankings)
             return rankings
         elif int(r['status'] == 2):
             return []

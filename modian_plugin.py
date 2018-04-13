@@ -89,41 +89,41 @@ def update_modian_conf():
                 my_logger.debug('len(rst)==1')
 
                 # 修正当前接棒数
-                my_logger.debug('修正当前接棒数')
-                start_time = util.convert_timestr_to_timestamp(activity['start_time'])
-                current_stick_num = 0
-                cur_page = 1
-                entity = None
-                for modian_entity in global_config.MODIAN_ARRAY:
-                    pro_id = modian_entity.pro_id
-                    if str(pro_id) == str(activity['pro_id']):
-                        entity = modian_entity
-                        break
-                while True:
-                    finish_find = False
-
-                    orders = modian_handler.query_project_orders(entity, cur_page)
-                    if len(orders) <= 0:
-                        break
-
-                    for order in orders:
-                        order_time = util.convert_timestr_to_timestamp(order['pay_time'])
-                        if order_time < start_time:
-                            finish_find = True
-                            break
-                        current_stick_num += modian_handler.compute_stick_num(activity['min_stick_amount'], order['backer_money'])
-                    if finish_find is True:
-                        break
-                    cur_page += 1
-
-                cursor.execute("""
-                    UPDATE jiebang SET name=?, pro_id=?, start_time=?, end_time=?, 
-                    target_stick_num=?, min_stick_amount=?, current_stick_num=?
-                    WHERE name=?
-                """, (name, activity['pro_id'], activity['start_time'], activity['end_time'],
-                      activity['target_stick_num'], activity['min_stick_amount'], current_stick_num, name))
-                conn.commit()
-                my_logger.debug('%s接棒数修正完成，当前棒数:%s', activity['pro_id'], current_stick_num)
+                # my_logger.debug('修正当前接棒数')
+                # start_time = util.convert_timestr_to_timestamp(activity['start_time'])
+                # current_stick_num = 0
+                # cur_page = 1
+                # entity = None
+                # for modian_entity in global_config.MODIAN_ARRAY:
+                #     pro_id = modian_entity.pro_id
+                #     if str(pro_id) == str(activity['pro_id']):
+                #         entity = modian_entity
+                #         break
+                # while True:
+                #     finish_find = False
+                #
+                #     orders = modian_handler.query_project_orders(entity, cur_page)
+                #     if len(orders) <= 0:
+                #         break
+                #
+                #     for order in orders:
+                #         order_time = util.convert_timestr_to_timestamp(order['pay_time'])
+                #         if order_time < start_time:
+                #             finish_find = True
+                #             break
+                #         current_stick_num += modian_handler.compute_stick_num(activity['min_stick_amount'], order['backer_money'])
+                #     if finish_find is True:
+                #         break
+                #     cur_page += 1
+                #
+                # cursor.execute("""
+                #     UPDATE jiebang SET name=?, pro_id=?, start_time=?, end_time=?,
+                #     target_stick_num=?, min_stick_amount=?, current_stick_num=?
+                #     WHERE name=?
+                # """, (name, activity['pro_id'], activity['start_time'], activity['end_time'],
+                #       activity['target_stick_num'], activity['min_stick_amount'], current_stick_num, name))
+                # conn.commit()
+                # my_logger.debug('%s接棒数修正完成，当前棒数:%s', activity['pro_id'], current_stick_num)
             elif len(rst) == 0:
                 my_logger.debug('len(rst)==0')
                 cursor.execute("""
@@ -154,7 +154,7 @@ def update_modian_conf():
                 SELECT name, pro_id, current_stick_num, last_record_time, 
                     start_time, end_time, target_stick_num, min_stick_amount
                 FROM jiebang where pro_id=? and start_time <= datetime('now', 'localtime') 
-                    and end_time >= datetime('now', 'localtime')
+                    and end_time >= datetime('now', 'localtime') and current_stick_num < target_stick_num
             """, (pro_id, ))
             rst = c.fetchall()
             for jiebang in rst:

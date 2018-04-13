@@ -5,7 +5,7 @@ import json
 
 import time
 from cool_http_server import bot
-from log.my_logger import logger
+from log.my_logger import pocket48_logger as logger
 from qq.qqhandler import QQHandler
 
 from utils import global_config, util

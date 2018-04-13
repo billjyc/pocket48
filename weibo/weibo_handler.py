@@ -8,7 +8,7 @@ import json
 import requests
 import time
 from utils import util
-from log.my_logger import logger as my_logger
+from log.my_logger import weibo_logger as my_logger
 
 
 class WeiboMonitor:

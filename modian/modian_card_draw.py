@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import json
-from log.my_logger import logger
+from log.my_logger import modian_logger as logger
 from utils import util
 from utils.mysql_util import MySQLUtil
 
