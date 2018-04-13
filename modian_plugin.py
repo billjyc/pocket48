@@ -128,11 +128,12 @@ def update_modian_conf():
                 my_logger.debug('len(rst)==0')
                 cursor.execute("""
                                     INSERT INTO jiebang (name, pro_id, current_stick_num, last_record_time, start_time, 
-                                    end_time, target_stick_num, min_stick_amount) VALUES
-                                    (?, ?, ?, ?, ?, ?, ?, ?)
+                                    end_time, target_stick_num, min_stick_amount, need_detail) VALUES
+                                    (?, ?, ?, ?, ?, ?, ?, ?, ?)
                                 """, (
                 name, activity['pro_id'], 0, util.convert_timestamp_to_timestr(time.time()*1000),
-                    activity['start_time'], activity['end_time'], activity['target_stick_num'], activity['min_stick_amount']))
+                    activity['start_time'], activity['end_time'], activity['target_stick_num'],
+                activity['min_stick_amount'], activity['need_detail']))
                 conn.commit()
             else:
                 raise RuntimeError('接棒活动名称错误！')
@@ -152,17 +153,17 @@ def update_modian_conf():
             cursor = conn.cursor()
             c = cursor.execute("""
                 SELECT name, pro_id, current_stick_num, last_record_time, 
-                    start_time, end_time, target_stick_num, min_stick_amount
+                    start_time, end_time, target_stick_num, min_stick_amount, need_detail
                 FROM jiebang where pro_id=? and start_time <= datetime('now', 'localtime') 
                     and end_time >= datetime('now', 'localtime') and current_stick_num < target_stick_num
             """, (pro_id, ))
             rst = c.fetchall()
             for jiebang in rst:
-                my_logger.debug('jiebang: %s, %s, %s, %s, %s, %s, %s, %s',
+                my_logger.debug('jiebang: %s, %s, %s, %s, %s, %s, %s, %s, %s',
                                 jiebang[0], jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
-                                              jiebang[6], jiebang[7])
+                                              jiebang[6], jiebang[7], jiebang[8])
                 jiebang_entity = ModianJiebangEntity(jiebang[0], jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
-                                              jiebang[6], jiebang[7])
+                                              jiebang[6], jiebang[7], jiebang[8])
                 global_config.MODIAN_JIEBANG_ACTIVITIES[pro_id].append(jiebang_entity)
 
         except Exception as e:

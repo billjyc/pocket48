@@ -32,7 +32,7 @@ class ModianEntity:
 
 class ModianJiebangEntity:
     def __init__(self, name, pro_id, current_stick_num, last_record_time, start_time, end_time, target_stick_num,
-                 min_stick_amount):
+                 min_stick_amount, need_detail):
         self.name = name
         self.pro_id = pro_id
         self.current_stick_num = current_stick_num
@@ -41,6 +41,7 @@ class ModianJiebangEntity:
         self.end_time = end_time
         self.target_stick_num = target_stick_num
         self.min_stick_amount = min_stick_amount
+        self.need_detail = need_detail
 
 
 class ModianFlagEntity:
@@ -219,6 +220,7 @@ class ModianHandler:
             # 接棒相关
             my_logger.debug('接棒情况更新')
 
+            isFirst = True
             for jiebang in jiebang_activities:
                 my_logger.debug('接棒活动详情: 【%s】', jiebang.name)
                 my_logger.debug('集资金额: %s, 接棒最小金额: %s', backer_money, jiebang.min_stick_amount)
@@ -227,12 +229,17 @@ class ModianHandler:
                     jiebang.current_stick_num += stick_num
                     
                     jiebang.last_record_time = util.convert_timestamp_to_timestr(time.time()*1000)
-                    test_msg = '接棒活动: 【%s】, 当前第%s棒, 目标%s棒, 每棒金额%s元\n' \
-                               % (jiebang.name, jiebang.current_stick_num, jiebang.target_stick_num, jiebang.min_stick_amount)
+                    test_msg = ''
+                    if jiebang.need_detail == 1:
+                        test_msg = '【%s】, 当前第%s棒, 目标%s棒\n' \
+                                   % (jiebang.name, jiebang.current_stick_num, jiebang.target_stick_num)
+                    elif jiebang.need_detail == 0:
+                        test_msg = '【%s】\n' % jiebang.name
                     my_logger.debug(test_msg)
                     if len(test_msg) > 0:
                         msg += test_msg
                         # QQHandler.send_to_groups(['483548995'], test_msg)
+                    isFirst = False
 
             # flag相关
             my_logger.debug('flag情况更新')
