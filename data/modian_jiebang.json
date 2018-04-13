@@ -22,7 +22,7 @@
       "target_stick_num": 88,
       "min_stick_amount": 27.5,
       "start_time": "2018-04-12 20:00:00",
-      "end_time": "2018-04-14 21:59:59"
+      "end_time": "2018-04-12 21:59:59"
     },
     {
       "jiebang_name": "修恩: 满100棒，追10棒",
@@ -30,7 +30,7 @@
       "target_stick_num": 100,
       "min_stick_amount": 27.5,
       "start_time": "2018-04-12 20:00:00",
-      "end_time": "2018-04-14 21:59:59"
+      "end_time": "2018-04-12 21:59:59"
     },
     {
       "jiebang_name": "爆米花: 满100棒，追加500元",
@@ -38,7 +38,7 @@
       "target_stick_num": 100,
       "min_stick_amount": 27.5,
       "start_time": "2018-04-12 20:00:00",
-      "end_time": "2018-04-14 21:59:59"
+      "end_time": "2018-04-12 21:59:59"
     }
   ]
 }
