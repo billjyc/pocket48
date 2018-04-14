@@ -165,8 +165,10 @@ class ModianHandler:
                     """ % (user_id, nickname, nickname))
 
             self.mysql_util.query("""
-                INSERT INTO `order` (`id`,`supporter_id`,`backer_money`,`pay_time`, `pro_id`) VALUES ('%s', %s, %s, '%s', %s)
-            """ % (oid, user_id, backer_money, pay_time, modian_entity.pro_id))
+                INSERT INTO `order` (`id`,`supporter_id`,`backer_money`,`pay_time`, `pro_id`) 
+                VALUES ('%s', %s, %s, '%s', %s) ON DUPLICATE KEY
+                        UPDATE `id`='%s'
+            """ % (oid, user_id, backer_money, pay_time, modian_entity.pro_id, oid))
 
             msg = '感谢 %s 支持了%s元, %s\n' % (nickname, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
             daka_rank, support_days = self.find_user_daka_rank(self.daka_rank_list, nickname)
