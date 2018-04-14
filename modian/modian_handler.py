@@ -15,6 +15,8 @@ import random
 import sqlite3
 import uuid
 from modian.modian_card_draw import CardDrawHandler, Card
+from utils.mysql_util import MySQLUtil
+
 
 from qq.qqhandler import QQHandler
 
@@ -64,6 +66,8 @@ class ModianHandler:
 
         self.card_draw_handler = CardDrawHandler()
         self.order_queues = {}
+
+        self.mysql_util = MySQLUtil('localhost', 3306, 'root', 'Jyc@1993', 'card_draw')
 
         # self.init_order_queues()
 
@@ -154,6 +158,10 @@ class ModianHandler:
 
             if oid in self.order_queues[modian_entity.pro_id]:
                 continue
+
+            self.mysql_util.query("""
+                INSERT INTO `order` (`id`,`support_id`,`backer_money`,`pay_time`, `pro_id`) VALUES (%s, %s, %s, %s, %s)
+            """ % (oid, user_id, backer_money, pay_time, modian_entity.pro_id))
 
             msg = '感谢 %s 支持了%s元, %s\n' % (nickname, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
             daka_rank, support_days = self.find_user_daka_rank(self.daka_rank_list, nickname)
