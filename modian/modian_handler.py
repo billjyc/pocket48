@@ -158,9 +158,14 @@ class ModianHandler:
 
             if oid in self.order_queues[modian_entity.pro_id]:
                 continue
+            # 每次需要更新一下昵称
+            self.mysql_util.query("""
+                    INSERT INTO `supporter` (`id`, `name`) VALUES (%s, '%s')  ON DUPLICATE KEY
+                        UPDATE `name`='%s'
+                    """ % (user_id, nickname, nickname))
 
             self.mysql_util.query("""
-                INSERT INTO `order` (`id`,`support_id`,`backer_money`,`pay_time`, `pro_id`) VALUES (%s, %s, %s, %s, %s)
+                INSERT INTO `order` (`id`,`support_id`,`backer_money`,`pay_time`, `pro_id`) VALUES (%s, %s, %s, '%s', %s)
             """ % (oid, user_id, backer_money, pay_time, modian_entity.pro_id))
 
             msg = '感谢 %s 支持了%s元, %s\n' % (nickname, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
