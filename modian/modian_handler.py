@@ -309,8 +309,8 @@ class ModianHandler:
                 else:
                     count_flag_test_msgs += '【%s】, 当前人数: %s, 目标人数: %s ' % (flag.name, rst[0][0], flag.target_flag_amount)
 
-            my_logger.debug(flag_test_msgs)
-            if len(flag_test_msgs) > 0:
+            my_logger.debug(count_flag_test_msgs)
+            if len(count_flag_test_msgs) > 0:
                 QQHandler.send_to_groups(['483548995'], count_flag_test_msgs)
                 # msg += flag_test_msgs
 
