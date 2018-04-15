@@ -72,10 +72,11 @@ def update_modian_conf():
 
     my_logger.debug('读取正在进行的人头flag活动')
     global_config.MODIAN_COUNT_FLAG_ACTIVITIES = {}
+    count_flag_json = json.load(open('data/modian_count_flag.json', encoding='utf8'))['activities']
     for modian in global_config.MODIAN_ARRAY:
         pro_id = modian.pro_id
         global_config.MODIAN_COUNT_FLAG_ACTIVITIES[pro_id] = []
-    for activity in flag_json:
+    for activity in count_flag_json:
         pro_id = activity['pro_id']
         start_time = activity['start_time']
         end_time = activity['end_time']
