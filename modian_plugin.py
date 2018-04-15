@@ -3,7 +3,7 @@
 from log.my_logger import logger as my_logger
 
 from utils.config_reader import ConfigReader
-from modian.modian_handler import ModianHandler, ModianEntity, ModianJiebangEntity, ModianFlagEntity
+from modian.modian_handler import ModianHandler, ModianEntity, ModianJiebangEntity, ModianFlagEntity, ModianCountFlagEntity
 from utils import global_config
 from qq.qqhandler import QQHandler
 import sqlite3
@@ -69,6 +69,25 @@ def update_modian_conf():
                                     activity['end_time'], activity['remark'])
             global_config.MODIAN_FLAG_ACTIVITIES[int(pro_id)].append(flag)
     my_logger.debug('MODIAN_FLAG_ACTIVITIES: %s', global_config.MODIAN_FLAG_ACTIVITIES)
+
+    my_logger.debug('读取正在进行的人头flag活动')
+    global_config.MODIAN_COUNT_FLAG_ACTIVITIES = {}
+    for modian in global_config.MODIAN_ARRAY:
+        pro_id = modian.pro_id
+        global_config.MODIAN_COUNT_FLAG_ACTIVITIES[pro_id] = []
+    for activity in flag_json:
+        pro_id = activity['pro_id']
+        start_time = activity['start_time']
+        end_time = activity['end_time']
+        if util.convert_timestr_to_timestamp(start_time) >= util.convert_timestr_to_timestamp(end_time):
+            my_logger.error('人头类flag，起始时间大于结束时间！')
+            raise RuntimeError('起始时间大于结束时间')
+        time0 = time.time()
+        if util.convert_timestr_to_timestamp(end_time) > time0 > util.convert_timestr_to_timestamp(start_time):
+            flag = ModianCountFlagEntity(activity['flag_name'], activity['pro_id'], activity['target_flag_amount'],
+                                    activity['start_time'], activity['end_time'], activity['remark'])
+            global_config.MODIAN_COUNT_FLAG_ACTIVITIES[int(pro_id)].append(flag)
+    my_logger.debug('MODIAN_COUNT_FLAG_ACTIVITIES: %s', global_config.MODIAN_COUNT_FLAG_ACTIVITIES)
 
     # 接棒活动更新，读取json文件中的内容，更新到数据库中
     my_logger.debug('接棒活动更新，读取json文件中的内容，更新到数据库中')

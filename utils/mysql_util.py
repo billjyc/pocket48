@@ -51,8 +51,8 @@ class MySQLUtil:
 
 if __name__ == '__main__':
     mysql_util = MySQLUtil('localhost', 3306, 'root', 'root', 'card_draw')
-    rst = mysql_util.select('select * from card')
-    print(rst)
+    rst = mysql_util.select('select count(distinct(supporter_id)) from `order`')
+    print(rst[0][0])
 
 
 

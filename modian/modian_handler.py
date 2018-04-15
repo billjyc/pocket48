@@ -55,6 +55,16 @@ class ModianFlagEntity:
         self.remark = remark
 
 
+class ModianCountFlagEntity:
+    def __init__(self, name, pro_id, target_flag_amount, start_time, end_time, remark):
+        self.name = name
+        self.pro_id = pro_id
+        self.target_flag_amount = target_flag_amount
+        self.start_time = start_time
+        self.end_time = end_time
+        self.remark = remark
+
+
 class ModianHandler:
     def __init__(self, modian_notify_groups, modian_project_array):
         self.session = requests.session()
@@ -133,9 +143,10 @@ class ModianHandler:
         if len(self.order_queues[modian_entity.pro_id]) == 0:
             my_logger.debug('订单队列为空')
             return
-        # time_tmp = time.time()
         jiebang_activities = global_config.MODIAN_JIEBANG_ACTIVITIES[modian_entity.pro_id]
         flag_activities = global_config.MODIAN_FLAG_ACTIVITIES[modian_entity.pro_id]
+        count_flag_activities = global_config.MODIAN_COUNT_FLAG_ACTIVITIES[modian_entity.pro_id]
+
         # 查询集资情况
         target, current, pro_name = self.get_current_and_target(modian_entity)
         project_info = '当前进度: %s元, 目标金额: %s元\n当前集资人数: %s' % (current, target, len(self.jizi_rank_list))
@@ -175,6 +186,13 @@ class ModianHandler:
 
             if support_days:
                 msg += '当前项目已打卡%s天\n' % support_days
+
+            if modian_entity.need_display_rank is True:
+                jizi_rank, backer_money = self.find_user_jizi_rank(self.jizi_rank_list, nickname)
+                msg += '当前项目已集资%s元, 排名: %s' % (backer_money, jizi_rank)
+            else:
+                pass
+            msg += '%s\n集资项目: %s\n链接: %s' % (project_info, pro_name, modian_entity.link)
             
             # 集福
             # fu_switch = True #集福开关
@@ -232,10 +250,8 @@ class ModianHandler:
             #     fu_result_str += '~'
             # 集福结束
 
-            # 接棒相关
+            '''接棒相关'''
             my_logger.debug('接棒情况更新')
-
-            isFirst = True
             for jiebang in jiebang_activities:
                 my_logger.debug('接棒活动详情: 【%s】', jiebang.name)
                 my_logger.debug('集资金额: %s, 接棒最小金额: %s', backer_money, jiebang.min_stick_amount)
@@ -254,9 +270,8 @@ class ModianHandler:
                     if len(test_msg) > 0:
                         msg += test_msg
                         # QQHandler.send_to_groups(['483548995'], test_msg)
-                    isFirst = False
 
-            # flag相关
+            '''金额类flag相关'''
             my_logger.debug('flag情况更新')
             flag_test_msgs = ''
             for flag in flag_activities:
@@ -273,13 +288,32 @@ class ModianHandler:
             if len(flag_test_msgs) > 0:
                 # QQHandler.send_to_groups(['483548995'], flag_test_msgs)
                 msg += flag_test_msgs
-            
-            if modian_entity.need_display_rank is True:
-                jizi_rank, backer_money = self.find_user_jizi_rank(self.jizi_rank_list, nickname)
-                msg += '当前项目已集资%s元, 排名: %s' % (backer_money, jizi_rank)
-            else:
-                pass
-            msg += '%s\n集资项目: %s\n链接: %s' % (project_info, pro_name, modian_entity.link)
+
+            '''人头类flag相关'''
+            my_logger.debug('人头flag情况更新')
+            count_flag_test_msgs = ''
+            for flag in count_flag_activities:
+                my_logger.debug('人头Flag活动详情: %s', flag.name)
+                my_logger.debug('人头Flag金额: %s, 开始时间: %s, 结束时间: %s', flag.target_flag_amount,
+                                flag.start_time, flag.end_time)
+                target = flag.target_flag_amount
+
+                # 统计当前人数
+                rst = self.mysql_util.select("""
+                    select count(distinct(`supporter_id`)) from `order` where `pay_time` <= '%s' and `pay_time` >= '%s' 
+                """ % (flag.end_time, flag.start_time))
+
+                # 目标人数为0，代表特殊类flag，只报人数
+                if target == 0:
+                    count_flag_test_msgs += '【%s】, 当前人数: %s ' % (flag.name, rst[0][0])
+                else:
+                    count_flag_test_msgs += '【%s】, 当前人数: %s, 目标人数: %s ' % (flag.name, rst[0][0], flag.target_flag_amount)
+
+            my_logger.debug(flag_test_msgs)
+            if len(flag_test_msgs) > 0:
+                QQHandler.send_to_groups(['483548995'], count_flag_test_msgs)
+                # msg += flag_test_msgs
+
             
             # 集福播报
             # if fu_switch:
