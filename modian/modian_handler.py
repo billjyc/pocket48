@@ -278,16 +278,16 @@ class ModianHandler:
                 my_logger.debug('Flag活动详情: %s', flag.name)
                 my_logger.debug('Flag金额: %s, 结束时间: %s', flag.target_flag_amount, flag.end_time)
                 diff = flag.target_flag_amount - current
-                test_msgs = 'Flag活动名称: 【%s】, 目标金额: %s元, ' % (flag.name, flag.target_flag_amount)
+                test_msgs = '【%s】, 目标金额: %s元, ' % (flag.name, flag.target_flag_amount)
                 if diff > 0:
-                    test_msgs += '距离目标还差%s元，继续加油！\n' % round(diff, 2)
+                    test_msgs += '距离目标还差%s元\n' % round(diff, 2)
                     flag_test_msgs += test_msgs
                 else:
-                    test_msgs += '已经达成目标，干得漂亮~'
+                    test_msgs += '已经达成目标\n'
             my_logger.debug(flag_test_msgs)
             if len(flag_test_msgs) > 0:
-                # QQHandler.send_to_groups(['483548995'], flag_test_msgs)
-                msg += flag_test_msgs
+                QQHandler.send_to_groups(['483548995'], flag_test_msgs)
+                # msg += flag_test_msgs
 
             '''人头类flag相关'''
             my_logger.debug('人头flag情况更新')
