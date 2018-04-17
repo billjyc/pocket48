@@ -8,51 +8,6 @@
       "start_time": "2018-04-12 20:00:00",
       "end_time": "2018-04-14 21:59:59",
       "need_detail": 1
-    },
-    {
-      "jiebang_name": "满230棒追加108元",
-      "pro_id": "13566",
-      "target_stick_num": 230,
-      "min_stick_amount": 27.5,
-      "start_time": "2018-04-12 20:00:00",
-      "end_time": "2018-04-14 21:59:59",
-      "need_detail": 0
-    },
-    {
-      "jiebang_name": "满231棒追加108元",
-      "pro_id": "13566",
-      "target_stick_num": 231,
-      "min_stick_amount": 27.5,
-      "start_time": "2018-04-12 20:00:00",
-      "end_time": "2018-04-14 21:59:59",
-      "need_detail": 0
-    },
-    {
-      "jiebang_name": "满251棒追加108元",
-      "pro_id": "13566",
-      "target_stick_num": 251,
-      "min_stick_amount": 27.5,
-      "start_time": "2018-04-12 20:00:00",
-      "end_time": "2018-04-14 21:59:59",
-      "need_detail": 0
-    },
-    {
-      "jiebang_name": "丘比：满275棒，追加550元",
-      "pro_id": "13566",
-      "target_stick_num": 275,
-      "min_stick_amount": 27.5,
-      "start_time": "2018-04-12 20:00:00",
-      "end_time": "2018-04-14 21:59:59",
-      "need_detail": 0
-    },
-    {
-      "jiebang_name": "北婶：满275棒，追加550元",
-      "pro_id": "13566",
-      "target_stick_num": 275,
-      "min_stick_amount": 27.5,
-      "start_time": "2018-04-12 20:00:00",
-      "end_time": "2018-04-14 21:59:59",
-      "need_detail": 0
     }
   ]
 }
