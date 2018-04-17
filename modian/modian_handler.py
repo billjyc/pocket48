@@ -294,14 +294,15 @@ class ModianHandler:
             count_flag_test_msgs = ''
             for flag in count_flag_activities:
                 my_logger.debug('人头Flag活动详情: %s', flag.name)
-                my_logger.debug('人头Flag金额: %s, 开始时间: %s, 结束时间: %s', flag.target_flag_amount,
+                my_logger.debug('人头Flag目标: %s, 开始时间: %s, 结束时间: %s', flag.target_flag_amount,
                                 flag.start_time, flag.end_time)
                 target = flag.target_flag_amount
 
                 # 统计当前人数
                 rst = self.mysql_util.select("""
-                    select count(distinct(`supporter_id`)) from `order` where `pay_time` <= '%s' and `pay_time` >= '%s' 
-                """ % (flag.end_time, flag.start_time))
+                    select count(distinct(`supporter_id`)) from `order` 
+                    where `pro_id` = %s and `pay_time` <= '%s' and `pay_time` >= '%s' 
+                """ % (modian_entity.pro_id, flag.end_time, flag.start_time))
 
                 # 目标人数为0，代表特殊类flag，只报人数
                 if target == 0:
