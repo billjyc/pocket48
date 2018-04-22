@@ -149,7 +149,7 @@ class ModianHandler:
 
         # 查询集资情况
         target, current, pro_name = self.get_current_and_target(modian_entity)
-        project_info = '当前进度: %s元, 目标金额: %s元\n' % (current, target)
+        project_info = '当前进度: %s元, 目标金额: %s元' % (current, target)
 
         modian_entity.current = current
         modian_entity.title = pro_name
@@ -199,7 +199,7 @@ class ModianHandler:
                                 where `pro_id` = %s
                             """, (modian_entity.pro_id, ))
             if rst is not None:
-                msg += '当前集资人数: %s' % rst[0]
+                msg += '当前集资人数: %s\n' % rst[0]
             msg += '%s\n集资项目: %s\n链接: %s' % (project_info, pro_name, modian_entity.link)
 
             '''接棒相关'''
