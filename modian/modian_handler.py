@@ -193,6 +193,13 @@ class ModianHandler:
                     msg += '当前项目已集资%s元, 排名: %s' % (backer_money, jizi_rank)
             else:
                 pass
+            # 统计当前人数
+            rst = self.mysql_util.select_one("""
+                                select count(distinct(`supporter_id`)) from `order` 
+                                where `pro_id` = %s
+                            """, (modian_entity.pro_id, ))
+            if rst is not None:
+                msg += '当前集资人数: %s' % rst[0]
             msg += '%s\n集资项目: %s\n链接: %s' % (project_info, pro_name, modian_entity.link)
 
             '''接棒相关'''
@@ -246,14 +253,14 @@ class ModianHandler:
                 # 统计当前人数
                 rst = self.mysql_util.select_one("""
                     select count(distinct(`supporter_id`)) from `order` 
-                    where `pro_id` = %s and `pay_time` <= '%s' and `pay_time` >= '%s' 
+                    where `pro_id` = %s and `pay_time` <= %s and `pay_time` >= %s
                 """, (modian_entity.pro_id, flag.end_time, flag.start_time))
 
                 # 目标人数为0，代表特殊类flag，只报人数
                 if target == 0:
-                    count_flag_test_msgs += '【%s】, 当前人数: %s ' % (flag.name, rst[0][0])
+                    count_flag_test_msgs += '【%s】, 当前人数: %s ' % (flag.name, rst[0])
                 else:
-                    count_flag_test_msgs += '【%s】, 当前人数: %s, 目标人数: %s ' % (flag.name, rst[0][0], flag.target_flag_amount)
+                    count_flag_test_msgs += '【%s】, 当前人数: %s, 目标人数: %s ' % (flag.name, rst[0], flag.target_flag_amount)
 
             my_logger.debug(count_flag_test_msgs)
             if len(count_flag_test_msgs) > 0:
