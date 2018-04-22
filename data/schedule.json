@@ -1,6 +1,5 @@
 {
   "schedules": [
-    {"name": "命运的X号", "time": "2017-04-13 19:30:00", "team": "Team X", "comment": ""},
-    {"name": "X队三周年特别公演", "time": "2017-04-21 19:00:00", "team": "Team X", "comment": ""}
+    {"name": "Dream of Fate特别公演", "time": "2018-04-29 14:00:00", "team": "Team X & Team Ft", "comment": ""}
   ]
 }

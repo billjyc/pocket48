@@ -27,7 +27,7 @@ AUTO_REPLY = {}
 # SUPER_TAG = ''
 #
 # GONGYAN_KEYWORDS = []
-# LIVE_LINK = []
+LIVE_LINK = []
 # LIVE_SCHEDULE = []
 #
 # MEMBER_ATTR = ''

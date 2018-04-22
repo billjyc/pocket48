@@ -60,6 +60,8 @@ def update_conf():
 
     global_config.PERFORMANCE_NOTIFY = ConfigReader.get_property('profile', 'performance_notify')
 
+    global_config.LIVE_LINK = ConfigReader.get_property('auto_reply', '公演直播').split(';')
+
 
 @scheduler.scheduled_job('cron', minute='*', second=10)
 def get_room_msgs():

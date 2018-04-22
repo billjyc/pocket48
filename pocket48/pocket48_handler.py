@@ -553,7 +553,9 @@ class Pocket48Handler:
         return header
 
     def notify_performance(self):
-        f = open('data/schedule.json', encoding='utf8')
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        db_path = os.path.join(base_dir, 'data', 'schedule.json')
+        f = open(db_path, encoding='utf8')
 
         schedules = json.load(f)
         for s in schedules['schedules']:
@@ -569,20 +571,20 @@ class Pocket48Handler:
 
 
 if __name__ == '__main__':
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    db_path = os.path.join(base_dir, 'statistic', 'statistics.db')
-    print(db_path)
-    print(os.path.exists(db_path))
-
-    params = {
-        "questionId": 10513, "answerId": 7675, "questionFlipSource": 2
-    }
-    a = json.dumps(params)
+    # base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # db_path = os.path.join(base_dir, 'statistic', 'statistics.db')
+    # print(db_path)
+    # print(os.path.exists(db_path))
+    #
+    # params = {
+    #     "questionId": 10513, "answerId": 7675, "questionFlipSource": 2
+    # }
+    # a = json.dumps(params)
 
     # bot.send_group_msg(group_id=483548995, message='test')
     handler = Pocket48Handler([], [], [], [], [])
 
-    # handler.notify_performance()
+    handler.notify_performance()
 
     handler.login('*', '*')
 
