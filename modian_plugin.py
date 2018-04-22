@@ -212,18 +212,18 @@ def monitor_modian():
         my_logger.debug('查询摩点集资情况所消耗的时间为: %s秒', time.time() - time0)
 
 
-@scheduler.scheduled_job('cron', second='15,35,55')
-def update_ranking_list():
-    time0 = time.time()
-    global modian_handler
-    my_logger.debug('更新集资榜')
-    for modian in global_config.MODIAN_ARRAY:
-        modian_handler.jizi_rank_list = modian_handler.get_ranking_list(modian, type0=1)
-    time.sleep(5)
-    my_logger.debug('更新打卡榜')
-    for modian in global_config.MODIAN_ARRAY:
-        modian_handler.daka_rank_list = modian_handler.get_ranking_list(modian, type0=2)
-    my_logger.debug('更新排名榜单所用时间: %s', time.time() - time0)
+# @scheduler.scheduled_job('cron', second='15,35,55')
+# def update_ranking_list():
+#     time0 = time.time()
+#     global modian_handler
+#     my_logger.debug('更新集资榜')
+#     for modian in global_config.MODIAN_ARRAY:
+#         modian_handler.jizi_rank_list = modian_handler.get_ranking_list(modian, type0=1)
+#     time.sleep(5)
+#     my_logger.debug('更新打卡榜')
+#     for modian in global_config.MODIAN_ARRAY:
+#         modian_handler.daka_rank_list = modian_handler.get_ranking_list(modian, type0=2)
+#     my_logger.debug('更新排名榜单所用时间: %s', time.time() - time0)
 
 
 @scheduler.scheduled_job('cron', minute='17', hour='*')

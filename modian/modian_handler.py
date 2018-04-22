@@ -71,13 +71,13 @@ class ModianHandler:
         self.modian_notify_groups = modian_notify_groups
         self.modian_project_array = modian_project_array
 
-        self.jizi_rank_list = []
-        self.daka_rank_list = []
+        # self.jizi_rank_list = []
+        # self.daka_rank_list = []
 
         self.card_draw_handler = CardDrawHandler()
         self.order_queues = {}
 
-        self.mysql_util = MySQLUtil('localhost', 3306, 'root', 'Jyc@1993', 'card_draw')
+        self.mysql_util = MySQLUtil()
 
         # self.init_order_queues()
 
@@ -149,12 +149,12 @@ class ModianHandler:
 
         # 查询集资情况
         target, current, pro_name = self.get_current_and_target(modian_entity)
-        project_info = '当前进度: %s元, 目标金额: %s元\n当前集资人数: %s' % (current, target, len(self.jizi_rank_list))
+        project_info = '当前进度: %s元, 目标金额: %s元\n' % (current, target)
 
         modian_entity.current = current
         modian_entity.title = pro_name
         modian_entity.target = target
-        modian_entity.support_num = len(self.jizi_rank_list)
+        # modian_entity.support_num = len(self.jizi_rank_list)
         my_logger.debug('size of order %s queue: %s', modian_entity.pro_id,
                         len(self.order_queues[modian_entity.pro_id]))
 
@@ -171,84 +171,29 @@ class ModianHandler:
                 continue
             # 每次需要更新一下昵称
             self.mysql_util.query("""
-                    INSERT INTO `supporter` (`id`, `name`) VALUES (%s, '%s')  ON DUPLICATE KEY
-                        UPDATE `name`='%s'
-                    """ % (user_id, nickname, nickname))
+                    INSERT INTO `supporter` (`id`, `name`) VALUES (%s, %s)  ON DUPLICATE KEY
+                        UPDATE `name`=%s
+                    """, (user_id, nickname, nickname))
 
             self.mysql_util.query("""
                 INSERT INTO `order` (`id`,`supporter_id`,`backer_money`,`pay_time`, `pro_id`) 
-                VALUES ('%s', %s, %s, '%s', %s) ON DUPLICATE KEY
-                        UPDATE `id`='%s'
-            """ % (oid, user_id, backer_money, pay_time, modian_entity.pro_id, oid))
+                VALUES (%s, %s, %s, %s, %s) ON DUPLICATE KEY
+                        UPDATE `id`=%s
+            """, (oid, user_id, backer_money, pay_time, modian_entity.pro_id, oid))
 
             msg = '感谢 %s 支持了%s元, %s\n' % (nickname, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
-            daka_rank, support_days = self.find_user_daka_rank(self.daka_rank_list, nickname)
+            daka_rank, support_days = self.find_user_daka_rank(user_id, modian_entity.pro_id)
 
-            if support_days:
+            if daka_rank != -1 and support_days:
                 msg += '当前项目已打卡%s天\n' % support_days
 
             if modian_entity.need_display_rank is True:
-                jizi_rank, backer_money = self.find_user_jizi_rank(self.jizi_rank_list, nickname)
-                msg += '当前项目已集资%s元, 排名: %s' % (backer_money, jizi_rank)
+                jizi_rank, backer_money = self.find_user_jizi_rank(user_id, modian_entity.pro_id)
+                if jizi_rank != -1:
+                    msg += '当前项目已集资%s元, 排名: %s' % (backer_money, jizi_rank)
             else:
                 pass
             msg += '%s\n集资项目: %s\n链接: %s' % (project_info, pro_name, modian_entity.link)
-            
-            # 集福
-            # fu_switch = True #集福开关
-            # fu_rate = [22,22,22,22,11,1] #五福概率，可调，合计需为100
-            # fu_list = ['爱国福', '富强福', '和谐福', '友善福', '敬业福', '五福礼包']
-            # fu_num = [0,0,0,0,0,0]
-            # full_percentage = 0
-            # result_list = []
-            # drafts = 0
-            # fu_result_str = ''
-            #
-            # for item in fu_rate:
-            #     full_percentage += item
-            # if not (full_percentage == 100):
-            #     raise RuntimeError('概率设置错误')
-            # else:
-            #     if backer_money < 10.17:
-            #         result_list = None
-            #         pass
-            #     else:
-            #         drafts = int(backer_money // 10)
-            #
-            #         for i in range(0,drafts):
-            #             start = 0
-            #             rand = random.randint(1,sum(fu_rate))
-            #             for index, item in enumerate(fu_rate):
-            #                 start += item
-            #                 if rand <= start:
-            #                     break
-            #             result_list.append((fu_list[index]))
-            #
-            # if result_list == None:
-            #     pass
-            # else:
-            #     fu_result_str = '\n恭喜抽到 '
-            #     for item in result_list:
-            #         if item == '爱国福':
-            #             fu_num[0] += 1
-            #         if item == '富强福':
-            #             fu_num[1] += 1
-            #         if item == '和谐福':
-            #             fu_num[2] += 1
-            #         if item == '友善福':
-            #             fu_num[3] += 1
-            #         if item == '敬业福':
-            #             fu_num[4] += 1
-            #         if item == '五福礼包':
-            #             fu_num[5] += 1
-            #
-            #     for index in range(0,6):
-            #         if fu_num[index] == 0:
-            #             pass
-            #         else:
-            #             fu_result_str += '%s*%s ' % (fu_list[index], str(fu_num[index]))
-            #     fu_result_str += '~'
-            # 集福结束
 
             '''接棒相关'''
             my_logger.debug('接棒情况更新')
@@ -299,10 +244,10 @@ class ModianHandler:
                 target = flag.target_flag_amount
 
                 # 统计当前人数
-                rst = self.mysql_util.select("""
+                rst = self.mysql_util.select_one("""
                     select count(distinct(`supporter_id`)) from `order` 
                     where `pro_id` = %s and `pay_time` <= '%s' and `pay_time` >= '%s' 
-                """ % (modian_entity.pro_id, flag.end_time, flag.start_time))
+                """, (modian_entity.pro_id, flag.end_time, flag.start_time))
 
                 # 目标人数为0，代表特殊类flag，只报人数
                 if target == 0:
@@ -314,13 +259,6 @@ class ModianHandler:
             if len(count_flag_test_msgs) > 0:
                 QQHandler.send_to_groups(['483548995'], count_flag_test_msgs)
                 # msg += flag_test_msgs
-
-            
-            # 集福播报
-            # if fu_switch:
-            #     msg += fu_result_str
-            # else:
-            #     pass
 
             # 抽卡播报
             cards_msg = ''
@@ -366,22 +304,33 @@ class ModianHandler:
             cursor.close()
             conn.close()
 
-    def get_ranking_list(self, modian_entity, type0=1):
+    def get_jizi_ranking_list(self, pro_id):
         """
-        获取排名所有的列表
-        :param modian_entity:
-        :param type0: 1为集资，2为打卡
+        获取集资排名列表，从本地获取
+        :param pro_id: 项目id
         :return:
         """
-        ranking_list = []
-        page = 1
-        while True:
-            rank_page = self.get_modian_rankings(modian_entity, type0, page)
-            if len(rank_page) > 0:
-                ranking_list.extend(rank_page)
-                page += 1
-            else:
-                return ranking_list
+        rst = self.mysql_util.select_all("""
+            select supporter_id, sum(backer_money) as total from `order` where pro_id=%s group by supporter_id order by total desc;
+        """, (pro_id, ))
+        return rst
+
+    # def get_ranking_list(self, modian_entity, type0=1):
+    #     """
+    #     获取排名所有的列表
+    #     :param modian_entity:
+    #     :param type0: 1为集资，2为打卡
+    #     :return:
+    #     """
+    #     ranking_list = []
+    #     page = 1
+    #     while True:
+    #         rank_page = self.get_modian_rankings(modian_entity, type0, page)
+    #         if len(rank_page) > 0:
+    #             ranking_list.extend(rank_page)
+    #             page += 1
+    #         else:
+    #             return ranking_list
 
     def get_modian_rankings(self, modian_entity, type0=1, page=1):
         """
@@ -415,31 +364,43 @@ class ModianHandler:
         else:
             raise RuntimeError('获取项目排名失败, type=%d', type0)
 
-    def find_user_jizi_rank(self, ranking_list, user_name):
+    def find_user_jizi_rank(self, user_id, pro_id):
         """
         在集资榜中找到用户的排名
-        :param ranking_list:
-        :param user_name:
+        :param user_id:
+        :param pro_id:
         :return:
         """
-        my_logger.info('找到用户名为%s的集资排名', user_name)
-        for rank in ranking_list:
-            if 'backer_money' in rank.keys() and rank['nickname'] == user_name:
-                return rank['rank'], rank['backer_money']
-        return None, None
+        my_logger.info('找到id为%s的集资排名', user_id)
+        ranking_list = self.mysql_util.select_all("""
+                select supporter_id, sum(backer_money) as c 
+                    from `order` where pro_id=13566 group by supporter_id order by c desc;
+                """, (pro_id,))
+        cur_rank = 0
+        for temp_id, total in ranking_list:
+            cur_rank += 1
+            if temp_id == user_id:
+                return cur_rank, total
+        return -1, -1
 
-    def find_user_daka_rank(self, ranking_list, user_name):
+    def find_user_daka_rank(self, user_id, pro_id):
         """
         在打卡榜中找到用户的排名
-        :param ranking_list:
-        :param user_name:
+        :param user_id:
+        :param pro_id:
         :return:
         """
-        my_logger.info('找到用户名为%s的打卡排名', user_name)
-        for rank in ranking_list:
-            if 'support_days' in rank.keys() and rank['nickname'] == user_name:
-                return rank['rank'], rank['support_days']
-        return None, None
+        my_logger.info('找到用户id为%s的打卡排名', user_id)
+        ranking_list = self.mysql_util.select_all("""
+            select supporter_id, count(distinct(date(pay_time))) as c 
+            from `order` where pro_id=%s group by supporter_id order by c desc; 
+        """, (pro_id, ))
+        cur_rank = 0
+        for temp_id, days in ranking_list:
+            cur_rank += 1
+            if temp_id == user_id:
+                return cur_rank, days
+        return -1, -1
 
     def get_current_and_target(self, modian_entity):
         """
@@ -508,16 +469,3 @@ if __name__ == '__main__':
                            10506)
     arrays = [modian1, modian2]
     modian_handler = ModianHandler(['483548995'], arrays)
-    modian_handler.jizi_rank_list = modian_handler.get_ranking_list(modian1, 1)
-    time.sleep(5)
-    modian_handler.daka_rank_list = modian_handler.get_ranking_list(modian1, 2)
-    orders = modian_handler.query_project_orders(modian1)
-    modian_handler.parse_order_details(orders, modian1)
-    #
-    # orders2 = modian_handler.query_project_orders(modian2)
-    # modian_handler.parse_order_details(orders2, modian2)
-    #
-    # sorted(arrays, key=lambda x: x.current, reverse=True)
-    # pass
-    # modian_handler.get_current_and_target(modian1)
-    modian_handler.get_modian_rankings(modian1, 2, page=1)

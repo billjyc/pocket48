@@ -34,6 +34,7 @@ class MySQLUtil:
 
     def execute_and_get_id(self, sql, param=None):
         """ 执行插入语句并获取自增id """
+        logger.debug('sql: %s, param: %s', sql, param)
         conn = self.get_conn()
         cursor = conn.cursor()
         if param is None:
@@ -47,6 +48,7 @@ class MySQLUtil:
 
     def query(self, sql, param=None):
         """ 删除，更新，插入， 执行sql语句 """
+        logger.debug('sql: %s, param: %s', sql, param)
         conn = self.get_conn()
         cursor = conn.cursor()
         if param is None:
@@ -61,6 +63,7 @@ class MySQLUtil:
 
     def select_one(self, sql, param=None):
         """ 获取一条信息 """
+        logger.debug('sql: %s, param: %s', sql, param)
         conn = self.get_conn()
         cursor = conn.cursor()
         rowcount = cursor.execute(sql, param)
@@ -75,6 +78,7 @@ class MySQLUtil:
 
     def select_all(self, sql, param=None):
         """ 获取所有信息 """
+        logger.debug('sql: %s, param: %s', sql, param)
         conn = self.get_conn()
         cursor = conn.cursor()
         rowcount = cursor.execute(sql, param)
