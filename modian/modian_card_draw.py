@@ -27,7 +27,7 @@ class Card:
 
 class CardDrawHandler:
     def __init__(self):
-        self.mysql_util = MySQLUtil('localhost', 3306, 'root', 'Jyc@1993', 'card_draw')
+        self.mysql_util = MySQLUtil()
         # self.read_config()
 
     def read_config(self):
