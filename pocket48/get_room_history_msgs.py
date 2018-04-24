@@ -3,6 +3,7 @@ import requests
 import json
 import sqlite3
 import os
+import time
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 db_path = os.path.join(base_dir, 'statistic', 'statistics.db')
@@ -31,6 +32,7 @@ def get_room_history_msg(room_id, start_time):
 
 
 def _get_room_msg(room_id, last_time, limit):
+    time.sleep(30)
     url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/mainpage'
     header = {
         'os': 'android',
