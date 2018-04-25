@@ -2,8 +2,8 @@
 from cqhttp import CQHttp, Error
 from log.my_logger import logger
 from utils.config_reader import ConfigReader
-from utils import global_config
-from modian_plugin import modian_handler
+# from utils import global_config
+# from modian_plugin import modian_handler
 
 bot = CQHttp(api_root='http://127.0.0.1:5700', access_token='aslkfdjie32df', secret='abc')
 AUTO_REPLY = {}
@@ -37,19 +37,19 @@ def handle_msg(context):
                 break
         # bot.send(context, '你好呀，下面一条是你刚刚发的：')
 
-        if message == '-今日榜单':
-            if int(group_id) in global_config.JIZI_NOTIFY_GROUPS:
-                if len(global_config.MODIAN_ARRAY) > 0:
-                    for modian in global_config.MODIAN_ARRAY:
-                        rankings, total = modian_handler.get_today_jizi_ranking_list(modian.pro_id)
-                        reply = '今日榜单: %s\n' % modian.title
-                        for rank in rankings:
-                            sub_message = '%s.%s: %s元\n' % (rank[3], rank[1], rank[2])
-                            reply += sub_message
-                        reply += '总金额: %s\n'
-                        bot.send(context, reply)
-                else:
-                    bot.send(context, '目前并没有正在进行的集资项目T_T')
+        # if message == '-今日榜单':
+        #     if int(group_id) in global_config.JIZI_NOTIFY_GROUPS:
+        #         if len(global_config.MODIAN_ARRAY) > 0:
+        #             for modian in global_config.MODIAN_ARRAY:
+        #                 rankings, total = modian_handler.get_today_jizi_ranking_list(modian.pro_id)
+        #                 reply = '今日榜单: %s\n' % modian.title
+        #                 for rank in rankings:
+        #                     sub_message = '%s.%s: %s元\n' % (rank[3], rank[1], rank[2])
+        #                     reply += sub_message
+        #                 reply += '总金额: %s\n'
+        #                 bot.send(context, reply)
+        #         else:
+        #             bot.send(context, '目前并没有正在进行的集资项目T_T')
     except Error:
         pass
     # return {'reply': context['message'],
