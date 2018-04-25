@@ -66,6 +66,11 @@ class ModianCountFlagEntity:
 
 
 class ModianHandler:
+    def __new__(cls, *args, **kwargs):
+        if not hasattr(cls, 'instance'):
+            cls._instance = super().__new__(cls)
+        return cls._instance
+    
     def __init__(self, modian_notify_groups, modian_project_array):
         self.session = requests.session()
         self.modian_notify_groups = modian_notify_groups
