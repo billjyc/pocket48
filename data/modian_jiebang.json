@@ -1,9 +1,9 @@
 {
   "activities": [
     {
-      "jiebang_name": "接棒冲刺",
+      "jiebang_name": "接棒冲刺，每满20棒追加101.7元（上限3次）",
       "pro_id": "13566",
-      "target_stick_num": 275,
+      "target_stick_num": 1500,
       "min_stick_amount": 35,
       "start_time": "2018-04-25 10:00:00",
       "end_time": "2018-04-30 23:59:59",
