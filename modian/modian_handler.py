@@ -200,7 +200,6 @@ class ModianHandler:
                             """, (modian_entity.pro_id, ))
             if rst is not None:
                 msg += '当前集资人数: %s\n' % rst[0]
-            msg += '%s\n集资项目: %s\n链接: %s' % (project_info, pro_name, modian_entity.link)
 
             '''接棒相关'''
             my_logger.debug('接棒情况更新')
@@ -287,7 +286,7 @@ class ModianHandler:
                     msg += '\n%s' % cards_msg
                 # if cards_msg:
                 #     QQHandler.send_to_groups(['483548995'], cards_msg)
-
+            msg += '%s\n集资项目: %s\n链接: %s' % (project_info, pro_name, modian_entity.link)
             my_logger.info(msg)
             if global_config.USING_COOLQ_PRO is True:
                 my_logger.debug('使用酷Q PRO发送图片')
