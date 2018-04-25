@@ -218,6 +218,9 @@ class ModianHandler:
                                    % (jiebang.name, jiebang.current_stick_num, jiebang.target_stick_num)
                     elif jiebang.need_detail == 0:
                         test_msg = '【%s】\n' % jiebang.name
+                    elif jiebang.need_detail == 2:
+                        test_msg = '【%s】, 当前第%s棒\n' \
+                                   % (jiebang.name, jiebang.current_stick_num)
                     my_logger.debug(test_msg)
                     if len(test_msg) > 0:
                         msg += test_msg
