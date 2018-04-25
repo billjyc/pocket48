@@ -313,6 +313,45 @@ class ModianHandler:
             cursor.close()
             conn.close()
 
+    def get_today_jizi_ranking_list(self, pro_id):
+        """
+        获取当日集资排名
+        :param pro_id:
+        :return: 排名tuple 格式（supporter_id, supporter_name, total_amount, rank)
+        """
+        # 总额
+        rst2 = self.mysql_util.select_one("""
+                    select SUM(`order`.backer_money) as total 
+                    from `order`
+                    where `order`.pro_id = %s
+                        and CURDATE()=DATE(`order`.pay_time);
+                """, (pro_id,))
+        total = rst2[0]
+
+        # 集资排名
+        rst = self.mysql_util.select_all("""
+            select `supporter`.id, `supporter`.name, SUM(`order`.backer_money) as total 
+            from `order`, `supporter` 
+            where `supporter`.id=`order`.supporter_id 
+                and `order`.pro_id = %s
+                and CURDATE()=DATE(`order`.pay_time) 
+            group by `order`.supporter_id 
+            order by total desc;
+        """, (pro_id, ))
+        cur_rank = 0
+        row_tmp = 0
+        last_val = -1
+        new_rst = []
+        for rank in rst:
+            row_tmp += 1
+            if rank[2] != last_val:
+                cur_rank = row_tmp
+            last_val = rank[2]
+            rank_tmp = rank + (cur_rank, )
+            new_rst.append(rank_tmp)
+        my_logger.debug(new_rst)
+        return new_rst, total
+
     def get_jizi_ranking_list(self, pro_id):
         """
         获取集资排名列表，从本地获取
