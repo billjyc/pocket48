@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from log.my_logger import logger as my_logger
+from log.my_logger import modian_logger as my_logger
 
 from utils.config_reader import ConfigReader
 from modian.modian_handler import ModianHandler, ModianEntity, ModianJiebangEntity, ModianFlagEntity, ModianCountFlagEntity
