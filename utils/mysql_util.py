@@ -92,8 +92,11 @@ class MySQLUtil:
         return res
 
 
+mysql_util = MySQLUtil()
+
+
 if __name__ == '__main__':
-    mysql_util = MySQLUtil()
+    # mysql_util = MySQLUtil()
     sql = """
     select supporter_id, sum(backer_money) as total 
     from `order` where pro_id=%s group by supporter_id order by total desc;

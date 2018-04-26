@@ -3,7 +3,7 @@ import os
 import json
 from log.my_logger import modian_logger as logger
 from utils import util
-from utils.mysql_util import MySQLUtil
+from utils.mysql_util import mysql_util
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -27,7 +27,8 @@ class Card:
 
 class CardDrawHandler:
     def __init__(self):
-        self.mysql_util = MySQLUtil()
+        pass
+        # self.mysql_util = MySQLUtil()
         # self.read_config()
 
     def read_config(self):
@@ -40,10 +41,10 @@ class CardDrawHandler:
         for card_j in card_draw_json['cards']:
             card = Card(card_j['id'], card_j['name'], card_j['url'], card_j['level'])
             # 更新数据库中的卡牌信息
-            self.mysql_util.query("""
-                        INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (%s,'%s','%s',%s)  ON DUPLICATE KEY
-                                                UPDATE `name`='%s', `url`='%s', `level`=%s
-                        """ % (card.id, card.name, card.url, card.level, card.name, card.url, card.level))
+            mysql_util.query("""
+                        INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (%s, %s, %s, %s)  ON DUPLICATE KEY
+                                                UPDATE `name`=%s, `url`=%s, `level`=%s
+                        """, (card.id, card.name, card.url, card.level, card.name, card.url, card.level))
             self.cards.append(card)
             if card_j['level'] == 1:
                 self.weight.append(card_j['weight'])
@@ -62,10 +63,10 @@ class CardDrawHandler:
         logger.info('共抽卡%d张', card_num)
         rst = {}
         # 每次需要更新一下昵称
-        self.mysql_util.query("""
-                        INSERT INTO `supporter` (`id`, `name`) VALUES (%s, '%s')  ON DUPLICATE KEY
-                            UPDATE `name`='%s'
-                    """ % (user_id, nickname, nickname))
+        mysql_util.query("""
+                        INSERT INTO `supporter` (`id`, `name`) VALUES (%s, %s)  ON DUPLICATE KEY
+                            UPDATE `name`= %s
+                    """, (user_id, nickname, nickname))
 
         insert_sql = 'INSERT INTO `draw_record` (`supporter_id`, `card_id`, `draw_time`) VALUES '
         for no in range(card_num):
@@ -77,7 +78,7 @@ class CardDrawHandler:
                 rst[card] += 1
             else:
                 rst[card] = 1
-        self.mysql_util.query(insert_sql[:-1])
+        mysql_util.query(insert_sql[:-1])
         return rst
 
 

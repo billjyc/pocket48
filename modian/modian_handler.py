@@ -15,7 +15,7 @@ import random
 import sqlite3
 import uuid
 from modian.modian_card_draw import CardDrawHandler, Card
-from utils.mysql_util import MySQLUtil
+from utils.mysql_util import mysql_util
 
 
 from qq.qqhandler import QQHandler
@@ -82,7 +82,7 @@ class ModianHandler:
         self.card_draw_handler = CardDrawHandler()
         self.order_queues = {}
 
-        self.mysql_util = MySQLUtil()
+        # self.mysql_util = MySQLUtil()
 
         # self.init_order_queues()
 
@@ -175,12 +175,12 @@ class ModianHandler:
             if oid in self.order_queues[modian_entity.pro_id]:
                 continue
             # 每次需要更新一下昵称
-            self.mysql_util.query("""
+            mysql_util.query("""
                     INSERT INTO `supporter` (`id`, `name`) VALUES (%s, %s)  ON DUPLICATE KEY
                         UPDATE `name`=%s
                     """, (user_id, nickname, nickname))
 
-            self.mysql_util.query("""
+            mysql_util.query("""
                 INSERT INTO `order` (`id`,`supporter_id`,`backer_money`,`pay_time`, `pro_id`) 
                 VALUES (%s, %s, %s, %s, %s) ON DUPLICATE KEY
                         UPDATE `id`=%s
@@ -199,7 +199,7 @@ class ModianHandler:
             else:
                 pass
             # 统计当前人数
-            rst = self.mysql_util.select_one("""
+            rst = mysql_util.select_one("""
                                 select count(distinct(`supporter_id`)) from `order` 
                                 where `pro_id` = %s
                             """, (modian_entity.pro_id, ))
@@ -258,7 +258,7 @@ class ModianHandler:
                 target = flag.target_flag_amount
 
                 # 统计当前人数
-                rst = self.mysql_util.select_one("""
+                rst = mysql_util.select_one("""
                     select count(distinct(`supporter_id`)) from `order` 
                     where `pro_id` = %s and `pay_time` <= %s and `pay_time` >= %s
                 """, (modian_entity.pro_id, flag.end_time, flag.start_time))
@@ -325,7 +325,7 @@ class ModianHandler:
         :return: 排名tuple 格式（supporter_id, supporter_name, total_amount, rank)
         """
         # 总额
-        rst2 = self.mysql_util.select_one("""
+        rst2 = mysql_util.select_one("""
                     select SUM(`order`.backer_money) as total 
                     from `order`
                     where `order`.pro_id = %s
@@ -334,7 +334,7 @@ class ModianHandler:
         total = rst2[0]
 
         # 集资排名
-        rst = self.mysql_util.select_all("""
+        rst = mysql_util.select_all("""
             select `supporter`.id, `supporter`.name, SUM(`order`.backer_money) as total 
             from `order`, `supporter` 
             where `supporter`.id=`order`.supporter_id 
@@ -363,7 +363,7 @@ class ModianHandler:
         :param pro_id: 项目id
         :return:
         """
-        rst = self.mysql_util.select_all("""
+        rst = mysql_util.select_all("""
             select supporter_id, sum(backer_money) as total from `order` where pro_id=%s group by supporter_id order by total desc;
         """, (pro_id, ))
         return rst
@@ -425,7 +425,7 @@ class ModianHandler:
         :return:
         """
         my_logger.info('找到id为%s的集资排名', user_id)
-        ranking_list = self.mysql_util.select_all("""
+        ranking_list = mysql_util.select_all("""
                 select supporter_id, sum(backer_money) as c 
                     from `order` where pro_id=13566 group by supporter_id order by c desc;
                 """, (pro_id,))
@@ -444,7 +444,7 @@ class ModianHandler:
         :return:
         """
         my_logger.info('找到用户id为%s的打卡排名', user_id)
-        ranking_list = self.mysql_util.select_all("""
+        ranking_list = mysql_util.select_all("""
             select supporter_id, count(distinct(date(pay_time))) as c 
             from `order` where pro_id=%s group by supporter_id order by c desc; 
         """, (pro_id, ))
