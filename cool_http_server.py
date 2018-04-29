@@ -51,23 +51,9 @@ def handle_msg(context):
         if str(group_id) in groups:
             if len(modian_array) > 0:
                 if message == '-today':
-                    for modian in modian_array:
-                        rankings, total = get_jizi_ranking_list_by_date_diff(modian['modian_pro_id'], 0)
-                        reply = '今日榜单: %s\n' % modian['modian_title']
-                        for rank in rankings:
-                            sub_message = '%s.%s: %s元\n' % (rank[3], str(rank[1], encoding='utf8'), rank[2])
-                            reply += sub_message
-                        reply += '总金额: %s元\n' % total
-                        bot.send(context, reply)
+                    get_jizi_ranking_list_by_date(context, 0)
                 elif message == '-yesterday':
-                    for modian in modian_array:
-                        rankings, total = get_jizi_ranking_list_by_date_diff(modian['modian_pro_id'], 1)
-                        reply = '昨日榜单: %s\n' % modian['modian_title']
-                        for rank in rankings:
-                            sub_message = '%s.%s: %s元\n' % (rank[3], str(rank[1], encoding='utf8'), rank[2])
-                            reply += sub_message
-                        reply += '总金额: %s元\n' % total
-                        bot.send(context, reply)
+                    get_jizi_ranking_list_by_date(context, 1)
             else:
                 bot.send(context, '目前并没有正在进行的集资项目T_T')
     except Error:
@@ -76,11 +62,28 @@ def handle_msg(context):
     #         'at_sender': False}  # 返回给 HTTP API 插件，走快速回复途径
 
 
-def get_jizi_ranking_list_by_date_diff(pro_id, day_diff=0):
+def get_jizi_ranking_list_by_date(context, day_diff):
+    """
+    根据日期获取集资榜单
+    :param context:
+    :param day_diff: 与今天相差的天数
+    :return:
+    """
+    for modian in modian_array:
+        rankings, total = __get_jizi_ranking_list_by_date_diff(modian['modian_pro_id'], day_diff)
+        reply = '昨日榜单: %s\n' % modian['modian_title']
+        for rank in rankings:
+            sub_message = '%s.%s: %s元\n' % (rank[3], str(rank[1], encoding='utf8'), rank[2])
+            reply += sub_message
+        reply += '总金额: %s元\n' % total
+        bot.send(context, reply)
+
+
+def __get_jizi_ranking_list_by_date_diff(pro_id, day_diff=0):
     """
     获取当日集资排名
     :param pro_id:
-    :param day_diff:
+    :param day_diff:与今天相差的天数
     :return: 排名tuple 格式（supporter_id, supporter_name, total_amount, rank)
     """
     # 总额
