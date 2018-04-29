@@ -4,6 +4,8 @@ from log.my_logger import logger
 from utils.config_reader import ConfigReader
 # from utils import global_config
 # from modian_plugin import modian_handler
+from utils.mysql_util import mysql_util
+import json
 
 bot = CQHttp(api_root='http://127.0.0.1:5700', access_token='aslkfdjie32df', secret='abc')
 AUTO_REPLY = {}
@@ -14,6 +16,15 @@ for k, v in items:
     AUTO_REPLY[k] = v
     logger.debug('k in global_config.AUTO_REPLY: %s', k in AUTO_REPLY)
     logger.debug(AUTO_REPLY)
+
+# groups = [483548995]
+groups = ConfigReader.get_property('qq_conf', 'jizi_notify_groups').split(';')
+print(groups)
+modian_json = json.load(open("data/modian.json", encoding='utf8'))
+
+modian_array = []
+for modian_j in modian_json['monitor_activities']:
+    modian_array.append(modian_j)
 
 
 @bot.on_message()
@@ -37,23 +48,63 @@ def handle_msg(context):
                 break
         # bot.send(context, '你好呀，下面一条是你刚刚发的：')
 
-        # if message == '-今日榜单':
-        #     if int(group_id) in global_config.JIZI_NOTIFY_GROUPS:
-        #         if len(global_config.MODIAN_ARRAY) > 0:
-        #             for modian in global_config.MODIAN_ARRAY:
-        #                 rankings, total = modian_handler.get_today_jizi_ranking_list(modian.pro_id)
-        #                 reply = '今日榜单: %s\n' % modian.title
-        #                 for rank in rankings:
-        #                     sub_message = '%s.%s: %s元\n' % (rank[3], rank[1], rank[2])
-        #                     reply += sub_message
-        #                 reply += '总金额: %s\n'
-        #                 bot.send(context, reply)
-        #         else:
-        #             bot.send(context, '目前并没有正在进行的集资项目T_T')
+        if message == '-today':
+            if str(group_id) in groups:
+                if len(modian_array) > 0:
+                    for modian in modian_array:
+                        rankings, total = get_today_jizi_ranking_list(modian['modian_pro_id'])
+                        reply = '今日榜单: %s\n' % modian['modian_title']
+                        for rank in rankings:
+                            sub_message = '%s.%s: %s元\n' % (rank[3], str(rank[1], encoding='utf8'), rank[2])
+                            reply += sub_message
+                        reply += '总金额: %s元\n' % total
+                        bot.send(context, reply)
+                else:
+                    bot.send(context, '目前并没有正在进行的集资项目T_T')
     except Error:
         pass
     # return {'reply': context['message'],
     #         'at_sender': False}  # 返回给 HTTP API 插件，走快速回复途径
+
+
+def get_today_jizi_ranking_list(pro_id):
+    """
+    获取当日集资排名
+    :param pro_id:
+    :return: 排名tuple 格式（supporter_id, supporter_name, total_amount, rank)
+    """
+    # 总额
+    rst2 = mysql_util.select_one("""
+                    select SUM(`order`.backer_money) as total 
+                    from `order`
+                    where `order`.pro_id = %s
+                        and CURDATE()=DATE(`order`.pay_time);
+                """, (pro_id,))
+    total = rst2[0]
+
+    # 集资排名
+    rst = mysql_util.select_all("""
+            select `supporter`.id, `supporter`.name, SUM(`order`.backer_money) as total 
+            from `order`, `supporter` 
+            where `supporter`.id=`order`.supporter_id 
+                and `order`.pro_id = %s
+                and CURDATE()=DATE(`order`.pay_time) 
+            group by `order`.supporter_id 
+            order by total desc;
+        """, (pro_id, ))
+    cur_rank = 0
+    row_tmp = 0
+    last_val = -1
+    new_rst = []
+    for rank in rst:
+        row_tmp += 1
+        if rank[2] != last_val:
+            cur_rank = row_tmp
+        last_val = rank[2]
+        rank_tmp = rank + (cur_rank, )
+        new_rst.append(rank_tmp)
+    logger.debug(new_rst)
+    return new_rst, total
 
 
 @bot.on_event('group_increase')
