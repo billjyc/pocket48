@@ -48,29 +48,39 @@ def handle_msg(context):
                 break
         # bot.send(context, '你好呀，下面一条是你刚刚发的：')
 
-        if message == '-today':
-            if str(group_id) in groups:
-                if len(modian_array) > 0:
+        if str(group_id) in groups:
+            if len(modian_array) > 0:
+                if message == '-today':
                     for modian in modian_array:
-                        rankings, total = get_today_jizi_ranking_list(modian['modian_pro_id'])
+                        rankings, total = get_jizi_ranking_list_by_date_diff(modian['modian_pro_id'], 0)
                         reply = '今日榜单: %s\n' % modian['modian_title']
                         for rank in rankings:
                             sub_message = '%s.%s: %s元\n' % (rank[3], str(rank[1], encoding='utf8'), rank[2])
                             reply += sub_message
                         reply += '总金额: %s元\n' % total
                         bot.send(context, reply)
-                else:
-                    bot.send(context, '目前并没有正在进行的集资项目T_T')
+                elif message == '-yesterday':
+                    for modian in modian_array:
+                        rankings, total = get_jizi_ranking_list_by_date_diff(modian['modian_pro_id'], 1)
+                        reply = '昨日榜单: %s\n' % modian['modian_title']
+                        for rank in rankings:
+                            sub_message = '%s.%s: %s元\n' % (rank[3], str(rank[1], encoding='utf8'), rank[2])
+                            reply += sub_message
+                        reply += '总金额: %s元\n' % total
+                        bot.send(context, reply)
+            else:
+                bot.send(context, '目前并没有正在进行的集资项目T_T')
     except Error:
         pass
     # return {'reply': context['message'],
     #         'at_sender': False}  # 返回给 HTTP API 插件，走快速回复途径
 
 
-def get_today_jizi_ranking_list(pro_id):
+def get_jizi_ranking_list_by_date_diff(pro_id, day_diff=0):
     """
     获取当日集资排名
     :param pro_id:
+    :param day_diff:
     :return: 排名tuple 格式（supporter_id, supporter_name, total_amount, rank)
     """
     # 总额
@@ -78,8 +88,8 @@ def get_today_jizi_ranking_list(pro_id):
                     select SUM(`order`.backer_money) as total 
                     from `order`
                     where `order`.pro_id = %s
-                        and CURDATE()=DATE(`order`.pay_time);
-                """, (pro_id,))
+                        and CURDATE()-%s=DATE(`order`.pay_time);
+                """, (pro_id, day_diff))
     total = rst2[0]
 
     # 集资排名
@@ -88,10 +98,10 @@ def get_today_jizi_ranking_list(pro_id):
             from `order`, `supporter` 
             where `supporter`.id=`order`.supporter_id 
                 and `order`.pro_id = %s
-                and CURDATE()=DATE(`order`.pay_time) 
+                and CURDATE()-%s=DATE(`order`.pay_time) 
             group by `order`.supporter_id 
             order by total desc;
-        """, (pro_id, ))
+        """, (pro_id, day_diff))
     cur_rank = 0
     row_tmp = 0
     last_val = -1
