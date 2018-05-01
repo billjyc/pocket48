@@ -71,7 +71,7 @@ def get_jizi_ranking_list_by_date(context, day_diff):
     """
     for modian in modian_array:
         rankings, total = __get_jizi_ranking_list_by_date_diff(modian['modian_pro_id'], day_diff)
-        reply = '昨日榜单: %s\n' % modian['modian_title']
+        reply = '榜单: %s\n' % modian['modian_title']
         for rank in rankings:
             sub_message = '%s.%s: %s元\n' % (rank[3], str(rank[1], encoding='utf8'), rank[2])
             reply += sub_message
