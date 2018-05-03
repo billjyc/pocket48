@@ -23,10 +23,10 @@
 * 可以给不同的群开放不同的功能(目前有房间消息，房间评论，直播提醒，微博提醒），详情请见conf.ini
 * 暂不支持语音和图片消息
 * 在conf.ini中修改内容，注意一定要按照格式来写，否则无法解析
-* 彩蛋：目前已经可以在数据库中记录成员房间中的消息，数据存储在statistic/statistics.db的'room_message'表中
 
 
 ### 摩点插件使用
+* 需要安装mysql
 * 摩点监控数据在data/wds.json中，monitor_activities为监控项目，modian_pk_activities为PK活动的项目
 * 接棒活动播报（测试中）：在data/modian_jiebang.json中增加对应的接棒活动，相关数据记录在data/modian.db中
 * 金额flag类活动播报（测试中）：在data/modian_flag.json中增加对应的flag活动
