@@ -91,7 +91,7 @@ class ModianHandler:
             try:
                 my_logger.info('初始化%s的订单队列', modian_entity.pro_id)
                 my_logger.debug(self.order_queues)
-                if self.order_queues[modian_entity.pro_id] is None:
+                if modian_entity.pro_id not in self.order_queues:
                     self.order_queues[modian_entity.pro_id] = set()
                     my_logger.debug('队列为空，重新初始化队列')
                 else:
