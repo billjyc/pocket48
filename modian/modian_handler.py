@@ -84,16 +84,18 @@ class ModianHandler:
 
         # self.mysql_util = MySQLUtil()
 
-        self.init_order_queues()
+        # self.init_order_queues()
 
     def init_order_queues(self):
         for modian_entity in self.modian_project_array:
             try:
-                # my_logger.info('初始化%s的订单队列', modian_entity.pro_id)
-                # if self.order_queues[modian_entity.pro_id] is not None:
-                #     my_logger.debug('队列不为空，不用重新初始化队列')
-                #     continue
-                self.order_queues[modian_entity.pro_id] = set()
+                my_logger.info('初始化%s的订单队列', modian_entity.pro_id)
+                if not self.order_queues[modian_entity.pro_id]:
+                    self.order_queues[modian_entity.pro_id] = set()
+                    my_logger.debug('队列为空，重新初始化队列')
+                else:
+                    my_logger.debug('队列不为空，不重新初始化队列')
+                # self.order_queues[modian_entity.pro_id] = set()
                 orders = self.query_project_orders(modian_entity)
                 retry_time = 0
                 while retry_time < 5:
