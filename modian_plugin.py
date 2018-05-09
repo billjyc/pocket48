@@ -14,7 +14,7 @@ from utils import util
 from utils.scheduler import scheduler
 
 
-@scheduler.scheduled_job('cron', minute='*/5')
+@scheduler.scheduled_job('cron', minute='*/15')
 def update_modian_conf():
     global modian_handler
     time0 = time.time()
@@ -45,7 +45,7 @@ def update_modian_conf():
 
     modian_handler.modian_project_array = global_config.MODIAN_ARRAY
 
-    modian_handler.init_order_queues()
+    # modian_handler.init_order_queues()
     modian_handler.card_draw_handler.read_config()
 
     global_config.JIZI_NOTIFY_GROUPS = ConfigReader.get_property('qq_conf', 'jizi_notify_groups').split(';')

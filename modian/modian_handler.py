@@ -84,7 +84,7 @@ class ModianHandler:
 
         # self.mysql_util = MySQLUtil()
 
-        # self.init_order_queues()
+        self.init_order_queues()
 
     def init_order_queues(self):
         for modian_entity in self.modian_project_array:
