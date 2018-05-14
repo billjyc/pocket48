@@ -12,6 +12,11 @@
 
 口袋48插件1分钟监听一次，微博插件1分钟监听一次，摩点插件20秒监听一次（可以自行调整）
 
+### 前置条件
+* 在项目目录的上一级目录新建`logs`文件夹，日志文件会存放在该目录中
+* 摩点插件所需的数据库建表语句存放在`data/db.sql`中
+
+
 ### coolq配置
 * 具体使用请参照(https://richardchien.github.io/coolq-http-api)
 * 先启动coolq_http_server.py, 再启动main.py
