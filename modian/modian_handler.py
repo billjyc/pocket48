@@ -97,6 +97,7 @@ class ModianHandler:
                 else:
                     my_logger.debug('队列不为空，不重新初始化队列')
                 # self.order_queues[modian_entity.pro_id] = set()
+                my_logger.debug('项目%s队列长度: %s', modian_entity.pro_id, len(self.order_queues[modian_entity.pro_id]))
                 orders = self.query_project_orders(modian_entity)
                 retry_time = 0
                 while retry_time < 5:
@@ -180,6 +181,7 @@ class ModianHandler:
 
             if oid in self.order_queues[modian_entity.pro_id]:
                 continue
+            my_logger.debug('项目%s队列长度: %s', modian_entity.pro_id, len(self.order_queues[modian_entity.pro_id]))
             # 每次需要更新一下昵称
             mysql_util.query("""
                     INSERT INTO `supporter` (`id`, `name`) VALUES (%s, %s)  ON DUPLICATE KEY
