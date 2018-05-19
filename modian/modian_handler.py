@@ -223,7 +223,8 @@ class ModianHandler:
                     stick_num = util.compute_stick_num(jiebang.min_stick_amount, backer_money)
                     jiebang.current_stick_num += stick_num
                     
-                    jiebang.last_record_time = util.convert_timestamp_to_timestr(time.time()*1000)
+                    # jiebang.last_record_time = util.convert_timestamp_to_timestr(time.time()*1000)
+                    jiebang.last_record_time = time.time()
                     test_msg = ''
                     if jiebang.need_detail == 1:
                         test_msg = '【%s】, 当前第%s棒, 目标%s棒\n' \
@@ -235,8 +236,8 @@ class ModianHandler:
                                    % (jiebang.name, jiebang.current_stick_num)
                     my_logger.debug(test_msg)
                     if len(test_msg) > 0:
-                        msg += test_msg
-                        # QQHandler.send_to_groups(['483548995'], test_msg)
+                        # msg += test_msg
+                        QQHandler.send_to_groups(['483548995'], test_msg)
 
             '''金额类flag相关'''
             my_logger.debug('flag情况更新')
@@ -308,23 +309,23 @@ class ModianHandler:
             self.order_queues[modian_entity.pro_id].add(oid)
 
         # 更新接棒的数据库
-        conn = sqlite3.connect('data/modian.db', check_same_thread=False)
-        cursor = conn.cursor()
+        # conn = sqlite3.connect('data/modian.db', check_same_thread=False)
+        # cursor = conn.cursor()
         try:
             my_logger.debug('更新接棒活动信息:')
             for jiebang in jiebang_activities:
                 my_logger.debug('current_stick_num: %s, last_record_time: %s, name: %s',
                                 jiebang.current_stick_num, jiebang.last_record_time, jiebang.name)
-                cursor.execute("""
-                    UPDATE jiebang SET current_stick_num=?, last_record_time=? WHERE name=?
-                """, (jiebang.current_stick_num, jiebang.last_record_time, jiebang.name))
+                mysql_util.query("""
+                    UPDATE jiebang SET current_stick_num=%s WHERE name=%s
+                """, (jiebang.current_stick_num, jiebang.name))
 
         except Exception as e:
             my_logger.error(e)
-        finally:
-            conn.commit()
-            cursor.close()
-            conn.close()
+        # finally:
+        #     conn.commit()
+        #     cursor.close()
+        #     conn.close()
 
     def get_today_jizi_ranking_list(self, pro_id):
         """

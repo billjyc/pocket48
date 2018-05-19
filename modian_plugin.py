@@ -10,6 +10,7 @@ import sqlite3
 import json
 import time
 from utils import util
+from utils.mysql_util import mysql_util
 
 from utils.scheduler import scheduler
 
@@ -93,75 +94,42 @@ def update_modian_conf():
     # 接棒活动更新，读取json文件中的内容，更新到数据库中
     my_logger.debug('接棒活动更新，读取json文件中的内容，更新到数据库中')
     jiebang_json = json.load(open('data/modian_jiebang.json', encoding='utf8'))['activities']
-    conn = sqlite3.connect('data/modian.db', check_same_thread=False)
+    # conn = sqlite3.connect('data/modian.db', check_same_thread=False)
     for activity in jiebang_json:
         end_time = activity['end_time']
         if util.convert_timestr_to_timestamp(end_time) < time.time():
             continue
         name = activity['jiebang_name']
         try:
-            cursor = conn.cursor()
-            c = cursor.execute("""
-                select * from jiebang WHERE name=?
+            # cursor = conn.cursor()
+            # c = cursor.execute("""
+            #     select * from jiebang WHERE name=?
+            # """, (name, ))
+            # rst = c.fetchall()
+            rst = mysql_util.select_one("""
+                select * from jiebang WHERE name=%s
             """, (name, ))
-            rst = c.fetchall()
-            if len(rst) == 1:
+            my_logger.debug(rst)
+            if rst is not None:
                 my_logger.debug('len(rst)==1')
-
-                # 修正当前接棒数
-                # my_logger.debug('修正当前接棒数')
-                # start_time = util.convert_timestr_to_timestamp(activity['start_time'])
-                # current_stick_num = 0
-                # cur_page = 1
-                # entity = None
-                # for modian_entity in global_config.MODIAN_ARRAY:
-                #     pro_id = modian_entity.pro_id
-                #     if str(pro_id) == str(activity['pro_id']):
-                #         entity = modian_entity
-                #         break
-                # while True:
-                #     finish_find = False
-                #
-                #     orders = modian_handler.query_project_orders(entity, cur_page)
-                #     if len(orders) <= 0:
-                #         break
-                #
-                #     for order in orders:
-                #         order_time = util.convert_timestr_to_timestamp(order['pay_time'])
-                #         if order_time < start_time:
-                #             finish_find = True
-                #             break
-                #         current_stick_num += modian_handler.compute_stick_num(activity['min_stick_amount'], order['backer_money'])
-                #     if finish_find is True:
-                #         break
-                #     cur_page += 1
-                #
-                # cursor.execute("""
-                #     UPDATE jiebang SET name=?, pro_id=?, start_time=?, end_time=?,
-                #     target_stick_num=?, min_stick_amount=?, current_stick_num=?
-                #     WHERE name=?
-                # """, (name, activity['pro_id'], activity['start_time'], activity['end_time'],
-                #       activity['target_stick_num'], activity['min_stick_amount'], current_stick_num, name))
-                # conn.commit()
-                # my_logger.debug('%s接棒数修正完成，当前棒数:%s', activity['pro_id'], current_stick_num)
-            elif len(rst) == 0:
+            else:
                 my_logger.debug('len(rst)==0')
-                cursor.execute("""
+                mysql_util.query("""
                                     INSERT INTO jiebang (name, pro_id, current_stick_num, last_record_time, start_time, 
                                     end_time, target_stick_num, min_stick_amount, need_detail) VALUES
-                                    (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                    (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                                 """, (
                 name, activity['pro_id'], 0, util.convert_timestamp_to_timestr(time.time()*1000),
                     activity['start_time'], activity['end_time'], activity['target_stick_num'],
                 activity['min_stick_amount'], activity['need_detail']))
-                conn.commit()
-            else:
-                raise RuntimeError('接棒活动名称错误！')
+                # conn.commit()
+            # else:
+            #     raise RuntimeError('接棒活动名称错误！')
         except Exception as e:
-            my_logger.error('读取modian.db出现错误')
+            my_logger.error('读取mysql出现错误')
             my_logger.error(e)
-        finally:
-            cursor.close()
+        # finally:
+        #     cursor.close()
 
     # 读取正在进行中的接棒活动
     my_logger.debug('读取正在进行中的接棒活动')
@@ -170,14 +138,14 @@ def update_modian_conf():
         pro_id = modian.pro_id
         global_config.MODIAN_JIEBANG_ACTIVITIES[pro_id] = []
         try:
-            cursor = conn.cursor()
-            c = cursor.execute("""
+            # cursor = conn.cursor()
+            rst = mysql_util.select_all("""
                 SELECT name, pro_id, current_stick_num, last_record_time, 
                     start_time, end_time, target_stick_num, min_stick_amount, need_detail
-                FROM jiebang where pro_id=? and start_time <= datetime('now', 'localtime') 
-                    and end_time >= datetime('now', 'localtime') and current_stick_num < target_stick_num
+                FROM jiebang where pro_id=%s and start_time <= NOW() 
+                    and end_time >= NOW() and current_stick_num < target_stick_num
             """, (pro_id, ))
-            rst = c.fetchall()
+
             for jiebang in rst:
                 my_logger.debug('jiebang: %s, %s, %s, %s, %s, %s, %s, %s, %s',
                                 jiebang[0], jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
@@ -189,10 +157,10 @@ def update_modian_conf():
         except Exception as e:
             my_logger.error('读取正在进行中的接棒活动出现错误！')
             my_logger.error(e)
-        finally:
-            cursor.close()
+        # finally:
+        #     cursor.close()
     my_logger.debug(global_config.MODIAN_JIEBANG_ACTIVITIES)
-    conn.close()
+    # conn.close()
 
     my_logger.debug('读取摩点配置耗时: %s秒', time.time() - time0)
 
