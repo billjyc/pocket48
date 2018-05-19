@@ -226,7 +226,7 @@ def sync_order():
                             ('%s', %s, %s, '%s', %s);
                     """ % (oid, user_id, backer_money, pay_time, pro_id))
                 msg = '【机器人补播报】感谢 %s 支持了%s元, %s\n' % (nickname, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
-                QQHandler.send_to_groups(modian_handler.modian_notify_groups, msg)
+                QQHandler.send_to_groups(['483548995'], msg)
                 modian_handler.order_queues[modian.pro_id].add(oid)
 
 
