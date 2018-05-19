@@ -515,6 +515,22 @@ class ModianHandler:
         sign = hashlib.md5(md5_string.encode('utf-8')).hexdigest()[5:21]
         return sign
 
+    def get_all_orders(self, modian_entity):
+        """
+        获取全部订单
+        :return:
+        """
+        orders = []
+        page = 1
+        while True:
+            sub_orders = self.query_project_orders(modian_entity, page)
+            if len(sub_orders) > 0:
+                orders.extend(sub_orders)
+                page += 1
+            else:
+                break
+        return orders
+
 
 if __name__ == '__main__':
     user_id = '123456'

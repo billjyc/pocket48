@@ -6,13 +6,14 @@ from utils.config_reader import ConfigReader
 from modian.modian_handler import ModianHandler, ModianEntity, ModianJiebangEntity, ModianFlagEntity, ModianCountFlagEntity
 from utils import global_config
 from qq.qqhandler import QQHandler
-import sqlite3
+import uuid
 import json
 import time
 from utils import util
 from utils.mysql_util import mysql_util
 
 from utils.scheduler import scheduler
+from qq.qqhandler import QQHandler
 
 
 @scheduler.scheduled_job('cron', minute='*/15')
@@ -150,7 +151,7 @@ def update_modian_conf():
                 my_logger.debug('jiebang: %s, %s, %s, %s, %s, %s, %s, %s, %s',
                                 jiebang[0], jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
                                               jiebang[6], jiebang[7], jiebang[8])
-                jiebang_entity = ModianJiebangEntity(jiebang[0], jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
+                jiebang_entity = ModianJiebangEntity(str(jiebang[0]), jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
                                               jiebang[6], jiebang[7], jiebang[8])
                 global_config.MODIAN_JIEBANG_ACTIVITIES[pro_id].append(jiebang_entity)
 
@@ -192,6 +193,41 @@ def monitor_modian():
 #     for modian in global_config.MODIAN_ARRAY:
 #         modian_handler.daka_rank_list = modian_handler.get_ranking_list(modian, type0=2)
 #     my_logger.debug('更新排名榜单所用时间: %s', time.time() - time0)
+
+
+@scheduler.scheduled_job('cron', hour='*')
+def sync_order():
+    global modian_handler
+    my_logger.info('同步订单')
+    for modian in global_config.MODIAN_ARRAY:
+        pro_id = modian.pro_id
+        orders = modian_handler.get_all_orders(modian)
+        for order in orders:
+            user_id = order['user_id']
+            nickname = order['nickname']
+            pay_time = order['pay_time']
+            backer_money = order['backer_money']
+
+            oid = uuid.uuid3(uuid.NAMESPACE_OID, str(user_id) + pay_time)
+            # print('oid: %s', oid)
+
+            rst = mysql_util.select("""
+                    select * from `order` where id='%s'
+                """ % oid)
+            if len(rst) == 0:
+                my_logger.info('该订单不在数据库中')
+                # 每次需要更新一下昵称
+                mysql_util.query("""
+                                        INSERT INTO `supporter` (`id`, `name`) VALUES (%s, '%s')  ON DUPLICATE KEY
+                                            UPDATE `name`='%s'
+                                        """ % (user_id, nickname, nickname))
+                mysql_util.query("""
+                        INSERT INTO `order` (`id`, `supporter_id`, `backer_money`, `pay_time`, `pro_id`) VALUES 
+                            ('%s', %s, %s, '%s', %s);
+                    """ % (oid, user_id, backer_money, pay_time, pro_id))
+                msg = '【机器人补播报】感谢 %s 支持了%s元, %s\n' % (nickname, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
+                QQHandler.send_to_groups(modian_handler.modian_notify_groups, msg)
+                modian_handler.order_queues[modian.pro_id].add(oid)
 
 
 @scheduler.scheduled_job('cron', minute='17', hour='*')
