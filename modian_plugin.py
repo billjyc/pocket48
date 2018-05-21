@@ -112,15 +112,15 @@ def update_modian_conf():
             """, (name, ))
             my_logger.debug(rst)
             if rst is not None:
-                my_logger.debug('len(rst)==1')
+                my_logger.debug('DB中有相应的接棒活动')
             else:
-                my_logger.debug('len(rst)==0')
+                my_logger.debug('DB中没有对应的接棒活动，需要创建')
                 mysql_util.query("""
                                     INSERT INTO jiebang (name, pro_id, current_stick_num, last_record_time, start_time, 
                                     end_time, target_stick_num, min_stick_amount, need_detail) VALUES
                                     (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                                 """, (
-                name, activity['pro_id'], 0, util.convert_timestamp_to_timestr(time.time()*1000),
+                name, activity['pro_id'], 0, int(time.time()),
                     activity['start_time'], activity['end_time'], activity['target_stick_num'],
                 activity['min_stick_amount'], activity['need_detail']))
                 # conn.commit()
