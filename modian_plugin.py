@@ -195,7 +195,7 @@ def monitor_modian():
 #     my_logger.debug('更新排名榜单所用时间: %s', time.time() - time0)
 
 
-@scheduler.scheduled_job('cron', hour='*')
+@scheduler.scheduled_job('cron', minute='*/30')
 def sync_order():
     global modian_handler
     my_logger.info('同步订单')
