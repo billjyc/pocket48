@@ -128,7 +128,7 @@ def update_modian_conf():
             #     raise RuntimeError('接棒活动名称错误！')
         except Exception as e:
             my_logger.error('读取mysql出现错误')
-            my_logger.error(e)
+            my_logger.exception(e)
         # finally:
         #     cursor.close()
 
@@ -157,7 +157,7 @@ def update_modian_conf():
 
         except Exception as e:
             my_logger.error('读取正在进行中的接棒活动出现错误！')
-            my_logger.error(e)
+            my_logger.exception(e)
         # finally:
         #     cursor.close()
     my_logger.debug(global_config.MODIAN_JIEBANG_ACTIVITIES)

@@ -116,7 +116,7 @@ class ModianHandler:
                     self.order_queues[modian_entity.pro_id].add(oid)
             except Exception as e:
                 my_logger.error('初始化订单队列失败！')
-                my_logger.error(e)
+                my_logger.exception(e)
 
     def modian_header(self):
         """
@@ -321,7 +321,7 @@ class ModianHandler:
                 """, (jiebang.current_stick_num, jiebang.name))
 
         except Exception as e:
-            my_logger.error(e)
+            my_logger.exception(e)
         # finally:
         #     conn.commit()
         #     cursor.close()
