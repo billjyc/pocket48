@@ -211,9 +211,9 @@ def sync_order():
             oid = uuid.uuid3(uuid.NAMESPACE_OID, str(user_id) + pay_time)
             # print('oid: %s', oid)
 
-            rst = mysql_util.select("""
+            rst = mysql_util.select_one("""
                     select * from `order` where id='%s'
-                """ % oid)
+                """, (oid,))
             if len(rst) == 0:
                 my_logger.info('该订单不在数据库中')
                 # 每次需要更新一下昵称

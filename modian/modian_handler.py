@@ -229,6 +229,7 @@ class ModianHandler:
                     mysql_util.query("""
                         UPDATE jiebang SET current_stick_num=%s, last_record_time=%s WHERE name=%s
                     """, (jiebang.current_stick_num, jiebang.last_record_time, jiebang.name))
+                    my_logger('数据库接棒数据更新完成')
                     test_msg = ''
                     if jiebang.need_detail == 1:
                         test_msg = '【%s】, 当前第%s棒, 目标%s棒\n' \
