@@ -225,6 +225,10 @@ class ModianHandler:
                     
                     # jiebang.last_record_time = util.convert_timestamp_to_timestr(time.time()*1000)
                     jiebang.last_record_time = time.time()
+                    # 数据库也要更新
+                    mysql_util.query("""
+                        UPDATE jiebang SET current_stick_num=%s, last_record_time=%s where name=%s
+                    """, (jiebang.current_stick_num, jiebang.last_record_time, jiebang.name))
                     test_msg = ''
                     if jiebang.need_detail == 1:
                         test_msg = '【%s】, 当前第%s棒, 目标%s棒\n' \
