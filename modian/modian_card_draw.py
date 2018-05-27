@@ -35,8 +35,8 @@ class CardDrawHandler:
         config_path = os.path.join(BASE_DIR, 'data/card_draw.json')
         card_draw_json = json.load(open(config_path, encoding='utf8'))
         self.min_amount = card_draw_json['min_amount']
-        self.base_cards = []
-        self.cards = []
+        self.base_cards = []  # 基本卡
+        self.cards = [] # 所有卡
         self.weight = []
         for card_j in card_draw_json['cards']:
             card = Card(card_j['id'], card_j['name'], card_j['url'], card_j['level'])
@@ -80,6 +80,27 @@ class CardDrawHandler:
                 rst[card] = 1
         mysql_util.query(insert_sql[:-1])
         return rst
+
+    def evolution(self, raw_list):
+        """
+        进化（吞噬）
+        :param raw_list: 原材料，只能为同等级的材料
+        :return:
+        """
+        if (not raw_list) or len(raw_list) == 0:
+            logger.exception('原材料为空！')
+            raise RuntimeError('原材料列表为空')
+        raw_material_level = raw_list[0].level
+        logger.info('删除原材料')
+        # 删除原材料
+        for raw_material in raw_list:
+            mysql_util.query("""
+                UPDATE `draw_record` SET is_valid=0 WHERE id=%s
+            """, (raw_material.id, ))
+        # 从高1级的卡中获得一张
+        logger.info('合卡完成')
+
+
 
 
 if __name__ == '__main__':
