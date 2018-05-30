@@ -116,10 +116,27 @@ def get_plus_10_times(pro_id):
     return rst[0] + int(rst2 // 5)
 
 
+def get_current_supporter_num(pro_id):
+    """
+    获取当前集资人数
+    :param pro_id:
+    :return:
+    """
+    rst = mysql_util.select_one("""
+        SELECT COUNT(*) FROM `order` WHERE `pro_id`=%s
+    """, (pro_id, ))
+    my_logger.info('%s当前集资人数: %s' % (pro_id, rst[0]))
+    return rst[0]
+
+
 def get_current_points(pro_id):
-    if pro_id not in[15972, 15980]:
+    if pro_id not in[FXF_PRO_ID, WJL_PRO_ID]:
         return 0
     time0 = time.time()
+    # 当前集资人数
+    fxf_supporter_num = get_current_supporter_num(FXF_PRO_ID)
+    wjl_supporter_num = get_current_supporter_num(WJL_PRO_ID)
+    supporter_num_points = 0
     rst = mysql_util.select_all("""
         select * from `order` where pro_id=%s
     """, (pro_id, ))
@@ -140,6 +157,9 @@ def get_current_points(pro_id):
         bonus_minus_points = int(bonus_minus_time // 5) * 10
         my_logger.debug('汪佳翎共给冯晓菲捣乱%s次，共扣除%s分' % (make_trouble_time_other, make_trouble_points))
         my_logger.debug('冯晓菲共有%s次+10分的记录，为汪佳翎扣除%s分' % (bonus_minus_time, bonus_minus_points))
+        if fxf_supporter_num > wjl_supporter_num:
+            supporter_num_points = 61
+
     elif pro_id == WJL_PRO_ID:
         make_trouble_time_self = get_make_trouble_time(WJL_PRO_ID)
         make_trouble_time_other = get_make_trouble_time(FXF_PRO_ID)
@@ -151,14 +171,17 @@ def get_current_points(pro_id):
         bonus_minus_points = int(bonus_minus_time // 5) * 10
         my_logger.debug('冯晓菲共给汪佳翎捣乱%s次，共扣除%s分' % (make_trouble_time_other, make_trouble_points))
         my_logger.debug('冯晓菲共有%s次+10分的记录，为汪佳翎扣除%s分' % (bonus_minus_time, bonus_minus_points))
+        if fxf_supporter_num < wjl_supporter_num:
+            supporter_num_points = 61
     else:
         return 0
+    my_logger.info('%s人头数得分为:%s' % (pro_id, supporter_num_points))
     # 己方捣乱加成分数
     my_logger.info('%s捣乱次数为: %s' % (pro_id, make_trouble_time_self))
     make_trouble_bonus_points = 10 * int(make_trouble_time_self // 5)
     my_logger.info('%s捣乱共加分: %s' % (pro_id, make_trouble_bonus_points))
-    # 分数计算方法: 基本得分 - 对方捣乱分数 + 己方捣乱分数(每5次捣乱+10分） - 额外分数（每有5次+10分项目 为对方-10分）
-    points = points - make_trouble_points + make_trouble_bonus_points - bonus_minus_points
+    # 分数计算方法: 基本得分 - 对方捣乱分数 + 己方捣乱分数(每5次捣乱+10分） - 额外分数（每有5次+10分项目 为对方-10分）+ 人头得分
+    points = points - make_trouble_points + make_trouble_bonus_points - bonus_minus_points + supporter_num_points
     my_logger.info('当前%s的总得分为: %s' % (pro_id, points))
     my_logger.debug('该函数共消耗时间: %s' % (time.time() - time0))
     return points
