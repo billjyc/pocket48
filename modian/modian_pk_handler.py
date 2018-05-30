@@ -49,7 +49,7 @@ def plus_points(pro_id, pay_amount):
         elif pay_amount < 101.7:
             point = 5
         else:
-            extra = int((pay_amount - 101.7) // 10)
+            extra = int((pay_amount - 100) // 10)
             point = 10 + extra
         my_logger.info('冯晓菲 加分%s' % point)
 
@@ -61,7 +61,7 @@ def plus_points(pro_id, pay_amount):
         elif pay_amount < 71.3:
             point = 7
         else:
-            extra = int((pay_amount - 71.3) // 7)
+            extra = int((pay_amount - 70) // 7)
             point = 10 + extra
         my_logger.info('汪佳翎 加分%s' % point)
     else:
