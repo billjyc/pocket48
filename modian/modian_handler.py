@@ -318,7 +318,7 @@ class ModianHandler:
 
             jizi_pk_report += '\n'
             fxf_points = modian_pk_handler.get_current_points(modian_pk_handler.FXF_PRO_ID)
-            wjl_points = modian_pk_handler.get_current_points(modian_pk_handler.WJL_MAKE_TROUBLE_POINTS)
+            wjl_points = modian_pk_handler.get_current_points(modian_pk_handler.WJL_PRO_ID)
 
             jizi_pk_report += '目前得分：\n冯晓菲: %s分; 汪佳翎: %s分\n' % (fxf_points, wjl_points)
 
