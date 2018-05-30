@@ -230,7 +230,7 @@ def sync_order():
                 modian_handler.order_queues[modian.pro_id].add(oid)
 
 
-@scheduler.scheduled_job('cron', minute='17', hour='*')
+@scheduler.scheduled_job('cron', minute='5', hour='*')
 def notify_modian_pk():
     """
     播报摩点集资PK情况
@@ -239,7 +239,6 @@ def notify_modian_pk():
     if global_config.MODIAN_NEED_DISPLAY_PK is False:
         return
     global modian_handler
-    # wds_handler = WDSHandler([], [])
     my_logger.info('摩点集资PK播报')
 
     for modian_entity in global_config.MODIAN_PK_ARRAY:

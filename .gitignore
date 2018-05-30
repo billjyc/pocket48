@@ -3,6 +3,7 @@
 .idea/
 venv/
 */__pycache__/
+pocket48_logs/
 
 *.log
 .DS_Store
