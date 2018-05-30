@@ -43,6 +43,7 @@ CREATE TABLE `draw_record` (
   `supporter_id` int(11) NOT NULL DEFAULT '0',
   `card_id` int(11) NOT NULL DEFAULT '0',
   `draw_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `is_valid` int(11) DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=993 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
