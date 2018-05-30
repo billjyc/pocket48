@@ -28,18 +28,21 @@ def update_conf():
         get_property('qq_conf', 'member_room_comment_groups').split(';')
     global_config.MEMBER_LIVE_GROUPS = ConfigReader.get_property('qq_conf', 'member_live_groups').split(';')
     global_config.MEMBER_ROOM_MSG_LITE_GROUPS = ConfigReader.get_property('qq_conf', 'member_room_comment_lite_groups').split(';')
+    global_config.TEST_GROUPS = ConfigReader.get_property('qq_conf', 'test_groups').split(';')
 
     auto_reply_groups = global_config.AUTO_REPLY_GROUPS
     member_room_msg_groups = global_config.MEMBER_ROOM_MSG_GROUPS
     member_room_comment_msg_groups = global_config.MEMBER_ROOM_COMMENT_GROUPS
     member_live_groups = global_config.MEMBER_LIVE_GROUPS
     member_room_msg_lite_groups = global_config.MEMBER_ROOM_MSG_LITE_GROUPS
+    test_groups = global_config.TEST_GROUPS
 
     pocket48_handler.member_room_msg_groups = member_room_msg_groups
     pocket48_handler.member_room_comment_msg_groups = member_room_comment_msg_groups
     pocket48_handler.auto_reply_groups = auto_reply_groups
     pocket48_handler.member_live_groups = member_live_groups
     pocket48_handler.member_room_msg_lite_groups = member_room_msg_lite_groups
+    pocket48_handler.test_groups = test_groups
 
     my_logger.debug('member_room_msg_groups: %s, length: %d', ','.join(global_config.MEMBER_ROOM_MSG_GROUPS), len(pocket48_handler.member_room_msg_groups))
     my_logger.debug('member_room_comment_groups: %s, length: %d', ','.join(global_config.MEMBER_ROOM_COMMENT_GROUPS), len(pocket48_handler.member_room_comment_msg_groups))
@@ -92,7 +95,7 @@ def notify_performance():
     pocket48_handler.notify_performance()
 
 
-pocket48_handler = Pocket48Handler([], [], [], [], [])
+pocket48_handler = Pocket48Handler([], [], [], [], [], [])
 
 username = ConfigReader.get_property('user', 'username')
 password = ConfigReader.get_property('user', 'password')

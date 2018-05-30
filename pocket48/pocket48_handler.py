@@ -1,16 +1,15 @@
 # -*- coding:utf-8 -*-
 
-import requests
 import json
-
-import time
-from cool_http_server import bot
-from log.my_logger import pocket48_logger as logger
-from qq.qqhandler import QQHandler
-
-from utils import global_config, util
 import os
 import sqlite3
+import time
+
+import requests
+
+from log.my_logger import pocket48_logger as logger
+from qq.qqhandler import QQHandler
+from utils import global_config, util
 
 
 class Member:
@@ -25,7 +24,7 @@ class Member:
 class Pocket48Handler:
 
     def __init__(self, auto_reply_groups, member_room_msg_groups, member_room_comment_msg_groups,
-                 member_live_groups, member_room_msg_lite_groups):
+                 member_live_groups, member_room_msg_lite_groups, test_groups):
         self.session = requests.session()
         self.token = '0'
         self.is_login = False
@@ -36,6 +35,7 @@ class Pocket48Handler:
         self.member_room_comment_msg_groups = member_room_comment_msg_groups
         self.member_live_groups = member_live_groups
         self.member_room_msg_lite_groups = member_room_msg_lite_groups
+        self.test_groups = test_groups
 
         self.member_room_msg_ids = []
         self.member_room_comment_ids = []
