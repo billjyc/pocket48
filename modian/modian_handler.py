@@ -2,23 +2,19 @@
 """
 摩点API文档地址：https://www.showdoc.cc/1702718?page_id=15700669
 """
-import sys
+
+import hashlib
+import time
+import urllib.parse
+import uuid
 
 import requests
+
 from log.my_logger import modian_logger as my_logger
-
-import time
-from utils import global_config, util
-import hashlib
-import urllib.parse
-import random
-import sqlite3
-import uuid
-from modian.modian_card_draw import CardDrawHandler, Card
-from utils.mysql_util import mysql_util
-
-
+from modian.modian_card_draw import CardDrawHandler
 from qq.qqhandler import QQHandler
+from utils import global_config, util
+from utils.mysql_util import mysql_util
 
 
 class ModianEntity:
@@ -335,6 +331,9 @@ class ModianHandler:
         #     conn.commit()
         #     cursor.close()
         #     conn.close()
+
+    def jizi_operation(self):
+        pass
 
     def get_today_jizi_ranking_list(self, pro_id):
         """
