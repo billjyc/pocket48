@@ -318,7 +318,7 @@ class ModianHandler:
                 jizi_pk_report += '本方成长值+%s\n' % plus_points
             if minus_points > 0:
                 jizi_pk_report += '捣乱成功，对方成长值-%s\n' % minus_points
-            jizi_pk_report = '【六一成长快乐大作战】\n'
+            jizi_pk_report += '【六一成长快乐大作战】\n'
 
             fxf_points = modian_pk_handler.get_current_points(modian_pk_handler.FXF_PRO_ID)
             wjl_points = modian_pk_handler.get_current_points(modian_pk_handler.WJL_PRO_ID)
