@@ -313,7 +313,7 @@ class ModianHandler:
             # TODO: 集资PK积分播报
             plus_points = modian_pk_handler.plus_points(modian_entity.pro_id, backer_money)
             minus_points = modian_pk_handler.minus_points(modian_entity.pro_id, backer_money)
-            jizi_pk_report = '【TEST集资PK活动】\n'
+            jizi_pk_report = '【六一限定PK活动】\n'
             if plus_points > 0:
                 jizi_pk_report += '本次集资为本方+%s分 ' % plus_points
             if minus_points > 0:
@@ -326,12 +326,13 @@ class ModianHandler:
             jizi_pk_report += '目前得分：\n冯晓菲: %s分; 汪佳翎: %s分\n' % (fxf_points, wjl_points)
 
             msg += '%s\n集资项目: %s\n链接: %s' % (project_info, pro_name, modian_entity.link)
+            # msg += jizi_pk_report
             my_logger.info(msg)
             if global_config.USING_COOLQ_PRO is True:
                 my_logger.debug('使用酷Q PRO发送图片')
                 msg += '\n[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]'
             QQHandler.send_to_groups(global_config.TEST_GROUPS, jizi_pk_report)
-            if modian_entity.pro_id == 15980:
+            if modian_entity.pro_id == modian_pk_handler.WJL_PRO_ID:
                 QQHandler.send_to_groups(global_config.TEST_GROUPS, msg)
             else:
                 QQHandler.send_to_groups(self.modian_notify_groups, msg)
