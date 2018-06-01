@@ -40,6 +40,8 @@ def plus_points(pro_id, pay_amount):
     :return:
     """
     my_logger.info('加分, pro_id: %s, pay_amount: %s' % (pro_id, pay_amount))
+    if pay_amount == 99.9:
+        return 0
     point = 0
     if pro_id == FXF_PRO_ID:
         if pay_amount < 10.17:
@@ -138,7 +140,7 @@ def get_current_points(pro_id):
     wjl_supporter_num = get_current_supporter_num(WJL_PRO_ID)
     supporter_num_points = 0
     rst = mysql_util.select_all("""
-        select * from `order` where pro_id=%s
+        select * from `order` where pro_id=%s and `backer_money` <> 99.9
     """, (pro_id, ))
     points = 0
     for order in rst:
