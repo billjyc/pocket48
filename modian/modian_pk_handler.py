@@ -98,17 +98,17 @@ def get_plus_10_times(pro_id):
     :return:
     """
     # fxf: 集资101.7以上
-    # wjl: 集资71.3以上
+    # wjl: 集资71.3以上 不包含99.9
     # 每5次捣乱 +10分
     my_logger.info('获取给本方加10分的次数，pro_id: %s' % pro_id)
     if pro_id == FXF_PRO_ID:
         rst = mysql_util.select_one("""
-            SELECT count(*) FROM `order` WHERE `pro_id`=%s and `backer_money`>= %s
-        """, (FXF_PRO_ID, 101.7))
+            SELECT count(*) FROM `order` WHERE `pro_id`=%s and `backer_money`>= %s and `backer_money`<>%s
+        """, (FXF_PRO_ID, 101.7, MINUS_AMOUNT))
     elif pro_id == WJL_PRO_ID:
         rst = mysql_util.select_one("""
-                    SELECT count(*) FROM `order` WHERE `pro_id`=%s and `backer_money`>= %s
-                """, (WJL_PRO_ID, 71.3))
+                    SELECT count(*) FROM `order` WHERE `pro_id`=%s and `backer_money`>= %s AND `backer_money`<>%s
+                """, (WJL_PRO_ID, 71.3, MINUS_AMOUNT))
     else:
         return 0
     # 本方捣乱次数
