@@ -112,8 +112,8 @@ def get_plus_10_times(pro_id):
     else:
         return 0
     # 本方捣乱次数
-    rst2 = get_make_trouble_time(pro_id)
-    return rst[0] + int(rst2 // 5)
+    # rst2 = get_make_trouble_time(pro_id)
+    return rst[0]
 
 
 def get_current_supporter_num(pro_id):
