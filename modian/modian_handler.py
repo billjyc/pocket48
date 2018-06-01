@@ -325,7 +325,7 @@ class ModianHandler:
 
             jizi_pk_report += '目前成长值：\n冯晓菲: %s点; 汪佳翎: %s点\n' % (fxf_points, wjl_points)
 
-            msg += '%s\n集资项目: %s\n链接: %s' % (project_info, pro_name, modian_entity.link)
+            msg += '%s\n集资项目: %s\n链接: %s\n' % (project_info, pro_name, modian_entity.link)
             msg += jizi_pk_report
             my_logger.info(msg)
             if global_config.USING_COOLQ_PRO is True:
