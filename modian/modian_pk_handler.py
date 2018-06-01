@@ -183,7 +183,8 @@ def get_current_points(pro_id):
     make_trouble_bonus_points = 10 * int(make_trouble_time_self // 5)
     my_logger.info('%s捣乱共加分: %s' % (pro_id, make_trouble_bonus_points))
     # 分数计算方法: 基本得分 - 对方捣乱分数 + 己方捣乱分数(每5次捣乱+10分） - 额外分数（每有5次+10分项目 为对方-10分）+ 人头得分
-    points = points - make_trouble_points + make_trouble_bonus_points - bonus_minus_points + supporter_num_points
+    # points = points - make_trouble_points + make_trouble_bonus_points - bonus_minus_points + supporter_num_points
+    points = points - make_trouble_points + make_trouble_bonus_points - bonus_minus_points
     my_logger.info('当前%s的总得分为: %s' % (pro_id, points))
     my_logger.debug('该函数共消耗时间: %s' % (time.time() - time0))
     return points
