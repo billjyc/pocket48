@@ -326,13 +326,14 @@ class ModianHandler:
             jizi_pk_report += '目前成长值：\n冯晓菲: %s点; 汪佳翎: %s点\n' % (fxf_points, wjl_points)
 
             msg += '%s\n集资项目: %s\n链接: %s\n' % (project_info, pro_name, modian_entity.link)
-            msg += jizi_pk_report
+            # msg += jizi_pk_report
+
             my_logger.info(msg)
             if global_config.USING_COOLQ_PRO is True:
                 my_logger.debug('使用酷Q PRO发送图片')
                 msg += '\n[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]'
 
-            # QQHandler.send_to_groups(global_config.TEST_GROUPS, jizi_pk_report)
+            QQHandler.send_to_groups(['483548995'], jizi_pk_report)
 
             if modian_entity.pro_id == modian_pk_handler.WJL_PRO_ID:
                 QQHandler.send_to_groups(global_config.TEST_GROUPS, msg)
