@@ -4,8 +4,8 @@ from log.my_logger import modian_logger as my_logger
 import time
 
 MINUS_AMOUNT = 99.9
-FXF_PRO_ID = 15972
-WJL_PRO_ID = 15980
+FXF_PRO_ID = 18966
+WJL_PRO_ID = 18954
 
 FXF_MAKE_TROUBLE_POINTS = 9
 WJL_MAKE_TROUBLE_POINTS = 5
