@@ -311,19 +311,19 @@ class ModianHandler:
                 #     QQHandler.send_to_groups(['483548995'], cards_msg)
 
             # 六一集资PK积分播报
-            jizi_pk_report = ''
-            plus_points = modian_pk_handler.plus_points(modian_entity.pro_id, backer_money)
-            minus_points = modian_pk_handler.minus_points(modian_entity.pro_id, backer_money)
-            if plus_points > 0:
-                jizi_pk_report += '本方成长值+%s\n' % plus_points
-            if minus_points > 0:
-                jizi_pk_report += '捣乱成功，对方成长值-%s\n' % minus_points
-            jizi_pk_report += '【六一成长快乐大作战】\n'
-
-            fxf_points = modian_pk_handler.get_current_points(modian_pk_handler.FXF_PRO_ID)
-            wjl_points = modian_pk_handler.get_current_points(modian_pk_handler.WJL_PRO_ID)
-
-            jizi_pk_report += '目前成长值：\n冯晓菲: %s点; 汪佳翎: %s点\n' % (fxf_points, wjl_points)
+            # jizi_pk_report = ''
+            # plus_points = modian_pk_handler.plus_points(modian_entity.pro_id, backer_money)
+            # minus_points = modian_pk_handler.minus_points(modian_entity.pro_id, backer_money)
+            # if plus_points > 0:
+            #     jizi_pk_report += '本方成长值+%s\n' % plus_points
+            # if minus_points > 0:
+            #     jizi_pk_report += '捣乱成功，对方成长值-%s\n' % minus_points
+            # jizi_pk_report += '【六一成长快乐大作战】\n'
+            #
+            # fxf_points = modian_pk_handler.get_current_points(modian_pk_handler.FXF_PRO_ID)
+            # wjl_points = modian_pk_handler.get_current_points(modian_pk_handler.WJL_PRO_ID)
+            #
+            # jizi_pk_report += '目前成长值：\n冯晓菲: %s点; 汪佳翎: %s点\n' % (fxf_points, wjl_points)
 
             msg += '%s\n集资项目: %s\n链接: %s\n' % (project_info, pro_name, modian_entity.link)
             # msg += jizi_pk_report
@@ -333,12 +333,12 @@ class ModianHandler:
                 my_logger.debug('使用酷Q PRO发送图片')
                 msg += '\n[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]'
 
-            QQHandler.send_to_groups(['483548995'], jizi_pk_report)
+            # QQHandler.send_to_groups(['483548995'], jizi_pk_report)
 
-            if modian_entity.pro_id == modian_pk_handler.WJL_PRO_ID:
-                QQHandler.send_to_groups(global_config.TEST_GROUPS, msg)
-            else:
-                QQHandler.send_to_groups(self.modian_notify_groups, msg)
+            # if modian_entity.pro_id == modian_pk_handler.WJL_PRO_ID:
+            #     QQHandler.send_to_groups(global_config.TEST_GROUPS, msg)
+            # else:
+            QQHandler.send_to_groups(self.modian_notify_groups, msg)
             self.order_queues[modian_entity.pro_id].add(oid)
 
         # 更新接棒的数据库
