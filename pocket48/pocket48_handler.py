@@ -122,7 +122,7 @@ class Pocket48Handler:
             logger.error('尚未登录')
         url = 'https://plive.48.cn/livesystem/api/live/v1/memberLivePage'
         params = {
-            "giftUpdTime": 1503766100000,
+            "giftUpdTime": time.time()*1000,
             "groupId": 0,  # SNH48 Group所有人
             "lastTime": 0,
             "limit": limit,
