@@ -173,6 +173,17 @@ def weight_choice(candidate, weight):
     return 0
 
 
+def choice(candidate, num=1):
+    """
+    随机抽选（非加权）
+    :param candidate:
+    :param num: 抽取的数量
+    :return:
+    """
+    return random.sample(candidate, num)
+
+
+
 if __name__ == '__main__':
     save_image('https://nos.netease.com/nim/NDA5MzEwOA==/bmltYV8xNzc5NzQyNDlfMTUxNTAzODQyMzkyN182OGMzZTA2OS00NzUwLTQ2MWYtOWI3NC1jODNiNmMzMDhhMzM=')
 

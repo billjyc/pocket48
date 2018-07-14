@@ -16,7 +16,7 @@ class Card:
         self.level = level
 
     def __repr__(self):
-        return "<Card {id: %s, name: %s, url: %s}>" % (self.id, self.name, self.url)
+        return "<Card {id: %s, name: %s, url: %s, level: %s}>" % (self.id, self.name, self.url, self.level)
 
     def __eq__(self, other):
         return self.id == other.id
@@ -36,7 +36,7 @@ class CardDrawHandler:
         card_draw_json = json.load(open(config_path, encoding='utf8'))
         self.min_amount = card_draw_json['min_amount']
         self.base_cards = []  # 基本卡
-        self.cards = [] # 所有卡
+        self.cards = {}  # 所有卡
         self.weight = []
         for card_j in card_draw_json['cards']:
             card = Card(card_j['id'], card_j['name'], card_j['url'], card_j['level'])
@@ -45,7 +45,9 @@ class CardDrawHandler:
                         INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (%s, %s, %s, %s)  ON DUPLICATE KEY
                                                 UPDATE `name`=%s, `url`=%s, `level`=%s
                         """, (card.id, card.name, card.url, card.level, card.name, card.url, card.level))
-            self.cards.append(card)
+            if card.level not in self.cards.keys():
+                self.cards[card.level] = []
+            self.cards[card.level].append(card)
             if card_j['level'] == 1:
                 self.weight.append(card_j['weight'])
                 self.base_cards.append(card)
@@ -81,7 +83,7 @@ class CardDrawHandler:
         mysql_util.query(insert_sql[:-1])
         return rst
 
-    def evolution(self, raw_list):
+    def evolution(self, raw_list, user_id, pay_time):
         """
         进化（吞噬）
         :param raw_list: 原材料，只能为同等级的材料
@@ -91,6 +93,9 @@ class CardDrawHandler:
             logger.exception('原材料为空！')
             raise RuntimeError('原材料列表为空')
         raw_material_level = raw_list[0].level
+        if raw_material_level + 1 not in self.cards.keys():
+            logger.info('已经是最高级的卡牌，不能合成')
+            return None
         logger.info('删除原材料')
         # 删除原材料
         for raw_material in raw_list:
@@ -98,9 +103,13 @@ class CardDrawHandler:
                 UPDATE `draw_record` SET is_valid=0 WHERE id=%s
             """, (raw_material.id, ))
         # 从高1级的卡中获得一张
+        new_card = util.choice(self.cards[raw_material_level+1])
+        logger.debug('合成的新卡: %s' % new_card)
+        mysql_util.query("""
+            INSERT INTO `draw_record` (`supporter_id`, `card_id`, `draw_time`, `is_valid`) VALUES
+                (%s, %s, %s, %s)
+        """, (user_id, new_card.id, pay_time, 1))
         logger.info('合卡完成')
-
-
 
 
 if __name__ == '__main__':
