@@ -4,10 +4,8 @@
 封装酷Q HTTP API
 https://richardchien.github.io/coolq-http-api/3.3/#/API
 """
-from cool_http_server import bot
 from log.my_logger import logger
-
-import time
+from utils.bot import bot
 
 
 class QQHandler:

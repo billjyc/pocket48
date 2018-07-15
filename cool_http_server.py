@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
-from cqhttp import CQHttp, Error
+import json
+
+from cqhttp import Error
+
 from log.my_logger import logger
+from utils.bot import bot
 from utils.config_reader import ConfigReader
 # from utils import global_config
 # from modian_plugin import modian_handler
 from utils.mysql_util import mysql_util
-import json
 
-bot = CQHttp(api_root='http://127.0.0.1:5700', access_token='aslkfdjie32df', secret='abc')
 AUTO_REPLY = {}
 items = ConfigReader.get_section('auto_reply')
 logger.debug('items: %s', items)
