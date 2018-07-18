@@ -28,6 +28,9 @@ modian_array = []
 for modian_j in modian_json['monitor_activities']:
     modian_array.append(modian_j)
 
+ai_app_key = ConfigReader.get_property('AIBot', 'appkey')
+ai_app_id = ConfigReader.get_property('AIBot', 'appid')
+
 
 @bot.on_message()
 def handle_msg(context):
