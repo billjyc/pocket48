@@ -24,6 +24,7 @@ for k, v in items:
 groups = ConfigReader.get_property('qq_conf', 'jizi_notify_groups').split(';')
 test_groups = ConfigReader.get_property('qq_conf', 'auto_reply_groups').split(';')
 print(groups)
+logger.debug('test groups: %s' % test_groups)
 modian_json = json.load(open("data/modian.json", encoding='utf8'))
 
 modian_array = []
