@@ -2,7 +2,7 @@
 
 import os
 import json
-# from log.my_logger import logger
+from log.my_logger import logger
 from utils import util
 import hashlib
 import urllib.parse
@@ -25,6 +25,7 @@ class QQAIBot(object):
         :return:
         """
         url = 'https://api.ai.qq.com/fcgi-bin/nlp/nlp_textchat'
+        logger.info('调用QQ基础闲聊接口: %s' % url)
         params = {
             "app_id": self.appid,
             "time_stamp": int(time.time()),
@@ -33,12 +34,12 @@ class QQAIBot(object):
             'question': question
         }
         r = requests.post(url, self.make_post_params(params), headers=self.header()).json()
-        print(r)
+        logger.debug(r)
         if r['ret'] == 0:
-            print(r['data']['answer'])
+            logger.debug('回复: %s' % r['data']['answer'])
             return r['data']['answer']
         else:
-            print('调用基础闲聊接口出错，错误码: %s, msg: %s' % (r['ret'], r['msg']))
+            logger.error('调用基础闲聊接口出错，错误码: %s, msg: %s' % (r['ret'], r['msg']))
 
     def header(self):
         header = {
@@ -81,11 +82,10 @@ class QQAIBot(object):
         post_fields_sorted = util.ksort(post_fields)
         url_string = urllib.parse.urlencode(post_fields_sorted)
         url_string += '&app_key=%s' % self.appkey
-        print(url_string)
+        logger.debug('md5 string: %s' % url_string)
         sign = hashlib.md5(url_string.encode('utf-8')).hexdigest()
-        print(sign)
         sign = sign.upper()
-        print(sign)
+        logger.debug('sign: %s' % sign)
         return sign
 
 

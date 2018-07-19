@@ -9,6 +9,7 @@ from utils.config_reader import ConfigReader
 # from utils import global_config
 # from modian_plugin import modian_handler
 from utils.mysql_util import mysql_util
+from qq.ai_reply import QQAIBot
 
 AUTO_REPLY = {}
 items = ConfigReader.get_section('auto_reply')
@@ -28,8 +29,10 @@ modian_array = []
 for modian_j in modian_json['monitor_activities']:
     modian_array.append(modian_j)
 
+# AI智能闲聊机器人
 ai_app_key = ConfigReader.get_property('AIBot', 'appkey')
 ai_app_id = ConfigReader.get_property('AIBot', 'appid')
+ai_bot = QQAIBot(ai_app_key, ai_app_id)
 
 
 @bot.on_message()
@@ -46,13 +49,19 @@ def handle_msg(context):
 
         logger.info(AUTO_REPLY)
 
+        # 关键词自动回复
         for k, v in AUTO_REPLY.items():
             if k in message.lower():
                 logger.info('命中关键词: %s', k)
                 bot.send(context, v)
                 break
-        # bot.send(context, '你好呀，下面一条是你刚刚发的：')
+        # AI智能回复
+        if message.startwith('%'):
+            content = message[1:]
+            reply = ai_bot.nlp_textchat(content, user_id)
+            bot.send(context, reply)
 
+        # 查询集资
         if str(group_id) in groups:
             if len(modian_array) > 0:
                 if message == '-today':
