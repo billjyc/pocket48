@@ -22,6 +22,7 @@ for k, v in items:
 
 # groups = [483548995]
 groups = ConfigReader.get_property('qq_conf', 'jizi_notify_groups').split(';')
+test_groups = ConfigReader.get_property('qq_conf', 'auto_reply_groups').split(';')
 print(groups)
 modian_json = json.load(open("data/modian.json", encoding='utf8'))
 
@@ -56,10 +57,11 @@ def handle_msg(context):
                 bot.send(context, v)
                 break
         # AI智能回复
-        if len(message) > 1 and message.startswith('%'):
-            content = message[1:]
-            reply = ai_bot.nlp_textchat(content, user_id)
-            bot.send(context, reply)
+        if str(group_id) in test_groups:
+            if len(message) > 1 and message.startswith('%'):
+                content = message[1:]
+                reply = ai_bot.nlp_textchat(content, user_id)
+                bot.send(context, reply)
 
         # 查询集资
         if str(group_id) in groups:
