@@ -56,7 +56,7 @@ def handle_msg(context):
                 bot.send(context, v)
                 break
         # AI智能回复
-        if message.startswith('%'):
+        if len(message) > 1 and message.startswith('%'):
             content = message[1:]
             reply = ai_bot.nlp_textchat(content, user_id)
             bot.send(context, reply)
