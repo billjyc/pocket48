@@ -62,6 +62,7 @@ def handle_msg(context):
             logger.debug('AI智能回复')
             if len(message) > 1 and message.startswith('%'):
                 content = message[1:]
+                logger.debug('提问内容: %s' % content)
                 reply = ai_bot.nlp_textchat(content, user_id)
                 bot.send(context, reply)
 
