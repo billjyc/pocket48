@@ -59,6 +59,7 @@ def handle_msg(context):
                 break
         # AI智能回复
         if str(group_id) in test_groups:
+            logger.debug('AI智能回复')
             if len(message) > 1 and message.startswith('%'):
                 content = message[1:]
                 reply = ai_bot.nlp_textchat(content, user_id)
