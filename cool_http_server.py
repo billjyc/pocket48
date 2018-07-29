@@ -147,6 +147,7 @@ def handle_group_increase(context):
     name = nickname if nickname else '新人'
     # bot.send(context, message='最快的机器人欢迎@{}～'.format(name))
     bot.send(context, message='最快的机器人欢迎[CQ:at,qq={}]'.format(context['user_id']))
+    logger.info('有人进群, QQ号: %s' % context['user_id'])
 #     if context['group_id'] == int('101724227'):
 #         bot.send(context, message="""
 # 欢迎加入SNH48-冯晓菲应援会，今天的机长是灰灰
