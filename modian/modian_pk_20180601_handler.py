@@ -1,7 +1,11 @@
 # -*- coding:utf-8 -*-
+"""
+冯晓菲VS汪佳翎 20180601 PK专用
+"""
 from utils.mysql_util import mysql_util
 from log.my_logger import modian_logger as my_logger
 import time
+
 
 MINUS_AMOUNT = 99.9
 FXF_PRO_ID = 18966

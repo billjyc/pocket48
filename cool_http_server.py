@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
-from cqhttp import CQHttp, Error
+import json
+
+from cqhttp import Error
+
 from log.my_logger import logger
+from utils.bot import bot
 from utils.config_reader import ConfigReader
 # from utils import global_config
 # from modian_plugin import modian_handler
 from utils.mysql_util import mysql_util
-import json
+from qq.ai_reply import QQAIBot
 
-bot = CQHttp(api_root='http://127.0.0.1:5700', access_token='aslkfdjie32df', secret='abc')
 AUTO_REPLY = {}
 items = ConfigReader.get_section('auto_reply')
 logger.debug('items: %s', items)
@@ -19,12 +22,19 @@ for k, v in items:
 
 # groups = [483548995]
 groups = ConfigReader.get_property('qq_conf', 'jizi_notify_groups').split(';')
+test_groups = ConfigReader.get_property('qq_conf', 'auto_reply_groups').split(';')
 print(groups)
+logger.debug('test groups: %s' % test_groups)
 modian_json = json.load(open("data/modian.json", encoding='utf8'))
 
 modian_array = []
 for modian_j in modian_json['monitor_activities']:
     modian_array.append(modian_j)
+
+# AI智能闲聊机器人
+ai_app_key = ConfigReader.get_property('AIBot', 'appkey')
+ai_app_id = ConfigReader.get_property('AIBot', 'appid')
+ai_bot = QQAIBot(ai_app_key, ai_app_id)
 
 
 @bot.on_message()
@@ -41,13 +51,22 @@ def handle_msg(context):
 
         logger.info(AUTO_REPLY)
 
+        # 关键词自动回复
         for k, v in AUTO_REPLY.items():
             if k in message.lower():
                 logger.info('命中关键词: %s', k)
                 bot.send(context, v)
                 break
-        # bot.send(context, '你好呀，下面一条是你刚刚发的：')
+        # AI智能回复
+        if str(group_id) in test_groups:
+            logger.debug('AI智能回复')
+            if len(message) > 1 and message.startswith('%'):
+                content = message[1:]
+                logger.debug('提问内容: %s' % content)
+                reply = ai_bot.nlp_textchat(content, user_id)
+                bot.send(context, reply)
 
+        # 查询集资
         if str(group_id) in groups:
             if len(modian_array) > 0:
                 if message == '-today':

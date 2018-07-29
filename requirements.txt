@@ -1,0 +1,5 @@
+requests
+APScheduler
+DBUtils
+PyMySQL
+cqhttp
