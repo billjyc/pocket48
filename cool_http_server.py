@@ -139,7 +139,7 @@ def __get_jizi_ranking_list_by_date_diff(pro_id, day_diff=0):
     return new_rst, total
 
 
-@bot.on_notice('group_increase')
+@bot.on_event('group_increase')
 def handle_group_increase(context):
     info = bot.get_group_member_info(group_id=context['group_id'],
                                      user_id=context['user_id'])
@@ -160,7 +160,7 @@ def handle_group_increase(context):
 #         """)
 
 
-@bot.on_notice('group_decrease')
+@bot.on_event('group_decrease')
 def handle_group_decrease(context):
     user_id = context['user_id']
     logger.info('有人退群，QQ号: %s', user_id)
