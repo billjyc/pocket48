@@ -67,14 +67,14 @@ def handle_msg(context):
                 bot.send(context, reply)
 
         # 查询集资
-        if str(group_id) in groups:
-            if len(modian_array) > 0:
-                if message == '-today':
-                    get_jizi_ranking_list_by_date(context, 0)
-                elif message == '-yesterday':
-                    get_jizi_ranking_list_by_date(context, 1)
-            else:
-                bot.send(context, '目前并没有正在进行的集资项目T_T')
+            if str(group_id) in groups:
+                if len(modian_array) > 0:
+                    if message == '-today':
+                        get_jizi_ranking_list_by_date(context, 0)
+                    elif message == '-yesterday':
+                        get_jizi_ranking_list_by_date(context, 1)
+                else:
+                    bot.send(context, '目前并没有正在进行的集资项目T_T')
     except Error:
         pass
     # return {'reply': context['message'],
@@ -144,6 +144,7 @@ def handle_group_increase(context):
     info = bot.get_group_member_info(group_id=context['group_id'],
                                      user_id=context['user_id'])
     nickname = info['nickname']
+    logger.info('有人进群: qq: %s' % context['user_id'])
     name = nickname if nickname else '新人'
     # bot.send(context, message='最快的机器人欢迎@{}～'.format(name))
     bot.send(context, message='最快的机器人欢迎[CQ:at,qq={}]'.format(context['user_id']))
