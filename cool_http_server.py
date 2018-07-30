@@ -67,14 +67,14 @@ def handle_msg(context):
                 bot.send(context, reply)
 
         # 查询集资
-            if str(group_id) in groups:
-                if len(modian_array) > 0:
-                    if message == '-today':
-                        get_jizi_ranking_list_by_date(context, 0)
-                    elif message == '-yesterday':
-                        get_jizi_ranking_list_by_date(context, 1)
-                else:
-                    bot.send(context, '目前并没有正在进行的集资项目T_T')
+        if str(group_id) in groups:
+            if len(modian_array) > 0:
+                if message == '-today':
+                    get_jizi_ranking_list_by_date(context, 0)
+                elif message == '-yesterday':
+                    get_jizi_ranking_list_by_date(context, 1)
+            else:
+                bot.send(context, '目前并没有正在进行的集资项目T_T')
     except Error:
         pass
     # return {'reply': context['message'],
