@@ -139,11 +139,12 @@ def __get_jizi_ranking_list_by_date_diff(pro_id, day_diff=0):
     return new_rst, total
 
 
-@bot.on_event('group_increase')
+@bot.on_notice('group_increase')
 def handle_group_increase(context):
     info = bot.get_group_member_info(group_id=context['group_id'],
                                      user_id=context['user_id'])
     nickname = info['nickname']
+    logger.info('有人进群: qq: %s' % context['user_id'])
     name = nickname if nickname else '新人'
     # bot.send(context, message='最快的机器人欢迎@{}～'.format(name))
     bot.send(context, message='最快的机器人欢迎[CQ:at,qq={}]'.format(context['user_id']))
@@ -160,7 +161,7 @@ def handle_group_increase(context):
 #         """)
 
 
-@bot.on_event('group_decrease')
+@bot.on_notice('group_decrease')
 def handle_group_decrease(context):
     user_id = context['user_id']
     logger.info('有人退群，QQ号: %s', user_id)
