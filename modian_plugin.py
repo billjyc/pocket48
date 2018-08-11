@@ -35,6 +35,8 @@ def update_modian_conf():
     # 是否需要开启抽卡功能
     global_config.MODIAN_CARD_DRAW = modian_json['modian_need_card_draw']
 
+    global_config.MODIAN_300_ACTIVITY = modian_json['modian_300_activity']
+
     # 需要适应同时开多个链接的情况
     global_config.MODIAN_ARRAY = []
 

@@ -314,7 +314,7 @@ class ModianHandler:
                 # if cards_msg:
                 #     QQHandler.send_to_groups(['483548995'], cards_msg)
 
-            if False:
+            if global_config.MODIAN_300_ACTIVITY:
                 seats = []
                 standings = []
                 ticket_num = modian_300_performance_handler.get_draw_tickets_num(backer_money)
