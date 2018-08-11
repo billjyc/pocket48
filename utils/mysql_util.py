@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import pymysql
-from log.my_logger import logger
+import logging
+try:
+    from log.my_logger import logger
+except:
+    logger = logging.getLogger(__name__)
 
 from DBUtils.PooledDB import PooledDB
 from utils import db_config as Config
