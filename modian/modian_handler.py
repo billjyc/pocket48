@@ -349,7 +349,7 @@ class ModianHandler:
                         report_message += '%d. 公演日期: %d年%d月%d日, 座位号: %s排%s号' % (idx, seat_o.year, seat_o.month, seat_o.day, seat_o.row, seat_o.col)
                         # 特殊座位
                         if seat in modian_300_performance_handler.special_seats_wording.keys():
-                            report_message += ', %s' % modian_300_performance_handler.special_seats_wording[seat]
+                            report_message += ', \n【奖励】%s' % modian_300_performance_handler.special_seats_wording[seat]
                         report_message += '\n'
                         idx += 1
                 if len(standings) > 0:
