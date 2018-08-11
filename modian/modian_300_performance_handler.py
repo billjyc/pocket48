@@ -118,9 +118,9 @@ def get_current_available_seats():
     used_seats = mysql_util.select_all("""
         SELECT seats_number FROM `seats_record` where seats_type = 1
     """)
-    my_logger.debug('当前已经被占用的座区号码: %s' % used_seats)
     for seat in used_seats:
         rst.remove(seat[0])
+    my_logger.debug('当前剩余的座区号码: %s' % rst)
     return rst
 
 
