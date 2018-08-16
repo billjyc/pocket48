@@ -147,8 +147,9 @@ def get_current_available_standings():
     used_standings = mysql_util.select_all("""
         SELECT seats_number FROM `seats_record` where seats_type = 2
     """)
-    for standing in used_standings:
-        rst.remove(standing[0])
+    if used_standings and len(used_standings) > 0:
+        for standing in used_standings:
+            rst.remove(standing[0])
     my_logger.debug('当前剩余的座区号码: %s' % rst)
     return rst
 
