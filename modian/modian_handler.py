@@ -315,11 +315,7 @@ class ModianHandler:
                 #     QQHandler.send_to_groups(['483548995'], cards_msg)
 
             # 300场公演活动
-            START_TIME = util.convert_timestr_to_timestamp('2018-08-16 20:00:00')
-            END_TIME = util.convert_timestr_to_timestamp('2018-08-19 22:00:00')
-            if (global_config.MODIAN_300_ACTIVITY and START_TIME
-                <= util.convert_timestr_to_timestamp(pay_time) <= END_TIME) or \
-                    (global_config.MODIAN_300_ACTIVITY is False):
+            if global_config.MODIAN_300_ACTIVITY and modian_entity.pro_id == 28671:
                 seats = []
                 standings = []
                 ticket_num = modian_300_performance_handler.get_draw_tickets_num(backer_money)
