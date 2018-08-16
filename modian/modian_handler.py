@@ -315,7 +315,7 @@ class ModianHandler:
                 #     QQHandler.send_to_groups(['483548995'], cards_msg)
 
             # 300场公演活动
-            if global_config.MODIAN_300_ACTIVITY and modian_entity.pro_id == 28671:
+            if int(modian_entity.pro_id) == 28671:
                 seats = []
                 standings = []
                 ticket_num = modian_300_performance_handler.get_draw_tickets_num(backer_money)
