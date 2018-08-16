@@ -94,6 +94,7 @@ class ModianHandler:
                     my_logger.debug('队列为空，重新初始化队列')
                 else:
                     my_logger.debug('队列不为空，不重新初始化队列')
+                    continue
                 # self.order_queues[modian_entity.pro_id] = set()
                 my_logger.debug('项目%s队列长度: %s', modian_entity.pro_id, len(self.order_queues[modian_entity.pro_id]))
                 orders = self.query_project_orders(modian_entity)
