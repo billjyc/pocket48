@@ -94,18 +94,17 @@ class ModianHandler:
                     my_logger.debug('队列为空，重新初始化队列')
                 else:
                     my_logger.debug('队列不为空，不重新初始化队列')
-                    continue
                 # self.order_queues[modian_entity.pro_id] = set()
                 my_logger.debug('项目%s队列长度: %s', modian_entity.pro_id, len(self.order_queues[modian_entity.pro_id]))
                 orders = self.query_project_orders(modian_entity)
-                retry_time = 0
-                while retry_time < 5:
-                    retry_time += 1
-                    if len(orders) == 0:
-                        my_logger.debug('请求订单失败，第%s次重试', retry_time)
-                        orders = self.query_project_orders(modian_entity)
-                    else:
-                        break
+                # retry_time = 0
+                # while retry_time < 5:
+                #     retry_time += 1
+                #     if len(orders) == 0:
+                #         my_logger.debug('请求订单失败，第%s次重试', retry_time)
+                #         orders = self.query_project_orders(modian_entity)
+                #     else:
+                #         break
 
                 for order in orders:
                     user_id = order['user_id']
