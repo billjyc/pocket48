@@ -359,10 +359,8 @@ class ModianHandler:
                             idx += 1
                     report_message += '\n'
 
-                if global_config.MODIAN_300_ACTIVITY:
-                    msg += report_message
-                else:
-                    QQHandler.send_to_groups(['483548995'], report_message)
+
+                msg += report_message
 
             # 六一集资PK积分播报
             # jizi_pk_report = ''
