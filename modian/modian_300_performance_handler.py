@@ -76,6 +76,18 @@ class Standing:
         return 'Standing[number=%s]' % self.number
 
 
+class Wanneng:
+    def __init__(self, number):
+        self._number = number
+
+    @property
+    def number(self):
+        return self._number
+
+    def __str__(self):
+        return 'Wanneng[number=%s]' % self.number
+
+
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 excel_path = os.path.join(base_dir, 'data', '300场活动.xlsx')
 workbook = xlrd.open_workbook(excel_path)
@@ -125,6 +137,22 @@ def get_current_available_seats():
     return rst
 
 
+def get_current_available_standings():
+    """
+    获取当前可用站区号码
+    :return:
+    """
+    my_logger.info('获取当前可用站区号码')
+    rst = [i for i in range(1, 101)]
+    used_standings = mysql_util.select_all("""
+        SELECT seats_number FROM `seats_record` where seats_type = 2
+    """)
+    for standing in used_standings:
+        rst.remove(standing[0])
+    my_logger.debug('当前剩余的座区号码: %s' % rst)
+    return rst
+
+
 def get_draw_tickets_num(support_num):
     if support_num < 10:
         return 0
@@ -134,9 +162,9 @@ def get_draw_tickets_num(support_num):
         return 10
 
 
-def can_draw_tickets(is_seats=True):
+def can_draw_tickets(is_seats=True, isWanNeng=False):
     """
-    抽选概率1/8（坐区），1/2.5(站区）
+    抽选概率1/8（坐区），1/6(站区）, 1/40（万能票）
     :return: 是否能够抽中
     """
     if is_seats:
@@ -145,10 +173,17 @@ def can_draw_tickets(is_seats=True):
         my_logger.debug('是否抽中坐区: %s' % (rst[0] < 1))
         return rst[0] < 1
     else:
-        candidates = [i for i in range(5)]
-        rst = util.choice(candidates)
-        my_logger.debug('是否抽中站区: %s' % (rst[0] < 2))
-        return rst[0] < 2
+        if not isWanNeng:
+            candidates = [i for i in range(6)]
+            rst = util.choice(candidates)
+            my_logger.debug('是否抽中站区: %s' % (rst[0] < 1))
+            return rst[0] < 1
+        else:
+            my_logger.debug("万能票")
+            candidates = [i for i in range(40)]
+            rst = util.choice(candidates)
+            my_logger.debug('是否抽中万能票: %s' % (rst[0] < 1))
+            return rst[0] < 1
 
 
 def get_current_standing_num():
@@ -162,16 +197,45 @@ def get_current_standing_num():
     return rst[0]
 
 
-def draw_standing_tickets():
+def get_current_wanneng_num():
+    """
+    获取当前已售出的万能票总数
+    :return:
+    """
+    rst = mysql_util.select_one("""
+        SELECT COUNT(*) FROM `seats_record` WHERE seats_type=3
+    """)
+    return rst[0]
+
+
+def draw_standing_tickets(tickets_array):
     """
     抽站票
     :return:
     """
-    can_draw = can_draw_tickets(is_seats=False)
+    can_draw = can_draw_tickets(is_seats=False, isWanNeng=False)
+    # if not can_draw:
+    #     return -1
+    # rst = get_current_standing_num() + 1
+    # my_logger.info('抽中的站区号码: %s' % rst)
+    # return rst
     if not can_draw:
         return -1
-    rst = get_current_standing_num() + 1
-    my_logger.info('抽中的站区号码: %s' % rst)
+    rst = util.choice(tickets_array)[0]
+    my_logger.info('抽中的站区号: %s' % rst)
+    return rst
+
+
+def draw_wanneng_tickets():
+    """
+    抽万能票
+    :return:
+    """
+    can_draw = can_draw_tickets(is_seats=False, isWanNeng=True)
+    if not can_draw:
+        return -1
+    rst = get_current_wanneng_num() + 1
+    my_logger.info('抽中的万能票号码: %s' % rst)
     return rst
 
 
