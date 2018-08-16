@@ -166,6 +166,7 @@ def update_modian_conf():
     # conn.close()
 
     my_logger.debug('读取摩点配置耗时: %s秒', time.time() - time0)
+    modian_handler.init_order_queues()
 
 
 @scheduler.scheduled_job('cron', second='10,30,50')
@@ -260,4 +261,4 @@ def notify_modian_pk():
 
 modian_handler = ModianHandler([], [])
 update_modian_conf()
-modian_handler.init_order_queues()
+# modian_handler.init_order_queues()
