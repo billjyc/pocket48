@@ -366,7 +366,7 @@ class ModianHandler:
                             idx += 1
                     if len(standings) > 0:
                         for standing in standings:
-                            report_message += '%d. 座位号: 加站%03d\n' % (idx, standing.number)
+                            report_message += '%d. 站票: %03d\n' % (idx, standing.number)
                             idx += 1
                     if len(wannengs) > 0:
                         for wanneng in wannengs:
