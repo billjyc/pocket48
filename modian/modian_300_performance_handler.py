@@ -126,9 +126,7 @@ def get_current_available_seats():
 
 
 def get_draw_tickets_num(support_num):
-    if not global_config.MODIAN_300_ACTIVITY:
-        support_num = support_num * 10
-    if support_num <= 10:
+    if support_num < 10:
         return 0
     elif support_num <= 100:
         return int(support_num / 10)
