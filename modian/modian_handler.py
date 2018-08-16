@@ -84,9 +84,6 @@ class ModianHandler:
 
         # self.init_order_queues()
 
-        self.current_available_seats = modian_300_performance_handler.get_current_available_seats()
-        self.current_standing_seats_num = modian_300_performance_handler.get_current_standing_num()
-
     def init_order_queues(self):
         for modian_entity in self.modian_project_array:
             try:
@@ -118,6 +115,9 @@ class ModianHandler:
             except Exception as e:
                 my_logger.error('初始化订单队列失败！')
                 my_logger.exception(e)
+
+        self.current_available_seats = modian_300_performance_handler.get_current_available_seats()
+        self.current_standing_seats_num = modian_300_performance_handler.get_current_standing_num()
 
     def modian_header(self):
         """
