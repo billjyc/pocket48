@@ -165,11 +165,11 @@ def get_draw_tickets_num(support_num):
 
 def can_draw_tickets(is_seats=True, isWanNeng=False):
     """
-    抽选概率1/8（坐区），1/6(站区）, 1/40（万能票）
+    抽选概率1/6（坐区），1/6(站区）, 1/40（万能票）
     :return: 是否能够抽中
     """
     if is_seats:
-        candidates = [i for i in range(8)]
+        candidates = [i for i in range(6)]
         rst = util.choice(candidates)
         my_logger.debug('是否抽中坐区: %s' % (rst[0] < 1))
         return rst[0] < 1
