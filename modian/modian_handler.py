@@ -317,6 +317,11 @@ class ModianHandler:
                 # if cards_msg:
                 #     QQHandler.send_to_groups(['483548995'], cards_msg)
 
+            if int(modian_entity.pro_id) == 28672:
+                END_TIME = util.convert_timestr_to_timestamp('2018-08-19 22:30:00')
+                if util.convert_timestr_to_timestamp(pay_time) > END_TIME:
+                    continue
+
             # 300场公演活动
             if int(modian_entity.pro_id) == 28671:
                 seats = []
