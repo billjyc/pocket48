@@ -342,8 +342,9 @@ class ModianHandler:
                                     (%s, %s, %s)
                             """, (2, user_id, standing_number))
                             standings.append(Standing(standing_number))
-                    else:
-                        wanneng_number = modian_300_performance_handler.draw_wanneng_tickets()
+
+                    wanneng_number = modian_300_performance_handler.draw_wanneng_tickets()
+                    if wanneng_number != -1:
                         mysql_util.query("""
                         INSERT INTO `seats_record` (`seats_type`, `modian_id`, `seats_number`) VALUES
                                     (%s, %s, %s)
