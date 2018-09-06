@@ -15,6 +15,8 @@ from modian.modian_card_draw import CardDrawHandler
 from qq.qqhandler import QQHandler
 from utils import global_config, util
 from utils.mysql_util import mysql_util
+from modian import modian_300_performance_handler
+from modian.modian_300_performance_handler import Seat, Standing, Wanneng
 
 
 class ModianEntity:
@@ -66,7 +68,7 @@ class ModianHandler:
         if not hasattr(cls, 'instance'):
             cls._instance = super().__new__(cls)
         return cls._instance
-
+    
     def __init__(self, modian_notify_groups, modian_project_array):
         self.session = requests.session()
         self.modian_notify_groups = modian_notify_groups
@@ -115,10 +117,10 @@ class ModianHandler:
                 my_logger.error('初始化订单队列失败！')
                 my_logger.exception(e)
 
-        # self.current_available_seats = modian_300_performance_handler.get_current_available_seats()
+        self.current_available_seats = modian_300_performance_handler.get_current_available_seats()
         # self.current_standing_seats_num = modian_300_performance_handler.get_current_standing_num()
-        # self.current_wanneng_num = modian_300_performance_handler.get_current_wanneng_num()
-        # self.current_available_standings = modian_300_performance_handler.get_current_available_standings()
+        self.current_wanneng_num = modian_300_performance_handler.get_current_wanneng_num()
+        self.current_available_standings = modian_300_performance_handler.get_current_available_standings()
 
     def modian_header(self):
         """
@@ -227,7 +229,7 @@ class ModianHandler:
                 if backer_money >= jiebang.min_stick_amount:
                     stick_num = util.compute_stick_num(jiebang.min_stick_amount, backer_money)
                     jiebang.current_stick_num += stick_num
-
+                    
                     # jiebang.last_record_time = util.convert_timestamp_to_timestr(time.time()*1000)
                     jiebang.last_record_time = int(time.time())
                     # 数据库也要更新
@@ -315,64 +317,72 @@ class ModianHandler:
                 # if cards_msg:
                 #     QQHandler.send_to_groups(['483548995'], cards_msg)
 
+            # if int(modian_entity.pro_id) == 28672:
+            #     END_TIME = util.convert_timestr_to_timestamp('2018-08-19 22:30:00')
+            #     if util.convert_timestr_to_timestamp(pay_time) > END_TIME:
+            #         continue
+
             # 300场公演活动
-            # if int(modian_entity.pro_id) == 28671:
-            #     seats = []
-            #     standings = []
-            #     wannengs = []
-            #     ticket_num = modian_300_performance_handler.get_draw_tickets_num(backer_money)
-            #     for i in range(ticket_num):
-            #         if len(self.current_available_seats) > 0:
-            #             seat_number = modian_300_performance_handler.draw_tickets(self.current_available_seats)
-            #             if seat_number != -1:
-            #                 self.current_available_seats.remove(seat_number)
-            #                 mysql_util.query("""
-            #                         INSERT INTO `seats_record` (`seats_type`, `modian_id`, `seats_number`) VALUES
-            #                             (%s, %s, %s)
-            #                     """, (1, user_id, seat_number))
-            #                 seats.append(seat_number)
-            #         elif len(self.current_available_standings) > 0:
-            #             standing_number = modian_300_performance_handler.draw_standing_tickets(self.current_available_standings)
-            #             if standing_number != -1:
-            #                 self.current_available_standings.remove(standing_number)
-            #                 mysql_util.query("""
-            #                     INSERT INTO `seats_record` (`seats_type`, `modian_id`, `seats_number`) VALUES
-            #                         (%s, %s, %s)
-            #                 """, (2, user_id, standing_number))
-            #                 standings.append(Standing(standing_number))
-            #         else:
-            #             wanneng_number = modian_300_performance_handler.draw_wanneng_tickets()
-            #             mysql_util.query("""
-            #             INSERT INTO `seats_record` (`seats_type`, `modian_id`, `seats_number`) VALUES
-            #                         (%s, %s, %s)
-            #                 """, (3, user_id, wanneng_number))
-            #             wannengs.append(Wanneng(wanneng_number))
-            #
-            #     if len(seats) == 0 and len(standings) == 0 and len(wannengs) == 0:
-            #         report_message = '抱歉，本次抽选未中T_T\n'
-            #     else:
-            #         report_message = '您参与的FXF48公演抽选成功！\n'
-            #         idx = 1
-            #         if len(seats) > 0:
-            #             for seat in seats:
-            #                 # seat_o = modian_300_performance_handler.convert_number_to_seats(seat)
-            #                 seat_o = modian_300_performance_handler.seat_number_to_date_dict[seat]
-            #                 report_message += '%d. 公演日期: %d年%d月%d日, 座位号: %s排%s号' % (idx, seat_o.year, seat_o.month, seat_o.day, seat_o.row, seat_o.col)
-            #                 # 特殊座位
-            #                 if seat in modian_300_performance_handler.special_seats_wording.keys():
-            #                     report_message += ', \n【奖励】%s' % modian_300_performance_handler.special_seats_wording[seat]
-            #                 report_message += '\n'
-            #                 idx += 1
-            #         if len(standings) > 0:
-            #             for standing in standings:
-            #                 report_message += '%d. 站票: %03d\n' % (idx, standing.number)
-            #                 idx += 1
-            #         if len(wannengs) > 0:
-            #             for wanneng in wannengs:
-            #                 report_message += '%d. 万能票%03d: 可小窗联系@OFJ，您可获得一张自己指定座位号的门票【注：票面将会标有"复刻票"字样，10排17除外】\n' % (idx, wanneng.number)
-            #                 idx += 1
-            #         report_message += '\n'
-            # msg += report_message
+            if int(modian_entity.pro_id) == 28671:
+                seats = []
+                standings = []
+                wannengs = []
+                ticket_num = modian_300_performance_handler.get_draw_tickets_num(backer_money)
+                for i in range(ticket_num):
+                    if len(self.current_available_seats) > 0:
+                        seat_number = modian_300_performance_handler.draw_tickets(self.current_available_seats)
+                        if seat_number != -1:
+                            self.current_available_seats.remove(seat_number)
+                            mysql_util.query("""
+                                    INSERT INTO `seats_record` (`seats_type`, `modian_id`, `seats_number`) VALUES
+                                        (%s, %s, %s)
+                                """, (1, user_id, seat_number))
+                            seats.append(seat_number)
+                    elif len(self.current_available_standings) > 0:
+                        standing_number = modian_300_performance_handler.draw_standing_tickets(self.current_available_standings)
+                        if standing_number != -1:
+                            self.current_available_standings.remove(standing_number)
+                            mysql_util.query("""
+                                INSERT INTO `seats_record` (`seats_type`, `modian_id`, `seats_number`) VALUES
+                                    (%s, %s, %s)
+                            """, (2, user_id, standing_number))
+                            standings.append(Standing(standing_number))
+
+                    wanneng_number = modian_300_performance_handler.draw_wanneng_tickets()
+                    if wanneng_number != -1:
+                        mysql_util.query("""
+                        INSERT INTO `seats_record` (`seats_type`, `modian_id`, `seats_number`) VALUES
+                                    (%s, %s, %s)
+                            """, (3, user_id, wanneng_number))
+                        wannengs.append(Wanneng(wanneng_number))
+
+                if len(seats) == 0 and len(standings) == 0 and len(wannengs) == 0:
+                    report_message = '抱歉，本次抽选未中T_T\n'
+                else:
+                    report_message = '您参与的FXF48公演抽选成功！\n'
+                    idx = 1
+                    if len(seats) > 0:
+                        for seat in seats:
+                            # seat_o = modian_300_performance_handler.convert_number_to_seats(seat)
+                            seat_o = modian_300_performance_handler.seat_number_to_date_dict[seat]
+                            report_message += '%d. 公演日期: %d年%d月%d日, 座位号: %s排%s号' % (idx, seat_o.year, seat_o.month, seat_o.day, seat_o.row, seat_o.col)
+                            # 特殊座位
+                            if seat in modian_300_performance_handler.special_seats_wording.keys():
+                                report_message += ', \n【奖励】%s' % modian_300_performance_handler.special_seats_wording[seat]
+                            report_message += '\n'
+                            idx += 1
+                    if len(standings) > 0:
+                        for standing in standings:
+                            report_message += '%d. 站票: %03d\n' % (idx, standing.number)
+                            idx += 1
+                    if len(wannengs) > 0:
+                        for wanneng in wannengs:
+                            report_message += '%d. 万能票%03d: 可小窗联系@OFJ，您可获得一张自己指定座位号的门票【注：票面将会标有"复刻票"字样，10排17除外】\n' % (idx, wanneng.number)
+                            idx += 1
+                    report_message += '\n'
+
+
+                msg += report_message
 
             # 六一集资PK积分播报
             # jizi_pk_report = ''
