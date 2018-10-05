@@ -35,6 +35,8 @@ def update_modian_conf():
     # 是否需要开启抽卡功能
     global_config.MODIAN_CARD_DRAW = modian_json['modian_need_card_draw']
 
+    global_config.MODIAN_300_ACTIVITY = modian_json['modian_300_activity']
+
     # 需要适应同时开多个链接的情况
     global_config.MODIAN_ARRAY = []
 
@@ -164,6 +166,7 @@ def update_modian_conf():
     # conn.close()
 
     my_logger.debug('读取摩点配置耗时: %s秒', time.time() - time0)
+    modian_handler.init_order_queues()
 
 
 @scheduler.scheduled_job('cron', second='10,30,50')
@@ -258,4 +261,4 @@ def notify_modian_pk():
 
 modian_handler = ModianHandler([], [])
 update_modian_conf()
-modian_handler.init_order_queues()
+# modian_handler.init_order_queues()

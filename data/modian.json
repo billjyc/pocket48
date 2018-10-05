@@ -1,9 +1,21 @@
 {
   "monitor_activities": [
     {
-      "modian_link": "https://zhongchou.modian.com/item/24441.html",
-      "modian_title": "【冯晓菲】2018年7月总选MVP集资",
-      "modian_pro_id": 24441,
+      "modian_link": "https://zhongchou.modian.com/item/27449.html",
+      "modian_title": "冯晓菲2018年生日集资",
+      "modian_pro_id": 27449,
+      "modian_need_display_rank": false
+    },
+    {
+      "modian_link": "https://zhongchou.modian.com/item/28671.html",
+      "modian_title": "【冯晓菲】300场公演达成特别活动",
+      "modian_pro_id": 28671,
+      "modian_need_display_rank": false
+    },
+    {
+      "modian_link": "https://zhongchou.modian.com/item/28672.html",
+      "modian_title": "【冯晓菲】FXF48 10排17门票竞拍活动",
+      "modian_pro_id": 28672,
       "modian_need_display_rank": false
     }
   ],
@@ -13,5 +25,6 @@
   "modian_pk_activities": [
     18954, 18966
   ],
-  "modian_need_card_draw": false
+  "modian_need_card_draw": false,
+  "modian_300_activity": true
 }
