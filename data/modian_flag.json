@@ -13,6 +13,34 @@
       "target_flag_amount": 6000,
       "end_time": "2018-10-17 23:59:59",
       "remark": ""
+    },
+    {
+      "flag_name": "满6666追加131.4（闪闪）",
+      "pro_id": "33035",
+      "target_flag_amount": 6666,
+      "end_time": "2018-10-17 23:59:59",
+      "remark": ""
+    },
+    {
+      "flag_name": "满7000追加101.7（向阳）",
+      "pro_id": "33035",
+      "target_flag_amount": 7000,
+      "end_time": "2018-10-17 23:59:59",
+      "remark": ""
+    },
+    {
+      "flag_name": "满8000追加101.7（向阳）",
+      "pro_id": "33035",
+      "target_flag_amount": 8000,
+      "end_time": "2018-10-17 23:59:59",
+      "remark": ""
+    },
+    {
+      "flag_name": "满9000追加101.7（向阳）",
+      "pro_id": "33035",
+      "target_flag_amount": 9000,
+      "end_time": "2018-10-17 23:59:59",
+      "remark": ""
     }
   ]
 }
