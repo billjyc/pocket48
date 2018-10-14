@@ -2,23 +2,16 @@
   "activities": [
 
     {
-      "flag_name": "10.13满1500解锁头像",
+      "flag_name": "10.14满2000解锁头像",
       "pro_id": "33035",
-      "target_flag_amount": 8784.03,
-      "end_time": "2018-10-13 23:59:59",
+      "target_flag_amount": 11578.78,
+      "end_time": "2018-10-14 23:59:59",
       "remark": ""
     },
     {
-      "flag_name": "满8000追加101.7（向阳）",
+      "flag_name": "满10400追加100",
       "pro_id": "33035",
-      "target_flag_amount": 8000,
-      "end_time": "2018-10-17 23:59:59",
-      "remark": ""
-    },
-    {
-      "flag_name": "满9000追加101.7（向阳）",
-      "pro_id": "33035",
-      "target_flag_amount": 9000,
+      "target_flag_amount": 10400,
       "end_time": "2018-10-17 23:59:59",
       "remark": ""
     }
