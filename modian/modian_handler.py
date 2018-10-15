@@ -305,7 +305,7 @@ class ModianHandler:
                 cards = self.card_draw_handler.draw(user_id, nickname, backer_money, pay_time)
                 if cards:
                     for k, v in cards.items():
-                        cards_msg += '%s*%d,' % (k.name, v)
+                        cards_msg += '\"%s\"*%d,' % (k.name, v)
                     my_logger.debug(cards_msg)
                     cards_msg = cards_msg[:-1] + '，连词成句 试图中奖，start！\n'
                     # 加上图片
