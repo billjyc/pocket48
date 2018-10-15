@@ -15,8 +15,6 @@ from modian.modian_card_draw import CardDrawHandler
 from qq.qqhandler import QQHandler
 from utils import global_config, util
 from utils.mysql_util import mysql_util
-from modian import modian_300_performance_handler
-from modian.modian_300_performance_handler import Seat, Standing, Wanneng
 
 
 class ModianEntity:
@@ -117,10 +115,10 @@ class ModianHandler:
                 my_logger.error('初始化订单队列失败！')
                 my_logger.exception(e)
 
-        self.current_available_seats = modian_300_performance_handler.get_current_available_seats()
-        # self.current_standing_seats_num = modian_300_performance_handler.get_current_standing_num()
-        self.current_wanneng_num = modian_300_performance_handler.get_current_wanneng_num()
-        self.current_available_standings = modian_300_performance_handler.get_current_available_standings()
+        # self.current_available_seats = modian_300_performance_handler.get_current_available_seats()
+        # # self.current_standing_seats_num = modian_300_performance_handler.get_current_standing_num()
+        # self.current_wanneng_num = modian_300_performance_handler.get_current_wanneng_num()
+        # self.current_available_standings = modian_300_performance_handler.get_current_available_standings()
 
     def modian_header(self):
         """
