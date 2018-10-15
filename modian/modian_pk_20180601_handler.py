@@ -6,13 +6,28 @@ from utils.mysql_util import mysql_util
 from log.my_logger import modian_logger as my_logger
 import time
 
-
 MINUS_AMOUNT = 99.9
 FXF_PRO_ID = 18966
 WJL_PRO_ID = 18954
 
 FXF_MAKE_TROUBLE_POINTS = 9
 WJL_MAKE_TROUBLE_POINTS = 5
+
+
+# 六一集资PK积分播报
+# jizi_pk_report = ''
+# plus_points = modian_pk_handler.plus_points(modian_entity.pro_id, backer_money)
+# minus_points = modian_pk_handler.minus_points(modian_entity.pro_id, backer_money)
+# if plus_points > 0:
+#     jizi_pk_report += '本方成长值+%s\n' % plus_points
+# if minus_points > 0:
+#     jizi_pk_report += '捣乱成功，对方成长值-%s\n' % minus_points
+# jizi_pk_report += '【六一成长快乐大作战】\n'
+#
+# fxf_points = modian_pk_handler.get_current_points(modian_pk_handler.FXF_PRO_ID)
+# wjl_points = modian_pk_handler.get_current_points(modian_pk_handler.WJL_PRO_ID)
+#
+# jizi_pk_report += '目前成长值：\n冯晓菲: %s点; 汪佳翎: %s点\n' % (fxf_points, wjl_points)
 
 
 def minus_points(pro_id, pay_amount):
@@ -130,13 +145,13 @@ def get_current_supporter_num(pro_id):
     """
     rst = mysql_util.select_one("""
         SELECT COUNT(DISTINCT(`supporter_id`)) FROM `order` WHERE `pro_id`=%s
-    """, (pro_id, ))
+    """, (pro_id,))
     my_logger.info('%s当前集资人数: %s' % (pro_id, rst[0]))
     return rst[0]
 
 
 def get_current_points(pro_id):
-    if pro_id not in[FXF_PRO_ID, WJL_PRO_ID]:
+    if pro_id not in [FXF_PRO_ID, WJL_PRO_ID]:
         return 0
     time0 = time.time()
     # 当前集资人数
@@ -145,7 +160,7 @@ def get_current_points(pro_id):
     supporter_num_points = 0
     rst = mysql_util.select_all("""
         select * from `order` where pro_id=%s and `backer_money` <> 99.9
-    """, (pro_id, ))
+    """, (pro_id,))
     points = 0
     for order in rst:
         """
@@ -205,4 +220,3 @@ if __name__ == '__main__':
     # print(get_plus_10_times(WJL_PRO_ID))
     get_current_points(15972)
     get_current_points(15980)
-

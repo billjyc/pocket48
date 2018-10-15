@@ -302,102 +302,24 @@ class ModianHandler:
             # 抽卡播报
             cards_msg = ''
             if global_config.MODIAN_CARD_DRAW:
+
                 cards_msg += '恭喜抽中'
                 cards = self.card_draw_handler.draw(user_id, nickname, backer_money, pay_time)
-                for k, v in cards.items():
-                    cards_msg += '%s*%d,' % (k.name, v)
-                my_logger.debug(cards_msg)
-                cards_msg = cards_msg[:-1] + '\n'
-                # 加上图片
-                if global_config.USING_COOLQ_PRO is True:
+                if cards:
                     for k, v in cards.items():
-                        cards_msg += '[CQ:image,file=%s]' % k.url
+                        cards_msg += '%s*%d,' % (k.name, v)
+                    my_logger.debug(cards_msg)
+                    cards_msg = cards_msg[:-1] + '，连词成句 试图中奖，start！\n'
+                    # 加上图片
+                    # if global_config.USING_COOLQ_PRO is True:
+                    #     for k, v in cards.items():
+                    #         cards_msg += '[CQ:image,file=%s]' % k.url
+                else:
+                    cards_msg += '没有抽中任何字，就送您一个“谢谢惠顾”吧'
                 if cards_msg:
                     msg += '\n%s' % cards_msg
                 # if cards_msg:
                 #     QQHandler.send_to_groups(['483548995'], cards_msg)
-
-            # if int(modian_entity.pro_id) == 28672:
-            #     END_TIME = util.convert_timestr_to_timestamp('2018-08-19 22:30:00')
-            #     if util.convert_timestr_to_timestamp(pay_time) > END_TIME:
-            #         continue
-
-            # 300场公演活动
-            if int(modian_entity.pro_id) == 28671:
-                seats = []
-                standings = []
-                wannengs = []
-                ticket_num = modian_300_performance_handler.get_draw_tickets_num(backer_money)
-                for i in range(ticket_num):
-                    if len(self.current_available_seats) > 0:
-                        seat_number = modian_300_performance_handler.draw_tickets(self.current_available_seats)
-                        if seat_number != -1:
-                            self.current_available_seats.remove(seat_number)
-                            mysql_util.query("""
-                                    INSERT INTO `seats_record` (`seats_type`, `modian_id`, `seats_number`) VALUES
-                                        (%s, %s, %s)
-                                """, (1, user_id, seat_number))
-                            seats.append(seat_number)
-                    elif len(self.current_available_standings) > 0:
-                        standing_number = modian_300_performance_handler.draw_standing_tickets(self.current_available_standings)
-                        if standing_number != -1:
-                            self.current_available_standings.remove(standing_number)
-                            mysql_util.query("""
-                                INSERT INTO `seats_record` (`seats_type`, `modian_id`, `seats_number`) VALUES
-                                    (%s, %s, %s)
-                            """, (2, user_id, standing_number))
-                            standings.append(Standing(standing_number))
-
-                    wanneng_number = modian_300_performance_handler.draw_wanneng_tickets()
-                    if wanneng_number != -1:
-                        mysql_util.query("""
-                        INSERT INTO `seats_record` (`seats_type`, `modian_id`, `seats_number`) VALUES
-                                    (%s, %s, %s)
-                            """, (3, user_id, wanneng_number))
-                        wannengs.append(Wanneng(wanneng_number))
-
-                if len(seats) == 0 and len(standings) == 0 and len(wannengs) == 0:
-                    report_message = '抱歉，本次抽选未中T_T\n'
-                else:
-                    report_message = '您参与的FXF48公演抽选成功！\n'
-                    idx = 1
-                    if len(seats) > 0:
-                        for seat in seats:
-                            # seat_o = modian_300_performance_handler.convert_number_to_seats(seat)
-                            seat_o = modian_300_performance_handler.seat_number_to_date_dict[seat]
-                            report_message += '%d. 公演日期: %d年%d月%d日, 座位号: %s排%s号' % (idx, seat_o.year, seat_o.month, seat_o.day, seat_o.row, seat_o.col)
-                            # 特殊座位
-                            if seat in modian_300_performance_handler.special_seats_wording.keys():
-                                report_message += ', \n【奖励】%s' % modian_300_performance_handler.special_seats_wording[seat]
-                            report_message += '\n'
-                            idx += 1
-                    if len(standings) > 0:
-                        for standing in standings:
-                            report_message += '%d. 站票: %03d\n' % (idx, standing.number)
-                            idx += 1
-                    if len(wannengs) > 0:
-                        for wanneng in wannengs:
-                            report_message += '%d. 万能票%03d: 可小窗联系@OFJ，您可获得一张自己指定座位号的门票【注：票面将会标有"复刻票"字样，10排17除外】\n' % (idx, wanneng.number)
-                            idx += 1
-                    report_message += '\n'
-
-
-                msg += report_message
-
-            # 六一集资PK积分播报
-            # jizi_pk_report = ''
-            # plus_points = modian_pk_handler.plus_points(modian_entity.pro_id, backer_money)
-            # minus_points = modian_pk_handler.minus_points(modian_entity.pro_id, backer_money)
-            # if plus_points > 0:
-            #     jizi_pk_report += '本方成长值+%s\n' % plus_points
-            # if minus_points > 0:
-            #     jizi_pk_report += '捣乱成功，对方成长值-%s\n' % minus_points
-            # jizi_pk_report += '【六一成长快乐大作战】\n'
-            #
-            # fxf_points = modian_pk_handler.get_current_points(modian_pk_handler.FXF_PRO_ID)
-            # wjl_points = modian_pk_handler.get_current_points(modian_pk_handler.WJL_PRO_ID)
-            #
-            # jizi_pk_report += '目前成长值：\n冯晓菲: %s点; 汪佳翎: %s点\n' % (fxf_points, wjl_points)
 
             msg += '%s\n集资项目: %s\n链接: %s\n' % (project_info, pro_name, modian_entity.link)
             # msg += jizi_pk_report

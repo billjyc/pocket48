@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
 import json
-from log.my_logger import modian_logger as logger
 from utils import util
+import logging
 from utils.mysql_util import mysql_util
+try:
+    from log.my_logger import modian_logger as logger
+except:
+    logger = logging.getLogger(__name__)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -52,6 +56,16 @@ class CardDrawHandler:
                 self.weight.append(card_j['weight'])
                 self.base_cards.append(card)
 
+    def can_draw(self):
+        """
+        是否可以抽中卡, 概率1/3
+        :return:
+        """
+        candidates = [i for i in range(3)]
+        rst = util.choice(candidates)
+        logger.debug('是否抽中卡: %s' % (rst[0] < 1))
+        return rst[0] < 1
+
     def draw(self, user_id, nickname, backer_money, pay_time):
         logger.info('抽卡: user_id: %s, nickname: %s, backer_money: %s, pay_time: %s',
                     user_id, nickname, backer_money, pay_time)
@@ -60,7 +74,7 @@ class CardDrawHandler:
 
         if card_num == 0:
             logger.info('集资未达到标准，无法抽卡')
-            return []
+            return None
 
         logger.info('共抽卡%d张', card_num)
         rst = {}
@@ -72,6 +86,10 @@ class CardDrawHandler:
 
         insert_sql = 'INSERT INTO `draw_record` (`supporter_id`, `card_id`, `draw_time`) VALUES '
         for no in range(card_num):
+            # 先判断能否抽中卡，如果抽不中，直接跳过
+            draw_rst = self.can_draw()
+            if not draw_rst:
+                continue
             card_index = util.weight_choice(self.base_cards, self.weight)
             card = self.base_cards[card_index]
             insert_sql += '(%s, %s, \'%s\'),' % (user_id, card.id, pay_time)
