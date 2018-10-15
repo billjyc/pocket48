@@ -155,7 +155,7 @@ def weight_choice(candidate, weight):
     """
     if len(candidate) != len(weight):
         raise RuntimeError('候选数组和权重数组的长度不一致！')
-    weight_sum = sum(weight)
+    weight_sum = int(sum(weight))
 
     if weight_sum != 100:
         raise RuntimeError('权重设置有误，权重之和不为100')

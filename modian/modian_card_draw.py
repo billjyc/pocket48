@@ -85,11 +85,13 @@ class CardDrawHandler:
                     """, (user_id, nickname, nickname))
 
         insert_sql = 'INSERT INTO `draw_record` (`supporter_id`, `card_id`, `draw_time`) VALUES '
+        flag = False
         for no in range(card_num):
             # 先判断能否抽中卡，如果抽不中，直接跳过
             draw_rst = self.can_draw()
             if not draw_rst:
                 continue
+            flag = True
             card_index = util.weight_choice(self.base_cards, self.weight)
             card = self.base_cards[card_index]
             insert_sql += '(%s, %s, \'%s\'),' % (user_id, card.id, pay_time)
@@ -98,7 +100,8 @@ class CardDrawHandler:
                 rst[card] += 1
             else:
                 rst[card] = 1
-        mysql_util.query(insert_sql[:-1])
+        if flag:  # 如果一张都没有抽中，就不执行sql语句
+            mysql_util.query(insert_sql[:-1])
         return rst
 
     def evolution(self, raw_list, user_id, pay_time):
@@ -132,5 +135,6 @@ class CardDrawHandler:
 
 if __name__ == '__main__':
     handler = CardDrawHandler()
-    rst = handler.draw('123', 'billjyc1', 2, '2018-03-24 12:54:00')
+    handler.read_config()
+    rst = handler.draw('123', 'billjyc1', 200, '2018-03-24 12:54:00')
     print(rst)
