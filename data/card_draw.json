@@ -1,5 +1,5 @@
 {
-  "min_amount": 1,
+  "min_amount": 0.1,
   "cards": [
     {
       "id": 1,
