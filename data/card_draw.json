@@ -6,28 +6,28 @@
       "name": "推",
       "url": "https://wx4.sinaimg.cn/mw690/8a300cd8gy1fpw03hrpffj2046046t8o.jpg",
       "level": 1,
-      "weight": 30
+      "weight": 25
     },
     {
       "id": 2,
       "name": "灰",
       "url": "https://wx4.sinaimg.cn/mw690/8a300cd8gy1fpw03hrn3uj2046046mx4.jpg",
       "level": 1,
-      "weight": 25
+      "weight": 20
     },
     {
       "id": 3,
       "name": "生日",
       "url": "https://wx4.sinaimg.cn/mw690/8a300cd8gy1fpw03hscqoj20460460sw.jpg",
       "level": 1,
-      "weight": 15
+      "weight": 10
     },
     {
       "id": 4,
       "name": "快乐",
       "url": "https://wx2.sinaimg.cn/mw690/8a300cd8gy1fpw03hrpzcj2046046jre.jpg",
       "level": 1,
-      "weight": 15
+      "weight": 10
     },
     {
       "id": 5,
@@ -59,17 +59,17 @@
     },
     {
       "id": 9,
-      "name": "锁",
+      "name": "锁了",
       "url": "https://wx3.sinaimg.cn/mw690/8a300cd8gy1fpw04gpmw9j2046046mx5.jpg",
       "level": 1,
-      "weight": 4.9
+      "weight": 14.9
     },
     {
       "id": 10,
       "name": "甜",
       "url": "https://wx3.sinaimg.cn/mw690/8a300cd8gy1fpw04gqlpdj204608cmxa.jpg",
       "level": 1,
-      "weight": 4.9
+      "weight": 14.9
     }
   ]
 }
