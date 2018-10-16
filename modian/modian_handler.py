@@ -300,10 +300,9 @@ class ModianHandler:
             # 抽卡播报
             cards_msg = ''
             if global_config.MODIAN_CARD_DRAW:
-
-                cards_msg += '恭喜抽中'
                 cards = self.card_draw_handler.draw(user_id, nickname, backer_money, pay_time)
                 if cards:
+                    cards_msg += '恭喜抽中'
                     for k, v in cards.items():
                         cards_msg += '\"%s\"*%d,' % (k.name, v)
                     my_logger.debug(cards_msg)
@@ -314,10 +313,10 @@ class ModianHandler:
                     #         cards_msg += '[CQ:image,file=%s]' % k.url
                 else:
                     cards_msg += '没有抽中任何字，就送您一个“谢谢惠顾”吧'
-                if cards_msg:
-                    msg += '\n%s' % cards_msg
                 # if cards_msg:
-                #     QQHandler.send_to_groups(['483548995'], cards_msg)
+                #     msg += '\n%s' % cards_msg
+                if cards_msg:
+                    QQHandler.send_to_groups(['483548995'], cards_msg)
 
             msg += '%s\n集资项目: %s\n链接: %s\n' % (project_info, pro_name, modian_entity.link)
             # msg += jizi_pk_report
