@@ -6,28 +6,28 @@
       "name": "推",
       "url": "https://wx4.sinaimg.cn/mw690/8a300cd8gy1fpw03hrpffj2046046t8o.jpg",
       "level": 1,
-      "weight": 25
+      "weight": 27
     },
     {
       "id": 2,
       "name": "灰",
       "url": "https://wx4.sinaimg.cn/mw690/8a300cd8gy1fpw03hrn3uj2046046mx4.jpg",
       "level": 1,
-      "weight": 20
+      "weight": 22
     },
     {
       "id": 3,
       "name": "生日",
       "url": "https://wx4.sinaimg.cn/mw690/8a300cd8gy1fpw03hscqoj20460460sw.jpg",
       "level": 1,
-      "weight": 10
+      "weight": 15
     },
     {
       "id": 4,
       "name": "快乐",
       "url": "https://wx2.sinaimg.cn/mw690/8a300cd8gy1fpw03hrpzcj2046046jre.jpg",
       "level": 1,
-      "weight": 10
+      "weight": 15
     },
     {
       "id": 5,
@@ -48,28 +48,28 @@
       "name": "瑟无端五十弦",
       "url": "https://wx1.sinaimg.cn/mw690/8a300cd8gy1fpw04gou6gj2046046dft.jpg",
       "level": 1,
-      "weight": 0.7
+      "weight": 1
     },
     {
       "id": 8,
       "name": "锦",
       "url": "https://wx2.sinaimg.cn/mw690/8a300cd8gy1fpw04gpjzbj2046046jrg.jpg",
       "level": 1,
-      "weight": 0.5
+      "weight": 1
     },
     {
       "id": 9,
       "name": "锁了",
       "url": "https://wx3.sinaimg.cn/mw690/8a300cd8gy1fpw04gpmw9j2046046mx5.jpg",
       "level": 1,
-      "weight": 14.9
+      "weight": 5
     },
     {
       "id": 10,
       "name": "甜",
       "url": "https://wx3.sinaimg.cn/mw690/8a300cd8gy1fpw04gqlpdj204608cmxa.jpg",
       "level": 1,
-      "weight": 14.9
+      "weight": 10
     }
   ]
 }

@@ -58,10 +58,10 @@ class CardDrawHandler:
 
     def can_draw(self):
         """
-        是否可以抽中卡, 概率1/5
+        是否可以抽中卡, 概率1/3
         :return:
         """
-        candidates = [i for i in range(4)]
+        candidates = [i for i in range(3)]
         rst = util.choice(candidates)
         logger.debug('是否抽中卡: %s' % (rst[0] < 1))
         return rst[0] < 1
