@@ -312,7 +312,7 @@ class ModianHandler:
                     #     for k, v in cards.items():
                     #         cards_msg += '[CQ:image,file=%s]' % k.url
                 else:
-                    cards_msg += '没有抽中任何字，就送您一个“谢谢惠顾”吧'
+                    cards_msg += '没有抽中任何字，就送您一个“谢谢惠顾”吧\n'
                 if cards_msg:
                     msg += '\n%s' % cards_msg
                 # if cards_msg:
