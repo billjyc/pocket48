@@ -3,7 +3,11 @@
 冯晓菲VS汪佳翎 20180601 PK专用
 """
 from utils.mysql_util import mysql_util
-from log.my_logger import modian_logger as my_logger
+import logging
+try:
+    from log.my_logger import modian_logger as my_logger
+except:
+    my_logger = logging.getLogger(__name__)
 import time
 
 MINUS_AMOUNT = 99.9
@@ -218,5 +222,6 @@ if __name__ == '__main__':
     # plus_points(15980, 7)
     # print(get_plus_10_times(FXF_PRO_ID))
     # print(get_plus_10_times(WJL_PRO_ID))
+    get_current_supporter_num(15972)
     get_current_points(15972)
     get_current_points(15980)
