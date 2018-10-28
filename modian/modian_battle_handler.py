@@ -12,7 +12,7 @@ except:
 import time
 
 
-LOLLIPOP_AMOUNT = 10.17
+LOLLIPOP_AMOUNT = 1
 LOLLIPOP_POINTS = 1
 LOLLIPOP_IMG = 'https://github.com/billjyc/girls_django/blob/master/modian/static/birthdaywish/imgs/%E6%A3%92%E6%A3%92%E7%B3%96.jpg?raw=true'
 SUGAR_BOWL_AMOUNT = 48
@@ -22,7 +22,7 @@ FOX_DOLL_AMOUNT = 101.7
 FOX_DOLL_POINTS = 10
 FOX_DOLL_IMG = 'https://github.com/billjyc/girls_django/blob/master/modian/static/birthdaywish/imgs/%E7%8B%90%E7%8B%B8%E7%8E%A9%E5%81%B6.jpg?raw=true'
 
-HUMMER_AMOUNT = 10.17
+HUMMER_AMOUNT = 1
 HUMMER_POINTS = -1
 HUMMER_IMG = 'https://github.com/billjyc/girls_django/blob/master/modian/static/birthdaywish/imgs/%E9%94%A4%E5%AD%90.jpg?raw=true'
 PUMPKIN_GRIMACE_AMOUNT = 101.7
