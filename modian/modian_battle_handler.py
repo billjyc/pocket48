@@ -77,9 +77,9 @@ def plus_points(amount, order_id, pro_id):
     my_logger.info('加分数量: %s' % points)
 
     report = '获得'
-    report += '棒棒糖*%s, ' % num_of_lollipop if num_of_lollipop > 0 else ''
-    report += '糖罐*%s, ' % num_of_sugar_bowl if num_of_sugar_bowl > 0 else ''
-    report += '狐狸玩偶*%s, ' % num_of_fox_doll if num_of_fox_doll > 0 else ''
+    report += '【棒棒糖】*%s, ' % num_of_lollipop if num_of_lollipop > 0 else ''
+    report += '【糖罐】*%s, ' % num_of_sugar_bowl if num_of_sugar_bowl > 0 else ''
+    report += '【狐狸玩偶】*%s, ' % num_of_fox_doll if num_of_fox_doll > 0 else ''
     if num_of_lollipop > 0:
         report += '[CQ:image,file=%s]' % LOLLIPOP_IMG
     if num_of_sugar_bowl > 0:
@@ -110,8 +110,9 @@ def plus_points(amount, order_id, pro_id):
         bonus_report += '恭喜，你获得了【FXF的啵啵】，本次获取的积分加倍'
     else:
         pass
-    bonus_report += '\n'
-    report += bonus_report
+    if bonus_report:
+        report += bonus_report
+    report += '本次加分：%s\n' % points
     # 存入数据库
     mysql_util.query("""
         insert into `point_detail` (`order_id`, `pro_id`, `point`) VALUES (%s, %s, %s)
@@ -155,9 +156,9 @@ def minus_points(amount, order_id, pro_id):
     my_logger.info('扣分数量: %s' % points)
 
     report = '获得'
-    report += '小锤子*%s, ' % num_of_hummer if num_of_hummer > 0 else ''
-    report += '南瓜鬼脸*%s, ' % num_of_pumpkin_grimace if num_of_pumpkin_grimace > 0 else ''
-    report += '捣蛋一次*%s, ' % num_of_treat if num_of_treat > 0 else ''
+    report += '【小锤子】*%s, ' % num_of_hummer if num_of_hummer > 0 else ''
+    report += '【南瓜鬼脸】*%s, ' % num_of_pumpkin_grimace if num_of_pumpkin_grimace > 0 else ''
+    report += '【捣蛋】*%s, ' % num_of_treat if num_of_treat > 0 else ''
     report += '\n'
     if num_of_hummer > 0:
         report += '[CQ:image,file=%s]' % HUMMER_IMG
@@ -189,8 +190,8 @@ def minus_points(amount, order_id, pro_id):
     else:
         pass
     if len(bonus_report) > 0:
-        bonus_report += '\n'
-    report += bonus_report
+        report += bonus_report
+    report += '本次减分：%s\n' % points
     # 存入数据库
     mysql_util.query("""
             insert into `point_detail` (`order_id`, `pro_id`, `point`) VALUES (%s, %s, %s)
