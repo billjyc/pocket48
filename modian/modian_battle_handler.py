@@ -14,17 +14,23 @@ import time
 
 LOLLIPOP_AMOUNT = 10.17
 LOLLIPOP_POINTS = 1
+LOLLIPOP_IMG = 'https://github.com/billjyc/girls_django/blob/master/modian/static/birthdaywish/imgs/%E6%A3%92%E6%A3%92%E7%B3%96.jpg?raw=true'
 SUGAR_BOWL_AMOUNT = 48
 SUGAR_BOWL_POINTS = 5
+SUGAR_BOWL_IMG = 'https://github.com/billjyc/girls_django/blob/master/modian/static/birthdaywish/imgs/%E7%B3%96%E6%9E%9C%E7%BD%90.jpg?raw=true'
 FOX_DOLL_AMOUNT = 101.7
 FOX_DOLL_POINTS = 10
+FOX_DOLL_IMG = 'https://github.com/billjyc/girls_django/blob/master/modian/static/birthdaywish/imgs/%E7%8B%90%E7%8B%B8%E7%8E%A9%E5%81%B6.jpg?raw=true'
 
 HUMMER_AMOUNT = 10.17
 HUMMER_POINTS = -1
+HUMMER_IMG = 'https://github.com/billjyc/girls_django/blob/master/modian/static/birthdaywish/imgs/%E9%94%A4%E5%AD%90.jpg?raw=true'
 PUMPKIN_GRIMACE_AMOUNT = 101.7
 PUMPKIN_GRIMACE_POINTS = -10
+PUMPKIN_GRIMACE_IMG = 'https://github.com/billjyc/girls_django/blob/master/modian/static/birthdaywish/imgs/%E5%8D%97%E7%93%9C%E9%AC%BC%E8%84%B8.jpg?raw=true'
 TREAT_AMOUNT = 111.1
 TREAT_POINTS = -12
+TREAT_IMG = 'https://github.com/billjyc/girls_django/blob/master/modian/static/birthdaywish/imgs/%E6%8D%A3%E8%9B%8B.jpg?raw=true'
 
 OUTDATED_LOLLIPOP_POINTS = -1
 FXF_KISS_POINTS = 3
@@ -74,6 +80,12 @@ def plus_points(amount, order_id, pro_id):
     report += '棒棒糖*%s, ' % num_of_lollipop if num_of_lollipop > 0 else ''
     report += '糖罐*%s, ' % num_of_sugar_bowl if num_of_sugar_bowl > 0 else ''
     report += '狐狸玩偶*%s, ' % num_of_fox_doll if num_of_fox_doll > 0 else ''
+    if num_of_lollipop > 0:
+        report += '[CQ:image,file=%s]' % LOLLIPOP_IMG
+    if num_of_sugar_bowl > 0:
+        report += '[CQ:image,file=%s]' % SUGAR_BOWL_IMG
+    if num_of_fox_doll > 0:
+        report += '[CQ:image,file=%s]' % FOX_DOLL_IMG
     report += '\n'
 
     candidate = ['过期的棒棒糖', 'FXF的啵啵', '无']
@@ -147,6 +159,12 @@ def minus_points(amount, order_id, pro_id):
     report += '南瓜鬼脸*%s, ' % num_of_pumpkin_grimace if num_of_pumpkin_grimace > 0 else ''
     report += '捣蛋一次*%s, ' % num_of_treat if num_of_treat > 0 else ''
     report += '\n'
+    if num_of_hummer > 0:
+        report += '[CQ:image,file=%s]' % HUMMER_IMG
+    if num_of_pumpkin_grimace > 0:
+        report += '[CQ:image,file=%s]' % PUMPKIN_GRIMACE_IMG
+    if num_of_treat > 0:
+        report += '[CQ:image,file=%s]' % TREAT_IMG
 
     candidate = ['捣蛋失败', '捣蛋大成功', '无']
     weight = [10, 20, 70]
@@ -202,6 +220,8 @@ def get_current_points(pro_id):
     rst = mysql_util.select_all("""
         SELECT `point` from `point_detail` WHERE `pro_id` = %s
     """, (pro_id, ))
+    if not rst:
+        return points
     for a in rst:
         points += a[0]
 
@@ -211,14 +231,14 @@ def get_current_points(pro_id):
 
 
 if __name__ == '__main__':
-    get_current_supporter_num(33035)
-    get_current_points(33035)
-    # print(minus_points(10.17))
+    # get_current_supporter_num(33035)
+    # get_current_points(33035)
+    print(minus_points(10.17, '1', '33035'))
     # print(minus_points(101.7))
     # print(minus_points(60))
     # print(minus_points(500))
-    #
+
     # print(plus_points(10.17))
     # print(plus_points(101.7))
-    # print(plus_points(60))
+    print(plus_points(60, '2', '33035'))
     # print(plus_points(500))
