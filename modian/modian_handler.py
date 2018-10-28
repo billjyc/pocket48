@@ -15,6 +15,7 @@ from modian.modian_card_draw import CardDrawHandler
 from qq.qqhandler import QQHandler
 from utils import global_config, util
 from utils.mysql_util import mysql_util
+from modian import modian_battle_handler
 
 
 class ModianEntity:
@@ -78,6 +79,8 @@ class ModianHandler:
         self.card_draw_handler = CardDrawHandler()
         self.order_queues = {}
 
+        modian_battle_handler.TOTAL_POINTS = modian_battle_handler.get_current_points(modian_battle_handler.SWEET_PRO_ID) \
+                                        + modian_battle_handler.get_current_points(modian_battle_handler.TREAT_PRO_ID)
         # self.mysql_util = MySQLUtil()
 
         # self.init_order_queues()
@@ -218,6 +221,17 @@ class ModianHandler:
                             """, (modian_entity.pro_id, ))
             if rst is not None:
                 msg += '当前集资人数: %s\n' % rst[0]
+
+            # 万圣节特别活动
+            halloween_report = ''
+            if modian_entity.pro_id == modian_battle_handler.SWEET_PRO_ID:
+                plus_points, halloween_report = modian_battle_handler.plus_points(backer_money, oid, modian_entity.pro_id)
+                modian_battle_handler.TOTAL_POINTS += plus_points
+            elif modian_entity.pro_id == modian_battle_handler.TREAT_PRO_ID:
+                minus_points, halloween_report = modian_battle_handler.minus_points(backer_money, oid, modian_entity.pro_id)
+                modian_battle_handler.TOTAL_POINTS += minus_points
+            halloween_report += '当前总分为：%s\n' % modian_battle_handler.TOTAL_POINTS
+            QQHandler.send_to_groups(['483548995'], halloween_report)
 
             '''接棒相关'''
             my_logger.debug('接棒情况更新')
