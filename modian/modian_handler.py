@@ -226,10 +226,10 @@ class ModianHandler:
             halloween_report = ''
             if modian_entity.pro_id == modian_battle_handler.SWEET_PRO_ID:
                 my_logger.debug('加分')
-                plus_points, halloween_report = modian_battle_handler.plus_points(backer_money, oid, modian_entity.pro_id)
+                plus_points, halloween_report = modian_battle_handler.plus_points(backer_money, str(oid), modian_entity.pro_id)
                 modian_battle_handler.TOTAL_POINTS += plus_points
             elif modian_entity.pro_id == modian_battle_handler.TREAT_PRO_ID:
-                minus_points, halloween_report = modian_battle_handler.minus_points(backer_money, oid, modian_entity.pro_id)
+                minus_points, halloween_report = modian_battle_handler.minus_points(backer_money, str(oid), modian_entity.pro_id)
                 my_logger.debug('减分')
                 modian_battle_handler.TOTAL_POINTS += minus_points
             halloween_report += '当前总分为：%s\n' % modian_battle_handler.TOTAL_POINTS
