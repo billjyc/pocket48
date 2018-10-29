@@ -15,20 +15,20 @@ import time
 LOLLIPOP_AMOUNT = 1
 LOLLIPOP_POINTS = 1
 LOLLIPOP_IMG = 'https://raw.githubusercontent.com/billjyc/girls_django/master/modian/static/birthdaywish/imgs/%E6%A3%92%E6%A3%92%E7%B3%96.jpg'
-SUGAR_BOWL_AMOUNT = 48
+SUGAR_BOWL_AMOUNT = 4.8
 SUGAR_BOWL_POINTS = 5
 SUGAR_BOWL_IMG = 'https://raw.githubusercontent.com/billjyc/girls_django/master/modian/static/birthdaywish/imgs/%E7%B3%96%E6%9E%9C%E7%BD%90.jpg'
-FOX_DOLL_AMOUNT = 101.7
+FOX_DOLL_AMOUNT = 10.17
 FOX_DOLL_POINTS = 10
 FOX_DOLL_IMG = 'https://raw.githubusercontent.com/billjyc/girls_django/master/modian/static/birthdaywish/imgs/%E7%8B%90%E7%8B%B8%E7%8E%A9%E5%81%B6.jpg'
 
 HUMMER_AMOUNT = 1
 HUMMER_POINTS = -1
 HUMMER_IMG = 'https://raw.githubusercontent.com/billjyc/girls_django/master/modian/static/birthdaywish/imgs/%E9%94%A4%E5%AD%90.jpg'
-PUMPKIN_GRIMACE_AMOUNT = 101.7
+PUMPKIN_GRIMACE_AMOUNT = 10.17
 PUMPKIN_GRIMACE_POINTS = -10
 PUMPKIN_GRIMACE_IMG = 'https://raw.githubusercontent.com/billjyc/girls_django/master/modian/static/birthdaywish/imgs/%E5%8D%97%E7%93%9C%E9%AC%BC%E8%84%B8.jpg'
-TREAT_AMOUNT = 111.1
+TREAT_AMOUNT = 11.11
 TREAT_POINTS = -12
 TREAT_IMG = 'https://raw.githubusercontent.com/billjyc/girls_django/master/modian/static/birthdaywish/imgs/%E6%8D%A3%E8%9B%8B.jpg'
 
