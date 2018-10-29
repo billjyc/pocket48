@@ -191,7 +191,7 @@ def minus_points(amount, order_id, pro_id):
         pass
     if len(bonus_report) > 0:
         report += bonus_report
-    report += '本次减分：%s\n' % points
+    report += '本次减分：%s\n' % -points
     # 存入数据库
     mysql_util.query("""
             insert into `point_detail` (`order_id`, `pro_id`, `point`) VALUES (%s, %s, %s)
