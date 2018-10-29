@@ -71,7 +71,7 @@ def plus_points(amount, order_id, pro_id):
         points = num_of_sugar_bowl * SUGAR_BOWL_POINTS +  num_of_lollipop * LOLLIPOP_POINTS
     else:
         num_of_fox_doll = int(amount // FOX_DOLL_AMOUNT)
-        num_of_sugar_bowl = (int(amount % FOX_DOLL_AMOUNT) // SUGAR_BOWL_AMOUNT)
+        num_of_sugar_bowl = int((amount % FOX_DOLL_AMOUNT) // SUGAR_BOWL_AMOUNT)
         num_of_lollipop = int((amount % FOX_DOLL_AMOUNT % SUGAR_BOWL_AMOUNT) // LOLLIPOP_AMOUNT)
         points = num_of_fox_doll * FOX_DOLL_POINTS + num_of_sugar_bowl * SUGAR_BOWL_POINTS + num_of_lollipop * LOLLIPOP_POINTS
     my_logger.info('加分数量: %s' % points)
@@ -148,7 +148,7 @@ def minus_points(amount, order_id, pro_id):
         points = num_of_pumpkin_grimace * PUMPKIN_GRIMACE_POINTS + num_of_hummer * HUMMER_POINTS
     else:
         num_of_treat = int(amount // TREAT_AMOUNT)
-        num_of_pumpkin_grimace = (int(amount % TREAT_AMOUNT) // PUMPKIN_GRIMACE_AMOUNT)
+        num_of_pumpkin_grimace = int((amount % TREAT_AMOUNT) // PUMPKIN_GRIMACE_AMOUNT)
         num_of_hummer = int((amount % TREAT_AMOUNT % PUMPKIN_GRIMACE_AMOUNT) // HUMMER_AMOUNT)
         points = num_of_treat * TREAT_POINTS \
                  + num_of_pumpkin_grimace * PUMPKIN_GRIMACE_POINTS \
@@ -196,7 +196,7 @@ def minus_points(amount, order_id, pro_id):
     mysql_util.query("""
             insert into `point_detail` (`order_id`, `pro_id`, `point`) VALUES (%s, %s, %s)
         """, (order_id, pro_id, points))
-    return points, report.strip('\n')
+    return points, report.strip()
 
 
 def get_current_supporter_num(pro_id):
