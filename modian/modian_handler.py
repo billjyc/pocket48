@@ -81,6 +81,7 @@ class ModianHandler:
 
         modian_battle_handler.TOTAL_POINTS = modian_battle_handler.get_current_points(modian_battle_handler.SWEET_PRO_ID) \
                                         + modian_battle_handler.get_current_points(modian_battle_handler.TREAT_PRO_ID)
+        my_logger.info('初始化的分数: %s')
         # self.mysql_util = MySQLUtil()
 
         # self.init_order_queues()
