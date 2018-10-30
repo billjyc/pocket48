@@ -351,6 +351,8 @@ class ModianHandler:
             #     QQHandler.send_to_groups(global_config.TEST_GROUPS, msg)
             # else:
             QQHandler.send_to_groups(self.modian_notify_groups, msg)
+            if modian_entity.pro_id in [modian_battle_handler.SWEET_PRO_ID, modian_battle_handler.TREAT_PRO_ID]:
+                QQHandler.send_to_groups(self.modian_notify_groups, halloween_report)
             self.order_queues[modian_entity.pro_id].add(oid)
 
         # 更新接棒的数据库

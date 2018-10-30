@@ -38,8 +38,8 @@ FXF_KISS_POINTS = 3
 TREAT_FAIL = 1
 TREAT_SUCCESS = -3
 
-SWEET_PRO_ID = 33035
-TREAT_PRO_ID = 33035
+SWEET_PRO_ID = 37152
+TREAT_PRO_ID = 37154
 
 TOTAL_POINTS = 0
 
@@ -117,7 +117,7 @@ def plus_points(amount, order_id, pro_id):
     mysql_util.query("""
         insert into `point_detail` (`order_id`, `pro_id`, `point`) VALUES (%s, %s, %s)
     """, (order_id, pro_id, points))
-    return points, report.strip('\n')
+    return points, report
 
 
 def minus_points(amount, order_id, pro_id):
@@ -196,7 +196,7 @@ def minus_points(amount, order_id, pro_id):
     mysql_util.query("""
             insert into `point_detail` (`order_id`, `pro_id`, `point`) VALUES (%s, %s, %s)
         """, (order_id, pro_id, points))
-    return points, report.strip()
+    return points, report
 
 
 def get_current_supporter_num(pro_id):
