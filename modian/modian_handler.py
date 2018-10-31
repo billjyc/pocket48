@@ -227,19 +227,19 @@ class ModianHandler:
             halloween_report = ''
             import random
             rand_int = random.randint(1, 100)
-            if rand_int < 50:
-            # if int(modian_entity.pro_id) == int(modian_battle_handler.SWEET_PRO_ID):
+            # if rand_int < 50:
+            if int(modian_entity.pro_id) == int(modian_battle_handler.SWEET_PRO_ID):
                 my_logger.debug('加分')
                 plus_points, halloween_report = modian_battle_handler.plus_points(backer_money, str(oid), modian_entity.pro_id)
                 modian_battle_handler.TOTAL_POINTS += plus_points
-            else:
-            # elif int(modian_entity.pro_id) == int(modian_battle_handler.TREAT_PRO_ID):
+            # else:
+            elif int(modian_entity.pro_id) == int(modian_battle_handler.TREAT_PRO_ID):
                 minus_points, halloween_report = modian_battle_handler.minus_points(backer_money, str(oid), modian_entity.pro_id)
                 my_logger.debug('减分')
                 modian_battle_handler.TOTAL_POINTS += minus_points
             halloween_report += '当前总分为：%s\n' % modian_battle_handler.TOTAL_POINTS
             my_logger.debug(halloween_report)
-            QQHandler.send_to_groups(['483548995'], halloween_report)
+            # QQHandler.send_to_groups(['483548995'], halloween_report)
 
             '''接棒相关'''
             my_logger.debug('接棒情况更新')
@@ -351,9 +351,11 @@ class ModianHandler:
             # if modian_entity.pro_id == modian_pk_handler.WJL_PRO_ID:
             #     QQHandler.send_to_groups(global_config.TEST_GROUPS, msg)
             # else:
-            QQHandler.send_to_groups(self.modian_notify_groups, msg)
+
             if int(modian_entity.pro_id) in [modian_battle_handler.SWEET_PRO_ID, modian_battle_handler.TREAT_PRO_ID]:
-                QQHandler.send_to_groups(self.modian_notify_groups, halloween_report)
+                msg += halloween_report
+
+            QQHandler.send_to_groups(self.modian_notify_groups, msg)
             self.order_queues[modian_entity.pro_id].add(oid)
 
         # 更新接棒的数据库
