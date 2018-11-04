@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 """
-用于两个集资链接互相PK用
+2018万圣节特别活动
 """
 from utils.mysql_util import mysql_util
 import logging
