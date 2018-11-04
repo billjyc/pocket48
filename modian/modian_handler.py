@@ -15,7 +15,6 @@ from modian.modian_card_draw import CardDrawHandler
 from qq.qqhandler import QQHandler
 from utils import global_config, util
 from utils.mysql_util import mysql_util
-from modian.special import modian_battle_handler
 
 
 class ModianEntity:
@@ -79,11 +78,6 @@ class ModianHandler:
         self.card_draw_handler = CardDrawHandler()
         self.order_queues = {}
 
-        modian_battle_handler.TOTAL_POINTS = modian_battle_handler.get_current_points(
-            modian_battle_handler.SWEET_PRO_ID) \
-                                             + modian_battle_handler.get_current_points(
-            modian_battle_handler.TREAT_PRO_ID)
-        my_logger.info('初始化的分数: %s')
         # self.mysql_util = MySQLUtil()
 
         # self.init_order_queues()
