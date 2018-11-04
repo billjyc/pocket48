@@ -15,7 +15,7 @@ from modian.modian_card_draw import CardDrawHandler
 from qq.qqhandler import QQHandler
 from utils import global_config, util
 from utils.mysql_util import mysql_util
-from modian import modian_battle_handler
+from modian.special import modian_battle_handler
 
 
 class ModianEntity:
@@ -79,8 +79,10 @@ class ModianHandler:
         self.card_draw_handler = CardDrawHandler()
         self.order_queues = {}
 
-        modian_battle_handler.TOTAL_POINTS = modian_battle_handler.get_current_points(modian_battle_handler.SWEET_PRO_ID) \
-                                        + modian_battle_handler.get_current_points(modian_battle_handler.TREAT_PRO_ID)
+        modian_battle_handler.TOTAL_POINTS = modian_battle_handler.get_current_points(
+            modian_battle_handler.SWEET_PRO_ID) \
+                                             + modian_battle_handler.get_current_points(
+            modian_battle_handler.TREAT_PRO_ID)
         my_logger.info('初始化的分数: %s')
         # self.mysql_util = MySQLUtil()
 
@@ -118,11 +120,6 @@ class ModianHandler:
             except Exception as e:
                 my_logger.error('初始化订单队列失败！')
                 my_logger.exception(e)
-
-        # self.current_available_seats = modian_300_performance_handler.get_current_available_seats()
-        # # self.current_standing_seats_num = modian_300_performance_handler.get_current_standing_num()
-        # self.current_wanneng_num = modian_300_performance_handler.get_current_wanneng_num()
-        # self.current_available_standings = modian_300_performance_handler.get_current_available_standings()
 
     def modian_header(self):
         """
@@ -200,9 +197,6 @@ class ModianHandler:
                         UPDATE `id`=%s
             """, (str(oid), user_id, backer_money, pay_time, modian_entity.pro_id, str(oid)))
 
-            # if modian_entity.pro_id == modian_pk_20180601_handler.WJL_PRO_ID:
-            #     msg = '感谢 %s 支持了%s元\n' % (nickname, backer_money)
-            # else:
             msg = '感谢 %s 支持了%s元, %s\n' % (nickname, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
             daka_rank, support_days = self.find_user_daka_rank(user_id, modian_entity.pro_id)
 
@@ -222,24 +216,6 @@ class ModianHandler:
                             """, (modian_entity.pro_id, ))
             if rst is not None:
                 msg += '当前集资人数: %s\n' % rst[0]
-
-            # 万圣节特别活动
-            # halloween_report = ''
-            # import random
-            # rand_int = random.randint(1, 100)
-            # # if rand_int < 50:
-            # if int(modian_entity.pro_id) == int(modian_battle_handler.SWEET_PRO_ID):
-            #     my_logger.debug('加分')
-            #     plus_points, halloween_report = modian_battle_handler.plus_points(backer_money, str(oid), modian_entity.pro_id)
-            #     modian_battle_handler.TOTAL_POINTS += plus_points
-            # # else:
-            # elif int(modian_entity.pro_id) == int(modian_battle_handler.TREAT_PRO_ID):
-            #     minus_points, halloween_report = modian_battle_handler.minus_points(backer_money, str(oid), modian_entity.pro_id)
-            #     my_logger.debug('减分')
-            #     modian_battle_handler.TOTAL_POINTS += minus_points
-            # halloween_report += '当前总分为：%s\n' % modian_battle_handler.TOTAL_POINTS
-            # my_logger.debug(halloween_report)
-            # QQHandler.send_to_groups(['483548995'], halloween_report)
 
             '''接棒相关'''
             my_logger.debug('接棒情况更新')
@@ -347,13 +323,6 @@ class ModianHandler:
             if global_config.USING_COOLQ_PRO is True:
                 my_logger.debug('使用酷Q PRO发送图片')
                 msg += '\n[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]'
-
-            # if modian_entity.pro_id == modian_pk_handler.WJL_PRO_ID:
-            #     QQHandler.send_to_groups(global_config.TEST_GROUPS, msg)
-            # else:
-
-            # if int(modian_entity.pro_id) in [modian_battle_handler.SWEET_PRO_ID, modian_battle_handler.TREAT_PRO_ID]:
-            #     msg += halloween_report
 
             my_logger.debug(msg)
             QQHandler.send_to_groups(self.modian_notify_groups, msg)

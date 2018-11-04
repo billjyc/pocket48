@@ -5,12 +5,12 @@
 from utils.mysql_util import mysql_util
 import logging
 from utils import util
+
 try:
     from log.my_logger import modian_logger as my_logger
 except:
     my_logger = logging.getLogger(__name__)
 import time
-
 
 LOLLIPOP_AMOUNT = 10.17
 LOLLIPOP_POINTS = 1
@@ -44,6 +44,25 @@ TREAT_PRO_ID = 37154
 TOTAL_POINTS = 0
 
 
+# 万圣节特别活动
+# halloween_report = ''
+# import random
+# rand_int = random.randint(1, 100)
+# # if rand_int < 50:
+# if int(modian_entity.pro_id) == int(modian_battle_handler.SWEET_PRO_ID):
+#     my_logger.debug('加分')
+#     plus_points, halloween_report = modian_battle_handler.plus_points(backer_money, str(oid), modian_entity.pro_id)
+#     modian_battle_handler.TOTAL_POINTS += plus_points
+# # else:
+# elif int(modian_entity.pro_id) == int(modian_battle_handler.TREAT_PRO_ID):
+#     minus_points, halloween_report = modian_battle_handler.minus_points(backer_money, str(oid), modian_entity.pro_id)
+#     my_logger.debug('减分')
+#     modian_battle_handler.TOTAL_POINTS += minus_points
+# halloween_report += '当前总分为：%s\n' % modian_battle_handler.TOTAL_POINTS
+# my_logger.debug(halloween_report)
+# QQHandler.send_to_groups(['483548995'], halloween_report)
+
+
 def plus_points(amount, order_id, pro_id):
     """
     发糖组加分
@@ -68,7 +87,7 @@ def plus_points(amount, order_id, pro_id):
     elif SUGAR_BOWL_AMOUNT <= amount < FOX_DOLL_AMOUNT:
         num_of_sugar_bowl = int(amount // SUGAR_BOWL_AMOUNT)
         num_of_lollipop = int((amount % SUGAR_BOWL_AMOUNT) // LOLLIPOP_AMOUNT)
-        points = num_of_sugar_bowl * SUGAR_BOWL_POINTS +  num_of_lollipop * LOLLIPOP_POINTS
+        points = num_of_sugar_bowl * SUGAR_BOWL_POINTS + num_of_lollipop * LOLLIPOP_POINTS
     else:
         num_of_fox_doll = int(amount // FOX_DOLL_AMOUNT)
         num_of_sugar_bowl = int((amount % FOX_DOLL_AMOUNT) // SUGAR_BOWL_AMOUNT)
@@ -220,7 +239,7 @@ def get_current_points(pro_id):
 
     rst = mysql_util.select_all("""
         SELECT `point` from `point_detail` WHERE `pro_id` = %s
-    """, (pro_id, ))
+    """, (pro_id,))
     if not rst:
         return points
     for a in rst:

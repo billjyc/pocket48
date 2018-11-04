@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import unittest
-from modian import modian_300_performance_handler
-from modian.modian_300_performance_handler import Standing, Seat, Wanneng
+from modian.special import modian_300_performance_handler
+from modian.special.modian_300_performance_handler import Standing, Wanneng
 from utils.mysql_util import mysql_util
 
 
@@ -50,7 +50,6 @@ class Modian300Test(unittest.TestCase):
         self.assertEqual(modian_300_performance_handler.convert_number_to_seats(number5).col, 18)
 
     def test_draw_tickets(self):
-        import random
         self.current_available_seats = modian_300_performance_handler.get_current_available_seats()
         self.current_available_standings = modian_300_performance_handler.get_current_available_standings()
         self.abc(20, 1446325)
