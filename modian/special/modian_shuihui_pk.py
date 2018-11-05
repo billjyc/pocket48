@@ -47,6 +47,7 @@ def plus_fxf_yby_points(amount, pro_id, order_id, user_id):
     mysql_util.query("""
                 insert into `point_detail` (`order_id`, `pro_id`, `point`) VALUES (%s, %s, %s)
             """, (order_id, pro_id, points))
+    return points
 
 
 def plus_shuihui_points(amount, pro_id, order_id, user_id):
@@ -72,6 +73,7 @@ def plus_shuihui_points(amount, pro_id, order_id, user_id):
     mysql_util.query("""
                 insert into `point_detail` (`order_id`, `pro_id`, `point`) VALUES (%s, %s, %s)
             """, (order_id, pro_id, points))
+    return points
 
 
 def get_current_supporter_num(pro_id):
