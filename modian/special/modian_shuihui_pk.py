@@ -83,8 +83,8 @@ def get_current_supporter_num(pro_id):
     rst = mysql_util.select_one("""
         SELECT COUNT(DISTINCT(`supporter_id`)) FROM `order` WHERE `pro_id`= %s
     """, (pro_id,))
-    my_logger.info('%s当前集资人数: %s' % (pro_id, rst[0]))
-    return rst[0]
+    my_logger.info('%s当前集资人数: %s' % (pro_id, rst[0] if rst[0] else 0))
+    return rst[0] if rst[0] else 0
 
 
 def compute_shuihui_total_points():
@@ -99,7 +99,7 @@ def compute_shuihui_total_points():
     rst = mysql_util.select_one("""
         SELECT SUM(`point`) from `point_detail` WHERE `pro_id`=%s
     """, (SHUIHUI_PRO_ID, ))
-    point = supporter_num * 25 + rst[0]
+    point = supporter_num * 25 + rst[0] if rst[0] else 0
     my_logger.info('水灰应援会总分: %s' % point)
     return point
 
@@ -115,7 +115,7 @@ def compute_fxf_yby_single_points(pro_id):
     rst = mysql_util.select_one("""
             SELECT SUM(`point`) from `point_detail` WHERE `pro_id`=%s
         """, (SHUIHUI_PRO_ID,))
-    point = rst[0]
+    point = rst[0] if rst[0] else 0
     my_logger.info('应援会总分: %s' % point)
     return point
 
