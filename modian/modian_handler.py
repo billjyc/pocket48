@@ -18,11 +18,12 @@ from utils.mysql_util import mysql_util
 
 
 class ModianEntity:
-    def __init__(self, link, title, pro_id, need_display_rank=False, current=0.0, target=0.0, support_num=0):
+    def __init__(self, link, title, pro_id, need_display_rank=False, broadcast_groups=[], current=0.0, target=0.0, support_num=0):
         self.link = link
         self.title = title
         self.pro_id = pro_id
         self.need_display_rank = need_display_rank
+        self.broadcast_groups = broadcast_groups
         self.current = current
         self.target = target
         self.support_num = support_num
@@ -319,7 +320,7 @@ class ModianHandler:
                 msg += '\n[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]'
 
             my_logger.debug(msg)
-            QQHandler.send_to_groups(self.modian_notify_groups, msg)
+            QQHandler.send_to_groups(modian_entity.broadcast_groups, msg)
             self.order_queues[modian_entity.pro_id].add(oid)
 
         # 更新接棒的数据库

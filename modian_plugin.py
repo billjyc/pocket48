@@ -42,9 +42,11 @@ def update_modian_conf():
 
     for modian_j in modian_json['monitor_activities']:
         if modian_j['modian_need_display_rank'] is False:
-            modian = ModianEntity(modian_j['modian_link'], modian_j['modian_title'], modian_j['modian_pro_id'], False)
+            modian = ModianEntity(modian_j['modian_link'], modian_j['modian_title'], modian_j['modian_pro_id'], False,
+                                  modian_j['broadcast_groups'])
         elif modian_j['wds_need_display_rank'] is True:
-            modian = ModianEntity(modian_j['modian_link'], modian_j['modian_title'], modian_j['modian_pro_id'], True)
+            modian = ModianEntity(modian_j['modian_link'], modian_j['modian_title'], modian_j['modian_pro_id'], True,
+                                  modian_j['broadcast_groups'])
         global_config.MODIAN_ARRAY.append(modian)
 
     modian_handler.modian_project_array = global_config.MODIAN_ARRAY
