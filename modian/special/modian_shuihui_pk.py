@@ -23,6 +23,9 @@ SHUIHUI_PRO_ID = 37740
 FXF_CURRENT_PRO_ID = 37393
 YBY_CURRENT_PRO_ID = 37540
 
+TEN = 1
+ONE_HUNDRED = 10
+
 
 def plus_fxf_yby_points(amount, pro_id, order_id, user_id):
     """
@@ -36,12 +39,12 @@ def plus_fxf_yby_points(amount, pro_id, order_id, user_id):
     """
     my_logger.info('pro_id: %s, 集资金额: %s, order_id: %s, user_id: %s' % (pro_id, amount, order_id, user_id))
     points = 0
-    if amount < 10:
+    if amount < TEN:
         points = 0
-    elif amount < 100:
-        points = int(amount // 10)
+    elif amount < ONE_HUNDRED:
+        points = int(amount // TEN)
     else:
-        points = int(amount // 100) * 11 + int(amount % 100 // 10)
+        points = int(amount // ONE_HUNDRED) * 11 + int(amount % ONE_HUNDRED // TEN)
     my_logger.info('加分数量: %s' % points)
     # 存入数据库
     mysql_util.query("""
@@ -62,12 +65,12 @@ def plus_shuihui_points(amount, pro_id, order_id, user_id):
     """
     my_logger.info('pro_id: %s, 集资金额: %s, order_id: %s, user_id: %s' % (pro_id, amount, order_id, user_id))
     points = 0
-    if amount < 10:
+    if amount < TEN:
         points = 0
-    elif amount < 100:
-        points = int(amount // 10) * 2.5
+    elif amount < ONE_HUNDRED:
+        points = int(amount // TEN) * 2.5
     else:
-        points = int(amount // 100) * 26 + int(amount % 100 // 10) * 2.5
+        points = int(amount // ONE_HUNDRED) * 26 + int(amount % ONE_HUNDRED // TEN) * 2.5
     my_logger.info('加分数量: %s' % points)
     # 存入数据库
     mysql_util.query("""
