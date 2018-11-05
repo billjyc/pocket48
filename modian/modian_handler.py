@@ -15,6 +15,7 @@ from modian.modian_card_draw import CardDrawHandler
 from qq.qqhandler import QQHandler
 from utils import global_config, util
 from utils.mysql_util import mysql_util
+from modian.special import modian_shuihui_pk
 
 
 class ModianEntity:
@@ -79,6 +80,11 @@ class ModianHandler:
         self.card_draw_handler = CardDrawHandler()
         self.order_queues = {}
 
+        self.fxf_current_point = modian_shuihui_pk.compute_fxf_yby_single_points(modian_shuihui_pk.FXF_CURRENT_PRO_ID)
+        self.yby_current_point = modian_shuihui_pk.compute_fxf_yby_single_points(modian_shuihui_pk.YBY_CURRENT_PRO_ID)
+
+        self.fxf_total_point, self.yby_total_point = modian_shuihui_pk.compute_fxf_yby_total_points()
+        self.shuihui_total_point = modian_shuihui_pk.compute_shuihui_total_points()
         # self.mysql_util = MySQLUtil()
 
         # self.init_order_queues()
@@ -211,6 +217,55 @@ class ModianHandler:
                             """, (modian_entity.pro_id, ))
             if rst is not None:
                 msg += '当前集资人数: %s\n' % rst[0]
+
+            # 水灰金曲PK活动相关
+            current_report = ''
+            if int(modian_entity.pro_id) == modian_shuihui_pk.FXF_CURRENT_PRO_ID:
+                plus_point = modian_shuihui_pk.plus_fxf_yby_points(backer_money, modian_entity.pro_id, str(oid),
+                                                                   user_id)
+                self.fxf_current_point += plus_point
+                self.fxf_total_point += plus_point
+                current_report += '本次加分: %s\n' % plus_point
+            elif int(modian_entity.pro_id) == modian_shuihui_pk.YBY_CURRENT_PRO_ID:
+                plus_point = modian_shuihui_pk.plus_fxf_yby_points(backer_money, modian_entity.pro_id, str(oid),
+                                                                   user_id)
+                self.yby_current_point += plus_point
+                self.yby_total_point += plus_point
+                current_report += '本次加分: %s\n' % plus_point
+            elif int(modian_entity.pro_id) == modian_shuihui_pk.SHUIHUI_PRO_ID:
+                plus_point = modian_shuihui_pk.plus_shuihui_points(backer_money, modian_entity.pro_id, str(oid),
+                                                                   user_id)
+                self.shuihui_total_point += plus_point
+                current_report += '本次加分: %s\n' % plus_point
+
+            fxf_data = {
+                "name": "冯晓菲应援会",
+                "current": self.fxf_current_point,
+                "total": self.fxf_total_point
+            }
+            yby_data = {
+                "name": "杨冰怡应援会",
+                "current": self.yby_current_point,
+                "total": self.yby_total_point,
+            }
+            shuihui_data = {
+                "name": "水灰应援会",
+                "total": self.shuihui_total_point,
+            }
+            current_data = [fxf_data, yby_data]
+            total_data = [fxf_data, yby_data, shuihui_data]
+            current_data.sort(key=lambda k: (k.get('current', 0)), reverse=True)
+            total_data.sort(key=lambda k: (k.get('total', 0)), reverse=True)
+            current_report += '今日战况: \n'
+            for i in range(len(current_data)):
+                sub_msg = '%d. %s: %.1f分\n' % (i + 1, current_data[i]['name'], current_data[i]['current'])
+                current_report += sub_msg
+            total_report = '总积分排行: \n'
+            for i in range(len(total_data)):
+                sub_msg = '%d. %s: %.1f分\n' % (i + 1, total_data[i]['name'], total_data[i]['total'])
+                total_report += sub_msg
+
+            QQHandler.send_to_groups(['483548995'], current_report + total_report)
 
             '''接棒相关'''
             my_logger.debug('接棒情况更新')

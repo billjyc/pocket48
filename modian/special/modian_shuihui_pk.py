@@ -14,14 +14,14 @@ import time
 
 
 # fxf, yby四天的链接列表，用于计算总积分
-FXF_PRO_IDS = []
-YBY_PRO_IDS = []
+FXF_PRO_IDS = [37393]
+YBY_PRO_IDS = [37540]
 # 水灰链接
-SHUIHUI_PRO_ID = 0
+SHUIHUI_PRO_ID = 37740
 
 # fxf, yby当日链接，用于计算当日积分
-FXF_CURRENT_PRO_ID = 0
-YBY_CURRENT_PRO_ID = 0
+FXF_CURRENT_PRO_ID = 37393
+YBY_CURRENT_PRO_ID = 37540
 
 
 def plus_fxf_yby_points(amount, pro_id, order_id, user_id):
@@ -89,7 +89,7 @@ def get_current_supporter_num(pro_id):
 
 def compute_shuihui_total_points():
     """
-    计算水灰应援会的总分
+    计算水灰应援会的总分=日常积分+人头数*25
     :return:
     """
     my_logger.info('计算水灰应援会总分')
@@ -118,3 +118,20 @@ def compute_fxf_yby_single_points(pro_id):
     point = rst[0]
     my_logger.info('应援会总分: %s' % point)
     return point
+
+
+def compute_fxf_yby_total_points():
+    """
+    计算fxf，yby阵营总积分
+    :return:
+    """
+    my_logger.info('计算fxf,yby阵营总积分')
+    yby_point = 0
+    fxf_point = 0
+    for pro_id in FXF_PRO_IDS:
+        fxf_point += compute_fxf_yby_single_points(pro_id)
+    my_logger.info('FXF阵营总积分: %s' % fxf_point)
+    for pro_id in YBY_PRO_IDS:
+        yby_point += compute_fxf_yby_single_points(pro_id)
+    my_logger.info('YBY阵营总积分: %s' % yby_point)
+    return fxf_point, yby_point
