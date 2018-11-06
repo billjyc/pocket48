@@ -119,7 +119,7 @@ def compute_fxf_yby_single_points(pro_id):
     # 总分
     rst = mysql_util.select_one("""
             SELECT SUM(`point`) from `point_detail` WHERE `pro_id`=%s
-        """, (SHUIHUI_PRO_ID,))
+        """, (pro_id,))
     point = rst[0] if rst[0] else 0
     my_logger.info('[水灰PK]应援会总分: %s' % point)
     return point
