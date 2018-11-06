@@ -379,8 +379,8 @@ class ModianHandler:
             my_logger.debug(msg)
             my_logger.debug('[水灰PK]%s' % current_report)
             my_logger.debug('[水灰PK]%s' % total_report)
-            msg += current_report
-            msg + total_report
+            # msg += current_report
+            # msg + total_report
             QQHandler.send_to_groups(modian_entity.broadcast_groups, msg)
             self.order_queues[modian_entity.pro_id].add(oid)
 
