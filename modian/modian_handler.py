@@ -379,11 +379,11 @@ class ModianHandler:
             my_logger.debug(msg)
             my_logger.debug('[水灰PK]%s' % current_report)
             my_logger.debug('[水灰PK]%s' % total_report)
+            QQHandler.send_to_groups(modian_entity.broadcast_groups, msg)
             if int(modian_entity.pro_id) in [modian_shuihui_pk.FXF_CURRENT_PRO_ID, modian_shuihui_pk.YBY_CURRENT_PRO_ID,
                                              modian_shuihui_pk.SHUIHUI_PRO_ID]:
-                msg += current_report
-                msg + total_report
-            QQHandler.send_to_groups(modian_entity.broadcast_groups, msg)
+                QQHandler.send_to_groups(modian_entity.broadcast_groups, current_report + total_report)
+
             self.order_queues[modian_entity.pro_id].add(oid)
 
         # 更新接棒的数据库
