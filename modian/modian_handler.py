@@ -374,7 +374,7 @@ class ModianHandler:
             my_logger.info(msg)
             if global_config.USING_COOLQ_PRO is True:
                 my_logger.debug('使用酷Q PRO发送图片')
-                msg += '\n[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]\n'
+                # msg += '\n[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]\n'
 
             my_logger.debug(msg)
             my_logger.debug('[水灰PK]%s' % current_report)
