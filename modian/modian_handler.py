@@ -256,6 +256,8 @@ class ModianHandler:
             total_data = [fxf_data, yby_data, shuihui_data]
             current_data.sort(key=lambda k: (k.get('current', 0)), reverse=True)
             total_data.sort(key=lambda k: (k.get('total', 0)), reverse=True)
+            my_logger.debug('[水灰PK]排序后的current_data: %s' % current_data)
+            my_logger.debug('[水灰PK]排序后的total_data: %s' % total_data)
             current_report += '今日战况: \n'
             for i in range(len(current_data)):
                 sub_msg = '%d. %s: %.1f分\n' % (i + 1, current_data[i]['name'], current_data[i]['current'])
@@ -372,9 +374,11 @@ class ModianHandler:
             my_logger.info(msg)
             if global_config.USING_COOLQ_PRO is True:
                 my_logger.debug('使用酷Q PRO发送图片')
-                msg += '\n[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]'
+                msg += '\n[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]\n'
 
             my_logger.debug(msg)
+            my_logger.debug('[水灰PK]%s' % current_report)
+            my_logger.debug('[水灰PK]%s' % total_report)
             msg += current_report
             msg + total_report
             QQHandler.send_to_groups(modian_entity.broadcast_groups, msg)
