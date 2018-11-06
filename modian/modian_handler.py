@@ -235,7 +235,7 @@ class ModianHandler:
             elif int(modian_entity.pro_id) == modian_shuihui_pk.SHUIHUI_PRO_ID:
                 plus_point = modian_shuihui_pk.plus_shuihui_points(backer_money, modian_entity.pro_id, str(oid),
                                                                    user_id)
-                self.shuihui_total_point += plus_point
+                self.shuihui_total_point = modian_shuihui_pk.compute_shuihui_total_points()
                 current_report += '本次加分: %s\n' % plus_point
 
             fxf_data = {
@@ -265,7 +265,7 @@ class ModianHandler:
                 sub_msg = '%d. %s: %.1f分\n' % (i + 1, total_data[i]['name'], total_data[i]['total'])
                 total_report += sub_msg
 
-            QQHandler.send_to_groups(['483548995'], current_report + total_report)
+            # QQHandler.send_to_groups(['483548995'], current_report + total_report)
 
             '''接棒相关'''
             my_logger.debug('接棒情况更新')
@@ -375,6 +375,8 @@ class ModianHandler:
                 msg += '\n[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]'
 
             my_logger.debug(msg)
+            msg += current_report
+            msg + total_report
             QQHandler.send_to_groups(modian_entity.broadcast_groups, msg)
             self.order_queues[modian_entity.pro_id].add(oid)
 

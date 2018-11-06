@@ -14,17 +14,17 @@ import time
 
 
 # fxf, yby四天的链接列表，用于计算总积分
-FXF_PRO_IDS = [37393]
-YBY_PRO_IDS = [37540]
+FXF_PRO_IDS = [37793]
+YBY_PRO_IDS = [37826]
 # 水灰链接
 SHUIHUI_PRO_ID = 37740
 
 # fxf, yby当日链接，用于计算当日积分
-FXF_CURRENT_PRO_ID = 37393
-YBY_CURRENT_PRO_ID = 37540
+FXF_CURRENT_PRO_ID = 37793
+YBY_CURRENT_PRO_ID = 37826
 
-TEN = 1
-ONE_HUNDRED = 10
+TEN = 10
+ONE_HUNDRED = 100
 
 
 def plus_fxf_yby_points(amount, pro_id, order_id, user_id):
