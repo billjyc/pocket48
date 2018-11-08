@@ -134,7 +134,10 @@ def compute_fxf_yby_total_points():
     yby_point = 0
     fxf_point = 0
     for pro_id in FXF_PRO_IDS:
-        fxf_point += compute_fxf_yby_single_points(pro_id)
+        if pro_id == 37920:
+            fxf_point += compute_fxf_yby_single_points(pro_id) * 1.5
+        else:
+            fxf_point += compute_fxf_yby_single_points(pro_id)
     my_logger.info('[水灰PK]FXF阵营总积分: %s' % fxf_point)
     for pro_id in YBY_PRO_IDS:
         yby_point += compute_fxf_yby_single_points(pro_id)
