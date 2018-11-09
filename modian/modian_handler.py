@@ -382,7 +382,8 @@ class ModianHandler:
             QQHandler.send_to_groups(modian_entity.broadcast_groups, msg)
             if int(modian_entity.pro_id) in [modian_shuihui_pk.FXF_CURRENT_PRO_ID, modian_shuihui_pk.YBY_CURRENT_PRO_ID,
                                              modian_shuihui_pk.SHUIHUI_PRO_ID]:
-                QQHandler.send_to_groups(modian_entity.broadcast_groups, current_report + total_report)
+                # QQHandler.send_to_groups(modian_entity.broadcast_groups, current_report + total_report)
+                pass
 
             self.order_queues[modian_entity.pro_id].add(oid)
 
