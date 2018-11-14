@@ -563,6 +563,7 @@ class Pocket48Handler:
 
         schedules = json.load(f)
         for s in schedules['schedules']:
+            logger.debug(s)
             perform_time = util.convert_timestr_to_timestamp(s['time'])
             diff = perform_time - time.time()
             if 0 < diff <= 15 * 60:

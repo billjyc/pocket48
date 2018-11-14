@@ -1,6 +1,7 @@
 {
   "schedules": [
-    {"name": "总选拉票专场", "time": "2018-07-15 14:00:00", "team": "无", "comment": ""},
-    {"name": "命运的X号", "time": "2018-07-20 19:30:00", "team": "Team X", "comment": ""}
+    {"name": "命运的X号", "time": "2018-11-16 19:30:00", "team": "Team X", "comment": ""},
+    {"name": "命运的X号", "time": "2018-11-17 19:00:00", "team": "Team X", "comment": ""},
+    {"name": "命运的X号", "time": "2018-11-22 19:30:00", "team": "Team X", "comment": ""}
   ]
 }
