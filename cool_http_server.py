@@ -73,60 +73,12 @@ def handle_msg(context):
                     get_jizi_ranking_list_by_date(context, 0)
                 elif message == '-yesterday':
                     get_jizi_ranking_list_by_date(context, 1)
-                elif message == '-战况':
-                    get_current_score(context)
             else:
                 bot.send(context, '目前并没有正在进行的集资项目T_T')
     except Error:
         pass
     # return {'reply': context['message'],
     #         'at_sender': False}  # 返回给 HTTP API 插件，走快速回复途径
-
-
-def get_current_score(context):
-    """
-    当前战况获取
-    :param context:
-    :return:
-    """
-    logger.info('[水灰PK]当前战况获取')
-    from modian.special import modian_shuihui_pk
-    fxf_current_point = modian_shuihui_pk.compute_fxf_yby_single_points(modian_shuihui_pk.FXF_CURRENT_PRO_ID)
-    yby_current_point = modian_shuihui_pk.compute_fxf_yby_single_points(modian_shuihui_pk.YBY_CURRENT_PRO_ID)
-
-    fxf_total_point, yby_total_point = modian_shuihui_pk.compute_fxf_yby_total_points()
-    shuihui_total_point = modian_shuihui_pk.compute_shuihui_total_points()
-
-    fxf_data = {
-        "name": "冯晓菲应援会",
-        "current": fxf_current_point,
-        "total": fxf_total_point
-    }
-    yby_data = {
-        "name": "杨冰怡应援会",
-        "current": yby_current_point,
-        "total": yby_total_point,
-    }
-    shuihui_data = {
-        "name": "水灰应援会",
-        "total": shuihui_total_point,
-    }
-    current_report = ''
-    current_data = [fxf_data, yby_data]
-    total_data = [fxf_data, yby_data, shuihui_data]
-    current_data.sort(key=lambda k: (k.get('current', 0)), reverse=True)
-    total_data.sort(key=lambda k: (k.get('total', 0)), reverse=True)
-    logger.debug('[水灰PK]排序后的current_data: %s' % current_data)
-    logger.debug('[水灰PK]排序后的total_data: %s' % total_data)
-    current_report += '今日战况: \n'
-    for i in range(len(current_data)):
-        sub_msg = '%d. %s: %.1f分\n' % (i + 1, current_data[i]['name'], current_data[i]['current'])
-        current_report += sub_msg
-    total_report = '总积分排行: \n'
-    for i in range(len(total_data)):
-        sub_msg = '%d. %s: %.1f分\n' % (i + 1, total_data[i]['name'], total_data[i]['total'])
-        total_report += sub_msg
-    bot.send(context, current_report + total_report)
 
 
 def get_jizi_ranking_list_by_date(context, day_diff):

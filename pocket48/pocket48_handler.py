@@ -336,7 +336,11 @@ class Pocket48Handler:
                     if 'url' in bodys.keys():
                         url = bodys['url']
                         if global_config.USING_COOLQ_PRO is True:
-                            message = ('【语音】[%s]-%s: [CQ:record,file=%s]\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
+                            message3 = ('【语音】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url))
+                            logger.info(message3)
+                            # 语音消息直接单条发送
+                            message2 = '[CQ:record,file=%s]\n' % url
+                            QQHandler.send_to_groups(self.member_room_msg_groups, message2)
                         else:
                             message = ('【语音】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
                         cursor.execute("""
