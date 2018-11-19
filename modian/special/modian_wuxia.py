@@ -18,4 +18,24 @@ class Character:
         self.prop5 = prop5
 
 
+def created(modian_id):
+    """
+    是否创建人物，以摩点id判断
+    :param modian_id: 摩点id
+    :return:
+    """
+    pass
+
+
+def sync_names():
+    """
+    程序启动时，本地和db同步下已使用的姓名
+    :return:
+    """
+    # 本地读取txt文件-list1
+    # 从DB获取已使用的姓名-list2
+    # return list1 - list2
+    pass
+
+
 
