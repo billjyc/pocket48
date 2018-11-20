@@ -15,6 +15,7 @@ from modian.modian_card_draw import CardDrawHandler
 from qq.qqhandler import QQHandler
 from utils import global_config, util
 from utils.mysql_util import mysql_util
+from modian.special import modian_wuxia
 
 
 class ModianEntity:
@@ -318,7 +319,8 @@ class ModianHandler:
             if global_config.USING_COOLQ_PRO is True:
                 my_logger.debug('使用酷Q PRO发送图片')
                 # msg += '\n[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]\n'
-
+            report = modian_wuxia.donate(user_id, backer_money)
+            QQHandler.send_to_groups(['483548995'], report)
             QQHandler.send_to_groups(modian_entity.broadcast_groups, msg)
 
             self.order_queues[modian_entity.pro_id].add(oid)

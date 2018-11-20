@@ -39,10 +39,15 @@ def created(modian_id):
     :param modian_id: 摩点id
     :return:
     """
+    my_logger.info('查询人物是否创建，modian_id: %s' % modian_id)
     rst = mysql_util.select_one("""
         SELECT * FROM `t_character` WHERE modian_id=%s
     """, (modian_id, ))
-    return len(rst) > 0
+    my_logger.debug('rst: %s' % rst)
+    if len(rst) > 0:
+        return True, Character(modian_id, rst[0][1], rst[0][2], rst[0][3], rst[0][4], rst[0][5], rst[0][6])
+    else:
+        return False, None
 
 
 def create_character(modian_id):
@@ -50,8 +55,10 @@ def create_character(modian_id):
     创建人物
     :return:
     """
+    my_logger.info('创建人物, modian_id: %s' % modian_id)
     # 随机姓名
     random_name = TOTAL_NAMES.pop()
+    my_logger.debug('随机姓名: %s' % random_name)
     # 随机生成属性
     prop1 = random.randint(1, 10)
     prop2 = random.randint(1, 10)
@@ -69,11 +76,14 @@ def create_character(modian_id):
 
 def donate(modian_id, pay_amount):
     rst = ''
-    if created(modian_id):
+    has_created, character = created(modian_id)
+    if has_created:
+        my_logger.info('已经创建了人物: %s' % modian_id)
         # 如果已经创建
-        pass
+        rst = '%s触发了随机事件（施工中）' % character.name
     else:
-        if pay_amount >= 10:
+        my_logger.info('未创建人物, modian_id: %s' % modian_id)
+        if pay_amount >= 1:
             rst = create_character(modian_id)
     return rst
 
@@ -91,12 +101,13 @@ def sync_names():
     name_used = []
     for a in rst:
         name_used.append(a[0])
-    name_used = ['刘超', '李凡']
+    # name_used = ['刘超', '李凡']
     # return list1 - list2
     total_copy = TOTAL_NAMES.copy()
     TOTAL_NAMES = list(total_copy.difference(set(name_used)))
 
 
+sync_names()
 if __name__ == '__main__':
     # sync_names()
     print(create_character('123456'))
