@@ -100,6 +100,8 @@ def sync_names():
     rst = mysql_util.select_all("""
         SELECT `name` from `t_character`;
     """)
+    my_logger.debug(type(rst))
+    my_logger.debug(rst)
     my_logger.debug('names in db: %s' % rst)
     name_used = []
     if rst:
