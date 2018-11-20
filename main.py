@@ -1,3 +1,5 @@
+# -*- coding:utf-8 -*-
+
 from utils import global_config
 import json
 from utils.config_reader import ConfigReader
