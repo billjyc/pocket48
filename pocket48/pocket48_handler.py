@@ -441,7 +441,8 @@ class Pocket48Handler:
         :return:
         """
         rsp_json = json.loads(response)
-        # logger.debug('keys of parse member live: %s', rsp_json['content'].keys())
+        logger.debug('keys of parse member live: %s', rsp_json['content'].keys())
+        logger.debug('rsp_json: %s' % rsp_json)
         # 当前没有人在直播
         if 'liveList' not in rsp_json['content'].keys():
             # print 'no live'
