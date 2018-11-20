@@ -189,7 +189,7 @@ def read_txt(file_path):
     context = file.readlines()
     # 按行读取
     for i in context:
-        rst.append(i)
+        rst.append(i.strip())
     return rst
 
 
