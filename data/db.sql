@@ -89,6 +89,21 @@ CREATE TABLE IF NOT EXISTS `point_detail` (
   PRIMARY KEY (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='积分详细情况';
 
+
+DROP TABLE IF EXISTS `t_character`;
+CREATE TABLE IF NOT EXISTS `t_character` (
+    `modian_id` int(11) NOT NULL,
+    `name` varchar(100) DEFAULT NULL,
+    `prop1` int(11) DEFAULT 0,
+    `prop2` int(11) DEFAULT 0,
+    `prop3` int(11) DEFAULT 0,
+    `prop4` int(11) DEFAULT 0,
+    `prop5` int(11) DEFAULT 0,
+    PRIMARY KEY (`modian_id`),
+    FOREIGN KEY (`modian_id`) REFERENCES `supporter`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='人物表';
+
+
 -- 数据导出被取消选择。
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
