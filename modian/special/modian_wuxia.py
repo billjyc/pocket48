@@ -43,6 +43,8 @@ def created(modian_id):
     rst = mysql_util.select_one("""
         SELECT * FROM `t_character` WHERE modian_id=%s
     """, (modian_id, ))
+    my_logger.debug(type(rst))
+    my_logger.debug(rst)
     my_logger.debug('rst: %s' % rst)
     if rst and len(rst) > 0:
         return True, Character(modian_id, rst[0][1], rst[0][2], rst[0][3], rst[0][4], rst[0][5], rst[0][6])
