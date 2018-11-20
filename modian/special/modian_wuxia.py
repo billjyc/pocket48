@@ -100,8 +100,9 @@ def sync_names():
     """)
     my_logger.debug('names in db: %s' % rst)
     name_used = []
-    for a in rst:
-        name_used.append(a[0])
+    if rst:
+        for a in rst:
+            name_used.append(a[0])
     # name_used = ['刘超', '李凡']
     # return list1 - list2
     total_copy = TOTAL_NAMES.copy()
