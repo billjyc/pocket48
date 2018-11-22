@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 # 本地读取txt文件-list1
 # last_names = util.read_txt(os.path.join(BASE_DIR, 'data', 'last_name.txt'))
 # first_names = util.read_txt(os.path.join(BASE_DIR, 'data', 'first_name.txt'))
-TOTAL_NAMES = util.read_txt(os.path.join(BASE_DIR, 'data', 'names.txt'))
+TOTAL_NAMES = set(util.read_txt(os.path.join(BASE_DIR, 'data', 'names.txt')))
 # for x in itertools.product(last_names, first_names):
 #     TOTAL_NAMES.add(x[0] + x[1])
 
@@ -121,7 +121,7 @@ def sync_names():
     # name_used = ['刘超', '李凡']
     # return list1 - list2
     total_copy = TOTAL_NAMES.copy()
-    TOTAL_NAMES = list(total_copy.difference(set(name_used)))
+    TOTAL_NAMES = total_copy.difference(set(name_used))
 
 
 sync_names()
