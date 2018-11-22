@@ -81,7 +81,7 @@ def create_character(modian_id):
     ]
     # 随机挑选一个出场方式
     intro = util.choice(intro_words)
-    report_str = '%s\n' % intro
+    report_str = '%s\n' % intro[0]
     report_str += '%s的武侠世界开启, 属性：\n攻: %s, 防: %s, 气: %s, 运: %s, 魅力: %s\n' % (random_name, prop1, prop2, prop3, prop4, prop5)
     return report_str
 
