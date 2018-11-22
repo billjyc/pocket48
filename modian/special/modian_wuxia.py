@@ -77,7 +77,7 @@ def create_character(modian_id):
         "湖山深处,但见竹木阴森,苍翠重叠,不雨而润,不烟而晕, 晨雾朦胧处现一少年，“在下【{}】，请问此处可是星梦谷？”".format(random_name),
         "月照竹林风飞叶，竹影之下见刀光。小侠籍籍无名，仅有此片竹林识得其名为【{}】".format(random_name),
         "嗖的一声，一支羽箭从山坳后射了出来，呜呜声响，划过长空，【{}】松开弓弦，雁落平沙。".format(random_name),
-        "灯宵月夕，雪际花时，市集喧闹却也听得句柔声细语：“这文书写有{}之名，可是你掉的？”".format(random_name)
+        "灯宵月夕，雪际花时，市集喧闹却也听得句柔声细语：“这文书写有【{}】之名，可是你掉的？”".format(random_name)
     ]
     # 随机挑选一个出场方式
     intro = util.choice(intro_words)
