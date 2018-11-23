@@ -123,7 +123,7 @@ class Event:
 
 def handle_event(pay_amount, character):
     result = ''
-    event_list_j = event_json[str(pay_amount)]
+    event_list_j = event_json[str(int(pay_amount))]
     event_list = []
     weight_list = []
     for event_j in event_list_j:
