@@ -4,24 +4,17 @@
 """
 from utils.mysql_util import mysql_util
 import logging
+
 try:
     from log.my_logger import modian_logger as my_logger
 except:
     my_logger = logging.getLogger(__name__)
 from utils import util
 import os
-import itertools
 import random
 import json
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-# 本地读取txt文件-list1
-# last_names = util.read_txt(os.path.join(BASE_DIR, 'data', 'last_name.txt'))
-# first_names = util.read_txt(os.path.join(BASE_DIR, 'data', 'first_name.txt'))
-TOTAL_NAMES = set(util.read_txt(os.path.join(BASE_DIR, 'data', 'wuxia', 'names.txt')))
-# for x in itertools.product(last_names, first_names):
-#     TOTAL_NAMES.add(x[0] + x[1])
-event_json = json.load(open(os.path.join(BASE_DIR, 'data', 'wuxia', 'event.json'), encoding='utf-8'))
 
 
 class Character:
@@ -34,11 +27,26 @@ class Character:
         self.prop4 = prop4  # 运
         self.prop5 = prop5  # 魅力
 
+    def __str__(self):
+        return 'Character[modian_id=%s, name=%s, 攻=%s, 防=%s, 气=%s, 运=%s, 魅力=%s]' % (self.id, self.name, self.prop1,
+                                                                                    self.prop2, self.prop3,
+                                                                                    self.prop4, self.prop5)
 
-class Equipment:
-    """
-    装备类物品
-    """
+    def use_good(self, good):
+        """
+        使用物品或学习技能
+        :param good:
+        :return:
+        """
+        my_logger.info('人物使用物品: %s' % good)
+        self.prop1 += good.prop1
+        self.prop2 += good.prop2
+        self.prop3 += good.prop3
+        self.prop4 += good.prop4
+        self.prop5 += good.prop5
+
+
+class Good:
     def __init__(self, name, prop1=0, prop2=0, prop3=0, prop4=0, prop5=0):
         self.name = name
         self.prop1 = prop1  # 攻
@@ -46,32 +54,47 @@ class Equipment:
         self.prop3 = prop3  # 气
         self.prop4 = prop4  # 运
         self.prop5 = prop5  # 魅力
+
+    def __str__(self):
+        return 'Good[name=%s, 攻=%s, 防=%s, 气=%s, 运=%s, 魅力=%s]' % (self.name, self.prop1,
+                                                                 self.prop2, self.prop3,
+                                                                 self.prop4, self.prop5)
+
+    def property_change(self):
+        property_change_str = ''
+        property_change_str += '攻+%s, ' % self.prop1 if self.prop1 > 0 else ''
+        property_change_str += '防+%s, ' % self.prop2 if self.prop2 > 0 else ''
+        property_change_str += '气+%s, ' % self.prop3 if self.prop3 > 0 else ''
+        property_change_str += '运+%s, ' % self.prop4 if self.prop4 > 0 else ''
+        property_change_str += '魅力+%s, ' % self.prop5 if self.prop5 > 0 else ''
+        return property_change_str[:-1]
+
+
+class Equipment(Good):
+    """
+    装备类物品
+    """
+
+    def __init__(self, name, prop1=0, prop2=0, prop3=0, prop4=0, prop5=0):
+        super(Equipment, self).__init__(name, prop1, prop2, prop3, prop4, prop5)
 
 
 class Item:
     """
     消耗类物品
     """
+
     def __init__(self, name, prop1=0, prop2=0, prop3=0, prop4=0, prop5=0):
-        self.name = name
-        self.prop1 = prop1  # 攻
-        self.prop2 = prop2  # 防
-        self.prop3 = prop3  # 气
-        self.prop4 = prop4  # 运
-        self.prop5 = prop5  # 魅力
+        super(Item, self).__init__(name, prop1, prop2, prop3, prop4, prop5)
 
 
 class Skill:
     """
     技能
     """
+
     def __init__(self, name, prop1=0, prop2=0, prop3=0, prop4=0, prop5=0):
-        self.name = name
-        self.prop1 = prop1  # 攻
-        self.prop2 = prop2  # 防
-        self.prop3 = prop3  # 气
-        self.prop4 = prop4  # 运
-        self.prop5 = prop5  # 魅力
+        super(Skill, self).__init__(name, prop1, prop2, prop3, prop4, prop5)
 
 
 class Event:
@@ -83,6 +106,7 @@ class Event:
 
 
 def handle_event(pay_amount, character):
+    result = ''
     event_list_j = event_json[str(pay_amount)]
     event_list = []
     weight_list = []
@@ -92,6 +116,7 @@ def handle_event(pay_amount, character):
         weight_list.append(event_j['weight'])
     # 按概率选出是哪个大类的事件
     choice = util.weight_choice(event_list, weight_list)
+    my_logger.debug('触发事件前属性: %s' % character)
     my_logger.info('触发事件: %s' % choice.name)
 
     if choice.id == 401:  # 个体-遇怪
@@ -105,15 +130,36 @@ def handle_event(pay_amount, character):
     elif choice.id == 405:  # 互动-PK
         pass
     elif choice.id == 301:  # 学艺-基础
-        pass
-    elif choice.id == 302:  # 学艺-PK
-        pass
+        skill = util.choice(skill1_list)
+        character.use_good(skill)
+        result += '【{}】刻苦修炼，终于习得【{}】，{}\n'.format(character.name, skill.name,
+                                                  skill.property_change())
+        save_character(character)
+    elif choice.id == 302:  # 学艺-进阶
+        skill = util.choice(skill2_list)
+        character.use_good(skill)
+        result += '【{}】刻苦修炼，终于习得【{}】，{}\n'.format(character.name, skill.name,
+                                                  skill.property_change())
+        save_character(character)
     elif choice.id == 201:  # 门派
-        pass
+        mentor = util.choice(SCHOOLS)
+        result += '【{}】骨骼精奇天资聪慧，{}对他青睐有加，亲自传授本门武功。\n【{}】获得真传，攻+35，防+30，气+30，运+20，魅力+40\n'.format(character.name,
+                                                                                                 mentor, character.name)
+        character.prop1 += 35
+        character.prop2 += 30
+        character.prop3 += 30
+        character.prop4 += 20
+        character.prop5 += 40
+        save_character(character)
     elif choice.id == 101:  # 其他-得子
-        pass
+        name = ['子', '女', '哪吒']
+        result += '行走江湖，总有意外，【{}】十月怀胎，诞下一{}。\n'.format(character.name, util.choice(name))
     elif choice.id == 102:  # 其他-称号升级
-        pass
+        result += '【{}】武功日益精进，救死扶伤匡扶正义，昔日的【无名小侠】如今已【名震江湖】，魅力+88\n'.format(character.name, )
+        character.prop5 += 88
+        save_character(character)
+    my_logger.debug('触发事件后属性: %s' % character)
+    return result
 
 
 def created(modian_id):
@@ -125,7 +171,7 @@ def created(modian_id):
     my_logger.info('查询人物是否创建，modian_id: %s' % modian_id)
     rst = mysql_util.select_one("""
         SELECT * FROM `t_character` WHERE modian_id=%s
-    """, (modian_id, ))
+    """, (modian_id,))
     my_logger.debug(type(rst))
     my_logger.debug(rst)
     # my_logger.debug('rst: %s' % rst)
@@ -165,7 +211,8 @@ def create_character(modian_id):
     # 随机挑选一个出场方式
     intro = util.choice(intro_words)
     report_str = '%s\n' % intro[0]
-    report_str += '%s的武侠世界开启, 属性：\n攻: %s, 防: %s, 气: %s, 运: %s, 魅力: %s\n' % (random_name, prop1, prop2, prop3, prop4, prop5)
+    report_str += '%s的武侠世界开启, 属性：\n攻: %s, 防: %s, 气: %s, 运: %s, 魅力: %s\n' % (
+        random_name, prop1, prop2, prop3, prop4, prop5)
     return report_str
 
 
@@ -222,7 +269,43 @@ def sync_names():
     TOTAL_NAMES = total_copy.difference(set(name_used))
 
 
+def save_character(character):
+    """
+    将更新后的任务保存到数据库
+    :param character:
+    :return:
+    """
+    my_logger.debug('将更新后的任务保存到数据库')
+    mysql_util.query("""
+        UPDATE `t_character` SET `name`=%s, `prop1`=%s, `prop2`=%s, `prop3`=%s, `prop4`=%s, `prop5`=%s
+            WHERE `modian_id`=%s
+    """, (character.name, character.prop1, character.prop2, character.prop3, character.prop4, character.prop5,
+          character.id))
+
+
+def read_skill_list():
+    # 读取招式列表
+    skill1_raw = util.read_txt(os.path.join(BASE_DIR, 'data', 'wuxia', 'skill1.txt'))
+    skill2_raw = util.read_txt(os.path.join(BASE_DIR, 'data', 'wuxia', 'skill2.txt'))
+    skill1_list = []
+    skill2_list = []
+    for line in skill1_raw:
+        strs = line.split(',')
+        skill = Skill(strs[0], int(strs[1]), int(strs[2]), int(strs[3]), int(strs[4]), int(strs[5]))
+        skill1_list.append(skill)
+    for line in skill2_raw:
+        strs = line.split(',')
+        skill = Skill(strs[0], int(strs[1]), int(strs[2]), int(strs[3]), int(strs[4]), int(strs[5]))
+        skill2_list.append(skill)
+    return skill1_list, skill2_list
+
+
+TOTAL_NAMES = set(util.read_txt(os.path.join(BASE_DIR, 'data', 'wuxia', 'names.txt')))
+event_json = json.load(open(os.path.join(BASE_DIR, 'data', 'wuxia', 'event.json'), encoding='utf-8'))
+SCHOOLS = util.read_txt(os.path.join(BASE_DIR, 'data', 'wuxia', 'school.txt'))
+skill1_list, skill2_list = read_skill_list()
 sync_names()
+
 if __name__ == '__main__':
     # sync_names()
     print(create_character('123456'))
