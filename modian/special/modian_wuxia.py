@@ -12,14 +12,16 @@ from utils import util
 import os
 import itertools
 import random
+import json
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # 本地读取txt文件-list1
 # last_names = util.read_txt(os.path.join(BASE_DIR, 'data', 'last_name.txt'))
 # first_names = util.read_txt(os.path.join(BASE_DIR, 'data', 'first_name.txt'))
-TOTAL_NAMES = set(util.read_txt(os.path.join(BASE_DIR, 'data', 'names.txt')))
+TOTAL_NAMES = set(util.read_txt(os.path.join(BASE_DIR, 'data', 'wuxia', 'names.txt')))
 # for x in itertools.product(last_names, first_names):
 #     TOTAL_NAMES.add(x[0] + x[1])
+event_json = json.load(open(os.path.join(BASE_DIR, 'data', 'wuxia', 'event.json'), encoding='utf-8'))
 
 
 class Character:
@@ -31,6 +33,87 @@ class Character:
         self.prop3 = prop3  # 气
         self.prop4 = prop4  # 运
         self.prop5 = prop5  # 魅力
+
+
+class Equipment:
+    """
+    装备类物品
+    """
+    def __init__(self, name, prop1=0, prop2=0, prop3=0, prop4=0, prop5=0):
+        self.name = name
+        self.prop1 = prop1  # 攻
+        self.prop2 = prop2  # 防
+        self.prop3 = prop3  # 气
+        self.prop4 = prop4  # 运
+        self.prop5 = prop5  # 魅力
+
+
+class Item:
+    """
+    消耗类物品
+    """
+    def __init__(self, name, prop1=0, prop2=0, prop3=0, prop4=0, prop5=0):
+        self.name = name
+        self.prop1 = prop1  # 攻
+        self.prop2 = prop2  # 防
+        self.prop3 = prop3  # 气
+        self.prop4 = prop4  # 运
+        self.prop5 = prop5  # 魅力
+
+
+class Skill:
+    """
+    技能
+    """
+    def __init__(self, name, prop1=0, prop2=0, prop3=0, prop4=0, prop5=0):
+        self.name = name
+        self.prop1 = prop1  # 攻
+        self.prop2 = prop2  # 防
+        self.prop3 = prop3  # 气
+        self.prop4 = prop4  # 运
+        self.prop5 = prop5  # 魅力
+
+
+class Event:
+    def __init__(self, id, name, amount, weight):
+        self.id = id
+        self.name = name
+        self.amount = amount
+        self.weight = weight
+
+
+def handle_event(pay_amount, character):
+    event_list_j = event_json[str(pay_amount)]
+    event_list = []
+    weight_list = []
+    for event_j in event_list_j:
+        event = Event(event_j['id'], event_j['name'], pay_amount, event_j['weight'])
+        event_list.append(event)
+        weight_list.append(event_j['weight'])
+    # 按概率选出是哪个大类的事件
+    choice = util.weight_choice(event_list, weight_list)
+    my_logger.info('触发事件: %s' % choice.name)
+
+    if choice.id == 401:  # 个体-遇怪
+        pass
+    elif choice.id == 402:  # 个体-物品
+        pass
+    elif choice.id == 403:  # 互动-相识
+        pass
+    elif choice.id == 404:  # 互动-交恶
+        pass
+    elif choice.id == 405:  # 互动-PK
+        pass
+    elif choice.id == 301:  # 学艺-基础
+        pass
+    elif choice.id == 302:  # 学艺-PK
+        pass
+    elif choice.id == 201:  # 门派
+        pass
+    elif choice.id == 101:  # 其他-得子
+        pass
+    elif choice.id == 102:  # 其他-称号升级
+        pass
 
 
 def created(modian_id):
@@ -87,15 +170,30 @@ def create_character(modian_id):
 
 
 def donate(modian_id, pay_amount):
+    MIN_AMOUNT = 1
     rst = ''
     has_created, character = created(modian_id)
     if has_created:
         my_logger.info('已经创建了人物: %s' % modian_id)
         # 如果已经创建
-        rst = '%s触发了随机事件（施工中）' % character.name
+        my_logger.debug('%s触发了随机事件（施工中）' % character.name)
+        if pay_amount < MIN_AMOUNT:
+            return ''
+        tmp = pay_amount
+        amounts = [200, 100, 50, 10]
+        max_event = 3  # 最多触发3次事件
+        idx = 0
+        while max_event > 0:
+            event_time = int(tmp / amounts[idx])
+            event_time = max_event if event_time > max_event else event_time
+            for i in range(event_time):
+                handle_event(amounts[idx], character)
+            max_event -= event_time
+            tmp = tmp % amounts[idx]
+            idx += 1
     else:
         my_logger.info('未创建人物, modian_id: %s' % modian_id)
-        if pay_amount >= 1:
+        if pay_amount >= MIN_AMOUNT:
             rst = create_character(modian_id)
     return rst
 

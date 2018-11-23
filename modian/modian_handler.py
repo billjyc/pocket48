@@ -320,7 +320,8 @@ class ModianHandler:
                 my_logger.debug('使用酷Q PRO发送图片')
                 # msg += '\n[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]\n'
             report = modian_wuxia.donate(user_id, backer_money)
-            QQHandler.send_to_groups(['483548995'], report)
+            if report and len(report) > 0:
+                QQHandler.send_to_groups(['483548995'], report)
             QQHandler.send_to_groups(modian_entity.broadcast_groups, msg)
 
             self.order_queues[modian_entity.pro_id].add(oid)
