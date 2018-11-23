@@ -140,7 +140,39 @@ def handle_event(pay_amount, character):
     if choice.id == 401:  # 个体-遇怪
         pass
     elif choice.id == 402:  # 个体-物品
-        pass
+        idx = random.randint(0, 1)
+        if idx == 0:  # 拾取
+            rand_int = random.randint(1, 100)
+            if rand_int <= 90:
+                # 普通事件
+                locations = ['路边', '树林', '衙门口', '肉铺', '荒井边']
+                item = util.choice(item_list)
+                result += '【{}】在 {} 拾到 {}，{}\n'.format(character.name, util.choice(locations), item.name,
+                                                       item.property_change())
+                character.use_good(item)
+            else:
+                # 屠龙宝刀
+                result += '【{}】在草丛中发现一把绝世好刀，动了动食指，点击一下，获得屠龙宝刀。\n【{}】攻击+15，运+15，魅力+10\n'.format(character.name,
+                                                                                               character.name)
+                character.prop1 += 15
+                character.prop4 += 15
+                character.prop5 += 10
+        else:  # 交易
+            locations = ['店里', '小摊', '行脚商', '毛头小孩']
+            location = util.choice(locations)
+            equipment = util.choice(equipment_list)
+            rand_int = random.randint(1, 100)
+            if rand_int <= 90:
+                # 普通事件
+                result += '在 {} 处购得{}，{}\n'.format(character.name, location, equipment.name,
+                                                   equipment.property_change())
+                character.use_good(equipment_list)
+            else:
+                # 假货
+                result += '在 {} 处购得{}，不料过了半日才发现竟是被奸商所骗，{}竟是赝品，运-8\n'.format(character.name, location, equipment.name,
+                                                   equipment.name)
+                character.prop4 -= 8
+        save_character(character)
     elif choice.id == 403:  # 互动-相识
         all_character = get_all_character()
         rand_character = util.choice(all_character)
@@ -162,15 +194,17 @@ def handle_event(pay_amount, character):
 
         pk_rst = character.pk(rand_character)
         if pk_rst:
-            result += '【{}】武功略胜一筹，心想江湖恩怨也不过如此。【{}】攻+6，防+5，气+5，运+3，魅力+8；【{}】攻-6，防-5，气-5，运-3，魅力-8\n'.format(character.name,
-                                                                                                        character.name,
-                                                                                                        rand_character.name)
+            result += '【{}】武功略胜一筹，心想江湖恩怨也不过如此。【{}】攻+6，防+5，气+5，运+3，魅力+8；【{}】攻-6，防-5，气-5，运-3，魅力-8\n'.format(
+                character.name,
+                character.name,
+                rand_character.name)
             character.use_good(Good('PK失败', 6, 5, 5, 3, 8))
             rand_character.use_good(Good('PK胜利', -6, -5, -5, -3, -8))
         else:
-            result += '【{}】在打斗中身负重伤，恩怨情仇总不如命重要，道歉认输便得作罢。【{}】攻-6，防-5，气-5，运-3，魅力-8；【{}】攻+6，防+5，气+5，运+3，魅力+8\n'.format(character.name,
-                                                                                                        character.name,
-                                                                                                        rand_character.name)
+            result += '【{}】在打斗中身负重伤，恩怨情仇总不如命重要，道歉认输便得作罢。【{}】攻-6，防-5，气-5，运-3，魅力-8；【{}】攻+6，防+5，气+5，运+3，魅力+8\n'.format(
+                character.name,
+                character.name,
+                rand_character.name)
             character.use_good(Good('PK失败', -6, -5, -5, -3, -8))
             rand_character.use_good(Good('PK胜利', 6, 5, 5, 3, 8))
     elif choice.id == 301:  # 学艺-基础
@@ -362,10 +396,32 @@ def read_skill_list():
     return skill1_list, skill2_list
 
 
+def read_equipments_list():
+    equipment_raw = util.read_txt(os.path.join(BASE_DIR, 'data', 'wuxia', 'equipments.txt'))
+    equipment_list = []
+    for line in equipment_raw:
+        strs = line.split(',')
+        equipment = Equipment(strs[0], int(strs[1]), int(strs[2]), int(strs[3]), int(strs[4]), int(strs[5]))
+        equipment_list.append(equipment)
+    return equipment_list
+
+
+def read_item_list():
+    item_raw = util.read_txt(os.path.join(BASE_DIR, 'data', 'wuxia', 'items.txt'))
+    item_list = []
+    for line in item_raw:
+        strs = line.split(',')
+        item = Item(strs[0], int(strs[1]), int(strs[2]), int(strs[3]), int(strs[4]), int(strs[5]))
+        item_list.append(item)
+    return item_list
+
+
 TOTAL_NAMES = set(util.read_txt(os.path.join(BASE_DIR, 'data', 'wuxia', 'names.txt')))
 event_json = json.load(open(os.path.join(BASE_DIR, 'data', 'wuxia', 'event.json'), encoding='utf-8'))
 SCHOOLS = util.read_txt(os.path.join(BASE_DIR, 'data', 'wuxia', 'school.txt'))
 skill1_list, skill2_list = read_skill_list()
+equipment_list = read_equipments_list()
+item_list = read_item_list()
 sync_names()
 
 if __name__ == '__main__':
