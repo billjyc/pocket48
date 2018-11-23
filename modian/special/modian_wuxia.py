@@ -138,7 +138,26 @@ def handle_event(pay_amount, character):
     # TODO: 事件是否需要存进数据库，方便后期统计
 
     if choice.id == 401:  # 个体-遇怪
-        pass
+        monsters = ['山猴子', '宵小之徒', '小毛贼', '蒙面强盗', '皮卡丘']
+        weights = [24, 24, 24, 24, 4]
+        hit = util.weight_choice(monsters, weights)
+        if hit == '皮卡丘':
+            # 遇到皮卡丘必败
+            result += '【{}】在路边发现一只皮卡丘！\n皮卡丘突然发动攻击，使出十万伏特，没有人能够抵抗，【{}】落败。\n【{}】气-2，运-10\n'.format(character.name,
+                                                                                                 character.name,
+                                                                                                 character.name)
+            character.use_good(Good('皮卡丘', 0, 0, -2, -10, 0))
+        else:
+            result += '【{}】受到{}的突然袭击。\n'.format(character.name, hit)
+            rand_int = random.randint(1, 100)
+            if rand_int <= 80:
+                # 80%几率获胜
+                result += '区区{}哪里是【{}】的对手，{}仓皇而逃。\n【{}】攻+5，防+3\n'.format(hit, character.name, hit, character.name)
+                character.use_good(Good('战斗胜利', 5, 3, 0, 0, 0))
+            else:
+                result += '堂堂侠客却被{}打伤，【{}】伤势过重只得遁走。\n【{}】防-3，气-2，运-2，魅力-5\n'.format(hit, character.name, character.name)
+                character.use_good(Good('战斗胜利', 0, -3, -2, -2, -5))
+        save_character(character)
     elif choice.id == 402:  # 个体-物品
         idx = random.randint(0, 1)
         if idx == 0:  # 拾取
@@ -147,8 +166,8 @@ def handle_event(pay_amount, character):
                 # 普通事件
                 locations = ['路边', '树林', '衙门口', '肉铺', '荒井边']
                 item = util.choice(item_list)
-                result += '【{}】在 {} 拾到 {}，{}\n'.format(character.name, util.choice(locations), item.name,
-                                                       item.property_change())
+                result += '【{}】在 {} 拾到 {}，\n{}\n'.format(character.name, util.choice(locations), item.name,
+                                                         item.property_change())
                 character.use_good(item)
             else:
                 # 屠龙宝刀
@@ -170,8 +189,8 @@ def handle_event(pay_amount, character):
             else:
                 # 假货
                 result += '在 {} 处购得{}，不料过了半日才发现竟是被奸商所骗，{}竟是赝品，运-8\n'.format(character.name, location, equipment.name,
-                                                   equipment.name)
-                character.prop4 -= 8
+                                                                            equipment.name)
+                character.use_good(Good('奸商', 0, 0, 0, -8, 0))
         save_character(character)
     elif choice.id == 403:  # 互动-相识
         all_character = get_all_character()
@@ -194,14 +213,14 @@ def handle_event(pay_amount, character):
 
         pk_rst = character.pk(rand_character)
         if pk_rst:
-            result += '【{}】武功略胜一筹，心想江湖恩怨也不过如此。【{}】攻+6，防+5，气+5，运+3，魅力+8；【{}】攻-6，防-5，气-5，运-3，魅力-8\n'.format(
+            result += '【{}】武功略胜一筹，心想江湖恩怨也不过如此。\n【{}】攻+6，防+5，气+5，运+3，魅力+8；\n【{}】攻-6，防-5，气-5，运-3，魅力-8\n'.format(
                 character.name,
                 character.name,
                 rand_character.name)
             character.use_good(Good('PK失败', 6, 5, 5, 3, 8))
             rand_character.use_good(Good('PK胜利', -6, -5, -5, -3, -8))
         else:
-            result += '【{}】在打斗中身负重伤，恩怨情仇总不如命重要，道歉认输便得作罢。【{}】攻-6，防-5，气-5，运-3，魅力-8；【{}】攻+6，防+5，气+5，运+3，魅力+8\n'.format(
+            result += '【{}】在打斗中身负重伤，恩怨情仇总不如命重要，道歉认输便得作罢。\n【{}】攻-6，防-5，气-5，运-3，魅力-8；\n【{}】攻+6，防+5，气+5，运+3，魅力+8\n'.format(
                 character.name,
                 character.name,
                 rand_character.name)
@@ -210,14 +229,14 @@ def handle_event(pay_amount, character):
     elif choice.id == 301:  # 学艺-基础
         skill = util.choice(skill1_list)
         character.use_good(skill)
-        result += '【{}】刻苦修炼，终于习得【{}】，{}\n'.format(character.name, skill.name,
-                                                  skill.property_change())
+        result += '【{}】刻苦修炼，终于习得【{}】，\n{}\n'.format(character.name, skill.name,
+                                                    skill.property_change())
         save_character(character)
     elif choice.id == 302:  # 学艺-进阶
         skill = util.choice(skill2_list)
         character.use_good(skill)
-        result += '【{}】刻苦修炼，终于习得【{}】，{}\n'.format(character.name, skill.name,
-                                                  skill.property_change())
+        result += '【{}】刻苦修炼，终于习得【{}】，\n{}\n'.format(character.name, skill.name,
+                                                    skill.property_change())
         save_character(character)
     elif choice.id == 201:  # 门派
         mentor = util.choice(SCHOOLS)
@@ -237,6 +256,9 @@ def handle_event(pay_amount, character):
         character.prop5 += 88
         save_character(character)
     my_logger.debug('触发事件后属性: %s' % character)
+    result += '【{}】当前属性：\n攻：{}, 防: {}, 气: {}, 运：{}, 魅力: {}\n'.format(character.name, character.prop1,
+                                                                     character.prop2, character.prop3,
+                                                                     character.prop4, character.prop5)
     return result
 
 
@@ -312,7 +334,9 @@ def donate(modian_id, pay_amount):
             event_time = int(tmp / amounts[idx])
             event_time = max_event if event_time > max_event else event_time
             for i in range(event_time):
-                handle_event(amounts[idx], character)
+                sub_event_str = handle_event(amounts[idx], character)
+                rst += sub_event_str
+                my_logger.debug(sub_event_str)
             max_event -= event_time
             tmp = tmp % amounts[idx]
             idx += 1
