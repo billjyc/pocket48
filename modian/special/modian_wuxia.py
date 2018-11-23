@@ -330,7 +330,7 @@ def donate(modian_id, pay_amount):
         amounts = [200, 100, 50, 10]
         max_event = 3  # 最多触发3次事件
         idx = 0
-        while max_event > 0:
+        while max_event > 0 and idx < len(amounts):
             event_time = int(tmp / amounts[idx])
             event_time = max_event if event_time > max_event else event_time
             for i in range(event_time):
