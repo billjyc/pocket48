@@ -95,7 +95,7 @@ class Equipment(Good):
         super(Equipment, self).__init__(name, prop1, prop2, prop3, prop4, prop5)
 
 
-class Item:
+class Item(Good):
     """
     消耗类物品
     """
@@ -104,7 +104,7 @@ class Item:
         super(Item, self).__init__(name, prop1, prop2, prop3, prop4, prop5)
 
 
-class Skill:
+class Skill(Good):
     """
     技能
     """
