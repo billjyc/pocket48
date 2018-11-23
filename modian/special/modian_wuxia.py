@@ -131,7 +131,8 @@ def handle_event(pay_amount, character):
         event_list.append(event)
         weight_list.append(event_j['weight'])
     # 按概率选出是哪个大类的事件
-    choice = util.weight_choice(event_list, weight_list)
+    idx = util.weight_choice(event_list, weight_list)
+    choice = event_list[idx]
     my_logger.debug('触发事件前属性: %s' % character)
     my_logger.info('触发事件: %s' % choice.name)
 
@@ -140,7 +141,8 @@ def handle_event(pay_amount, character):
     if choice.id == 401:  # 个体-遇怪
         monsters = ['山猴子', '宵小之徒', '小毛贼', '蒙面强盗', '皮卡丘']
         weights = [24, 24, 24, 24, 4]
-        hit = util.weight_choice(monsters, weights)
+        hit_idx = util.weight_choice(monsters, weights)
+        hit = monsters[hit_idx]
         if hit == '皮卡丘':
             # 遇到皮卡丘必败
             result += '【{}】在路边发现一只皮卡丘！\n皮卡丘突然发动攻击，使出十万伏特，没有人能够抵抗，【{}】落败。\n【{}】气-2，运-10\n'.format(character.name,
