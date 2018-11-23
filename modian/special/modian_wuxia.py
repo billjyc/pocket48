@@ -45,6 +45,22 @@ class Character:
         self.prop4 += good.prop4
         self.prop5 += good.prop5
 
+        self.prop1 = 0 if self.prop1 < 0 else self.prop1
+        self.prop2 = 0 if self.prop2 < 0 else self.prop2
+        self.prop3 = 0 if self.prop3 < 0 else self.prop3
+        self.prop4 = 0 if self.prop4 < 0 else self.prop4
+        self.prop5 = 0 if self.prop5 < 0 else self.prop5
+
+    def pk(self, other):
+        """
+        和他人PK
+        :param other:
+        :return:
+        """
+        value1 = (self.prop1 * 1.5 + self.prop2 + self.prop3 * 1.2 + self.prop5 * 0.9) * (1 + self.prop4 / 100.0)
+        value2 = (other.prop1 * 1.5 + other.prop2 + other.prop3 * 1.2 + other.prop5 * 0.9) * (1 + other.prop4 / 100.0)
+        return value1 >= value2
+
 
 class Good:
     def __init__(self, name, prop1=0, prop2=0, prop3=0, prop4=0, prop5=0):
@@ -119,16 +135,44 @@ def handle_event(pay_amount, character):
     my_logger.debug('触发事件前属性: %s' % character)
     my_logger.info('触发事件: %s' % choice.name)
 
+    # TODO: 事件是否需要存进数据库，方便后期统计
+
     if choice.id == 401:  # 个体-遇怪
         pass
     elif choice.id == 402:  # 个体-物品
         pass
     elif choice.id == 403:  # 互动-相识
-        pass
+        all_character = get_all_character()
+        rand_character = util.choice(all_character)
+        result += '【{}】在 酒肆/茶馆/驿站 与一陌生公子交谈甚欢，问得其名为【{}】，两人因此相识。\n'.format(character.name, rand_character.name)
     elif choice.id == 404:  # 互动-交恶
-        pass
+        all_character = get_all_character()
+        rand_character = util.choice(all_character)
+        result += '{}正要拿起包子铺里的最后一个包子，却被{}抢了先，于是二人结仇。\n'.format(character.name, rand_character.name)
     elif choice.id == 405:  # 互动-PK
-        pass
+        all_character = get_all_character()
+        rand_character = util.choice(all_character)
+
+        word_list = [
+            '【{}】在市集散步，突然被【{}】踩了脚，两人发生争执，兵刃相向。\n'.format(character.name, rand_character.name),
+            '【{}】在雨天步行赶路，【{}】骑马奔驰溅了他一身泥水，两人发生争执，兵刃相向。\n'.format(character.name, rand_character.name)
+        ]
+
+        result += util.choice(word_list)
+
+        pk_rst = character.pk(rand_character)
+        if pk_rst:
+            result += '【{}】武功略胜一筹，心想江湖恩怨也不过如此。【{}】攻+6，防+5，气+5，运+3，魅力+8；【{}】攻-6，防-5，气-5，运-3，魅力-8\n'.format(character.name,
+                                                                                                        character.name,
+                                                                                                        rand_character.name)
+            character.use_good(Good('PK失败', 6, 5, 5, 3, 8))
+            rand_character.use_good(Good('PK胜利', -6, -5, -5, -3, -8))
+        else:
+            result += '【{}】在打斗中身负重伤，恩怨情仇总不如命重要，道歉认输便得作罢。【{}】攻-6，防-5，气-5，运-3，魅力-8；【{}】攻+6，防+5，气+5，运+3，魅力+8\n'.format(character.name,
+                                                                                                        character.name,
+                                                                                                        rand_character.name)
+            character.use_good(Good('PK失败', -6, -5, -5, -3, -8))
+            rand_character.use_good(Good('PK胜利', 6, 5, 5, 3, 8))
     elif choice.id == 301:  # 学艺-基础
         skill = util.choice(skill1_list)
         character.use_good(skill)
@@ -281,6 +325,24 @@ def save_character(character):
             WHERE `modian_id`=%s
     """, (character.name, character.prop1, character.prop2, character.prop3, character.prop4, character.prop5,
           character.id))
+
+
+def get_all_character():
+    """
+    获取所有人物
+    :return:
+    """
+    my_logger.info('获取所有人物')
+    rst = mysql_util.select_all("""
+            SELECT * from `t_character`;
+        """)
+    character_list = []
+    if rst:
+        for a in rst:
+            character = Character(a[0], str(a[1], encoding='utf-8'), int(a[2]), int(a[3]),
+                                  int(a[4]), int(a[5]), int(a[6]))
+            character_list.append(character)
+    return character_list
 
 
 def read_skill_list():
