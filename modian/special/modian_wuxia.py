@@ -167,8 +167,8 @@ def handle_event(pay_amount, character):
             if rand_int <= 90:
                 # 普通事件
                 locations = ['路边', '树林', '衙门口', '肉铺', '荒井边']
-                item = util.choice(item_list)
-                result += '【{}】在 {} 拾到 {}，\n{}\n'.format(character.name, util.choice(locations), item.name,
+                item = util.choice(item_list)[0]
+                result += '【{}】在 {} 拾到 {}，\n{}\n'.format(character.name, util.choice(locations)[0], item.name,
                                                          item.property_change())
                 character.use_good(item)
             else:
@@ -180,14 +180,14 @@ def handle_event(pay_amount, character):
                 character.prop5 += 10
         else:  # 交易
             locations = ['店里', '小摊', '行脚商', '毛头小孩']
-            location = util.choice(locations)
-            equipment = util.choice(equipment_list)
+            location = util.choice(locations)[0]
+            equipment = util.choice(equipment_list)[0]
             rand_int = random.randint(1, 100)
             if rand_int <= 90:
                 # 普通事件
                 result += '在 {} 处购得{}，{}\n'.format(character.name, location, equipment.name,
                                                    equipment.property_change())
-                character.use_good(equipment_list)
+                character.use_good(equipment)
             else:
                 # 假货
                 result += '在 {} 处购得{}，不料过了半日才发现竟是被奸商所骗，{}竟是赝品，运-8\n'.format(character.name, location, equipment.name,
@@ -196,22 +196,22 @@ def handle_event(pay_amount, character):
         save_character(character)
     elif choice.id == 403:  # 互动-相识
         all_character = get_all_character()
-        rand_character = util.choice(all_character)
+        rand_character = util.choice(all_character)[0]
         result += '【{}】在 酒肆/茶馆/驿站 与一陌生公子交谈甚欢，问得其名为【{}】，两人因此相识。\n'.format(character.name, rand_character.name)
     elif choice.id == 404:  # 互动-交恶
         all_character = get_all_character()
-        rand_character = util.choice(all_character)
+        rand_character = util.choice(all_character)[0]
         result += '{}正要拿起包子铺里的最后一个包子，却被{}抢了先，于是二人结仇。\n'.format(character.name, rand_character.name)
     elif choice.id == 405:  # 互动-PK
         all_character = get_all_character()
-        rand_character = util.choice(all_character)
+        rand_character = util.choice(all_character)[0]
 
         word_list = [
             '【{}】在市集散步，突然被【{}】踩了脚，两人发生争执，兵刃相向。\n'.format(character.name, rand_character.name),
             '【{}】在雨天步行赶路，【{}】骑马奔驰溅了他一身泥水，两人发生争执，兵刃相向。\n'.format(character.name, rand_character.name)
         ]
 
-        result += util.choice(word_list)
+        result += util.choice(word_list)[0]
 
         pk_rst = character.pk(rand_character)
         if pk_rst:
@@ -229,19 +229,19 @@ def handle_event(pay_amount, character):
             character.use_good(Good('PK失败', -6, -5, -5, -3, -8))
             rand_character.use_good(Good('PK胜利', 6, 5, 5, 3, 8))
     elif choice.id == 301:  # 学艺-基础
-        skill = util.choice(skill1_list)
+        skill = util.choice(skill1_list)[0]
         character.use_good(skill)
         result += '【{}】刻苦修炼，终于习得【{}】，\n{}\n'.format(character.name, skill.name,
                                                     skill.property_change())
         save_character(character)
     elif choice.id == 302:  # 学艺-进阶
-        skill = util.choice(skill2_list)
+        skill = util.choice(skill2_list)[0]
         character.use_good(skill)
         result += '【{}】刻苦修炼，终于习得【{}】，\n{}\n'.format(character.name, skill.name,
                                                     skill.property_change())
         save_character(character)
     elif choice.id == 201:  # 门派
-        mentor = util.choice(SCHOOLS)
+        mentor = util.choice(SCHOOLS)[0]
         result += '【{}】骨骼精奇天资聪慧，{}对他青睐有加，亲自传授本门武功。\n【{}】获得真传，攻+35，防+30，气+30，运+20，魅力+40\n'.format(character.name,
                                                                                                  mentor, character.name)
         character.prop1 += 35
@@ -252,7 +252,7 @@ def handle_event(pay_amount, character):
         save_character(character)
     elif choice.id == 101:  # 其他-得子
         name = ['子', '女', '哪吒']
-        result += '行走江湖，总有意外，【{}】十月怀胎，诞下一{}。\n'.format(character.name, util.choice(name))
+        result += '行走江湖，总有意外，【{}】十月怀胎，诞下一{}。\n'.format(character.name, util.choice(name)[0])
     elif choice.id == 102:  # 其他-称号升级
         result += '【{}】武功日益精进，救死扶伤匡扶正义，昔日的【无名小侠】如今已【名震江湖】，魅力+88\n'.format(character.name, )
         character.prop5 += 88
@@ -453,4 +453,5 @@ sync_names()
 
 if __name__ == '__main__':
     # sync_names()
-    print(create_character('123456'))
+    for i in range(100):
+        print(donate('1351108', 1))
