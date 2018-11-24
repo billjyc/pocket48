@@ -78,11 +78,11 @@ class Good:
 
     def property_change(self):
         property_change_str = ''
-        property_change_str += '攻+%s, ' % self.prop1 if self.prop1 > 0 else ''
-        property_change_str += '防+%s, ' % self.prop2 if self.prop2 > 0 else ''
-        property_change_str += '气+%s, ' % self.prop3 if self.prop3 > 0 else ''
-        property_change_str += '运+%s, ' % self.prop4 if self.prop4 > 0 else ''
-        property_change_str += '魅力+%s, ' % self.prop5 if self.prop5 > 0 else ''
+        property_change_str += '攻+%s, ' % self.prop1 if self.prop1 == 0 else ''
+        property_change_str += '防+%s, ' % self.prop2 if self.prop2 == 0 else ''
+        property_change_str += '气+%s, ' % self.prop3 if self.prop3 == 0 else ''
+        property_change_str += '运+%s, ' % self.prop4 if self.prop4 == 0 else ''
+        property_change_str += '魅力+%s, ' % self.prop5 if self.prop5 == 0 else ''
         return property_change_str[:-1]
 
 
