@@ -192,7 +192,7 @@ def handle_event(pay_amount, character):
             rand_int = random.randint(1, 100)
             if rand_int <= 90:
                 # 普通事件
-                result += '在 {} 处购得{}，{}\n'.format(character.name, location, equipment.name,
+                result += '【{}】在 {} 处购得{}，{}\n'.format(character.name, location, equipment.name,
                                                    equipment.property_change())
                 character.use_good(equipment)
                 event_id = 4023
@@ -213,7 +213,7 @@ def handle_event(pay_amount, character):
     elif choice.id == 404:  # 互动-交恶
         all_character = get_all_character()
         rand_character = util.choice(all_character)[0]
-        result += '{}正要拿起包子铺里的最后一个包子，却被{}抢了先，于是二人结仇。\n'.format(character.name, rand_character.name)
+        result += '【{}】正要拿起包子铺里的最后一个包子，却被【{}】抢了先，于是二人结仇。\n'.format(character.name, rand_character.name)
         event_remark = rand_character.name
     elif choice.id == 405:  # 互动-PK
         all_character = get_all_character()
@@ -493,4 +493,4 @@ sync_names()
 if __name__ == '__main__':
     # sync_names()
     for i in range(1):
-        print(donate('1351108', 250))
+        print(donate('1351108', 10.17))
