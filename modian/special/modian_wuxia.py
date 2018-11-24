@@ -491,6 +491,19 @@ item_list = read_item_list()
 sync_names()
 
 if __name__ == '__main__':
+    rst = mysql_util.select_all("""
+select s.`name`, tc.`name`, CONCAT(ROUND((tc.prop1 * 1.5 + tc.prop2 + tc.prop3 * 1.2 + tc.prop5 * 0.9) * (1 + tc.prop4 / 100),1)) as ce
+from `t_character` tc, `supporter` s where tc.`modian_id` = s.`id`
+order by ce desc limit 10;
+        """)
+    print(rst)
+    result_str = ''
+    rank = 1
+    for name, c_name, ce in rst:
+        result_str += '{}.{}({}): {}\n'.format(rank, str(name, encoding='utf-8'),
+                                               str(c_name, encoding='utf-8'), str(ce, encoding='utf-8'))
+        rank += 1
+    print(result_str)
     # sync_names()
-    for i in range(1):
-        print(donate('1351108', 10.17))
+    # for i in range(1):
+    #     print(donate('1351108', 10.17))
