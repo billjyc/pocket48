@@ -123,7 +123,7 @@ class Event:
 
 def handle_event(pay_amount, character):
     result = ''
-    event_list_j = event_json[str(int(pay_amount * 10))]
+    event_list_j = event_json[str(int(pay_amount))]
     event_list = []
     weight_list = []
     for event_j in event_list_j:
@@ -491,5 +491,5 @@ sync_names()
 
 if __name__ == '__main__':
     # sync_names()
-    for i in range(10):
+    for i in range(1):
         print(donate('1351108', 28))
