@@ -73,12 +73,32 @@ def handle_msg(context):
                     get_jizi_ranking_list_by_date(context, 0)
                 elif message == '-yesterday':
                     get_jizi_ranking_list_by_date(context, 1)
+                elif message == '-排行榜':
+                    get_huitui_rank(context)
             else:
                 bot.send(context, '目前并没有正在进行的集资项目T_T')
     except Error:
         pass
     # return {'reply': context['message'],
     #         'at_sender': False}  # 返回给 HTTP API 插件，走快速回复途径
+
+
+def get_huitui_rank(context):
+    """
+    获取排行榜
+    :return:
+    """
+    logger.debug('获取排行榜')
+    rst = mysql_util.select_all("""
+        select s.`name`, ((tc.prop1 * 1.5 + tc.prop2 + tc.prop3 * 1.2 + tc.prop5 * 0.9) * (1 + tc.prop4 / 100)) as ce
+        from `t_character` tc, `supporter` s where tc.`modian_id` = s.`id`
+        order by ce desc limit 10;
+    """)
+    rank = 1
+    result_str = '灰推群侠传排行榜: \n'
+    for name, ce in rst:
+        result_str += '{}.{}: {}\n'.format(rank, name, ('%.1f' % ce))
+    bot.send(context, result_str)
 
 
 def get_jizi_ranking_list_by_date(context, day_diff):
@@ -176,4 +196,5 @@ def handle_group_request(context):
 
 
 if __name__ == '__main__':
+    get_huitui_rank()
     bot.run(host='127.0.0.1', port=8200)

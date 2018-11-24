@@ -360,7 +360,7 @@ def donate(modian_id, pay_amount):
                 sub_event_str = handle_event(amounts[idx], character)
                 rst += sub_event_str
                 my_logger.debug(sub_event_str)
-                rst += '----------------------------\n'
+                # rst += '----------------------------\n'
             max_event -= event_time
             tmp = tmp % amounts[idx]
             idx += 1
