@@ -30,31 +30,33 @@
       "weight": 50
     }
   ],
-  "10": [
-    {
-      "id": 401,
-      "name": "遇怪",
-      "weight": 45
-    },
-    {
-      "id": 402,
-      "name": "物品",
-      "weight": 25
-    },
+  "20": [
     {
       "id": 403,
       "name": "相识",
-      "weight": 10
+      "weight": 25
     },
     {
       "id": 404,
       "name": "交恶",
-      "weight": 10
+      "weight": 25
     },
     {
       "id": 405,
       "name": "PK",
-      "weight": 10
+      "weight": 50
+    }
+  ],
+  "10": [
+    {
+      "id": 401,
+      "name": "遇怪",
+      "weight": 67
+    },
+    {
+      "id": 402,
+      "name": "物品",
+      "weight": 33
     }
   ]
 }

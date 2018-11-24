@@ -349,7 +349,7 @@ def donate(modian_id, pay_amount):
         if pay_amount < MIN_AMOUNT:
             return ''
         tmp = pay_amount
-        amounts = [200, 100, 50, 10]
+        amounts = [200, 100, 50, 20, 10]
         # amounts = [i / 10 for i in amounts]
         max_event = 3  # 最多触发3次事件
         idx = 0
@@ -493,4 +493,4 @@ sync_names()
 if __name__ == '__main__':
     # sync_names()
     for i in range(1):
-        print(donate('1351108', 40))
+        print(donate('1351108', 250))
