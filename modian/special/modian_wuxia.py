@@ -280,9 +280,6 @@ def handle_event(pay_amount, character):
         character.prop5 += 88
         save_character(character)
     my_logger.debug('触发事件后属性: %s' % character)
-    result += '【{}】当前属性：\n攻：{}, 防: {}, 气: {}, 运：{}, 魅力: {}\n'.format(character.name, character.prop1,
-                                                                     character.prop2, character.prop3,
-                                                                     character.prop4, character.prop5)
     save_event(character.id, event_id, event_remark)
     return result
 
@@ -363,9 +360,13 @@ def donate(modian_id, pay_amount):
                 sub_event_str = handle_event(amounts[idx], character)
                 rst += sub_event_str
                 my_logger.debug(sub_event_str)
+                rst += '----------------------------\n'
             max_event -= event_time
             tmp = tmp % amounts[idx]
             idx += 1
+        rst += '【{}】当前属性：\n攻：{}, 防: {}, 气: {}, 运：{}, 魅力: {}\n'.format(character.name, character.prop1,
+                                                                         character.prop2, character.prop3,
+                                                                         character.prop4, character.prop5)
     else:
         my_logger.info('未创建人物, modian_id: %s' % modian_id)
         if pay_amount >= MIN_AMOUNT:
@@ -492,4 +493,4 @@ sync_names()
 if __name__ == '__main__':
     # sync_names()
     for i in range(1):
-        print(donate('1351108', 28))
+        print(donate('1351108', 40))
