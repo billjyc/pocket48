@@ -96,8 +96,10 @@ def get_huitui_rank(context):
     """)
     rank = 1
     result_str = '灰推群侠传排行榜: \n'
+    logger.debug(rst)
     for name, ce in rst:
         result_str += '{}.{}: {}\n'.format(rank, name, ('%.1f' % ce))
+        logger.debug(result_str)
     bot.send(context, result_str)
 
 
