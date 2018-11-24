@@ -196,5 +196,4 @@ def handle_group_request(context):
 
 
 if __name__ == '__main__':
-    get_huitui_rank()
     bot.run(host='127.0.0.1', port=8200)
