@@ -342,7 +342,7 @@ def create_character(modian_id):
 
 
 def donate(modian_id, pay_amount):
-    MIN_AMOUNT = 1
+    MIN_AMOUNT = 10
     rst = ''
     has_created, character = created(modian_id)
     if has_created:
@@ -353,7 +353,7 @@ def donate(modian_id, pay_amount):
             return ''
         tmp = pay_amount
         amounts = [200, 100, 50, 10]
-        amounts = [i / 10 for i in amounts]
+        # amounts = [i / 10 for i in amounts]
         max_event = 3  # 最多触发3次事件
         idx = 0
         while max_event > 0 and idx < len(amounts):
