@@ -90,16 +90,16 @@ def get_huitui_rank(context):
     """
     logger.debug('获取排行榜')
     rst = mysql_util.select_all("""
-    select s.`name`, tc.`name`, CONCAT(ROUND((tc.prop1 * 1.5 + tc.prop2 + tc.prop3 * 1.2 + tc.prop5 * 0.9) * (1 + tc.prop4 / 100),1)) as ce
-    from `t_character` tc, `supporter` s where tc.`modian_id` = s.`id`
-    order by ce desc limit 10;
+    select s.`name`, tc.`name`, CONVERT((tc.prop1 * 1.5 + tc.prop2 + tc.prop3 * 1.2 + tc.prop5 * 0.9) * (1 + tc.prop4 / 100), SIGNED) as ce
+from `t_character` tc, `supporter` s where tc.`modian_id` = s.`id`
+order by ce desc limit 10;
             """)
     rank = 1
     result_str = '灰推群侠传排行榜: \n'
     logger.debug(rst)
     for name, c_name, ce in rst:
         result_str += '{}.{}({}): {}\n'.format(rank, str(name, encoding='utf-8'),
-                                               str(c_name, encoding='utf-8'), str(ce, encoding='utf-8'))
+                                               str(c_name, encoding='utf-8'), ce)
         rank += 1
     logger.debug(result_str)
     bot.send(context, result_str)
