@@ -135,20 +135,22 @@ def handle_event(pay_amount, character):
     choice = event_list[idx]
     my_logger.debug('触发事件前属性: %s' % character)
     my_logger.info('触发事件: %s' % choice.name)
-
-    # TODO: 事件是否需要存进数据库，方便后期统计
+    event_id = choice.id
+    event_remark = ''
 
     if choice.id == 401:  # 个体-遇怪
         monsters = ['山猴子', '宵小之徒', '小毛贼', '蒙面强盗', '皮卡丘']
         weights = [24, 24, 24, 24, 4]
         hit_idx = util.weight_choice(monsters, weights)
         hit = monsters[hit_idx]
+        event_remark = hit
         if hit == '皮卡丘':
             # 遇到皮卡丘必败
             result += '【{}】在路边发现一只皮卡丘！\n皮卡丘突然发动攻击，使出十万伏特，没有人能够抵抗，【{}】落败。\n【{}】气-2，运-10\n'.format(character.name,
                                                                                                  character.name,
                                                                                                  character.name)
             character.use_good(Good('皮卡丘', 0, 0, -2, -10, 0))
+            event_id = 4011
         else:
             result += '【{}】受到{}的突然袭击。\n'.format(character.name, hit)
             rand_int = random.randint(1, 100)
@@ -156,9 +158,11 @@ def handle_event(pay_amount, character):
                 # 80%几率获胜
                 result += '区区{}哪里是【{}】的对手，{}仓皇而逃。\n【{}】攻+5，防+3\n'.format(hit, character.name, hit, character.name)
                 character.use_good(Good('战斗胜利', 5, 3, 0, 0, 0))
+                event_id = 4012
             else:
                 result += '堂堂侠客却被{}打伤，【{}】伤势过重只得遁走。\n【{}】防-3，气-2，运-2，魅力-5\n'.format(hit, character.name, character.name)
                 character.use_good(Good('战斗胜利', 0, -3, -2, -2, -5))
+                event_id = 4013
         save_character(character)
     elif choice.id == 402:  # 个体-物品
         idx = random.randint(0, 1)
@@ -171,6 +175,8 @@ def handle_event(pay_amount, character):
                 result += '【{}】在 {} 拾到 {}，\n{}\n'.format(character.name, util.choice(locations)[0], item.name,
                                                          item.property_change())
                 character.use_good(item)
+                event_id = 4021
+                event_remark = item.name
             else:
                 # 屠龙宝刀
                 result += '【{}】在草丛中发现一把绝世好刀，动了动食指，点击一下，获得屠龙宝刀。\n【{}】攻击+15，运+15，魅力+10\n'.format(character.name,
@@ -178,6 +184,7 @@ def handle_event(pay_amount, character):
                 character.prop1 += 15
                 character.prop4 += 15
                 character.prop5 += 10
+                event_id = 4022
         else:  # 交易
             locations = ['店里', '小摊', '行脚商', '毛头小孩']
             location = util.choice(locations)[0]
@@ -188,20 +195,26 @@ def handle_event(pay_amount, character):
                 result += '在 {} 处购得{}，{}\n'.format(character.name, location, equipment.name,
                                                    equipment.property_change())
                 character.use_good(equipment)
+                event_id = 4023
+                event_remark = equipment.name
             else:
                 # 假货
-                result += '在 {} 处购得{}，不料过了半日才发现竟是被奸商所骗，{}竟是赝品，运-8\n'.format(character.name, location, equipment.name,
+                result += '【{}】在 {} 处购得{}，不料过了半日才发现竟是被奸商所骗，{}竟是赝品，运-8\n'.format(character.name, location, equipment.name,
                                                                             equipment.name)
                 character.use_good(Good('奸商', 0, 0, 0, -8, 0))
+                event_id = 4024
+                event_remark = equipment.name
         save_character(character)
     elif choice.id == 403:  # 互动-相识
         all_character = get_all_character()
         rand_character = util.choice(all_character)[0]
         result += '【{}】在 酒肆/茶馆/驿站 与一陌生公子交谈甚欢，问得其名为【{}】，两人因此相识。\n'.format(character.name, rand_character.name)
+        event_remark = rand_character.name
     elif choice.id == 404:  # 互动-交恶
         all_character = get_all_character()
         rand_character = util.choice(all_character)[0]
         result += '{}正要拿起包子铺里的最后一个包子，却被{}抢了先，于是二人结仇。\n'.format(character.name, rand_character.name)
+        event_remark = rand_character.name
     elif choice.id == 405:  # 互动-PK
         all_character = get_all_character()
         rand_character = util.choice(all_character)[0]
@@ -210,6 +223,8 @@ def handle_event(pay_amount, character):
             '【{}】在市集散步，突然被【{}】踩了脚，两人发生争执，兵刃相向。\n'.format(character.name, rand_character.name),
             '【{}】在雨天步行赶路，【{}】骑马奔驰溅了他一身泥水，两人发生争执，兵刃相向。\n'.format(character.name, rand_character.name)
         ]
+
+        event_remark = rand_character.name
 
         result += util.choice(word_list)[0]
 
@@ -221,6 +236,7 @@ def handle_event(pay_amount, character):
                 rand_character.name)
             character.use_good(Good('PK失败', 6, 5, 5, 3, 8))
             rand_character.use_good(Good('PK胜利', -6, -5, -5, -3, -8))
+            event_id = 4051
         else:
             result += '【{}】在打斗中身负重伤，恩怨情仇总不如命重要，道歉认输便得作罢。\n【{}】攻-6，防-5，气-5，运-3，魅力-8；\n【{}】攻+6，防+5，气+5，运+3，魅力+8\n'.format(
                 character.name,
@@ -228,17 +244,20 @@ def handle_event(pay_amount, character):
                 rand_character.name)
             character.use_good(Good('PK失败', -6, -5, -5, -3, -8))
             rand_character.use_good(Good('PK胜利', 6, 5, 5, 3, 8))
+            event_id = 4052
     elif choice.id == 301:  # 学艺-基础
         skill = util.choice(skill1_list)[0]
         character.use_good(skill)
         result += '【{}】刻苦修炼，终于习得【{}】，\n{}\n'.format(character.name, skill.name,
                                                     skill.property_change())
+        event_remark = skill.name
         save_character(character)
     elif choice.id == 302:  # 学艺-进阶
         skill = util.choice(skill2_list)[0]
         character.use_good(skill)
         result += '【{}】刻苦修炼，终于习得【{}】，\n{}\n'.format(character.name, skill.name,
                                                     skill.property_change())
+        event_remark = skill.name
         save_character(character)
     elif choice.id == 201:  # 门派
         mentor = util.choice(SCHOOLS)[0]
@@ -249,10 +268,13 @@ def handle_event(pay_amount, character):
         character.prop3 += 30
         character.prop4 += 20
         character.prop5 += 40
+        event_remark = mentor
         save_character(character)
     elif choice.id == 101:  # 其他-得子
         name = ['子', '女', '哪吒']
-        result += '行走江湖，总有意外，【{}】十月怀胎，诞下一{}。\n'.format(character.name, util.choice(name)[0])
+        choice_name = util.choice(name)[0]
+        result += '行走江湖，总有意外，【{}】十月怀胎，诞下一{}。\n'.format(character.name, choice_name)
+        event_remark = choice_name
     elif choice.id == 102:  # 其他-称号升级
         result += '【{}】武功日益精进，救死扶伤匡扶正义，昔日的【无名小侠】如今已【名震江湖】，魅力+88\n'.format(character.name, )
         character.prop5 += 88
@@ -261,6 +283,7 @@ def handle_event(pay_amount, character):
     result += '【{}】当前属性：\n攻：{}, 防: {}, 气: {}, 运：{}, 魅力: {}\n'.format(character.name, character.prop1,
                                                                      character.prop2, character.prop3,
                                                                      character.prop4, character.prop5)
+    save_event(character.id, event_id, event_remark)
     return result
 
 
@@ -388,6 +411,21 @@ def save_character(character):
           character.id))
 
 
+def save_event(modian_id, event_id, event_remark):
+    """
+    保存事件到数据库
+    :param modian_id
+    :param event_id
+    :param event_remark
+    :return:
+    """
+    my_logger.debug('保存事件到数据库')
+    mysql_util.query("""
+        INSERT INTO `t_event` (`modian_id`, `event_id`, `event_remark`) VALUES 
+            (%s, %s, %s)
+    """, (modian_id, event_id, event_remark))
+
+
 def get_all_character():
     """
     获取所有人物
@@ -453,5 +491,5 @@ sync_names()
 
 if __name__ == '__main__':
     # sync_names()
-    for i in range(100):
-        print(donate('1351108', 1))
+    for i in range(10):
+        print(donate('1351108', 28))
