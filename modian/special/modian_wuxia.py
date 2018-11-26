@@ -208,7 +208,9 @@ def handle_event(pay_amount, character):
     elif choice.id == 403:  # 互动-相识
         all_character = get_all_character()
         rand_character = util.choice(all_character)[0]
-        result += '【{}】在 酒肆/茶馆/驿站 与一陌生公子交谈甚欢，问得其名为【{}】，两人因此相识。\n'.format(character.name, rand_character.name)
+        locations = ['酒肆', '茶馆', '驿站']
+        location = util.choice(locations)[0]
+        result += '【{}】在 {} 与一陌生公子交谈甚欢，问得其名为【{}】，两人因此相识。\n'.format(character.name, location, rand_character.name)
         event_remark = rand_character.name
     elif choice.id == 404:  # 互动-交恶
         all_character = get_all_character()
