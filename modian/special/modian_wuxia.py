@@ -78,12 +78,20 @@ class Good:
 
     def property_change(self):
         property_change_str = ''
-        property_change_str += '攻+%s, ' % self.prop1 if self.prop1 >= 0 else '攻%s, ' % self.prop1
-        property_change_str += '防+%s, ' % self.prop2 if self.prop2 >= 0 else '防%s, ' % self.prop2
-        property_change_str += '气+%s, ' % self.prop3 if self.prop3 >= 0 else '气%s, '% self.prop3
-        property_change_str += '运+%s, ' % self.prop4 if self.prop4 >= 0 else '运%s, ' % self.prop4
-        property_change_str += '魅力+%s, ' % self.prop5 if self.prop5 >= 0 else '魅力%s, ' % self.prop5
-        return property_change_str[:-1]
+        if self.prop1 != 0:
+            property_change_str += '攻+%s, ' % self.prop1 if self.prop1 >= 0 else '攻%s, ' % self.prop1
+        if self.prop2 != 0:
+            property_change_str += '防+%s, ' % self.prop2 if self.prop2 >= 0 else '防%s, ' % self.prop2
+        if self.prop3 != 0:
+            property_change_str += '气+%s, ' % self.prop3 if self.prop3 >= 0 else '气%s, '% self.prop3
+        if self.prop4 != 0:
+            property_change_str += '运+%s, ' % self.prop4 if self.prop4 >= 0 else '运%s, ' % self.prop4
+        if self.prop5 != 0:
+            property_change_str += '魅力+%s, ' % self.prop5 if self.prop5 >= 0 else '魅力%s, ' % self.prop5
+        if len(property_change_str) > 0:
+            return property_change_str[:-1]
+        else:
+            return property_change_str
 
 
 class Equipment(Good):
