@@ -245,6 +245,8 @@ def handle_event(pay_amount, character):
             character.use_good(Good('PK失败', -6, -5, -5, -3, -8))
             rand_character.use_good(Good('PK胜利', 6, 5, 5, 3, 8))
             event_id = 4052
+        save_character(character)
+        save_character(rand_character)
     elif choice.id == 301:  # 学艺-基础
         skill = util.choice(skill1_list)[0]
         character.use_good(skill)
