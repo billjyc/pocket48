@@ -10,6 +10,7 @@ from utils.config_reader import ConfigReader
 # from modian_plugin import modian_handler
 from utils.mysql_util import mysql_util
 from qq.ai_reply import QQAIBot
+import traceback
 
 AUTO_REPLY = {}
 items = ConfigReader.get_section('auto_reply')
@@ -106,10 +107,10 @@ def search_card(context, modian_id):
         bot.send(context, report)
     except Error as e:
         logger.error(e)
-        bot.send(context, '查询出现错误！\n{}'.format(e))
+        bot.send(context, '查询出现错误！\n{}'.format(traceback.print_exc()))
     except Exception as exp:
         logger.error(exp)
-        bot.send(context, '查询出现异常！\n{}'.format(exp))
+        bot.send(context, '查询出现异常！\n{}'.format(traceback.print_exc()))
 
 
 def get_huitui_rank(context):
