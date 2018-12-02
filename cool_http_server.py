@@ -75,7 +75,7 @@ def handle_msg(context):
                     get_jizi_ranking_list_by_date(context, 1)
                 elif message == '-排行榜':
                     get_huitui_rank(context)
-                elif message.startswith('查询'):
+                elif message.startswith('-查询'):
                     strs = message.split(' ')
                     if len(strs) == 2:
                         try:
