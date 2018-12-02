@@ -198,22 +198,35 @@ class CardDrawHandler:
         print(insert_sql[:-1])
         logger.debug(insert_sql[:-1])
 
+        img_flag = True
+        img_report = ''
         report = '恭喜抽中:\n'
         if CardLevel.UR in rst_level and len(rst_level[CardLevel.UR]) > 0:
             report += '【UR】: '
             for card in rst_level[CardLevel.UR]:
                 report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
+            img = util.choice(rst_level[CardLevel.UR])[0]
+            # TODO: 图片链接
+            img_report = '[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]\n'
             report += '\n'
         if CardLevel.SSR in rst_level and len(rst_level[CardLevel.SSR]) > 0:
             report += '【SSR】: '
             for card in rst_level[CardLevel.SSR]:
                 report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
+            img = util.choice(rst_level[CardLevel.SSR])[0]
+            # TODO: 图片链接
+            img_report = '[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]\n'
             report += '\n'
         if CardLevel.SR in rst_level and len(rst_level[CardLevel.SR]) > 0:
             report += '【SR】: '
             for card in rst_level[CardLevel.SR]:
                 report += '{}{}*{}, '.format(type_dict[card.type0], card.sub_id, rst[card])
+            img = util.choice(rst_level[CardLevel.SR])[0]
+            # TODO: 图片链接
+            img_report = '[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]\n'
             report += '\n'
+
+        report += img_report
 
         if flag:  # 如果一张都没有抽中，就不执行sql语句
             mysql_util.query(insert_sql[:-1])
@@ -225,6 +238,56 @@ class CardDrawHandler:
                     (%s, %s)
             """, (user_id, score_add))
             report += '通过重复卡获取积分: {}\n'.format(score_add)
+        logger.debug(report)
+        return report
+
+    def get_cards(self, modian_id):
+        """
+        获取该人所有已抽中的卡
+        :param modian_id:
+        :return:
+        """
+        logger.info("查询已抽中的卡: {}".format(modian_id))
+        rst = mysql_util.select_all("""
+            select card_id, count(*) from `draw_record` where supporter_id=%s group by `card_id`;
+        """, (modian_id, ))
+        rst_level = {}
+        rst_level[CardLevel.UR] = []
+        rst_level[CardLevel.SSR] = []
+        rst_level[CardLevel.SR] = []
+        rst_num = {}
+        type_dict = {
+            CardType.STAR: '星组',
+            CardType.MOON: '月组',
+            CardType.SUN: '日组'
+        }
+        if rst and len(rst) > 0:
+            for tmp in rst:
+                card = self.cards_single[int(tmp[0])]
+                if card not in rst_num:
+                    rst_num[card.id] = 0
+                rst_num[card] = int(tmp[1])
+                if card not in rst_level[card.level]:
+                    rst_level[card.level].append(card)
+        else:
+            return '摩点ID: {}, 当前暂未抽中任何卡片 \n'.format(modian_id)
+        report = '摩点ID: {}, 当前已抽中的卡片有: \n'.format(modian_id)
+        if CardLevel.UR in rst_level and len(rst_level[CardLevel.UR]) > 0:
+            report += '【UR】({}/{}): '.format(len(rst_level[CardLevel.UR]), len(self.cards[CardLevel.UR]))
+            for card in rst_level[CardLevel.UR]:
+                report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst_num[card])
+            report += '\n'
+        if CardLevel.SSR in rst_level and len(rst_level[CardLevel.SSR]) > 0:
+            report += '【SSR】({}/{}): '.format(len(rst_level[CardLevel.SSR]), len(self.cards[CardLevel.SSR]))
+            for card in rst_level[CardLevel.SSR]:
+                report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst_num[card])
+            report += '\n'
+        if CardLevel.SR in rst_level and len(rst_level[CardLevel.SR]) > 0:
+            report += '【SR】({}/{}): '.format(len(rst_level[CardLevel.SR]), len(self.cards[CardLevel.SR]))
+            for card in rst_level[CardLevel.SR]:
+                report += '{}{}*{}, '.format(type_dict[card.type0], card.sub_id, rst_num[card])
+            report += '\n'
+        print(report)
         logger.debug(report)
         return report
 
@@ -260,5 +323,6 @@ class CardDrawHandler:
 if __name__ == '__main__':
     handler = CardDrawHandler()
     handler.read_config()
-    rst = handler.draw('1236666', 'billjyc1', 200, '2018-03-24 12:54:00')
-    print(rst)
+    # rst = handler.draw('1236666', 'billjyc1', 200, '2018-03-24 12:54:00')
+    # print(rst)
+    handler.get_cards('123')

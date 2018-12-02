@@ -75,12 +75,41 @@ def handle_msg(context):
                     get_jizi_ranking_list_by_date(context, 1)
                 elif message == '-排行榜':
                     get_huitui_rank(context)
+                elif message.startswith('查询'):
+                    strs = message.split(' ')
+                    if len(strs) == 2:
+                        try:
+                            modian_id = int(strs[1])
+                            search_card(context, modian_id)
+                        except:
+                            bot.send(context, '摩点ID不符合规定~')
             else:
                 bot.send(context, '目前并没有正在进行的集资项目T_T')
     except Error:
         pass
     # return {'reply': context['message'],
     #         'at_sender': False}  # 返回给 HTTP API 插件，走快速回复途径
+
+
+def search_card(context, modian_id):
+    """
+    查询当前已经获得的卡片
+    :param context:
+    :param modian_id:
+    :return:
+    """
+    try:
+        from modian.modian_card_draw import CardDrawHandler
+        handler = CardDrawHandler()
+        handler.read_config()
+        report = handler.get_cards(modian_id)
+        bot.send(context, report)
+    except Error as e:
+        logger.error(e)
+        bot.send(context, '查询出现错误！\n{}'.format(e))
+    except Exception as exp:
+        logger.error(exp)
+        bot.send(context, '查询出现异常！\n{}'.format(exp))
 
 
 def get_huitui_rank(context):
