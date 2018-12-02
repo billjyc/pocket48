@@ -280,17 +280,18 @@ class CardDrawHandler:
             for card in rst_level[CardLevel.UR]:
                 report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst_num[card])
             report += '\n'
+        logger.debug(report)
         if CardLevel.SSR in rst_level and len(rst_level[CardLevel.SSR]) > 0:
             report += '【SSR】({}/{}): '.format(len(rst_level[CardLevel.SSR]), len(self.cards[CardLevel.SSR]))
             for card in rst_level[CardLevel.SSR]:
                 report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst_num[card])
             report += '\n'
+        logger.debug(report)
         if CardLevel.SR in rst_level and len(rst_level[CardLevel.SR]) > 0:
             report += '【SR】({}/{}): '.format(len(rst_level[CardLevel.SR]), len(self.cards[CardLevel.SR]))
             for card in rst_level[CardLevel.SR]:
                 report += '{}{}*{}, '.format(type_dict[card.type0], card.sub_id, rst_num[card])
             report += '\n'
-        print(report)
         logger.debug(report)
         return report
 
