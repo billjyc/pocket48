@@ -272,6 +272,8 @@ class CardDrawHandler:
                     rst_level[card.level].append(card)
         else:
             return '摩点ID: {}, 当前暂未抽中任何卡片 \n'.format(modian_id)
+        logger.debug(rst_level)
+        logger.debug(rst_num)
         report = '摩点ID: {}, 当前已抽中的卡片有: \n'.format(modian_id)
         if CardLevel.UR in rst_level and len(rst_level[CardLevel.UR]) > 0:
             report += '【UR】({}/{}): '.format(len(rst_level[CardLevel.UR]), len(self.cards[CardLevel.UR]))
