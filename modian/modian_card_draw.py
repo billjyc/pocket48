@@ -262,10 +262,11 @@ class CardDrawHandler:
             CardType.SUN: '日组'
         }
         if rst and len(rst) > 0:
+            logger.debug(rst)
             for tmp in rst:
                 card = self.cards_single[int(tmp[0])]
                 if card not in rst_num:
-                    rst_num[card.id] = 0
+                    rst_num[card] = 0
                 rst_num[card] = int(tmp[1])
                 if card not in rst_level[card.level]:
                     rst_level[card.level].append(card)
