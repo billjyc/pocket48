@@ -341,11 +341,31 @@ class CardDrawHandler:
         print(score)
         return score
 
+    def draw_missed_cards(self, modian_id):
+        """
+        补抽卡
+        :param modian_id:
+        :return:
+        """
+        import time
+        current_score = int(self.get_current_score(modian_id))
+        if current_score < 10:
+            return '摩点ID：{}的当前积分少于10，不能补抽！'
+        else:
+            result = '摩点ID：{}，补抽卡，当前积分-10'
+            mysql_util.query("""
+                            INSERT INTO `t_card_score` (`modian_id`, `score`) VALUES 
+                                (%s, %s)
+                        """, (modian_id, -10))
+            result += self.draw(modian_id, '补抽用户', 10.17, util.convert_timestamp_to_timestr(int(time.time() * 1000)))
+
+            return result
+
 
 if __name__ == '__main__':
     handler = CardDrawHandler()
     handler.read_config()
-    # rst = handler.draw('1236666', 'billjyc1', 200, '2018-03-24 12:54:00')
-    # print(rst)
-    handler.get_cards('123')
+    rst = handler.draw('1236666', 'billjyc1', 200, '2018-03-24 12:54:00')
+    print(rst)
+    handler.draw_missed_cards('1236666')
     # handler.get_current_score('1236666')
