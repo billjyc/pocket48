@@ -4,6 +4,8 @@ import json
 from utils import util
 import logging
 from utils.mysql_util import mysql_util
+from enum import Enum
+
 try:
     from log.my_logger import modian_logger as logger
 except:
@@ -12,21 +14,41 @@ except:
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+class CardType(Enum):
+    """
+    卡片种类：日，月，星
+    """
+    SUN = 1
+    MOON = 2
+    STAR = 3
+
+
+class CardLevel(Enum):
+    SR = 1
+    SSR = 2
+    UR = 3
+
+
 class Card:
-    def __init__(self, id, name, url, level):
+    def __init__(self, id, name, type0, level, sub_id):
         self.id = id
         self.name = name
-        self.url = url
+        self.type0 = type0
         self.level = level
+        self.sub_id = sub_id  # 组下的id
+
+    def img_path(self):
+        return os.path.join(BASE_DIR, 'imgs', self.id, '.jpg')
 
     def __repr__(self):
-        return "<Card {id: %s, name: %s, url: %s, level: %s}>" % (self.id, self.name, self.url, self.level)
+        return "<Card {id: %s, name: %s, type: %s, level: %s, sub_id: %s}>" % (self.id, self.name,
+                                                                            self.type0, self.level, self.sub_id)
 
     def __eq__(self, other):
         return self.id == other.id
 
     def __hash__(self):
-        return hash(str(self.id) + self.name + self.url + str(self.level))
+        return hash(str(self.id) + self.name + str(self.level))
 
 
 class CardDrawHandler:
@@ -36,25 +58,62 @@ class CardDrawHandler:
         # self.read_config()
 
     def read_config(self):
-        config_path = os.path.join(BASE_DIR, 'data/card_draw.json')
-        card_draw_json = json.load(open(config_path, encoding='utf8'))
-        self.min_amount = card_draw_json['min_amount']
-        self.base_cards = []  # 基本卡
-        self.cards = {}  # 所有卡
-        self.weight = []
-        for card_j in card_draw_json['cards']:
-            card = Card(card_j['id'], card_j['name'], card_j['url'], card_j['level'])
-            # 更新数据库中的卡牌信息
-            mysql_util.query("""
-                        INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (%s, %s, %s, %s)  ON DUPLICATE KEY
-                                                UPDATE `name`=%s, `url`=%s, `level`=%s
-                        """, (card.id, card.name, card.url, card.level, card.name, card.url, card.level))
-            if card.level not in self.cards.keys():
+        config_path = os.path.join(BASE_DIR, 'data/card_draw/cards.txt')
+        weight_path = os.path.join(BASE_DIR, 'data/card_draw/weight.txt')
+        card_datas = util.read_txt(config_path)
+        weight_datas = util.read_txt(weight_path)[0]
+        self.weights = []  # SR,SSR,UR卡的概率
+        self.cards = {}  # 所有卡，按等级分
+        self.cards_single = {}  # 根据ID查询卡
+
+        for line in card_datas:
+            strs = line.split(',')
+            card = Card(int(strs[0]), strs[3], CardType(int(strs[2])), CardLevel(int(strs[1])), int(strs[4]))
+            if card.level not in self.cards:
                 self.cards[card.level] = []
             self.cards[card.level].append(card)
-            if card_j['level'] == 1:
-                self.weight.append(card_j['weight'])
-                self.base_cards.append(card)
+            self.cards_single[card.id] = card
+        logger.debug(self.cards)
+
+        strs = weight_datas.split(',')
+        for weight in strs:
+            self.weights.append(float(weight))
+
+        # card_draw_json = json.load(open(config_path, encoding='utf8'))
+        # self.min_amount = card_draw_json['min_amount']
+        # self.base_cards = []  # 基本卡
+        # self.cards = {}  # 所有卡
+        # self.weight = []
+        # for card_j in card_draw_json['cards']:
+        #     card = Card(card_j['id'], card_j['name'], card_j['url'], card_j['level'])
+        #     # 更新数据库中的卡牌信息
+        #     mysql_util.query("""
+        #                 INSERT INTO `card` (`id`, `name`, `url`, `level`) VALUES (%s, %s, %s, %s)  ON DUPLICATE KEY
+        #                                         UPDATE `name`=%s, `url`=%s, `level`=%s
+        #                 """, (card.id, card.name, card.url, card.level, card.name, card.url, card.level))
+        #     if card.level not in self.cards.keys():
+        #         self.cards[card.level] = []
+        #     self.cards[card.level].append(card)
+        #     if card_j['level'] == 1:
+        #         self.weight.append(card_j['weight'])
+        #         self.base_cards.append(card)
+
+    def compute_draw_nums(self, backer_money):
+        """
+        计算抽卡张数
+        每集资10.17抽一张
+        集资达到101.7抽11张
+        :param backer_money:
+        :return:
+        """
+        if backer_money < 10.17:
+            return 0
+        elif backer_money < 101.7:
+            return int(backer_money // 10.17)
+        else:
+            tmp1 = int(backer_money // 101.7) * 11
+            tmp2 = int((backer_money % 101.7) // 10.17)
+            return tmp1 + tmp2
 
     def can_draw(self):
         """
@@ -70,7 +129,7 @@ class CardDrawHandler:
         logger.info('抽卡: user_id: %s, nickname: %s, backer_money: %s, pay_time: %s',
                     user_id, nickname, backer_money, pay_time)
         # 计算抽卡张数
-        card_num = util.compute_stick_num(self.min_amount, backer_money)
+        card_num = self.compute_draw_nums(backer_money)
 
         if card_num == 0:
             logger.info('集资未达到标准，无法抽卡')
@@ -78,31 +137,96 @@ class CardDrawHandler:
 
         logger.info('共抽卡%d张', card_num)
         rst = {}
-        # 每次需要更新一下昵称
-        mysql_util.query("""
-                        INSERT INTO `supporter` (`id`, `name`) VALUES (%s, %s)  ON DUPLICATE KEY
-                            UPDATE `name`= %s
-                    """, (user_id, nickname, nickname))
+        rst_type = {}
+        rst_level = {}
+        level_list = [CardLevel.SR, CardLevel.SSR, CardLevel.UR]
+        type_dict = {
+            CardType.STAR: '星组',
+            CardType.MOON: '月组',
+            CardType.SUN: '日组'
+        }
+
+        # 获取此ID已抽中的全部卡牌
+        rst_tmp = mysql_util.select_all("""
+            SELECT distinct(`card_id`) from `draw_record` where supporter_id=%s
+        """, (user_id, ))
+        card_has = set()
+        if rst_tmp and len(rst_tmp) > 0:
+            for tmp in rst_tmp:
+                card_has.add(tmp[0])
+
+        score_add = 0
 
         insert_sql = 'INSERT INTO `draw_record` (`supporter_id`, `card_id`, `draw_time`) VALUES '
         flag = False
         for no in range(card_num):
             # 先判断能否抽中卡，如果抽不中，直接跳过
-            draw_rst = self.can_draw()
-            if not draw_rst:
-                continue
+            # draw_rst = self.can_draw()
+            # if not draw_rst:
+            #     continue
             flag = True
-            card_index = util.weight_choice(self.base_cards, self.weight)
-            card = self.base_cards[card_index]
+            # 卡片类型
+            idx = util.weight_choice(level_list, self.weights)
+            card_type = level_list[idx]
+
+            # 在对应卡片类型中，抽出一张卡
+            card = util.choice(self.cards[card_type])[0]
+            logger.debug('抽出的卡: %s' % card)
+
+            if card.id in card_has:
+                # 如果已经拥有该卡片，积分+1
+                score_add += 1
+            card_has.add(card.id)
+
+            # card = self.base_cards[card_index]
             insert_sql += '(%s, %s, \'%s\'),' % (user_id, card.id, pay_time)
 
             if card in rst:
                 rst[card] += 1
             else:
                 rst[card] = 1
+
+            if card.level not in rst_level:
+                rst_level[card.level] = []
+            if card not in rst_level[card.level]:
+                rst_level[card.level].append(card)
+
+            if card.type0 not in rst_type:
+                rst_type[card.type0] = []
+            if card not in rst_type[card.type0]:
+                rst_type[card.type0].append(card)
+        print(insert_sql[:-1])
+        logger.debug(insert_sql[:-1])
+
+        report = '恭喜抽中:\n'
+        if CardLevel.UR in rst_level and len(rst_level[CardLevel.UR]) > 0:
+            report += '【UR】: '
+            for card in rst_level[CardLevel.UR]:
+                report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
+            report += '\n'
+        if CardLevel.SSR in rst_level and len(rst_level[CardLevel.SSR]) > 0:
+            report += '【SSR】: '
+            for card in rst_level[CardLevel.SSR]:
+                report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
+            report += '\n'
+        if CardLevel.SR in rst_level and len(rst_level[CardLevel.SR]) > 0:
+            report += '【SR】: '
+            for card in rst_level[CardLevel.SR]:
+                report += '{}{}*{}, '.format(type_dict[card.type0], card.sub_id, rst[card])
+            report += '\n'
+
         if flag:  # 如果一张都没有抽中，就不执行sql语句
             mysql_util.query(insert_sql[:-1])
-        return rst
+
+        # 积分保存到数据库
+        if score_add > 0:
+            mysql_util.query("""
+                INSERT INTO `t_card_score` (`modian_id`, `score`) VALUES 
+                    (%s, %s)
+            """, (user_id, score_add))
+            report += '通过重复卡获取积分: {}\n'.format(score_add)
+        logger.debug(report)
+        return report
 
     def evolution(self, raw_list, user_id, pay_time):
         """
@@ -136,5 +260,5 @@ class CardDrawHandler:
 if __name__ == '__main__':
     handler = CardDrawHandler()
     handler.read_config()
-    rst = handler.draw('123', 'billjyc1', 200, '2018-03-24 12:54:00')
+    rst = handler.draw('1236666', 'billjyc1', 200, '2018-03-24 12:54:00')
     print(rst)

@@ -15,7 +15,6 @@ from modian.modian_card_draw import CardDrawHandler
 from qq.qqhandler import QQHandler
 from utils import global_config, util
 from utils.mysql_util import mysql_util
-from modian.special import modian_wuxia
 
 
 class ModianEntity:
@@ -292,25 +291,11 @@ class ModianHandler:
                 # msg += flag_test_msgs
 
             # 抽卡播报
-            cards_msg = ''
             if global_config.MODIAN_CARD_DRAW:
-                cards = self.card_draw_handler.draw(user_id, nickname, backer_money, pay_time)
-                if cards:
-                    cards_msg += '恭喜抽中'
-                    for k, v in cards.items():
-                        cards_msg += '\"%s\"*%d,' % (k.name, v)
-                    my_logger.debug(cards_msg)
-                    cards_msg = cards_msg[:-1] + '，连词成句 试图中奖，start！\n'
-                    # 加上图片
-                    # if global_config.USING_COOLQ_PRO is True:
-                    #     for k, v in cards.items():
-                    #         cards_msg += '[CQ:image,file=%s]' % k.url
-                else:
-                    cards_msg += '没有抽中任何字，就送您一个“谢谢惠顾”吧\n'
-                if cards_msg:
-                    msg += '\n%s' % cards_msg
-                # if cards_msg:
-                #    QQHandler.send_to_groups(['483548995'], cards_msg)
+                report = self.card_draw_handler.draw(user_id, nickname, backer_money, pay_time)
+
+                if report:
+                    QQHandler.send_to_groups(['483548995'], report)
 
             msg += '%s\n集资项目: %s\n链接: %s\n' % (project_info, pro_name, modian_entity.link)
             # msg += jizi_pk_report
@@ -321,10 +306,6 @@ class ModianHandler:
                 msg += '\n[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]\n'
 
             QQHandler.send_to_groups(modian_entity.broadcast_groups, msg)
-            if int(modian_entity.pro_id) == 39946:
-                report = modian_wuxia.donate(user_id, backer_money)
-                if report and len(report) > 0:
-                    QQHandler.send_to_groups(modian_entity.broadcast_groups, report)
 
             self.order_queues[modian_entity.pro_id].add(oid)
 
