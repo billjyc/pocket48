@@ -238,6 +238,7 @@ class CardDrawHandler:
                     (%s, %s)
             """, (user_id, score_add))
             report += '通过重复卡获取积分: {}\n'.format(score_add)
+        report += '当前积分为: {}\n'.format(self.get_current_score(user_id))
         logger.debug(report)
         return report
 
@@ -323,6 +324,23 @@ class CardDrawHandler:
         """, (user_id, new_card.id, pay_time, 1))
         logger.info('合卡完成')
 
+    def get_current_score(self, modian_id):
+        """
+        获取当前积分
+        :param modian_id:
+        :return:
+        """
+        logger.debug('获取当前积分: {}'.format(modian_id))
+        score = 0
+        rst = mysql_util.select_one("""
+            SELECT CONCAT(SUM(`score`)) FROM `t_card_score` WHERE `modian_id`=%s
+        """, (modian_id, ))
+        if rst:
+            logger.debug('current score: {}'.format(rst[0]))
+            score = str(rst[0], encoding='utf-8')
+        print(score)
+        return score
+
 
 if __name__ == '__main__':
     handler = CardDrawHandler()
@@ -330,3 +348,4 @@ if __name__ == '__main__':
     # rst = handler.draw('1236666', 'billjyc1', 200, '2018-03-24 12:54:00')
     # print(rst)
     handler.get_cards('123')
+    # handler.get_current_score('1236666')
