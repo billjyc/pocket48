@@ -354,10 +354,10 @@ class CardDrawHandler:
         """
         logger.info('积分抽卡，modian_id:{}, score:{}'.format(modian_id, score))
         import time
-        if score < 10:
-            return '消耗的积分必须要大于等于10！'
-        if score % 10 != 0:
-            return '消耗的积分必须是10的倍数！'
+        if score < 15:
+            return '消耗的积分必须要大于等于15！'
+        if score % 15 != 0:
+            return '消耗的积分必须是15的倍数！'
         current_score = int(self.get_current_score(modian_id))
         if current_score < score:
             return '摩点ID：{}的当前积分: {}，少于需要消耗的积分: {}，不能补抽！'.format(modian_id, current_score, score)
