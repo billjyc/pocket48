@@ -339,7 +339,7 @@ class CardDrawHandler:
         rst = mysql_util.select_one("""
             SELECT CONCAT(SUM(`score`)) FROM `t_card_score` WHERE `modian_id`=%s
         """, (modian_id, ))
-        if rst:
+        if rst and len(rst) > 0:
             logger.debug('current score: {}'.format(rst[0]))
             score = str(rst[0], encoding='utf-8')
         print(score)
