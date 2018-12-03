@@ -113,7 +113,9 @@ def search_card(context, modian_id):
     :return:
     """
     try:
-        from modian.modian_card_draw import handler as card_draw_handler
+        from modian.modian_card_draw import CardDrawHandler
+        card_draw_handler = CardDrawHandler()
+        card_draw_handler.read_config()
         from utils import util
         is_digit = util.is_positive_integer(modian_id)
         if not is_digit:
@@ -137,7 +139,9 @@ def draw_missed_card(context, modian_id, score):
     :return:
     """
     from utils import util
-    from modian.modian_card_draw import handler as card_draw_handler
+    from modian.modian_card_draw import CardDrawHandler
+    card_draw_handler = CardDrawHandler()
+    card_draw_handler.read_config()
     score_is_digit = util.is_positive_integer(score)
     modian_id_is_digit = util.is_positive_integer(modian_id)
     if not modian_id_is_digit:
