@@ -158,7 +158,7 @@ class CardDrawHandler:
         logger.debug('摩点ID: {}, 当前拥有的卡片: {}'.format(user_id, card_has))
         score_add = 0
 
-        insert_sql = 'INSERT INTO `draw_record` (`supporter_id`, `card_id`, `draw_time`) VALUES '
+        insert_sql = 'INSERT INTO `draw_record` (`supporter_id`, `card_id`, `draw_time`, `backer_money`) VALUES '
         flag = False
         for no in range(card_num):
             # 先判断能否抽中卡，如果抽不中，直接跳过
@@ -181,7 +181,7 @@ class CardDrawHandler:
             card_has.add(card.id)
 
             # card = self.base_cards[card_index]
-            insert_sql += '(%s, %s, \'%s\'),' % (user_id, card.id, pay_time)
+            insert_sql += '(%s, %s, \'%s\', %s),' % (user_id, card.id, pay_time, backer_money)
 
             if card in rst:
                 rst[card] += 1
