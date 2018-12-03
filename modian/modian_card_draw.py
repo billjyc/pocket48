@@ -364,11 +364,12 @@ class CardDrawHandler:
             result += self.draw(modian_id, '补抽用户', money, util.convert_timestamp_to_timestr(int(time.time() * 1000)))
             return result
 
-
+handler = CardDrawHandler()
 if __name__ == '__main__':
-    handler = CardDrawHandler()
-    handler.read_config()
+    # handler = CardDrawHandler()
+    # handler.read_config()
     # rst = handler.draw('1236666', 'billjyc1', 200, '2018-03-24 12:54:00')
     # print(rst)
     # handler.draw_missed_cards('1236666')
     # handler.get_current_score('1236666')
+    pass
