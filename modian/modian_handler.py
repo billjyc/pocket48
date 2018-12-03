@@ -192,7 +192,7 @@ class ModianHandler:
                         UPDATE `id`=%s
             """, (str(oid), user_id, backer_money, pay_time, modian_entity.pro_id, str(oid)))
 
-            msg = '感谢 %s 支持了%s元, %s\n' % (nickname, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
+            msg = '感谢 %s(%s) 支持了%s元, %s\n' % (nickname, user_id, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
             daka_rank, support_days = self.find_user_daka_rank(user_id, modian_entity.pro_id)
 
             if daka_rank != -1 and support_days:
