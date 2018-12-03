@@ -95,7 +95,7 @@ def handle_msg(context):
                     return
                 strs = message.split(' ')
                 if len(strs) == 3:
-                    draw_card_using_score(context, strs[1], strs[2])
+                    draw_missed_card(context, strs[1], strs[2])
                 else:
                     bot.send(context, '格式为【-补抽 摩点ID 补抽金额】的形式，请重试~')
 
