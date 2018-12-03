@@ -134,7 +134,7 @@ class CardDrawHandler:
 
         if card_num == 0:
             logger.info('集资未达到标准，无法抽卡')
-            return None
+            return ''
 
         logger.info('共抽卡%d张', card_num)
         rst = {}

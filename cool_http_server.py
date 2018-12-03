@@ -87,6 +87,17 @@ def handle_msg(context):
                     draw_card_using_score(context, strs[1], strs[2])
                 else:
                     bot.send(context, '格式为【-积分抽 摩点ID 积分数量】的形式，请重试~')
+            elif message.startswith('-补抽'):
+                from utils import util
+                admins = util.read_txt(os.path.join(BASE_DIR, 'data', 'card_draw', 'admin.txt'))
+                if str(user_id) not in admins:
+                    logger.info('QQ：{} 无权限操作补抽卡！')
+                    return
+                strs = message.split(' ')
+                if len(strs) == 3:
+                    draw_card_using_score(context, strs[1], strs[2])
+                else:
+                    bot.send(context, '格式为【-积分抽 摩点ID 补抽金额】的形式，请重试~')
 
         # 查询集资
         if str(group_id) in groups:
