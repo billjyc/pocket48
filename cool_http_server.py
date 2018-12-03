@@ -84,7 +84,7 @@ def handle_msg(context):
                     return
                 strs = message.split(' ')
                 if len(strs) == 3:
-                    draw_missed_card(context, strs[1], strs[2])
+                    draw_card_using_score(context, strs[1], strs[2])
                 else:
                     bot.send(context, '格式为【-积分抽 摩点ID 积分数量】的形式，请重试~')
 
@@ -131,9 +131,9 @@ def search_card(context, modian_id):
         # bot.send(context, '查询出现异常！\n{}'.format(traceback.print_exc()))
 
 
-def draw_missed_card(context, modian_id, score):
+def draw_card_using_score(context, modian_id, score):
     """
-    补抽卡，消耗积分
+    消耗积分抽卡
     :param context:
     :param modian_id:
     :return:
@@ -154,6 +154,34 @@ def draw_missed_card(context, modian_id, score):
         bot.send(context, report)
     except:
         logger.error('积分抽卡出现错误！')
+
+
+def draw_missed_card(context, modian_id, backer_money):
+    """
+    补抽卡
+    :param context:
+    :param modian_id:
+    :param backer_money:
+    :return:
+    """
+    from utils import util
+    from modian.modian_card_draw import CardDrawHandler
+    import time
+    card_draw_handler = CardDrawHandler()
+    card_draw_handler.read_config()
+    money_is_digit = util.is_digit(backer_money)
+    modian_id_is_digit = util.is_positive_integer(modian_id)
+    if not modian_id_is_digit:
+        bot.send(context, '输入的摩点ID不符合规范，请重试~')
+        return
+    if not money_is_digit:
+        bot.send(context, '输入的金额不符合规范，请重试~')
+    try:
+        report = card_draw_handler.draw(modian_id, '补抽用户', float(backer_money),
+                                        util.convert_timestamp_to_timestr(int(time.time()*1000)))
+        bot.send(context, report)
+    except:
+        logger.error('补抽卡出现错误！')
 
 
 def get_huitui_rank(context):
