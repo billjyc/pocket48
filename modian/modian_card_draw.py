@@ -30,12 +30,13 @@ class CardLevel(Enum):
 
 
 class Card:
-    def __init__(self, id, name, type0, level, sub_id):
+    def __init__(self, id, name, type0, level, sub_id, url):
         self.id = id
         self.name = name
         self.type0 = type0
         self.level = level
         self.sub_id = sub_id  # 组下的id
+        self.url = url
 
     def img_path(self):
         return os.path.join(BASE_DIR, 'imgs', self.id, '.jpg')
@@ -68,7 +69,7 @@ class CardDrawHandler:
 
         for line in card_datas:
             strs = line.split(',')
-            card = Card(int(strs[0]), strs[3], CardType(int(strs[2])), CardLevel(int(strs[1])), int(strs[4]))
+            card = Card(int(strs[0]), strs[3], CardType(int(strs[2])), CardLevel(int(strs[1])), int(strs[4]), strs[5])
             if card.level not in self.cards:
                 self.cards[card.level] = []
             self.cards[card.level].append(card)
@@ -154,7 +155,7 @@ class CardDrawHandler:
         if rst_tmp and len(rst_tmp) > 0:
             for tmp in rst_tmp:
                 card_has.add(tmp[0])
-
+        logger.debug('摩点ID: {}, 当前拥有的卡片: {}'.format(user_id, card_has))
         score_add = 0
 
         insert_sql = 'INSERT INTO `draw_record` (`supporter_id`, `card_id`, `draw_time`) VALUES '
@@ -174,6 +175,7 @@ class CardDrawHandler:
             logger.debug('抽出的卡: %s' % card)
 
             if card.id in card_has:
+                logger.debug('卡片{}已经拥有，积分+1')
                 # 如果已经拥有该卡片，积分+1
                 score_add += 1
             card_has.add(card.id)
@@ -205,25 +207,28 @@ class CardDrawHandler:
             report += '【UR】: '
             for card in rst_level[CardLevel.UR]:
                 report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
-            img = util.choice(rst_level[CardLevel.UR])[0]
-            # TODO: 图片链接
-            img_report = '[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]\n'
+            if img_flag:
+                img = util.choice(rst_level[CardLevel.UR])[0]
+                img_report = '[CQ:image,file={}]\n'.format(img.url)
+                img_flag = False
             report += '\n'
         if CardLevel.SSR in rst_level and len(rst_level[CardLevel.SSR]) > 0:
             report += '【SSR】: '
             for card in rst_level[CardLevel.SSR]:
                 report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
-            img = util.choice(rst_level[CardLevel.SSR])[0]
-            # TODO: 图片链接
-            img_report = '[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]\n'
+            if img_flag:
+                img = util.choice(rst_level[CardLevel.SSR])[0]
+                img_report = '[CQ:image,file={}]\n'.format(img.url)
+                img_flag = False
             report += '\n'
         if CardLevel.SR in rst_level and len(rst_level[CardLevel.SR]) > 0:
             report += '【SR】: '
             for card in rst_level[CardLevel.SR]:
                 report += '{}{}*{}, '.format(type_dict[card.type0], card.sub_id, rst[card])
-            img = util.choice(rst_level[CardLevel.SR])[0]
-            # TODO: 图片链接
-            img_report = '[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]\n'
+            if img_flag:
+                img = util.choice(rst_level[CardLevel.SR])[0]
+                img_report = '[CQ:image,file={}]\n'.format(img.url)
+                img_flag = False
             report += '\n'
 
         report += img_report
