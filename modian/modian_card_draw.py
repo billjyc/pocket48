@@ -362,7 +362,7 @@ class CardDrawHandler:
         if current_score < score:
             return '摩点ID：{}的当前积分: {}，少于需要消耗的积分: {}，不能补抽！'.format(modian_id, current_score, score)
         else:
-            result = '摩点ID：{}，积分抽卡，当前积分-{}'.format(modian_id, score)
+            result = '摩点ID：{}，积分抽卡，当前积分-{}\n'.format(modian_id, score)
             mysql_util.query("""
                             INSERT INTO `t_card_score` (`modian_id`, `score`) VALUES 
                                 (%s, %s)
