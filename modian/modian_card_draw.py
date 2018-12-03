@@ -288,7 +288,7 @@ class CardDrawHandler:
         if CardLevel.SR in rst_level and len(rst_level[CardLevel.SR]) > 0:
             report += '【SR】({}/{}): '.format(len(rst_level[CardLevel.SR]), len(self.cards[CardLevel.SR]))
             for card in rst_level[CardLevel.SR]:
-                report += '{}{}, '.format(type_dict[card.type0], card.sub_id)
+                report += '{}-{}, '.format(type_dict[card.type0], card.name)
             report += '\n'
         current_score = self.get_current_score(modian_id)
         report += '当前积分为: {}\n'.format(current_score)
