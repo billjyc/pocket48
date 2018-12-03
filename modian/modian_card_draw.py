@@ -340,8 +340,9 @@ class CardDrawHandler:
             SELECT CONCAT(SUM(`score`)) FROM `t_card_score` WHERE `modian_id`=%s
         """, (modian_id, ))
         if rst and len(rst) > 0:
-            logger.debug('current score: {}'.format(rst[0]))
-            score = str(rst[0], encoding='utf-8')
+            if rst[0] is not None:
+                logger.debug('current score: {}'.format(rst[0]))
+                score = str(rst[0], encoding='utf-8')
         print(score)
         return score
 
