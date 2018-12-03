@@ -266,9 +266,6 @@ class CardDrawHandler:
             logger.debug(rst)
             for tmp in rst:
                 card = self.cards_single[int(tmp[0])]
-                if card not in rst_num:
-                    rst_num[card] = 0
-                rst_num[card] = int(tmp[1])
                 if card not in rst_level[card.level]:
                     rst_level[card.level].append(card)
         else:
@@ -279,19 +276,19 @@ class CardDrawHandler:
         if CardLevel.UR in rst_level and len(rst_level[CardLevel.UR]) > 0:
             report += '【UR】({}/{}): '.format(len(rst_level[CardLevel.UR]), len(self.cards[CardLevel.UR]))
             for card in rst_level[CardLevel.UR]:
-                report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst_num[card])
+                report += '{}-{}, '.format(type_dict[card.type0], card.name)
             report += '\n'
         logger.debug(report)
         if CardLevel.SSR in rst_level and len(rst_level[CardLevel.SSR]) > 0:
             report += '【SSR】({}/{}): '.format(len(rst_level[CardLevel.SSR]), len(self.cards[CardLevel.SSR]))
             for card in rst_level[CardLevel.SSR]:
-                report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst_num[card])
+                report += '{}-{}, '.format(type_dict[card.type0], card.name)
             report += '\n'
         logger.debug(report)
         if CardLevel.SR in rst_level and len(rst_level[CardLevel.SR]) > 0:
             report += '【SR】({}/{}): '.format(len(rst_level[CardLevel.SR]), len(self.cards[CardLevel.SR]))
             for card in rst_level[CardLevel.SR]:
-                report += '{}{}*{}, '.format(type_dict[card.type0], card.sub_id, rst_num[card])
+                report += '{}{}, '.format(type_dict[card.type0], card.sub_id)
             report += '\n'
         logger.debug(report)
         return report
@@ -341,31 +338,37 @@ class CardDrawHandler:
         print(score)
         return score
 
-    def draw_missed_cards(self, modian_id):
+    def draw_missed_cards(self, modian_id, score=10):
         """
         补抽卡
         :param modian_id:
+        :param score: 抽卡消耗的积分数量
         :return:
         """
+        logger.info('积分抽卡，modian_id:{}, score:{}'.format(modian_id, score))
         import time
+        if score < 10:
+            return '消耗的积分必须要大于等于10！'
+        if score % 10 != 0:
+            return '消耗的积分必须是10的倍数！'
         current_score = int(self.get_current_score(modian_id))
-        if current_score < 10:
-            return '摩点ID：{}的当前积分少于10，不能补抽！'
+        if current_score < score:
+            return '摩点ID：{}的当前积分: {}，少于需要消耗的积分: {}，不能补抽！'.format(modian_id, current_score, score)
         else:
-            result = '摩点ID：{}，补抽卡，当前积分-10'
+            result = '摩点ID：{}，积分抽卡，当前积分-{}'.format(modian_id, score)
             mysql_util.query("""
                             INSERT INTO `t_card_score` (`modian_id`, `score`) VALUES 
                                 (%s, %s)
-                        """, (modian_id, -10))
-            result += self.draw(modian_id, '补抽用户', 10.17, util.convert_timestamp_to_timestr(int(time.time() * 1000)))
-
+                        """, (modian_id, -1 * score))
+            money = int(score // 10) * 10.17
+            result += self.draw(modian_id, '补抽用户', money, util.convert_timestamp_to_timestr(int(time.time() * 1000)))
             return result
 
 
 if __name__ == '__main__':
     handler = CardDrawHandler()
     handler.read_config()
-    rst = handler.draw('1236666', 'billjyc1', 200, '2018-03-24 12:54:00')
-    print(rst)
-    handler.draw_missed_cards('1236666')
+    # rst = handler.draw('1236666', 'billjyc1', 200, '2018-03-24 12:54:00')
+    # print(rst)
+    # handler.draw_missed_cards('1236666')
     # handler.get_current_score('1236666')

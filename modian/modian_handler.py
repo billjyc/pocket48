@@ -11,7 +11,7 @@ import uuid
 import requests
 
 from log.my_logger import modian_logger as my_logger
-from modian.modian_card_draw import CardDrawHandler
+from modian.modian_card_draw import handler as card_draw_handler
 from qq.qqhandler import QQHandler
 from utils import global_config, util
 from utils.mysql_util import mysql_util
@@ -76,7 +76,7 @@ class ModianHandler:
         # self.jizi_rank_list = []
         # self.daka_rank_list = []
 
-        self.card_draw_handler = CardDrawHandler()
+        self.card_draw_handler = card_draw_handler
         self.order_queues = {}
 
         # self.mysql_util = MySQLUtil()

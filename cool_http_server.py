@@ -11,6 +11,7 @@ from utils.config_reader import ConfigReader
 from utils.mysql_util import mysql_util
 from qq.ai_reply import QQAIBot
 import traceback
+import os
 
 AUTO_REPLY = {}
 items = ConfigReader.get_section('auto_reply')
@@ -37,6 +38,8 @@ ai_app_key = ConfigReader.get_property('AIBot', 'appkey')
 ai_app_id = ConfigReader.get_property('AIBot', 'appid')
 ai_bot = QQAIBot(ai_app_key, ai_app_id)
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 @bot.on_message()
 def handle_msg(context):
@@ -58,14 +61,32 @@ def handle_msg(context):
                 logger.info('命中关键词: %s', k)
                 bot.send(context, v)
                 break
-        # AI智能回复
+
         if str(group_id) in test_groups:
+            # AI智能回复
             logger.debug('AI智能回复')
             if len(message) > 1 and message.startswith('%'):
                 content = message[1:]
                 logger.debug('提问内容: %s' % content)
                 reply = ai_bot.nlp_textchat(content, user_id)
                 bot.send(context, reply)
+            elif message.startswith('-查询'):
+                strs = message.split(' ')
+                if len(strs) == 2:
+                    search_card(context, strs[1])
+                else:
+                    bot.send(context, '格式为【-查询 摩点ID】的形式，请重试~')
+            elif message.startswith('-积分抽'):
+                from utils import util
+                admins = util.read_txt(os.path.join(BASE_DIR, 'data', 'card_draw', 'admin.txt'))
+                if str(user_id) not in admins:
+                    logger.info('QQ：{} 无权限操作积分抽卡！')
+                    return
+                strs = message.split(' ')
+                if len(strs) == 3:
+                    draw_missed_card(context, strs[1], strs[2])
+                else:
+                    bot.send(context, '格式为【-积分抽 摩点ID 积分数量】的形式，请重试~')
 
         # 查询集资
         if str(group_id) in groups:
@@ -76,14 +97,6 @@ def handle_msg(context):
                     get_jizi_ranking_list_by_date(context, 1)
                 elif message == '-排行榜':
                     get_huitui_rank(context)
-                elif message.startswith('-查询'):
-                    strs = message.split(' ')
-                    if len(strs) == 2:
-                        try:
-                            modian_id = int(strs[1])
-                            search_card(context, modian_id)
-                        except:
-                            bot.send(context, '摩点ID不符合规定~')
             else:
                 bot.send(context, '目前并没有正在进行的集资项目T_T')
     except Error:
@@ -100,17 +113,45 @@ def search_card(context, modian_id):
     :return:
     """
     try:
-        from modian.modian_card_draw import CardDrawHandler
-        handler = CardDrawHandler()
-        handler.read_config()
-        report = handler.get_cards(modian_id)
+        from modian.modian_card_draw import handler as card_draw_handler
+        from utils import util
+        is_digit = util.is_positive_integer(modian_id)
+        if not is_digit:
+            bot.send('摩点ID为纯数字，请重试~')
+            return
+        report = card_draw_handler.get_cards(int(modian_id))
         bot.send(context, report)
+    except ImportError:
+        logger.error('import出现错误！')
     except Error as e:
         logger.error(e)
-        bot.send(context, '查询出现错误！\n{}'.format(traceback.print_exc()))
+        # bot.send(context, '查询出现错误！\n{}'.format(traceback.print_exc()))
     except Exception as exp:
         logger.error(exp)
-        bot.send(context, '查询出现异常！\n{}'.format(traceback.print_exc()))
+        # bot.send(context, '查询出现异常！\n{}'.format(traceback.print_exc()))
+
+
+def draw_missed_card(context, modian_id, score):
+    """
+    补抽卡，消耗积分
+    :param context:
+    :param modian_id:
+    :return:
+    """
+    from utils import util
+    from modian.modian_card_draw import handler as card_draw_handler
+    score_is_digit = util.is_positive_integer(score)
+    modian_id_is_digit = util.is_positive_integer(modian_id)
+    if not modian_id_is_digit:
+        bot.send(context, '输入的摩点ID不符合规范，请重试~')
+        return
+    if not score_is_digit:
+        bot.send(context, '输入的积分数不符合规范，请重试~')
+    try:
+        report = card_draw_handler.draw_missed_cards(int(modian_id), int(score))
+        bot.send(context, report)
+    except:
+        logger.error('积分抽卡出现错误！')
 
 
 def get_huitui_rank(context):
