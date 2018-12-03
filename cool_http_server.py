@@ -97,7 +97,7 @@ def handle_msg(context):
                 if len(strs) == 3:
                     draw_card_using_score(context, strs[1], strs[2])
                 else:
-                    bot.send(context, '格式为【-积分抽 摩点ID 补抽金额】的形式，请重试~')
+                    bot.send(context, '格式为【-补抽 摩点ID 补抽金额】的形式，请重试~')
 
         # 查询集资
         if str(group_id) in groups:
