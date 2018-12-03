@@ -290,6 +290,8 @@ class CardDrawHandler:
             for card in rst_level[CardLevel.SR]:
                 report += '{}{}, '.format(type_dict[card.type0], card.sub_id)
             report += '\n'
+        current_score = self.get_current_score(modian_id)
+        report += '当前积分为: {}\n'.format(current_score)
         logger.debug(report)
         return report
 
@@ -364,7 +366,10 @@ class CardDrawHandler:
             result += self.draw(modian_id, '补抽用户', money, util.convert_timestamp_to_timestr(int(time.time() * 1000)))
             return result
 
+
 handler = CardDrawHandler()
+
+
 if __name__ == '__main__':
     # handler = CardDrawHandler()
     # handler.read_config()
