@@ -291,11 +291,9 @@ class ModianHandler:
                 # msg += flag_test_msgs
 
             # 抽卡播报
+            card_report = ''
             if global_config.MODIAN_CARD_DRAW:
-                report = self.card_draw_handler.draw(user_id, nickname, backer_money, pay_time)
-
-                if report:
-                    QQHandler.send_to_groups(['483548995'], report)
+                card_report = self.card_draw_handler.draw(user_id, nickname, backer_money, pay_time)
 
             msg += '%s\n集资项目: %s\n链接: %s\n' % (project_info, pro_name, modian_entity.link)
             # msg += jizi_pk_report
@@ -306,6 +304,8 @@ class ModianHandler:
                 msg += '\n[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]\n'
 
             QQHandler.send_to_groups(modian_entity.broadcast_groups, msg)
+            if card_report:
+                QQHandler.send_to_groups(modian_entity.broadcast_groups, card_report)
 
             self.order_queues[modian_entity.pro_id].add(oid)
 

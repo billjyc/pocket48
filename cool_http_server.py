@@ -70,34 +70,6 @@ def handle_msg(context):
                 logger.debug('提问内容: %s' % content)
                 reply = ai_bot.nlp_textchat(content, user_id)
                 bot.send(context, reply)
-            elif message.startswith('-查询'):
-                strs = message.split(' ')
-                if len(strs) == 2:
-                    search_card(context, strs[1])
-                else:
-                    bot.send(context, '格式为【-查询 摩点ID】的形式，请重试~')
-            elif message.startswith('-积分抽'):
-                from utils import util
-                admins = util.read_txt(os.path.join(BASE_DIR, 'data', 'card_draw', 'admin.txt'))
-                if str(user_id) not in admins:
-                    logger.info('QQ：{} 无权限操作积分抽卡！')
-                    return
-                strs = message.split(' ')
-                if len(strs) == 3:
-                    draw_card_using_score(context, strs[1], strs[2])
-                else:
-                    bot.send(context, '格式为【-积分抽 摩点ID 积分数量】的形式，请重试~')
-            elif message.startswith('-补抽'):
-                from utils import util
-                admins = util.read_txt(os.path.join(BASE_DIR, 'data', 'card_draw', 'admin.txt'))
-                if str(user_id) not in admins:
-                    logger.info('QQ：{} 无权限操作补抽卡！')
-                    return
-                strs = message.split(' ')
-                if len(strs) == 3:
-                    draw_missed_card(context, strs[1], strs[2])
-                else:
-                    bot.send(context, '格式为【-补抽 摩点ID 补抽金额】的形式，请重试~')
 
         # 查询集资
         if str(group_id) in groups:
@@ -108,6 +80,34 @@ def handle_msg(context):
                     get_jizi_ranking_list_by_date(context, 1)
                 elif message == '-排行榜':
                     get_huitui_rank(context)
+                elif message.startswith('-查询'):
+                    strs = message.split(' ')
+                    if len(strs) == 2:
+                        search_card(context, strs[1])
+                    else:
+                        bot.send(context, '格式为【-查询 摩点ID】的形式，请重试~')
+                elif message.startswith('-积分抽'):
+                    from utils import util
+                    admins = util.read_txt(os.path.join(BASE_DIR, 'data', 'card_draw', 'admin.txt'))
+                    if str(user_id) not in admins:
+                        logger.info('QQ：{} 无权限操作积分抽卡！')
+                        return
+                    strs = message.split(' ')
+                    if len(strs) == 3:
+                        draw_card_using_score(context, strs[1], strs[2])
+                    else:
+                        bot.send(context, '格式为【-积分抽 摩点ID 积分数量】的形式，请重试~')
+                elif message.startswith('-补抽'):
+                    from utils import util
+                    admins = util.read_txt(os.path.join(BASE_DIR, 'data', 'card_draw', 'admin.txt'))
+                    if str(user_id) not in admins:
+                        logger.info('QQ：{} 无权限操作补抽卡！')
+                        return
+                    strs = message.split(' ')
+                    if len(strs) == 3:
+                        draw_missed_card(context, strs[1], strs[2])
+                    else:
+                        bot.send(context, '格式为【-补抽 摩点ID 补抽金额】的形式，请重试~')
             else:
                 bot.send(context, '目前并没有正在进行的集资项目T_T')
     except Error:
