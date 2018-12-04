@@ -16,11 +16,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class CardType(Enum):
     """
-    卡片种类：日，月，星
+    卡片种类：日，月，星, 特殊
     """
     SUN = 1
     MOON = 2
     STAR = 3
+    SPECIAL = 4
 
 
 class CardLevel(Enum):
@@ -30,20 +31,22 @@ class CardLevel(Enum):
 
 
 class Card:
-    def __init__(self, id, name, type0, level, sub_id, url):
+    def __init__(self, id, name, type0, level, sub_id, url, is_valid=1):
         self.id = id
         self.name = name
         self.type0 = type0
         self.level = level
         self.sub_id = sub_id  # 组下的id
         self.url = url
+        self.is_valid = is_valid
 
     def img_path(self):
         return os.path.join(BASE_DIR, 'imgs', self.id, '.jpg')
 
     def __repr__(self):
-        return "<Card {id: %s, name: %s, type: %s, level: %s, sub_id: %s}>" % (self.id, self.name,
-                                                                            self.type0, self.level, self.sub_id)
+        return "<Card {id: %s, name: %s, type: %s, level: %s, sub_id: %s, is_valid: %s}>" % (self.id, self.name,
+                                                                                             self.type0, self.level,
+                                                                                             self.sub_id, self.is_valid)
 
     def __eq__(self, other):
         return self.id == other.id
@@ -69,6 +72,8 @@ class CardDrawHandler:
 
         for line in card_datas:
             strs = line.split(',')
+            if int(strs[6]) == 0:  # 如果卡片无效，则跳过
+                continue
             card = Card(int(strs[0]), strs[3], CardType(int(strs[2])), CardLevel(int(strs[1])), int(strs[4]), strs[5])
             if card.level not in self.cards:
                 self.cards[card.level] = []
@@ -144,13 +149,14 @@ class CardDrawHandler:
         type_dict = {
             CardType.STAR: '星组',
             CardType.MOON: '月组',
-            CardType.SUN: '日组'
+            CardType.SUN: '日组',
+            CardType.SPECIAL: '活动限定'
         }
 
         # 获取此ID已抽中的全部卡牌
         rst_tmp = mysql_util.select_all("""
             SELECT distinct(`card_id`) from `draw_record` where supporter_id=%s
-        """, (user_id, ))
+        """, (user_id,))
         card_has = set()
         if rst_tmp and len(rst_tmp) > 0:
             for tmp in rst_tmp:
@@ -175,9 +181,9 @@ class CardDrawHandler:
             logger.debug('抽出的卡: %s' % card)
 
             if card.id in card_has:
-                logger.debug('卡片{}已经拥有，积分+1')
+                logger.debug('卡片{}已经拥有，积分+2')
                 # 如果已经拥有该卡片，积分+1
-                score_add += 1
+                score_add += 2
             card_has.add(card.id)
 
             # card = self.base_cards[card_index]
@@ -256,7 +262,7 @@ class CardDrawHandler:
         logger.info("查询已抽中的卡: {}".format(modian_id))
         rst = mysql_util.select_all("""
             select card_id, count(*) from `draw_record` where supporter_id=%s group by `card_id`;
-        """, (modian_id, ))
+        """, (modian_id,))
         rst_level = {}
         rst_level[CardLevel.UR] = []
         rst_level[CardLevel.SSR] = []
@@ -265,7 +271,8 @@ class CardDrawHandler:
         type_dict = {
             CardType.STAR: '星组',
             CardType.MOON: '月组',
-            CardType.SUN: '日组'
+            CardType.SUN: '日组',
+            CardType.SPECIAL: '活动限定',
         }
         if rst and len(rst) > 0:
             logger.debug(rst)
@@ -318,9 +325,9 @@ class CardDrawHandler:
         for raw_material in raw_list:
             mysql_util.query("""
                 UPDATE `draw_record` SET is_valid=0 WHERE id=%s
-            """, (raw_material.id, ))
+            """, (raw_material.id,))
         # 从高1级的卡中获得一张
-        new_card = util.choice(self.cards[raw_material_level+1])
+        new_card = util.choice(self.cards[raw_material_level + 1])
         logger.debug('合成的新卡: %s' % new_card)
         mysql_util.query("""
             INSERT INTO `draw_record` (`supporter_id`, `card_id`, `draw_time`, `is_valid`) VALUES
@@ -338,7 +345,7 @@ class CardDrawHandler:
         score = 0
         rst = mysql_util.select_one("""
             SELECT CONCAT(SUM(`score`)) FROM `t_card_score` WHERE `modian_id`=%s
-        """, (modian_id, ))
+        """, (modian_id,))
         if rst and len(rst) > 0:
             if rst[0] is not None:
                 logger.debug('current score: {}'.format(rst[0]))
@@ -374,7 +381,6 @@ class CardDrawHandler:
 
 
 handler = CardDrawHandler()
-
 
 if __name__ == '__main__':
     # handler = CardDrawHandler()
