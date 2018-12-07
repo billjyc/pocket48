@@ -303,6 +303,9 @@ class ModianHandler:
                 my_logger.debug('使用酷Q PRO发送图片')
                 msg += '\n[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]\n'
 
+            if global_config.MODIAN_NEED_DISPLAY_PK:
+                msg += self.pk_modian_activity()
+
             QQHandler.send_to_groups(modian_entity.broadcast_groups, msg)
             if card_report:
                 QQHandler.send_to_groups(modian_entity.broadcast_groups, card_report)
