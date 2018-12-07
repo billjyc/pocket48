@@ -235,28 +235,14 @@ def sync_order():
                 modian_handler.order_queues[modian.pro_id].add(oid)
 
 
-@scheduler.scheduled_job('cron', minute='11', hour='*')
+# @scheduler.scheduled_job('cron', minute='11', hour='*')
 def notify_modian_pk():
     """
     播报摩点集资PK情况
     :return:
     """
-    if global_config.MODIAN_NEED_DISPLAY_PK is False:
-        return
     global modian_handler
-    my_logger.info('摩点集资PK播报')
-
-    for modian_entity in global_config.MODIAN_PK_ARRAY:
-        target, current, pro_name = modian_handler.get_current_and_target(modian_entity)
-
-    msg = '当前集资PK战况播报:\n'
-    sorted(global_config.MODIAN_PK_ARRAY, key=lambda x: x.current, reverse=True)
-
-    for i in range(len(global_config.MODIAN_PK_ARRAY)):
-        wds = global_config.MODIAN_PK_ARRAY[i]
-        sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i+1, wds.title, wds.current)
-        msg += sub_msg
-
+    msg = modian_handler.pk_modian_activity()
     my_logger.info(msg)
     QQHandler.send_to_groups(modian_handler.modian_notify_groups, msg)
 

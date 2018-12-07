@@ -150,9 +150,9 @@ class ModianHandler:
             raise RuntimeError('获取项目订单查询失败')
 
     def parse_order_details(self, orders, modian_entity):
-        if len(self.order_queues[modian_entity.pro_id]) == 0:
+        if len(self.order_queues[modian_entity.pro_id]) == 0 and len(orders) > 0:
             my_logger.debug('订单队列为空')
-            # return
+            return
         jiebang_activities = global_config.MODIAN_JIEBANG_ACTIVITIES[modian_entity.pro_id]
         flag_activities = global_config.MODIAN_FLAG_ACTIVITIES[modian_entity.pro_id]
         count_flag_activities = global_config.MODIAN_COUNT_FLAG_ACTIVITIES[modian_entity.pro_id]
@@ -546,14 +546,21 @@ class ModianHandler:
             return '当前没有开启PK！'
         my_logger.info('摩点集资PK播报')
 
-        for modian_entity in global_config.MODIAN_PK_ARRAY:
+        pk_list = []
+
+        for modian_id in global_config.MODIAN_PK_ARRAY:
+            modian_entity = ModianEntity('link', 'title', modian_id)
             target, current, pro_name = self.get_current_and_target(modian_entity)
+            modian_entity.target = target
+            modian_entity.current = current
+            modian_entity.title = pro_name
+            pk_list.append(modian_entity)
 
         msg = '当前集资PK战况播报:\n'
-        sorted(global_config.MODIAN_PK_ARRAY, key=lambda x: x.current, reverse=True)
+        sorted(pk_list, key=lambda x: x.current, reverse=True)
 
-        for i in range(len(global_config.MODIAN_PK_ARRAY)):
-            wds = global_config.MODIAN_PK_ARRAY[i]
+        for i in range(len(pk_list)):
+            wds = pk_list[i]
             sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
             msg += sub_msg
 
