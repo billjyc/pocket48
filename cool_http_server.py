@@ -108,6 +108,16 @@ def handle_msg(context):
                         draw_missed_card(context, strs[1], strs[2])
                     else:
                         bot.send(context, '格式为【-补抽 摩点ID 补抽金额】的形式，请重试~')
+                elif message.upper() == '-PK':
+                    try:
+                        from modian_plugin import modian_handler
+                        message = modian_handler.pk_modian_activity()
+                        bot.send(context, message)
+                    except Error as e:
+                        logger.error(e)
+                    except Exception as e:
+                        logger.error(e)
+                        bot.send(context, '查询PK出现错误！')
             else:
                 bot.send(context, '目前并没有正在进行的集资项目T_T')
     except Error:

@@ -535,6 +535,31 @@ class ModianHandler:
                 break
         return orders
 
+    def pk_modian_activity(self):
+        """
+        播报摩点PK战况
+        :param pro_id_list:
+        :return:
+        """
+        if global_config.MODIAN_NEED_DISPLAY_PK is False:
+            return '当前没有开启PK！'
+        my_logger.info('摩点集资PK播报')
+
+        for modian_entity in global_config.MODIAN_PK_ARRAY:
+            target, current, pro_name = self.get_current_and_target(modian_entity)
+
+        msg = '当前集资PK战况播报:\n'
+        sorted(global_config.MODIAN_PK_ARRAY, key=lambda x: x.current, reverse=True)
+
+        for i in range(len(global_config.MODIAN_PK_ARRAY)):
+            wds = global_config.MODIAN_PK_ARRAY[i]
+            sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
+            msg += sub_msg
+
+        my_logger.info(msg)
+        return msg
+        # QQHandler.send_to_groups(modian_handler.modian_notify_groups, msg)
+
 
 if __name__ == '__main__':
     user_id = '123456'
