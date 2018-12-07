@@ -545,6 +545,11 @@ class ModianHandler:
         :param pro_id_list:
         :return:
         """
+        def cmp_2(x, y):
+            if x.current >= y.current:
+                return 1
+            else:
+                return -1
         if global_config.MODIAN_NEED_DISPLAY_PK is False:
             return '当前没有开启PK！'
         my_logger.info('摩点集资PK播报')
@@ -560,7 +565,8 @@ class ModianHandler:
             pk_list.append(modian_entity)
 
         msg = '当前集资PK战况播报:\n'
-        sorted(pk_list, key=lambda x: x.current, reverse=True)
+        import functools
+        pk_list.sort(key=functools.cmp_to_key(cmp_2), reverse=True)
 
         for i in range(len(pk_list)):
             wds = pk_list[i]
@@ -569,6 +575,8 @@ class ModianHandler:
 
         my_logger.info(msg)
         return msg
+
+
         # QQHandler.send_to_groups(modian_handler.modian_notify_groups, msg)
 
 
