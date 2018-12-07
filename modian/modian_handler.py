@@ -480,6 +480,7 @@ class ModianHandler:
             'pro_id': modian_entity.pro_id
         }
         r = requests.post(api, self.make_post_params(params), headers=self.modian_header()).json()
+        my_logger.debug(r)
         if int(r['status']) == 0:
             data_json = r['data'][0]
             pro_name = data_json['pro_name']
