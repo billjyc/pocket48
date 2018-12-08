@@ -11,6 +11,13 @@ from utils import util
 from log.my_logger import weibo_logger as my_logger
 
 
+class WeiboListenTask:
+    def __init__(self, weibo_uid):
+        self.weibo_uid = weibo_uid
+        self.weibo_info = ''
+        self.itemIds = []  # WB Queue
+
+
 class WeiboMonitor:
     def __init__(self, ):
         self.session = requests.session()
@@ -59,15 +66,15 @@ class WeiboMonitor:
             self.echoMsg('Error', e)
             # sys.exit()
 
-    def getWBQueue(self, weibo_user_id):
+    def getWBQueue(self, task):
         """
         拿到用户的微博队列
-        :param weibo_user_id:
+        :param task:
         :return:
         """
         # get user weibo containerid
         user_info = 'https://m.weibo.cn/api/container/getIndex?uid=%s&type=uid&value=%s' % (
-        weibo_user_id, weibo_user_id)
+        task.member.weibo_uid, task.member.weibo_uid)
         try:
             r = self.session.get(user_info, headers=self.reqHeaders)
             for i in r.json()['data']['tabsInfo']['tabs']:
@@ -80,31 +87,36 @@ class WeiboMonitor:
             # sys.exit()
 
         # get user weibo index
-        self.weibo_info = 'https://m.weibo.cn/api/container/getIndex?uid=%s&type=uid&value=%s&containerid=%s' % (
-            weibo_user_id, weibo_user_id, con_id)
+        task.weibo_info = 'https://m.weibo.cn/api/container/getIndex?uid=%s&type=uid&value=%s&containerid=%s' % (
+            task.member.weibo_uid, task.member.weibo_uid, con_id)
         try:
-            r = self.session.get(self.weibo_info, headers=self.reqHeaders)
-            self.itemIds = []  # WBQueue
+            r = self.session.get(task.weibo_info, headers=self.reqHeaders)
+            task.itemIds = []  # WBQueue
             for i in r.json()['data']['cards']:
                 if i['card_type'] == 9:
-                    self.itemIds.append(i['mblog']['id'])
+                    task.itemIds.append(i['mblog']['id'])
             self.echoMsg('Info', 'Got weibos')
-            self.echoMsg('Info', 'Has %d weibo id(s)' % len(self.itemIds))
+            self.echoMsg('Info', 'Has %d weibo id(s)' % len(task.itemIds))
         except Exception as e:
             self.echoMsg('Error', e)
             print(e)
             # sys.exit()
 
-    def startMonitor(self, ):
+    def startMonitor(self, task):
+        """
+        开始监控
+        :param task:
+        :return:
+        """
         my_logger.debug('weibo handler: start monitor')
         return_dict = {}
         try:
-            r = self.session.get(self.weibo_info, headers=self.reqHeaders)
+            r = self.session.get(task.weibo_info, headers=self.reqHeaders)
             for i in r.json()['data']['cards']:
                 # print i
                 if i['card_type'] == 9:
-                    if str(i['mblog']['id']) not in self.itemIds:
-                        self.itemIds.append(i['mblog']['id'])
+                    if str(i['mblog']['id']) not in task.itemIds:
+                        task.itemIds.append(i['mblog']['id'])
                         self.echoMsg('Info', 'Got a new weibo')
                         # @ return returnDict dict
                         return_dict['created_at'] = i['mblog']['created_at']
@@ -121,7 +133,7 @@ class WeiboMonitor:
                                 my_logger.debug(j['url'])
 
                         return return_dict
-            my_logger.info('微博队列共有 %d 条' % len(self.itemIds))
+            my_logger.info('微博队列共有 %d 条' % len(task.itemIds))
             # self.echoMsg('Info', '微博队列共有 %d 条' % len(self.itemIds))
         except Exception as e:
             my_logger.error(e)
@@ -141,13 +153,14 @@ class WeiboMonitor:
 
 
 if __name__ == '__main__':
-    handler = WeiboMonitor()
-    handler.login('***', '****')
+    # handler = WeiboMonitor()
+    # handler.login('***', '****')
     # uid = ConfigReader.get_property('weibo', 'fengxiaofei')
-    uid = 1134206783
-    handler.getWBQueue(uid)
-    while 1:
-        newWB = handler.startMonitor()
-        if newWB is not None:
-            print(newWB['text'])
-        time.sleep(3)
+    # uid = 1134206783
+    # handler.getWBQueue(uid)
+    # while 1:
+    #     newWB = handler.startMonitor()
+    #     if newWB is not None:
+    #         print(newWB['text'])
+    #     time.sleep(3)
+    pass

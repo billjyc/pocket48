@@ -30,16 +30,17 @@
 
 ### 口袋48插件使用
 * 首先确保你想监控的成员已经开通口袋房间（否则会拉不到数据）
-* `conf.ini`相关配置
-    + `member_name`: 想要监控的成员的拼音（目前只有上海地区1-8期生的成员资料, 相关内容在`data/member.json`中）
+* `data/pocket48/pocket48.json`
     + `IMEI`: 手机序列号，可以使用真机，也可以使用模拟器
     + `version`: 所使用的口袋48的版本
     + `username`, `password`: 登录口袋48所需的用户名和密码（建议使用小号）
-    + `member_room_msg_groups`：接收成员消息的群号，用分号分隔
-    + `member_room_comment_groups`: 接收成员房间评论的群号，用分号分隔
-    + `member_live_groups`：如果成员开启直播，接收开播提醒的群号，用分号分隔
-    + `member_room_comment_lite_groups`: 如果距离成员上一条房间消息发送超过10分钟后，又有新的成员消息，这时会发送一条提醒到群中，用分号分隔
-    + `room_msg_lite_notify`: 简易版提醒的提示语，支持多个，用分号分隔，随机发送
+    + `monitor_members`: 监控成员列表，每一项需要填写如下内容：
+        * `member_room_msg_groups`：接收成员消息的群号，用分号分隔
+        + `member_room_comment_groups`: 接收成员房间评论的群号，用分号分隔
+        + `member_live_groups`：如果成员开启直播，接收开播提醒的群号，用分号分隔
+        + `member_room_comment_lite_groups`: 如果距离成员上一条房间消息发送超过10分钟后，又有新的成员消息，这时会发送一条提醒到群中
+        + `room_msg_lite_notify`: 简易版提醒的提示语，支持多个，随机发送
+* `conf.ini`相关配置
     + `performance_notify`: 公演直播提示语，需要在`data/schedule.json`中配置
 * 在`conf.ini`中修改内容，注意一定要按照格式来写，否则无法解析
 

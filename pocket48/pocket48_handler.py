@@ -21,21 +21,14 @@ class Member:
         self.pinyin = pinyin
 
 
-class Pocket48Handler:
-
-    def __init__(self, auto_reply_groups, member_room_msg_groups, member_room_comment_msg_groups,
-                 member_live_groups, member_room_msg_lite_groups, test_groups):
-        self.session = requests.session()
-        self.token = '0'
-        self.is_login = False
-
-        self.last_msg_time = -1
-        self.auto_reply_groups = auto_reply_groups
-        self.member_room_msg_groups = member_room_msg_groups
-        self.member_room_comment_msg_groups = member_room_comment_msg_groups
-        self.member_live_groups = member_live_groups
-        self.member_room_msg_lite_groups = member_room_msg_lite_groups
-        self.test_groups = test_groups
+class Pocket48ListenTask:
+    def __init__(self, member):
+        self.member = member
+        self.member_room_msg_groups = []
+        self.member_live_groups = []
+        self.member_room_msg_lite_groups = []
+        self.room_comment_groups = []
+        self.lite_message = ''
 
         self.member_room_msg_ids = []
         self.member_room_comment_ids = []
@@ -48,6 +41,18 @@ class Pocket48Handler:
 
         self.other_members_names = []
         self.last_other_member_msg_time = -1
+        self.last_msg_time = -1
+
+
+class Pocket48Handler:
+    def __init__(self):
+        self.session = requests.session()
+        self.token = '0'
+        self.is_login = False
+        self.auto_reply_groups = []
+        self.test_groups = []
+
+        self.listen_tasks = []
 
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         db_path = os.path.join(base_dir, 'statistic', 'statistics.db')
@@ -66,11 +71,6 @@ class Pocket48Handler:
                 );
                 """)
         cursor.close()
-
-        # self.live_urls = Queue.Queue(20)
-        # self.download = Download(self.live_urls)
-        # self.download.setDaemon(True)
-        # self.download.start()
 
     def login(self, username, password):
         """
@@ -122,7 +122,7 @@ class Pocket48Handler:
             logger.error('尚未登录')
         url = 'https://plive.48.cn/livesystem/api/live/v1/memberLivePage'
         params = {
-            "giftUpdTime": int(time.time()*1000),
+            "giftUpdTime": int(time.time() * 1000),
             "groupId": 0,  # SNH48 Group所有人
             "lastTime": 0,
             "limit": limit,
@@ -133,14 +133,14 @@ class Pocket48Handler:
             r = self.session.post(url, data=json.dumps(params), headers=self.live_header_args(), verify=False)
         except Exception as e:
             logger.error('获取成员直播失败')
-            logger.error(e)
+            logger.exception(e)
         return r.text
 
-    def get_member_room_msg(self, room_id, limit=20):
+    def get_member_room_msg(self, task, limit=20):
         """
         获取成员房间消息
         :param limit:
-        :param room_id: 房间id
+        :param task: 监听任务
         :return:
         """
         if not self.is_login:
@@ -148,94 +148,96 @@ class Pocket48Handler:
         # url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/chat'
         url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/mainpage'
         params = {
-            "roomId": room_id, "lastTime": 0, "limit": limit, "chatType": 0
+            "roomId": task.member.room_id, "lastTime": 0, "limit": limit, "chatType": 0
         }
         try:
             r = self.session.post(url, data=json.dumps(params), headers=self.juju_header_args(), verify=False)
         except Exception as e:
-            logger.error('获取成员消息失败')
-            logger.error(e)
+            logger.error('获取成员消息失败, room_id={}, name={}'.format(task.member.room_id, task.member.name))
+            logger.exception(e)
         return r.text
 
-    def init_msg_queues(self, room_id):
+    def init_msg_queues(self, task):
         """
         初始化房间消息队列
-        :param room_id:
+        :param task:
         :return:
         """
         try:
-            self.member_room_msg_ids = []
-            self.member_room_comment_ids = []
-            self.member_live_ids = []
+            task.member_room_msg_ids = []
+            task.member_room_comment_ids = []
+            task.member_live_ids = []
 
-            self.unread_msg_amount = 0
+            task.unread_msg_amount = 0
 
-            r1 = self.get_member_room_msg(room_id)
-            r2 = self.get_member_room_comment(room_id)
+            r1 = self.get_member_room_msg(task.member.room_id)
+            r2 = self.get_member_room_comment(task.member.room_id)
 
             r1_json = json.loads(r1)
             r2_json = json.loads(r2)
             for r in r1_json['content']['data']:
                 msg_id = r['msgidClient']
-                self.member_room_msg_ids.append(msg_id)
+                task.member_room_msg_ids.append(msg_id)
 
             for r in r2_json['content']['data']:
                 msg_id = r['msgidClient']
-                self.member_room_comment_ids.append(msg_id)
+                task.member_room_comment_ids.append(msg_id)
 
-            logger.debug('成员消息队列: %s', len(self.member_room_msg_ids))
-            logger.debug('房间评论队列: %s', len(self.member_room_comment_ids))
-            logger.debug('房间未读消息数量: %d', self.unread_msg_amount)
+            logger.debug('成员{}消息队列: {}'.format(task.member.name, len(task.member_room_msg_ids)))
+            logger.debug('{}房间评论队列: {}'.format(task.member.name, len(task.member_room_comment_ids)))
+            logger.debug('{}房间未读消息数量: {}'.format(task.member.name, task.unread_msg_amount))
         except Exception as e:
-            logger.error('初始化消息队列失败')
-            logger.error(e)
+            logger.error('初始化{}消息队列失败'.format(task.member.name))
+            logger.exception(e)
 
-    def get_member_room_msg_lite(self):
+    def get_member_room_msg_lite(self, task):
         """
-        发送成员房间消息（简易版，只提醒在房间里出现）
+        发送成员房间消息提醒（简易版，只提醒在房间里出现）
+        :param task:
         :return:
         """
         time_now = time.time()
         msg = ''
         logger.debug('timenow: %s', time_now)
-        logger.debug('unread_other_member_msg_amount=%s', self.unread_other_member_msg_amount)
-        logger.debug('last_other_member_msg_time: %s', self.last_other_member_msg_time)
-        logger.debug('time_now - self.last_other_member_msg_time: %s', time_now - self.last_other_member_msg_time)
+        logger.debug('unread_other_member_msg_amount=%s', task.unread_other_member_msg_amount)
+        logger.debug('last_other_member_msg_time: %s', task.last_other_member_msg_time)
+        logger.debug('time_now - self.last_other_member_msg_time: %s', time_now - task.last_other_member_msg_time)
 
-        if self.unread_other_member_msg_amount > 0 and len(self.member_room_msg_lite_groups) > 0:
-            if self.last_other_member_msg_time < 0 or time_now - self.last_other_member_msg_time >= 10 * 60:
+        if task.unread_other_member_msg_amount > 0 and len(task.member_room_msg_lite_groups) > 0:
+            if task.last_other_member_msg_time < 0 or time_now - task.last_other_member_msg_time >= 10 * 60:
                 logger.debug('其他成员出现在房间中')
-                member_name = ', '.join(self.other_members_names)
-                QQHandler.send_to_groups(self.member_room_msg_lite_groups, '%s来你们灰的房间里串门啦~' % member_name)
-            self.unread_other_member_msg_amount = 0
-            self.last_other_member_msg_time = time_now
-            self.other_members_names.clear()
+                member_name = ', '.join(task.other_members_names)
+                QQHandler.send_to_groups(task.member_room_msg_lite_groups, '%s来你们灰的房间里串门啦~' % member_name)
+            task.unread_other_member_msg_amount = 0
+            task.last_other_member_msg_time = time_now
+            task.other_members_names.clear()
 
-        logger.debug('unread_msg_amount=%s', self.unread_msg_amount)
-        logger.debug('last_msg_time: %s', self.last_msg_time)
-        logger.debug('time_now - self.last_msg_time: %s', time_now - self.last_msg_time)
+        logger.debug('unread_msg_amount=%s', task.unread_msg_amount)
+        logger.debug('last_msg_time: %s', task.last_msg_time)
+        logger.debug('time_now - self.last_msg_time: %s', time_now - task.last_msg_time)
 
-        if self.unread_msg_amount > 0 and len(self.member_room_msg_lite_groups) > 0:
+        if task.unread_msg_amount > 0 and len(task.member_room_msg_lite_groups) > 0:
             # 距离上一次提醒时间超过10分钟且有未读消息
-            if self.last_msg_time < 0 or time_now - self.last_msg_time >= 10 * 60:
+            if task.last_msg_time < 0 or time_now - task.last_msg_time >= 10 * 60:
                 logger.debug('向大群发送简易版提醒')
                 msg = util.random_str(global_config.ROOM_MSG_LITE_NOTIFY)
                 if global_config.USING_COOLQ_PRO:
                     msg += '[CQ:image,file=http://wx3.sinaimg.cn/large/789c06f9gy1fq4dl21j0rj20k00k0jsl.jpg]'
-                QQHandler.send_to_groups(self.member_room_msg_lite_groups, msg)
+                QQHandler.send_to_groups(task.member_room_msg_lite_groups, msg)
                 logger.info(msg)
 
             else:
                 logger.debug('不向大群发送简易版提醒')
-            self.last_msg_time = time_now
-            self.unread_msg_amount = 0
+            task.last_msg_time = time_now
+            task.unread_msg_amount = 0
         else:
             logger.info('最近10分钟内没有未读消息')
 
-    def parse_room_msg(self, response):
+    def parse_room_msg(self, response, task):
         """
         对成员消息进行处理
         :param response:
+        :param task:
         :return:
         """
         logger.debug('parse room msg response: %s', response)
@@ -247,23 +249,23 @@ class Pocket48Handler:
         try:
             for msg in msgs:
                 extInfo = json.loads(msg['extInfo'])
-                msg_id = msg['msgidClient']   # 消息id
+                msg_id = msg['msgidClient']  # 消息id
 
-                if msg_id in self.member_room_msg_ids:
+                if msg_id in task.member_room_msg_ids:
                     continue
 
                 if extInfo['role'] != 2:  # 其他成员的消息
-                    self.unread_other_member_msg_amount += 1
+                    task.unread_other_member_msg_amount += 1
                     member_name = extInfo['senderName']
                     if member_name == '你们的小可爱':
                         member_name = 'YBY'
-                    if member_name not in self.other_members_names:
-                        self.other_members_names.append(member_name)
+                    if member_name not in task.other_members_names:
+                        task.other_members_names.append(member_name)
                 else:
-                    self.unread_msg_amount += 1
+                    task.unread_msg_amount += 1
 
                 logger.debug('成员消息')
-                self.member_room_msg_ids.append(msg_id)
+                task.member_room_msg_ids.append(msg_id)
 
                 message_object = extInfo['messageObject']
 
@@ -271,11 +273,14 @@ class Pocket48Handler:
                 if msg['msgType'] == 0:  # 文字消息
                     if message_object == 'text':  # 普通消息
                         logger.debug('普通消息')
-                        message = ('【成员消息】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])) + message
+                        message = ('【成员消息】[%s]-%s: %s\n' % (
+                            msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])) + message
                         cursor.execute("""
                             INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
                             (?, ?, ?, ?, ?, ?)
-                        """, (msg_id, 100, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], extInfo['text']))
+                        """, (
+                            msg_id, 100, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'],
+                            extInfo['text']))
                     elif message_object == 'faipaiText':  # 翻牌消息
                         logger.debug('翻牌')
                         member_msg = extInfo['messageText']
@@ -283,11 +288,13 @@ class Pocket48Handler:
                         # fanpai_id = extInfo['faipaiName']
                         # message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s:%s\n' % (msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_id, fanpai_msg)) + message
                         message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s\n' % (
-                        msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_msg)) + message
+                            msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_msg)) + message
                         cursor.execute("""
                                         INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content, fans_comment) VALUES
                                         (?, ?, ?, ?, ?, ?, ?)
-                                """, (msg_id, 101, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], member_msg, fanpai_msg))
+                                """, (
+                            msg_id, 101, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], member_msg,
+                            fanpai_msg))
                     # TODO: 直播可以直接在房间里监控
                     elif message_object == 'diantai':  # 电台直播
                         logger.debug('电台直播')
@@ -315,14 +322,16 @@ class Pocket48Handler:
                         cursor.execute("""
                             INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content, fans_comment) VALUES
                             (?, ?, ?, ?, ?, ?, ?)
-                            """, (msg_id, 105, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], answer, user_name + ': ' + content))
+                            """, (msg_id, 105, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], answer,
+                                  user_name + ': ' + content))
                 elif msg['msgType'] == 1:  # 图片消息
                     bodys = json.loads(msg['bodys'])
                     logger.debug('图片')
                     if 'url' in bodys.keys():
                         url = bodys['url']
                         if global_config.USING_COOLQ_PRO is True:
-                            message = ('【图片】[%s]-%s: [CQ:image,file=%s]\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
+                            message = ('【图片】[%s]-%s: [CQ:image,file=%s]\n' % (
+                                msg['msgTimeStr'], extInfo['senderName'], url)) + message
                         else:
                             message = ('【图片】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
                         cursor.execute("""
@@ -340,7 +349,7 @@ class Pocket48Handler:
                             logger.info(message3)
                             # 语音消息直接单条发送
                             message2 = '[CQ:record,file=%s]\n' % url
-                            QQHandler.send_to_groups(self.member_room_msg_groups, message2)
+                            QQHandler.send_to_groups(task.member_room_msg_groups, message2)
                         else:
                             message = ('【语音】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
                         cursor.execute("""
@@ -358,13 +367,13 @@ class Pocket48Handler:
                                         (?, ?, ?, ?, ?, ?)
                         """, (msg_id, 202, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], url))
 
-            if message and len(self.member_room_msg_groups) > 0:
-                QQHandler.send_to_groups(self.member_room_msg_groups, message)
-                self.get_member_room_msg_lite()
+            if message and len(task.member_room_msg_groups) > 0:
+                QQHandler.send_to_groups(task.member_room_msg_groups, message)
+                self.get_member_room_msg_lite(task)
                 logger.info('message: %s', message)
-            logger.debug('成员消息队列: %s', len(self.member_room_msg_ids))
+            logger.debug('成员{}消息队列: {}'.format(task.member.name, len(task.member_room_msg_ids)))
         except Exception as e:
-            logger.error(e)
+            logger.exception(e)
         finally:
             self.conn.commit()
             cursor.close()
@@ -378,10 +387,11 @@ class Pocket48Handler:
         res = self.session.post(url, data=json.dumps(params), headers=self.idol_flip_header_args()).json()
         return res['content']['answer']
 
-    def parse_room_comment(self, response):
+    def parse_room_comment(self, response, task):
         """
         对房间评论进行处理
         :param response:
+        :param task:
         :return:
         """
         rsp_json = json.loads(response)
@@ -394,28 +404,29 @@ class Pocket48Handler:
             msg_id = msg['msgidClient']
             message_object = extInfo['messageObject']
 
-            if msg_id in self.member_room_comment_ids:
+            if msg_id in task.member_room_comment_ids:
                 continue
-            self.member_room_comment_ids.append(msg_id)
+            task.member_room_comment_ids.append(msg_id)
             if extInfo['contentType'] == 1:  # 普通评论
                 logger.debug('房间评论')
-                message = ('【房间评论】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])) + message
+                message = ('【房间评论】[%s]-%s: %s\n' % (
+                    msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])) + message
             elif extInfo['contentType'] == 3:  # 房间礼物
                 logger.debug('礼物')
             else:
                 logger.debug('其他类型评论')
 
         logger.info('message: %s', message)
-        logger.debug('length of comment groups: %d', len(self.member_room_comment_msg_groups))
-        if message and len(self.member_room_comment_msg_groups) > 0:
-            QQHandler.send_to_groups(self.member_room_comment_msg_groups, message)
-        logger.debug('房间评论队列: %s', len(self.member_room_comment_ids))
+        logger.debug('length of comment groups: %d', len(task.member_room_comment_msg_groups))
+        if message and len(task.member_room_comment_msg_groups) > 0:
+            QQHandler.send_to_groups(task.member_room_comment_msg_groups, message)
+        logger.debug('房间评论队列: %s', len(task.member_room_comment_ids))
 
-    def get_member_room_comment(self, room_id, limit=20):
+    def get_member_room_comment(self, task, limit=20):
         """
         获取成员房间的粉丝评论
         :param limit:
-        :param room_id: 房间id
+        :param task:
         :return:
         """
         if not self.is_login:
@@ -423,27 +434,27 @@ class Pocket48Handler:
         # url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/comment'
         url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/boardpage'
         params = {
-            "roomId": room_id, "lastTime": 0, "limit": limit, "isFirst": "true"
+            "roomId": task.member.room_id, "lastTime": 0, "limit": limit, "isFirst": "true"
         }
         # 收到响应
         try:
             r = self.session.post(url, data=json.dumps(params), headers=self.juju_header_args(), verify=False)
         except Exception as e:
-            logger.error('获取房间评论失败')
-            logger.error(e)
+            logger.error('获取房间评论失败！name: {}, room_id: {}'.format(task.member.name, task.member.room_id))
+            logger.exception(e)
         return r.text
 
-    def parse_member_live(self, response, member_id):
+    def parse_member_live(self, response, task):
         """
         对直播列表进行处理，找到正在直播的指定成员
-        :param member_id:
         :param response:
+        :param task
         :return:
         """
         rsp_json = json.loads(response)
         logger.debug('rsp_json: %s' % rsp_json)
         logger.debug('keys of parse member live: %s', rsp_json['content'].keys())
-
+        member_id = task.member.member_id
         # 当前没有人在直播
         if 'liveList' not in rsp_json['content'].keys():
             # print 'no live'
@@ -464,7 +475,7 @@ class Pocket48Handler:
             logger.debug('stream path: %s', live['streamPath'])
             # logger.debug('member_live_ids list: %s', ','.join(self.member_live_ids))
             # logger.debug('live_id is in member_live_ids: %s', str(live_id in self.member_live_ids))
-            if live['memberId'] == int(member_id) and live_id not in self.member_live_ids:
+            if live['memberId'] == int(member_id) and live_id not in task.member_live_ids:
                 logger.debug('[被监控成员正在直播]member_id: %s, live_id: %', member_id, live_id)
                 start_time = util.convert_timestamp_to_timestr(live['startTime'])
                 stream_path = live['streamPath']  # 流地址
@@ -475,11 +486,11 @@ class Pocket48Handler:
                     msg += '你的小宝贝儿开露脸直播了: %s\n直播链接: %s\n开始时间: %s' % (sub_title, url, start_time)
                 elif live_type == 2:  # 电台直播
                     msg += '你的小宝贝儿开电台直播了: %s\n直播链接: %s\n开始时间: %s' % (sub_title, url, start_time)
-                self.member_live_ids.append(live_id)
+                task.member_live_ids.append(live_id)
 
         logger.debug(msg)
-        if msg and len(self.member_live_groups) > 0:
-            QQHandler.send_to_groups(self.member_live_groups, msg)
+        if msg and len(task.member_live_groups) > 0:
+            QQHandler.send_to_groups(task.member_live_groups, msg)
 
     def login_header_args(self):
         """
@@ -572,10 +583,12 @@ class Pocket48Handler:
                 live_link = '\n'.join(global_config.LIVE_LINK)
                 live_msg = '直播传送门: %s' % live_link
                 notify_str = '%s\n公演: %s\n时间: %s\n队伍: %s\n%s' % (
-                global_config.PERFORMANCE_NOTIFY, s['name'], s['time'], s['team'], live_msg)
+                    global_config.PERFORMANCE_NOTIFY, s['name'], s['time'], s['team'], live_msg)
                 logger.info('notify str: %s', notify_str)
-                QQHandler.send_to_groups(self.member_room_msg_lite_groups, notify_str)
+                QQHandler.send_to_groups(self.test_groups, notify_str)
 
+
+pocket48_handler = Pocket48Handler()
 
 if __name__ == '__main__':
     # base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -589,23 +602,24 @@ if __name__ == '__main__':
     # a = json.dumps(params)
 
     # bot.send_group_msg(group_id=483548995, message='test')
-    handler = Pocket48Handler([], [], [], [], [])
-
-    handler.notify_performance()
-
-    handler.login('*', '*')
+    # handler = Pocket48Handler([], [], [], [], [])
+    #
+    # handler.notify_performance()
+    #
+    # handler.login('*', '*')
 
     # response = handler.get_member_live_msg()
     # handler.parse_member_live(response, 528331)
 
-    r1 = handler.get_member_room_msg(5777252)
-    print(r1)
-
-    r3 = handler.parse_idol_flip(10513, 7675, 2)
-    print(r3)
+    # r1 = handler.get_member_room_msg(5777252)
+    # print(r1)
+    #
+    # r3 = handler.parse_idol_flip(10513, 7675, 2)
+    # print(r3)
 
     # handler.parse_room_msg(r1)
     # r2 = handler.get_member_room_comment(5780791)
     # print(r2)
     # handler.parse_room_comment(r2)
     # print handler.convert_timestamp_to_timestr(1504970619679)
+    pass
