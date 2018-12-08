@@ -3,3 +3,4 @@ APScheduler
 DBUtils
 PyMySQL
 cqhttp
+SQLalchemy
