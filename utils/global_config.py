@@ -37,7 +37,7 @@ LIVE_SCHEDULE = []
 # I_LOVE = []
 #
 AT_AUTO_REPLY = []
-ROOM_MSG_LITE_NOTIFY = ''
+ROOM_MSG_LITE_NOTIFY = ["你们灰在口袋房间里出现啦~"]
 
 # 公演直播提醒
 PERFORMANCE_NOTIFY = ''

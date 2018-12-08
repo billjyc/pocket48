@@ -25,20 +25,20 @@ cursor.close()
 
 
 def get_room_history_msg(room_id, start_time):
-    next_start_time = _get_room_msg(room_id, start_time, 300)
+    next_start_time = _get_room_msg(room_id, start_time, 30)
     while next_start_time != -1:
-        next_start_time = _get_room_msg(room_id, next_start_time, 300)
+        next_start_time = _get_room_msg(room_id, next_start_time, 30)
     print('done')
 
 
 def _get_room_msg(room_id, last_time, limit):
-    time.sleep(30)
+    time.sleep(5)
     url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/mainpage'
     header = {
         'os': 'android',
         'User-Agent': 'Mobile_Pocket',
         'IMEI': '863526430773465',
-        'token': 'VRb3GStAbywb2myk2c7K9seuVtXP+QCppdX5dR8xQbToO345jE1Mw11w/IIG1wLuOY4eAF9ifbM=',
+        'token': 'c7T3Ky8FhQwb2myk2c7K9seuVtXP+QCpaf7GoMRkov5gDZuqVbcbNqZzh4QqQQgQOY4eAF9ifbM=',
         'version': '5.2.2',
         'Content-Type': 'application/json;charset=utf-8',
         'Host': 'pjuju.48.cn',
@@ -64,6 +64,10 @@ def _get_room_msg(room_id, last_time, limit):
         for msg in msgs:
             extInfo = json.loads(msg['extInfo'])
             msg_id = msg['msgidClient']  # 消息id
+            rst = cursor.execute("""
+                SELECT * FROM 'room_message' WHERE message_id=?
+            """, msg_id)
+
 
             message_object = extInfo['messageObject']
 
@@ -183,4 +187,5 @@ def parse_idol_flip(question_id, answer_id, source):
 
 
 if __name__ == '__main__':
-    get_room_history_msg(5780791, 1519610400*1000)
+    import time
+    get_room_history_msg(5780791, time.time()*1000)

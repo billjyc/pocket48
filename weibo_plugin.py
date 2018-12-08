@@ -47,10 +47,9 @@ update_weibo_conf()
 if __name__ == '__main__':
     global_config.MEMBER_WEIBO_GROUPS = ConfigReader.get_property('qq_conf', 'member_weibo_groups').split(';')
     # weibo_monitor.login('*', '*')
-    name = ConfigReader.get_property('root', 'member_name')
     # uid = ConfigReader.get_property('weibo', name)
     uid = 1134206783
-    weibo_monitor.getWBQueue(uid)
+    weibo_monitor.getWBQueue(uid, task)
     while True:
         monitor_member_weibo()
         time.sleep(5)

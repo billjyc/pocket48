@@ -33,7 +33,7 @@ def update_conf():
         if member_pinyin in global_config.MEMBER_JSON:
             # 如果成员名在数据文件中，创建监听任务
             member_json = global_config.MEMBER_JSON[member_pinyin]
-            member_obj = Member(name=member_json['name'], member_id=member_json['member_id'],
+            member_obj = Member(name=member_json['chinese_name'], member_id=member_json['member_id'],
                                 room_id=member_json['room_id'], weibo_uid=member_json['weibo_uid'],
                                 pinyin=member_pinyin)
             task = Pocket48ListenTask(member_obj)
@@ -41,7 +41,7 @@ def update_conf():
             task.member_room_msg_groups = member['broadcast_message_detail_groups']
             task.member_room_msg_lite_groups = member['broadcast_message_lite_groups']
             task.room_comment_groups = member['broadcast_room_comment_groups']
-            task.lite_message = member['lite_message']
+            # task.lite_message = member['lite_message']
             pocket48_handler.listen_tasks.append(task)
             pocket48_handler.init_msg_queues(task)
         else:

@@ -1,5 +1,5 @@
 {
-  "IMEI": 863526430773465,
+  "IMEI": "863526430773465",
   "version": "5.3.1",
   "username": "***",
   "password": "***",
@@ -8,8 +8,7 @@
       "name": "fengxiaofei",
       "broadcast_message_detail_groups": ["483548995"],
       "broadcast_message_lite_groups": ["483548995", "101724227"],
-      "broadcast_room_comment_groups": [],
-      "lite_message": ["你们灰在口袋房间里出现啦~~"]
+      "broadcast_room_comment_groups": []
     }
   ]
 }
