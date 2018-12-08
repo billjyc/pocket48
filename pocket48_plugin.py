@@ -53,9 +53,9 @@ def get_room_msgs():
     for task in pocket48_handler.listen_tasks:
         start_t = time.time()
         r1 = pocket48_handler.get_member_room_msg(task)
-        pocket48_handler.parse_room_msg(r1)
+        pocket48_handler.parse_room_msg(r1, task)
         r2 = pocket48_handler.get_member_room_comment(task)
-        pocket48_handler.parse_room_comment(r2)
+        pocket48_handler.parse_room_comment(r2, task)
 
         end_t = time.time()
         my_logger.debug('获取{}房间消息 执行时间: {}'.format(task.member.name, end_t - start_t))
