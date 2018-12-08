@@ -78,8 +78,8 @@ def notify_performance():
     pocket48_handler.notify_performance()
 
 
-# 先更新配置
-update_conf()
 username = global_config.POCKET48_JSON["username"]
 password = global_config.POCKET48_JSON["password"]
 pocket48_handler.login(username, password)
+# 先更新配置
+update_conf()
