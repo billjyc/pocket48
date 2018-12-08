@@ -170,8 +170,8 @@ class Pocket48Handler:
 
             task.unread_msg_amount = 0
 
-            r1 = self.get_member_room_msg(task.member.room_id)
-            r2 = self.get_member_room_comment(task.member.room_id)
+            r1 = self.get_member_room_msg(task)
+            r2 = self.get_member_room_comment(task)
 
             r1_json = json.loads(r1)
             r2_json = json.loads(r2)
@@ -452,7 +452,7 @@ class Pocket48Handler:
         :return:
         """
         rsp_json = json.loads(response)
-        logger.debug('rsp_json: %s' % rsp_json)
+        # logger.debug('rsp_json: %s' % rsp_json)
         logger.debug('keys of parse member live: %s', rsp_json['content'].keys())
         member_id = task.member.member_id
         # 当前没有人在直播
