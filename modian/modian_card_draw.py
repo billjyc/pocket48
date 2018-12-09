@@ -291,19 +291,19 @@ class CardDrawHandler:
         logger.debug(rst_num)
         report = '摩点ID: {}, 当前已抽中的卡片有: \n'.format(modian_id)
         if CardLevel.UR in rst_level and len(rst_level[CardLevel.UR]) > 0:
-            report += '【UR】({}/{}): '.format(len(rst_level[CardLevel.UR]), len(self.cards[CardLevel.UR]))
+            report += '【UR】({}/{}): '.format(len(rst_level[CardLevel.UR]), len(self.all_cards[CardLevel.UR]))
             for card in rst_level[CardLevel.UR]:
                 report += '{}-{}, '.format(type_dict[card.type0], card.name)
             report += '\n'
         logger.debug(report)
         if CardLevel.SSR in rst_level and len(rst_level[CardLevel.SSR]) > 0:
-            report += '【SSR】({}/{}): '.format(len(rst_level[CardLevel.SSR]), len(self.cards[CardLevel.SSR]))
+            report += '【SSR】({}/{}): '.format(len(rst_level[CardLevel.SSR]), len(self.all_cards[CardLevel.SSR]))
             for card in rst_level[CardLevel.SSR]:
                 report += '{}-{}, '.format(type_dict[card.type0], card.name)
             report += '\n'
         logger.debug(report)
         if CardLevel.SR in rst_level and len(rst_level[CardLevel.SR]) > 0:
-            report += '【SR】({}/{}): '.format(len(rst_level[CardLevel.SR]), len(self.cards[CardLevel.SR]))
+            report += '【SR】({}/{}): '.format(len(rst_level[CardLevel.SR]), len(self.all_cards[CardLevel.SR]))
             for card in rst_level[CardLevel.SR]:
                 report += '{}{}, '.format(type_dict[card.type0], card.sub_id)
             report += '\n'
