@@ -67,18 +67,23 @@ class CardDrawHandler:
         card_datas = util.read_txt(config_path)
         weight_datas = util.read_txt(weight_path)[0]
         self.weights = []  # SR,SSR,UR卡的概率
-        self.cards = {}  # 所有卡，按等级分
+        self.cards = {}  # 所有卡，按等级分，不包含已过期卡牌
+        self.all_cards = {} # 所有卡，按等级分，包含已下架卡牌
         self.cards_single = {}  # 根据ID查询卡
 
         for line in card_datas:
             strs = line.split(',')
-            if int(strs[6]) == 0:  # 如果卡片无效，则跳过
-                continue
             card = Card(int(strs[0]), strs[3], CardType(int(strs[2])), CardLevel(int(strs[1])), int(strs[4]), strs[5])
             if card.level not in self.cards:
                 self.cards[card.level] = []
-            self.cards[card.level].append(card)
+            if card.level not in self.all_cards:
+                self.all_cards[card.level] = []
+            self.all_cards[card.level].append(card)
             self.cards_single[card.id] = card
+            if int(strs[6]) == 0:  # 如果卡片无效，则跳过
+                continue
+            self.cards[card.level].append(card)
+
         logger.debug(self.cards)
 
         strs = weight_datas.split(',')
