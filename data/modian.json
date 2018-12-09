@@ -6,18 +6,11 @@
       "modian_pro_id": 37393,
       "modian_need_display_rank": false,
       "broadcast_groups": ["483548995", "101724227"]
-    },
-    {
-      "modian_link": "https://zhongchou.modian.com/item/42005.html",
-      "modian_title": "冯晓菲应援会 偶像之心宝石争夺赛",
-      "modian_pro_id": 42005,
-      "modian_need_display_rank": false,
-      "broadcast_groups": ["483548995", "101724227"]
     }
   ],
   "modian_postscripts": ["艾虎艾克斯艾虎给你笔芯~", "款款爱你哟~", "给您比个垃圾桶~", "笔芯~", "啵啵~"],
 
-  "modian_need_display_pk": true,
+  "modian_need_display_pk": false,
   "modian_pk_activities": [
     42004, 42005, 42006, 42008, 42009
   ],
