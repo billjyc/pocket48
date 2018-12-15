@@ -580,7 +580,7 @@ class Pocket48Handler:
             perform_time = util.convert_timestr_to_timestamp(s['time'])
             diff = perform_time - time.time()
             if 0 < diff <= 15 * 60:
-                live_link = '\n'.join(global_config.LIVE_LINK)
+                live_link = ''.join(global_config.LIVE_LINK)
                 live_msg = '直播传送门: %s' % live_link
                 notify_str = '%s\n公演: %s\n时间: %s\n队伍: %s\n%s' % (
                     global_config.PERFORMANCE_NOTIFY, s['name'], s['time'], s['team'], live_msg)
