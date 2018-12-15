@@ -41,7 +41,8 @@ def update_conf():
             task.member_room_msg_groups = member['broadcast_message_detail_groups']
             task.member_room_msg_lite_groups = member['broadcast_message_lite_groups']
             task.room_comment_groups = member['broadcast_room_comment_groups']
-            my_logger.debug(task.member_room_msg_lite_groups)
+            my_logger.debug('room_msg_lite_groups: {}'.format(task.member_room_msg_lite_groups))
+            my_logger.debug('room_msg_groups: {}'.format(task.member_room_msg_groups))
             # task.lite_message = member['lite_message']
             pocket48_handler.listen_tasks.append(task)
             pocket48_handler.init_msg_queues(task)
