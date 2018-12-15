@@ -41,7 +41,10 @@ class QQHandler:
     @classmethod
     def send_to_groups(cls, groups, message):
         for group in groups:
-            bot.send_group_msg(group_id=group, message=message)
+            try:
+                bot.send_group_msg(group_id=group, message=message)
+            except Exception as exp:
+                logger.exception(exp)
 
 
 if __name__ == '__main__':
