@@ -223,6 +223,7 @@ class Pocket48Handler:
                 msg = util.random_str(global_config.ROOM_MSG_LITE_NOTIFY)
                 if global_config.USING_COOLQ_PRO:
                     msg += '[CQ:image,file=http://wx3.sinaimg.cn/large/789c06f9gy1fq4dl21j0rj20k00k0jsl.jpg]'
+                logger.debug(task.member_room_msg_lite_groups)
                 QQHandler.send_to_groups(task.member_room_msg_lite_groups, msg)
                 logger.info(msg)
 
