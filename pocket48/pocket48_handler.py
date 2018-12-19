@@ -586,7 +586,7 @@ class Pocket48Handler:
                 notify_str = '%s\n公演: %s\n时间: %s\n队伍: %s\n%s' % (
                     global_config.PERFORMANCE_NOTIFY, s['name'], s['time'], s['team'], live_msg)
                 logger.info('notify str: %s', notify_str)
-                QQHandler.send_to_groups(self.test_groups, notify_str)
+                QQHandler.send_to_groups(self.auto_reply_groups, notify_str)
 
 
 pocket48_handler = Pocket48Handler()
