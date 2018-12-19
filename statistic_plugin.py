@@ -8,7 +8,7 @@ from utils.scheduler import scheduler
 
 
 @scheduler.scheduled_job('cron', minute='45', hour=2)
-def update_wds_conf():
+def read_statistic_conf():
     global statistic_handler
 
     my_logger.debug('读取数据配置-statistic_plugin')
@@ -23,10 +23,14 @@ def record_data():
     """
     global statistic_handler
     my_logger.debug('记录群人数数据')
-    for task in global_config.POCKET48_LISTEN_TASKS:
-        my_logger.debug('member name: %s', task.member.name)
-        statistic_handler.update_group_size(task.member.pinyin)
+    try:
+        my_logger.debug(global_config.POCKET48_LISTEN_TASKS)
+        for task in global_config.POCKET48_LISTEN_TASKS:
+            my_logger.debug('member name: %s', task.member.name)
+            statistic_handler.update_group_size(task.member.pinyin)
+    except Exception as exp:
+        my_logger.exception(exp)
 
 
 statistic_handler = StatisticHandler('statistics.db')
-update_wds_conf()
+read_statistic_conf()

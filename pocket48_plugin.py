@@ -2,7 +2,7 @@
 import time
 
 from log.my_logger import pocket48_logger as my_logger
-from pocket48.pocket48_handler import pocket48_handler, Pocket48ListenTask, Member
+from pocket48.pocket48_handler import pocket48_handler
 from utils import global_config
 from utils.config_reader import ConfigReader
 from utils.scheduler import scheduler
@@ -26,28 +26,9 @@ def update_conf():
     my_logger.debug('auto_reply_groups: %s, length: %d', ','.join(global_config.AUTO_REPLY_GROUPS),
                     len(pocket48_handler.auto_reply_groups))
 
-    my_logger.debug('读取成员信息')
-    members_list = global_config.POCKET48_JSON['monitor_members']
-    for member in members_list:
-        member_pinyin = member['name']
-        if member_pinyin in global_config.MEMBER_JSON:
-            # 如果成员名在数据文件中，创建监听任务
-            member_json = global_config.MEMBER_JSON[member_pinyin]
-            member_obj = Member(name=member_json['chinese_name'], member_id=member_json['member_id'],
-                                room_id=member_json['room_id'], weibo_uid=member_json['weibo_uid'],
-                                pinyin=member_pinyin)
-            task = Pocket48ListenTask(member_obj)
-            task.member_live_groups = member['broadcast_message_detail_groups']
-            task.member_room_msg_groups = member['broadcast_message_detail_groups']
-            task.member_room_msg_lite_groups = member['broadcast_message_lite_groups']
-            task.room_comment_groups = member['broadcast_room_comment_groups']
-            my_logger.debug('room_msg_lite_groups: {}'.format(task.member_room_msg_lite_groups))
-            my_logger.debug('room_msg_groups: {}'.format(task.member_room_msg_groups))
-            # task.lite_message = member['lite_message']
-            pocket48_handler.listen_tasks.append(task)
-            pocket48_handler.init_msg_queues(task)
-        else:
-            my_logger.error('member_name: {}不在数据文件中，请重试！'.format(member_pinyin))
+    for task in global_config.POCKET48_LISTEN_TASKS:
+        pocket48_handler.listen_tasks.append(task)
+        pocket48_handler.init_msg_queues(task)
 
 
 @scheduler.scheduled_job('cron', minute='*', second=10)

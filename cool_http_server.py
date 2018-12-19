@@ -199,7 +199,7 @@ def draw_missed_card(context, modian_id, backer_money):
         bot.send(context, '输入的金额不符合规范，请重试~')
     try:
         report = card_draw_handler.draw(modian_id, '补抽用户', float(backer_money),
-                                        util.convert_timestamp_to_timestr(int(time.time()*1000)))
+                                        util.convert_timestamp_to_timestr(int(time.time() * 1000)))
         bot.send(context, report)
     except:
         logger.error('补抽卡出现错误！')
@@ -279,7 +279,7 @@ def __get_jizi_ranking_list_by_date_diff(pro_id, day_diff=0):
         if rank[2] != last_val:
             cur_rank = row_tmp
         last_val = rank[2]
-        rank_tmp = rank + (cur_rank, )
+        rank_tmp = rank + (cur_rank,)
         new_rst.append(rank_tmp)
     logger.debug(new_rst)
     return new_rst, total
@@ -295,16 +295,16 @@ def handle_group_increase(context):
     # bot.send(context, message='最快的机器人欢迎@{}～'.format(name))
     bot.send(context, message='最快的机器人欢迎[CQ:at,qq={}]'.format(context['user_id']))
     logger.info('有人进群, QQ号: %s' % context['user_id'])
-#     if context['group_id'] == int('101724227'):
-#         bot.send(context, message="""
-# 欢迎加入SNH48-冯晓菲应援会，今天的机长是灰灰
-# 为了更好的了解灰灰，给灰灰应援～
-# 冯晓菲剧场应援群：499121036
-# B站补档推荐up主：冯晓菲的后置摄像头，冯晓菲甜甜的wink
-# 网易云电台：冯晓菲的地上波
-# 欢迎关注微博：@SNH48-冯晓菲应援会
-# @冯晓菲的萝卜养护中心
-#         """)
+    if context['group_id'] == int('101724227'):
+        bot.send(context, message="""
+欢迎加入SNH48-冯晓菲应援会，今天的机长是灰灰
+为了更好的了解灰灰，给灰灰应援～
+冯晓菲剧场应援群：499121036
+B站补档推荐up主：冯晓菲的后置摄像头，冯晓菲甜甜的wink
+网易云电台：冯晓菲的地上波
+欢迎关注微博：@SNH48-冯晓菲应援会
+@冯晓菲的萝卜养护中心
+        """)
 
 
 @bot.on_notice('group_decrease')
