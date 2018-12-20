@@ -8,6 +8,7 @@ import requests
 import json
 import base64
 import urllib.parse
+import csv
 
 
 def convert_timestamp_to_timestr(timestamp):
@@ -220,6 +221,18 @@ def is_positive_integer(x):
         return isinstance(x, int)
     except ValueError:
         return False
+
+
+def read_csv(file_path):
+    """
+    读取csv文件
+    :param file_path:
+    :return:
+    """
+    with open(file_path, 'r', encoding='utf-8') as csv_file:
+        read = csv.DictReader(csv_file)
+        rows = [row for row in read]
+    return rows
 
 
 if __name__ == '__main__':
