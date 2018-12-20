@@ -57,7 +57,7 @@ try:
                     CREATE TABLE IF NOT EXISTS 't_lot' (
                         user_id  VARCHAR( 100 ),
                         group_id VARCHAR( 100 ),
-                        date         DATE,
+                        lot_date         DATE,
                         lot_id       INTEGER,
                         has_solve INTEGER DEFAULT ( 0 ),
                         UNIQUE ( user_id, group_id ) 
