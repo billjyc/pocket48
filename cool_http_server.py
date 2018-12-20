@@ -201,7 +201,7 @@ def draw_lottery(user_id, group_id):
             if last_lot_date >= now_date:
                 can_lot = False
         if not can_lot:
-            return '[CQ:at,qq={}]你今天已经抽过签了，请明天再来！'.format(user_id)
+            return '[CQ:at,qq={}] 你今天已经抽过签了，请明天再来！'.format(user_id)
         # 抽签步骤：随机抽取，存进DB
         current_lot = util.choice(lottery_data)[0]
         logger.info('本次抽签: {}'.format(current_lot))
@@ -210,7 +210,7 @@ def draw_lottery(user_id, group_id):
                 (`user_id`, `group_id`, `lot_date`, `lot_id`, `has_solve`) VALUES (?, ?, ?, ?, ?)
             """, (user_id, group_id, now_date.strftime('%Y-%m-%d'), current_lot['ID'], 0))
         lottery_db.commit()
-        res_str = '[CQ:at,qq={}]您抽到了第{}签：{}'.format(user_id, current_lot['ID'], current_lot['抽签'])
+        res_str = '[CQ:at,qq={}] 您抽到了第{}签：{}'.format(user_id, current_lot['ID'], current_lot['抽签'])
         logger.info(res_str)
     except Exception as e:
         logger.exception(e)
@@ -238,17 +238,17 @@ def solve_lottery(user_id, group_id):
         now_date = date.today()
         if not rst:
             logger.info('你今天还没有抽过签，赶快去抽签吧！')
-            return '[CQ:at,qq={}]你今天还没有抽过签，赶快去抽签吧！'.format(user_id)
+            return '[CQ:at,qq={}] 你今天还没有抽过签，赶快去抽签吧！'.format(user_id)
         else:
             last_lot_date = datetime.datetime.strptime(rst[0], "%Y-%m-%d").date()
             logger.info('上次抽签日期: {}, 今天日期为: {}'.format(last_lot_date, now_date))
             if last_lot_date < now_date:
                 logger.info('你今天还没有抽过签，赶快去抽签吧！')
-                return '[CQ:at,qq={}]你今天还没有抽过签，赶快去抽签吧！'.format(user_id)
+                return '[CQ:at,qq={}] 你今天还没有抽过签，赶快去抽签吧！'.format(user_id)
             has_solve = int(rst[1])
             if has_solve == 1:
                 logger.info('你今天已经解过签了，请明天再来抽签吧~')
-                return '[CQ:at,qq={}]你今天已经解过签了，请明天再来抽签吧~'.format(user_id)
+                return '[CQ:at,qq={}] 你今天已经解过签了，请明天再来抽签吧~'.format(user_id)
             else:
                 lot_id = str(rst[2])
                 current_lot = lottery_data_map[lot_id]
@@ -256,7 +256,7 @@ def solve_lottery(user_id, group_id):
                     UPDATE `t_lot` SET `has_solve`=1 WHERE `user_id`=? and `group_id`=?
                 """, (user_id, group_id))
                 lottery_db.commit()
-                res_str = '[CQ:at,qq={}]{}'.format(user_id, current_lot['解签'])
+                res_str = '[CQ:at,qq={}] {}'.format(user_id, current_lot['解签'])
                 logger.info(res_str)
     except Exception as e:
         logger.exception(e)
