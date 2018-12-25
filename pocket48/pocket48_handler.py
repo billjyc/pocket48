@@ -606,7 +606,7 @@ class Pocket48Handler:
             "pocket_id": int(fanpai_user_id)
         }
         try:
-            r = requests.post(url, data=json.dumps(params), verify=False).json()
+            r = requests.post(url, data=params, verify=False).json()
             logger.info('获取普通翻牌用户的昵称，user_id: {}'.format(fanpai_user_id))
             logger.info(r)
             return r['nickName']
