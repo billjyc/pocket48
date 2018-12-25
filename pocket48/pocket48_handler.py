@@ -286,10 +286,14 @@ class Pocket48Handler:
                         logger.debug('翻牌')
                         member_msg = extInfo['messageText']
                         fanpai_msg = extInfo['faipaiContent']
-                        # fanpai_id = extInfo['faipaiName']
+                        fanpai_id = self.get_fanpai_name(extInfo['faipaiUserId'])
                         # message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s:%s\n' % (msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_id, fanpai_msg)) + message
-                        message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s\n' % (
-                            msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_msg)) + message
+                        if fanpai_id:
+                            message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s: %s\n' % (
+                                msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_id, fanpai_msg)) + message
+                        else:
+                            message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s\n' % (
+                                msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_msg)) + message
                         cursor.execute("""
                                         INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content, fans_comment) VALUES
                                         (?, ?, ?, ?, ?, ?, ?)
@@ -587,6 +591,28 @@ class Pocket48Handler:
                     global_config.PERFORMANCE_NOTIFY, s['name'], s['time'], s['team'], live_msg)
                 logger.info('notify str: %s', notify_str)
                 QQHandler.send_to_groups(self.auto_reply_groups, notify_str)
+
+    def get_fanpai_name(self, fanpai_user_id):
+        """
+        获取普通翻牌用户的昵称
+        :param fanpai_user_id:
+        :return:
+        """
+        if not self.is_login:
+            logger.exception('尚未登录')
+            return
+        url = 'http://zhibo.ckg48.com/Recharge/ajax_post_checkinfo'
+        params = {
+            "pocket_id": int(fanpai_user_id)
+        }
+        try:
+            r = requests.post(url, data=json.dumps(params), verify=False).json()
+            logger.info('获取普通翻牌用户的昵称，user_id: {}'.format(fanpai_user_id))
+            logger.info(r)
+            return r['nickName']
+        except Exception as e:
+            logger.exception(e)
+            return None
 
 
 pocket48_handler = Pocket48Handler()
