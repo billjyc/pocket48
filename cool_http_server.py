@@ -102,24 +102,24 @@ def handle_msg(context):
                 logger.debug('提问内容: %s' % content)
                 reply = ai_bot.nlp_textchat(content, user_id)
                 bot.send(context, reply)
-            elif message == '抽签':
-                try:
-                    message = draw_lottery(user_id, group_id)
-                    bot.send(context, message)
-                except Error as err:
-                    logger.exception(err)
-                except Exception as e:
-                    logger.exception(e)
-                    bot.send(context, '抽签出现错误！')
-            elif message == '解签':
-                try:
-                    message = solve_lottery(user_id, group_id)
-                    bot.send(context, message)
-                except Error as err:
-                    logger.exception(err)
-                except Exception as e:
-                    logger.exception(e)
-                    bot.send(context, '解签出现错误！')
+            # elif message == '抽签':
+            #     try:
+            #         message = draw_lottery(user_id, group_id)
+            #         bot.send(context, message)
+            #     except Error as err:
+            #         logger.exception(err)
+            #     except Exception as e:
+            #         logger.exception(e)
+            #         bot.send(context, '抽签出现错误！')
+            # elif message == '解签':
+            #     try:
+            #         message = solve_lottery(user_id, group_id)
+            #         bot.send(context, message)
+            #     except Error as err:
+            #         logger.exception(err)
+            #     except Exception as e:
+            #         logger.exception(e)
+            #         bot.send(context, '解签出现错误！')
 
         # 查询集资
         if str(group_id) in groups:

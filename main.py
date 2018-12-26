@@ -34,7 +34,7 @@ for member in members_list:
                             room_id=member_json['room_id'], weibo_uid=member_json['weibo_uid'],
                             pinyin=member_pinyin)
         task = Pocket48ListenTask(member_obj)
-        task.member_live_groups = member['broadcast_message_detail_groups']
+        task.member_live_groups = member['broadcast_message_lite_groups']
         task.member_room_msg_groups = member['broadcast_message_detail_groups']
         task.member_room_msg_lite_groups = member['broadcast_message_lite_groups']
         task.room_comment_groups = member['broadcast_room_comment_groups']
