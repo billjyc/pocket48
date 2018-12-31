@@ -188,7 +188,7 @@ class CardDrawHandler:
             if card.id in card_has:
                 logger.debug('卡片{}已经拥有，积分+2')
                 # 如果已经拥有该卡片，积分+1
-                score_add += 2
+                score_add += 1
             card_has.add(card.id)
 
             # card = self.base_cards[card_index]
