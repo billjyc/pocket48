@@ -12,6 +12,7 @@ except:
     logger = logging.getLogger(__name__)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ACTIVITY_CARD_ID = []
 
 
 class CardType(Enum):
@@ -186,13 +187,23 @@ class CardDrawHandler:
             logger.debug('抽出的卡: %s' % card)
 
             if card.id in card_has:
-                logger.debug('卡片{}已经拥有，积分+2')
+                logger.debug('卡片{}已经拥有，积分+1')
                 # 如果已经拥有该卡片，积分+1
                 score_add += 1
+
             card_has.add(card.id)
 
             # card = self.base_cards[card_index]
             insert_sql += '(%s, %s, \'%s\', %s),' % (user_id, card.id, pay_time, backer_money)
+
+            # 此种类型的卡如果已经达到了2张，则将该卡片从卡池中移除
+            if card.id in ACTIVITY_CARD_ID:
+                rst = mysql_util.select_all("""
+                    SELECT count(*) from `draw_record` WHERE `card_id` = %s
+                """, (card.id,))
+                if rst[0] == 2:
+                    if card in self.cards[card.level]:
+                        self.cards[card.level].remove(card)
 
             if card in rst:
                 rst[card] += 1
