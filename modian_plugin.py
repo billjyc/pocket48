@@ -169,6 +169,7 @@ def update_modian_conf():
                 mysql_util.query("""
                     UPDATE jiebang SET current_stick_num = %s WHERE name = %s
                 """, (real_stick_num, jiebang[0]))
+                jiebang[2] = real_stick_num
                 my_logger.debug('jiebang: %s, %s, %s, %s, %s, %s, %s, %s, %s',
                                 jiebang[0], jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
                                               jiebang[6], jiebang[7], jiebang[8])
