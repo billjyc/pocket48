@@ -162,8 +162,12 @@ def update_modian_conf():
                                     SELECT backer_money FROM `order`
                                         WHERE pro_id = %s and backer_money >= %s and pay_time >= %s and pay_time <= %s
                                 """, (pro_id, jiebang[7], jiebang[4], jiebang[5]))
+                    my_logger.debug("""
+                                    SELECT backer_money FROM `order`
+                                        WHERE pro_id = %s and backer_money >= %s and pay_time >= %s and pay_time <= %s
+                                """ % (pro_id, jiebang[7], jiebang[4], jiebang[5]))
                     my_logger.debug(rst0)
-                    if rst:
+                    if rst0:
                         for order in rst0[0]:
                             money = order[0]
                             real_stick_num += int(money // jiebang[7])
