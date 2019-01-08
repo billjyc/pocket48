@@ -169,8 +169,8 @@ def update_modian_conf():
                     my_logger.debug(rst0)
                     if rst0:
                         for order in rst0[0]:
-                            money = order[0]
-                            real_stick_num += int(money // jiebang[7])
+                            my_logger.debug('order: {}'.format(order))
+                            real_stick_num += int(order // jiebang[7])
 
                     my_logger.info('记录棒数: {}, 实际棒数: {}'.format(jiebang[2], real_stick_num))
                     mysql_util.query("""
