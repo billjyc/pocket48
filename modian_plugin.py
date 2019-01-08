@@ -150,32 +150,32 @@ def update_modian_conf():
                 FROM jiebang where pro_id=%s and start_time <= NOW() 
                     and end_time >= NOW() and current_stick_num < target_stick_num
             """, (pro_id, ))
+            if rst:
+                for jiebang in rst:
+                    # 修正当前棒数
+                    my_logger.info('修正接棒棒数')
+                    real_stick_num = 0
+                    rst0 = mysql_util.select_all("""
+                                    SELECT backer_money FROM `order`
+                                        WHERE pro_id = %s and backer_money >= %s and pay_time >= %s and pay_time <= %s
+                                """, (pro_id, jiebang[7], jiebang[4], jiebang[5]))
+                    my_logger.debug(rst0)
+                    if rst:
+                        for order in rst0[0]:
+                            money = order[0]
+                            real_stick_num += int(money // jiebang[7])
 
-            for jiebang in rst:
-                # 修正当前棒数
-                my_logger.info('修正接棒棒数')
-                real_stick_num = 0
-                rst0 = mysql_util.select_all("""
-                                SELECT backer_money FROM `order`
-                                    WHERE pro_id = %s and backer_money >= %s and pay_time >= %s and pay_time <= %s
-                            """, (pro_id, jiebang[7], jiebang[4], jiebang[5]))
-                my_logger.debug(rst0)
-                if rst:
-                    for order in rst0[0]:
-                        money = order[0]
-                        real_stick_num += int(money // jiebang[7])
-
-                my_logger.info('记录棒数: {}, 实际棒数: {}'.format(jiebang[2], real_stick_num))
-                mysql_util.query("""
-                    UPDATE jiebang SET current_stick_num = %s WHERE name = %s
-                """, (real_stick_num, jiebang[0]))
-                jiebang[2] = real_stick_num
-                my_logger.debug('jiebang: %s, %s, %s, %s, %s, %s, %s, %s, %s',
-                                jiebang[0], jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
-                                              jiebang[6], jiebang[7], jiebang[8])
-                jiebang_entity = ModianJiebangEntity(str(jiebang[0], encoding='utf-8'), jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
-                                              jiebang[6], jiebang[7], jiebang[8])
-                global_config.MODIAN_JIEBANG_ACTIVITIES[pro_id].append(jiebang_entity)
+                    my_logger.info('记录棒数: {}, 实际棒数: {}'.format(jiebang[2], real_stick_num))
+                    mysql_util.query("""
+                        UPDATE jiebang SET current_stick_num = %s WHERE name = %s
+                    """, (real_stick_num, jiebang[0]))
+                    jiebang[2] = real_stick_num
+                    my_logger.debug('jiebang: %s, %s, %s, %s, %s, %s, %s, %s, %s',
+                                    jiebang[0], jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
+                                                  jiebang[6], jiebang[7], jiebang[8])
+                    jiebang_entity = ModianJiebangEntity(str(jiebang[0], encoding='utf-8'), jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
+                                                  jiebang[6], jiebang[7], jiebang[8])
+                    global_config.MODIAN_JIEBANG_ACTIVITIES[pro_id].append(jiebang_entity)
 
         except Exception as e:
             my_logger.error('读取正在进行中的接棒活动出现错误！')
