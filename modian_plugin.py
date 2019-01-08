@@ -176,12 +176,14 @@ def update_modian_conf():
                     mysql_util.query("""
                         UPDATE jiebang SET current_stick_num = %s WHERE name = %s
                     """, (real_stick_num, jiebang[0]))
-                    jiebang[2] = real_stick_num
+                    
                     my_logger.debug('jiebang: %s, %s, %s, %s, %s, %s, %s, %s, %s',
                                     jiebang[0], jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
                                                   jiebang[6], jiebang[7], jiebang[8])
                     jiebang_entity = ModianJiebangEntity(str(jiebang[0], encoding='utf-8'), jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
                                                   jiebang[6], jiebang[7], jiebang[8])
+                    jiebang_entity.current_stick_num = real_stick_num
+                    my_logger.info('修正完成')
                     global_config.MODIAN_JIEBANG_ACTIVITIES[pro_id].append(jiebang_entity)
 
         except Exception as e:
