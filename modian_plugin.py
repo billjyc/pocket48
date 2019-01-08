@@ -125,9 +125,9 @@ def update_modian_conf():
                 mysql_util.query("""
                                     INSERT INTO jiebang (name, pro_id, current_stick_num, start_time, 
                                     end_time, target_stick_num, min_stick_amount, need_detail) VALUES
-                                    (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                                    (%s, %s, %s, %s, %s, %s, %s, %s)
                                 """, (
-                name, activity['pro_id'], 0, 
+                name, activity['pro_id'], 0,
                     activity['start_time'], activity['end_time'], activity['target_stick_num'],
                 activity['min_stick_amount'], activity['need_detail']))
                 # conn.commit()
