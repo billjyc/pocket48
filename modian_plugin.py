@@ -102,7 +102,10 @@ def update_modian_conf():
     # conn = sqlite3.connect('data/modian.db', check_same_thread=False)
     for activity in jiebang_json:
         end_time = activity['end_time']
+        my_logger.debug('活动结束时间: {}; 当前时间：{}'.format(util.convert_timestr_to_timestamp(end_time),
+                                                     time.time()))
         if util.convert_timestr_to_timestamp(end_time) < time.time():
+            my_logger.debug('活动结束时间早于当前时间，跳过')
             continue
         name = activity['jiebang_name']
         try:
