@@ -123,11 +123,11 @@ def update_modian_conf():
             else:
                 my_logger.debug('DB中没有对应的接棒活动，需要创建')
                 mysql_util.query("""
-                                    INSERT INTO jiebang (name, pro_id, current_stick_num, last_record_time, start_time, 
+                                    INSERT INTO jiebang (name, pro_id, current_stick_num, start_time, 
                                     end_time, target_stick_num, min_stick_amount, need_detail) VALUES
                                     (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                                 """, (
-                name, activity['pro_id'], 0, int(time.time()),
+                name, activity['pro_id'], 0, 
                     activity['start_time'], activity['end_time'], activity['target_stick_num'],
                 activity['min_stick_amount'], activity['need_detail']))
                 # conn.commit()
