@@ -152,6 +152,17 @@ def update_modian_conf():
             """, (pro_id, ))
 
             for jiebang in rst:
+                # 修正当前棒数
+                my_logger.info('修正接棒棒数')
+                rst0 = mysql_util.select_one("""
+                                SELECT COUNT(*) FROM `order`
+                                    WHERE pro_id = %s and pay_time >= %s and pay_time <= %s
+                            """, (pro_id, jiebang[4], jiebang[5]))
+                real_stick_num = int(rst0[0])
+                my_logger.info('记录棒数: {}, 实际棒数: {}'.format(jiebang[2], real_stick_num))
+                mysql_util.query("""
+                    UPDATE jiebang SET current_stick_num = %s WHERE name = %s
+                """, (real_stick_num, jiebang[0]))
                 my_logger.debug('jiebang: %s, %s, %s, %s, %s, %s, %s, %s, %s',
                                 jiebang[0], jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
                                               jiebang[6], jiebang[7], jiebang[8])
