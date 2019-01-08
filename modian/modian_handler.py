@@ -222,7 +222,7 @@ class ModianHandler:
                     jiebang.current_stick_num += stick_num
                     
                     # jiebang.last_record_time = util.convert_timestamp_to_timestr(time.time()*1000)
-                    jiebang.last_record_time = int(time.time())
+                    jiebang.last_record_time = util.convert_timestamp_to_timestr(int(time.time() * 1000))
                     # 数据库也要更新
                     try:
                         mysql_util.query("""

@@ -35,7 +35,7 @@ def update_modian_conf():
     # 是否需要开启抽卡功能
     global_config.MODIAN_CARD_DRAW = modian_json['modian_need_card_draw']
 
-    global_config.MODIAN_300_ACTIVITY = modian_json['modian_300_activity']
+    # global_config.MODIAN_300_ACTIVITY = modian_json['modian_300_activity']
 
     # 需要适应同时开多个链接的情况
     global_config.MODIAN_ARRAY = []
@@ -102,7 +102,10 @@ def update_modian_conf():
     # conn = sqlite3.connect('data/modian.db', check_same_thread=False)
     for activity in jiebang_json:
         end_time = activity['end_time']
+        my_logger.debug('活动结束时间: {}; 当前时间：{}'.format(util.convert_timestr_to_timestamp(end_time),
+                                                     time.time()))
         if util.convert_timestr_to_timestamp(end_time) < time.time():
+            my_logger.debug('活动结束时间早于当前时间，跳过')
             continue
         name = activity['jiebang_name']
         try:
@@ -120,11 +123,11 @@ def update_modian_conf():
             else:
                 my_logger.debug('DB中没有对应的接棒活动，需要创建')
                 mysql_util.query("""
-                                    INSERT INTO jiebang (name, pro_id, current_stick_num, last_record_time, start_time, 
+                                    INSERT INTO jiebang (name, pro_id, current_stick_num, start_time, 
                                     end_time, target_stick_num, min_stick_amount, need_detail) VALUES
-                                    (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                                    (%s, %s, %s, %s, %s, %s, %s, %s)
                                 """, (
-                name, activity['pro_id'], 0, int(time.time()),
+                name, activity['pro_id'], 0,
                     activity['start_time'], activity['end_time'], activity['target_stick_num'],
                 activity['min_stick_amount'], activity['need_detail']))
                 # conn.commit()
@@ -150,14 +153,38 @@ def update_modian_conf():
                 FROM jiebang where pro_id=%s and start_time <= NOW() 
                     and end_time >= NOW() and current_stick_num < target_stick_num
             """, (pro_id, ))
+            if rst:
+                for jiebang in rst:
+                    # 修正当前棒数
+                    my_logger.info('修正接棒棒数')
+                    real_stick_num = 0
+                    rst0 = mysql_util.select_all("""
+                                    SELECT backer_money FROM `order`
+                                        WHERE pro_id = %s and backer_money >= %s and pay_time >= %s and pay_time <= %s
+                                """, (pro_id, jiebang[7], jiebang[4], jiebang[5]))
+                    my_logger.debug("""
+                                    SELECT backer_money FROM `order`
+                                        WHERE pro_id = %s and backer_money >= %s and pay_time >= %s and pay_time <= %s
+                                """ % (pro_id, jiebang[7], jiebang[4], jiebang[5]))
+                    my_logger.debug(rst0)
+                    if rst0:
+                        for order in rst0:
+                            my_logger.debug('order: {}'.format(order[0]))
+                            real_stick_num += int(order[0] // jiebang[7])
 
-            for jiebang in rst:
-                my_logger.debug('jiebang: %s, %s, %s, %s, %s, %s, %s, %s, %s',
-                                jiebang[0], jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
-                                              jiebang[6], jiebang[7], jiebang[8])
-                jiebang_entity = ModianJiebangEntity(str(jiebang[0], encoding='utf-8'), jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
-                                              jiebang[6], jiebang[7], jiebang[8])
-                global_config.MODIAN_JIEBANG_ACTIVITIES[pro_id].append(jiebang_entity)
+                    my_logger.info('记录棒数: {}, 实际棒数: {}'.format(jiebang[2], real_stick_num))
+                    mysql_util.query("""
+                        UPDATE jiebang SET current_stick_num = %s WHERE name = %s
+                    """, (real_stick_num, jiebang[0]))
+
+                    my_logger.debug('jiebang: %s, %s, %s, %s, %s, %s, %s, %s, %s',
+                                    jiebang[0], jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
+                                                  jiebang[6], jiebang[7], jiebang[8])
+                    jiebang_entity = ModianJiebangEntity(str(jiebang[0], encoding='utf-8'), jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
+                                                  jiebang[6], jiebang[7], jiebang[8])
+                    jiebang_entity.current_stick_num = real_stick_num
+                    my_logger.info('修正完成')
+                    global_config.MODIAN_JIEBANG_ACTIVITIES[pro_id].append(jiebang_entity)
 
         except Exception as e:
             my_logger.error('读取正在进行中的接棒活动出现错误！')
