@@ -198,7 +198,7 @@ class CardDrawHandler:
 
             # 此种类型的卡如果已经达到了2张，则将该卡片从卡池中移除
             if card.id in ACTIVITY_CARD_ID:
-                rst = mysql_util.select_all("""
+                rst = mysql_util.select_one("""
                     SELECT count(*) from `draw_record` WHERE `card_id` = %s
                 """, (card.id,))
                 if rst[0] == 2:
