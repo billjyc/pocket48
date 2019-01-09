@@ -33,9 +33,9 @@
 33,2,4,现金红包30元,3,http://i1.fuimg.com/667696/cd088033dbf55170.png,1
 34,2,4,三只松鼠空投箱零食大礼包,4,http://i1.fuimg.com/667696/198d249f2e72bdef.jpg,1
 35,2,4,FSN电影票一张,5,http://i1.fuimg.com/667696/e4f4e03edf3961b9.jpg,1
-36,2,4,百事可乐一箱,6,http://i1.fuimg.com/667696/540dd9afaeeadb83.jpg,1
+36,2,4,百事可乐一箱,6,http://i1.fuimg.com/667696/540dd9afaeeadb83.jpg,0
 37,2,4,假面骑士ghost表盘（无腕带）,7,http://i1.fuimg.com/667696/16f58a183b16b35c.jpg,1
-38,2,4,款款同款瓜子抱枕一个,8,http://i1.fuimg.com/667696/7c55f7954e5e3931.png,0
-39,2,4,iMax电影票一张（180元以下）,9,http://i1.fuimg.com/667696/ac45d3db519ebf8c.png,0
+38,2,4,款款同款瓜子抱枕一个,8,http://i1.fuimg.com/667696/7c55f7954e5e3931.png,1
+39,2,4,iMax电影票一张（180元以下）,9,http://i1.fuimg.com/667696/ac45d3db519ebf8c.png,1
 40,2,4,李子园一箱,10,http://i1.fuimg.com/667696/3f992c47aec1f909.jpg,0
 41,2,4,游戏机一台,11,http://i1.fuimg.com/667696/621783fe77db4843.jpg,0
