@@ -16,7 +16,7 @@ from utils.scheduler import scheduler
 from qq.qqhandler import QQHandler
 
 
-@scheduler.scheduled_job('cron', minute='*/15')
+# @scheduler.scheduled_job('cron', minute='*/15')
 def update_modian_conf():
     global modian_handler
     time0 = time.time()
