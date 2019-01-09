@@ -12,7 +12,7 @@ except:
     logger = logging.getLogger(__name__)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ACTIVITY_CARD_ID = []
+ACTIVITY_CARD_ID = [32, 33, 34, 35, 36]
 
 
 class CardType(Enum):

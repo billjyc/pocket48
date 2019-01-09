@@ -29,8 +29,8 @@
 29,2,2,暗夜脚步声,3,http://i1.fuimg.com/667696/7f0b84650fe0cd1f.jpg,1
 30,3,2,冰雪女王,1,http://i1.fuimg.com/667696/cfd4d9f0d9c22bbb.jpg,1
 31,3,4,黑夜女神,1,http://i2.tiimg.com/667696/0caf917663cd2c77.jpg,0
-32,3,4,假面骑士geiz表盘,2,http://i1.fuimg.com/667696/c1298003696c1824.jpg,0
-33,3,4,现金红包30元,3,http://i1.fuimg.com/667696/cd088033dbf55170.png,0
+32,3,4,假面骑士geiz表盘,2,http://i1.fuimg.com/667696/c1298003696c1824.jpg,1
+33,3,4,现金红包30元,3,http://i1.fuimg.com/667696/cd088033dbf55170.png,1
 34,3,4,三只松鼠空投箱零食大礼包,4,http://i1.fuimg.com/667696/198d249f2e72bdef.jpg,0,
 35,3,4,FSN电影票一张,5,http://i1.fuimg.com/667696/e4f4e03edf3961b9.jpg,0
 36,3,4,百事可乐一箱,6,http://i1.fuimg.com/667696/540dd9afaeeadb83.jpg,0
