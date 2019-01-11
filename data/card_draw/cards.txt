@@ -39,3 +39,5 @@
 39,2,4,iMax电影票一张（180元以下）,9,http://i1.fuimg.com/667696/ac45d3db519ebf8c.png,1
 40,2,4,李子园一箱,10,http://i1.fuimg.com/667696/3f992c47aec1f909.jpg,0
 41,2,4,游戏机一台,11,http://i1.fuimg.com/667696/621783fe77db4843.jpg,1
+42,2,4,剧场站区手把手打call教学,12,http://i1.fuimg.com/667696/081fcf4ab57bcf74.png,1
+43,2,4,现金红包101.7元,13,http://i1.fuimg.com/667696/771d311d3dfd146b.png,1
