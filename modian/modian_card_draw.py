@@ -197,14 +197,14 @@ class CardDrawHandler:
             insert_sql += '(%s, %s, \'%s\', %s),' % (user_id, card.id, pay_time, backer_money)
 
             # 此种类型的卡如果已经达到了1张，则将该卡片从卡池中移除
-            if card.id in ACTIVITY_CARD_ID:
-                rst2 = mysql_util.select_one("""
-                    SELECT count(*) from `draw_record` WHERE `card_id` = %s
-                """, (card.id,))
-                if rst2:
-                    if rst2[0] == 1:
-                        if card in self.cards[card.level]:
-                            self.cards[card.level].remove(card)
+            # if card.id in ACTIVITY_CARD_ID:
+            #     rst2 = mysql_util.select_one("""
+            #         SELECT count(*) from `draw_record` WHERE `card_id` = %s
+            #     """, (card.id,))
+            #     if rst2:
+            #         if rst2[0] == 1:
+            #             if card in self.cards[card.level]:
+            #                 self.cards[card.level].remove(card)
 
             if card in rst:
                 rst[card] += 1

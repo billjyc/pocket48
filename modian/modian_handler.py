@@ -15,6 +15,7 @@ from modian.modian_card_draw import handler as card_draw_handler
 from qq.qqhandler import QQHandler
 from utils import global_config, util
 from utils.mysql_util import mysql_util
+from modian.special import modian_wufu_handler
 
 
 class ModianEntity:
@@ -294,6 +295,11 @@ class ModianHandler:
             card_report = ''
             if global_config.MODIAN_CARD_DRAW:
                 card_report = self.card_draw_handler.draw(user_id, nickname, backer_money, pay_time)
+
+            # 集五福
+            fu_report = modian_wufu_handler.draw(user_id, nickname, backer_money, pay_time)
+            if fu_report:
+                QQHandler.send_to_groups(['483548995'], fu_report)
 
             msg += '%s\n集资项目: %s\n链接: %s\n' % (project_info, pro_name, modian_entity.link)
             # msg += jizi_pk_report
