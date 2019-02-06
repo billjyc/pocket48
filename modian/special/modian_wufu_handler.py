@@ -62,9 +62,9 @@ def draw( user_id, nickname, backer_money, pay_time):
     flag = False  # 是否执行数据库插入语句
     insert_sql = 'insert into t_draw_fu_record (`modian_id`, `fu_idx`, `fu_name`, `update_time`) VALUES '
     for no in range(card_num):
-        draw_rst = can_draw()
-        if not draw_rst:
-            continue
+        # draw_rst = can_draw()
+        # if not draw_rst:
+        #     continue
         flag = True
         idx = util.weight_choice(FU_POOL, FU_CHANCE)
 
