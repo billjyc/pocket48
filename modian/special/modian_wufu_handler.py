@@ -60,14 +60,16 @@ def draw( user_id, nickname, backer_money, pay_time):
     fu_dict = {}
 
     flag = False  # 是否执行数据库插入语句
-    insert_sql = 'insert into t_draw_fu_record (`modian_id`, `fu_idx`, `fu_name`) VALUES '
+    insert_sql = 'insert into t_draw_fu_record (`modian_id`, `fu_idx`, `fu_name`, `update_time`) VALUES '
     for no in range(card_num):
         draw_rst = can_draw()
         if not draw_rst:
             continue
         flag = True
         idx = util.weight_choice(FU_POOL, FU_CHANCE)
-        insert_sql += '({}, {}, \'{}\'), '.format(user_id, idx, FU_POOL[idx])
+
+        insert_sql += '({}, {}, \'{}\', \'{}\'), '.format(user_id, idx, FU_POOL[idx],
+                                                          util.convert_timestamp_to_timestr(int(time.time() * 1000)))
         if idx not in fu_dict:
             fu_dict[idx] = 1
         else:
@@ -79,12 +81,12 @@ def draw( user_id, nickname, backer_money, pay_time):
     for key, value in fu_dict.items():
         report += '{}*{}, '.format(FU_POOL[key], value)
     if flag:
-        print(insert_sql)
-        mysql_util.query(insert_sql[:-1])
+        print(insert_sql.strip()[:-1])
+        mysql_util.query(insert_sql.strip()[:-1])
     print(report)
     return report
 
 
 if __name__ == "__main__":
-    draw('1234', '23443', 101.7, '2019-02-06 16:00:00')
+    draw('123', 'billjyc1', 101.7, '2019-02-06 16:00:00')
 
