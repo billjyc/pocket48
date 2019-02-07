@@ -77,14 +77,14 @@ def draw( user_id, nickname, backer_money, pay_time):
 
     if len(fu_dict) < 0:
         return ''
-    report = '恭喜抽中:\n'
+    report = '恭喜抽中: '
     for key, value in fu_dict.items():
         report += '{}*{}, '.format(FU_POOL[key], value)
     if flag:
         print(insert_sql.strip()[:-1])
         mysql_util.query(insert_sql.strip()[:-1])
     print(report)
-    return report
+    return report + '\n'
 
 
 if __name__ == "__main__":
