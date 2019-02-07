@@ -75,7 +75,7 @@ def draw( user_id, nickname, backer_money, pay_time):
         else:
             fu_dict[idx] += 1
 
-    if len(fu_dict) < 0:
+    if len(fu_dict) <= 0:
         return ''
     report = '恭喜抽中: '
     for key, value in fu_dict.items():
