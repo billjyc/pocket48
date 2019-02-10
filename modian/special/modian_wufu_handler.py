@@ -88,5 +88,5 @@ def draw( user_id, nickname, backer_money, pay_time):
 
 
 if __name__ == "__main__":
-    draw('123', 'billjyc1', 101.7, '2019-02-06 16:00:00')
+    draw('987758', 'Nanjo恩恩', 10.17, '2019-02-08 12:00:41')
 
