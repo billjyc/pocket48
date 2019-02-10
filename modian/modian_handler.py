@@ -297,9 +297,9 @@ class ModianHandler:
                 card_report = self.card_draw_handler.draw(user_id, nickname, backer_money, pay_time)
 
             # 集五福
-            fu_report = modian_wufu_handler.draw(user_id, nickname, backer_money, pay_time)
-            if fu_report:
-                msg += fu_report
+            # fu_report = modian_wufu_handler.draw(user_id, nickname, backer_money, pay_time)
+            # if fu_report:
+            #     msg += fu_report
                 # QQHandler.send_to_groups(['483548995'], fu_report)
 
             msg += '%s\n集资项目: %s\n链接: %s\n' % (project_info, pro_name, modian_entity.link)
