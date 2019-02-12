@@ -4,3 +4,4 @@ DBUtils
 PyMySQL
 cqhttp
 SQLalchemy
+mysql-connector
