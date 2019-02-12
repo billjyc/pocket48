@@ -9,13 +9,18 @@ import urllib.parse
 import uuid
 
 import requests
+import logging
 
-from log.my_logger import modian_logger as my_logger
+try:
+    from log.my_logger import modian_logger as my_logger
+except:
+    my_logger = logging.getLogger(__name__)
+
 from modian.modian_card_draw import handler as card_draw_handler
 from qq.qqhandler import QQHandler
 from utils import global_config, util
-from utils.mysql_util import mysql_util
-from modian.special import modian_wufu_handler
+from utils.mysql_util import mysql_util, Base, DBSession
+from sqlalchemy import Column, String, Integer, Float, DateTime
 
 
 class ModianEntity:
@@ -63,6 +68,23 @@ class ModianCountFlagEntity:
         self.remark = remark
 
 
+class Supporter(Base):
+    __tablename__ = 'supporter'
+
+    id = Column(Integer, primary_key=True, name='id')
+    name = Column(String(50), name='name')
+
+
+class ModianOrder(Base):
+    __tablename__ = 'order'
+
+    id = Column(String(100), primary_key=True, name='id')
+    supporter_id = Column(Integer, name='supporter_id')
+    backer_money = Column(Float(10, 2), name='backer_money')
+    pay_time = Column(DateTime, name='pay_time')
+    pro_id = Column(Integer, name='pro_id')
+
+
 class ModianHandler:
     def __new__(cls, *args, **kwargs):
         if not hasattr(cls, 'instance'):
@@ -79,6 +101,7 @@ class ModianHandler:
 
         self.card_draw_handler = card_draw_handler
         self.order_queues = {}
+        self.alchemy_session = DBSession()
 
         # self.mysql_util = MySQLUtil()
 
@@ -151,7 +174,7 @@ class ModianHandler:
             raise RuntimeError('获取项目订单查询失败')
 
     def parse_order_details(self, orders, modian_entity):
-        if len(self.order_queues[modian_entity.pro_id]) == 0:
+        if len(self.order_queues[modian_entity.pro_id]) == 0 and len(orders) == 0:
             my_logger.debug('订单队列为空')
             return
         jiebang_activities = global_config.MODIAN_JIEBANG_ACTIVITIES[modian_entity.pro_id]
@@ -181,17 +204,30 @@ class ModianHandler:
             if oid in self.order_queues[modian_entity.pro_id]:
                 continue
             my_logger.debug('项目%s队列长度: %s', modian_entity.pro_id, len(self.order_queues[modian_entity.pro_id]))
-            # 每次需要更新一下昵称
-            mysql_util.query("""
-                    INSERT INTO `supporter` (`id`, `name`) VALUES (%s, %s)  ON DUPLICATE KEY
-                        UPDATE `name`=%s
-                    """, (user_id, nickname, nickname))
 
-            mysql_util.query("""
-                INSERT INTO `order` (`id`,`supporter_id`,`backer_money`,`pay_time`, `pro_id`) 
-                VALUES (%s, %s, %s, %s, %s) ON DUPLICATE KEY
-                        UPDATE `id`=%s
-            """, (str(oid), user_id, backer_money, pay_time, modian_entity.pro_id, str(oid)))
+            # 每次需要更新一下昵称
+            try:
+                supporter = Supporter(id=user_id, name=nickname)
+                self.alchemy_session.merge(supporter)
+            except Exception as e:
+                my_logger.exception(e)
+                mysql_util.query("""
+                        INSERT INTO `supporter` (`id`, `name`) VALUES (%s, %s)  ON DUPLICATE KEY
+                            UPDATE `name`=%s
+                        """, (user_id, nickname, nickname))
+
+            try:
+                # 创建对象
+                modian_order = ModianOrder(id=str(oid), supporter_id=user_id, backer_money=backer_money, pay_time=pay_time,
+                                           pro_id=modian_entity.pro_id)
+                self.alchemy_session.merge(modian_order)
+            except Exception as e:
+                my_logger.exception(e)
+                mysql_util.query("""
+                    INSERT INTO `order` (`id`,`supporter_id`,`backer_money`,`pay_time`, `pro_id`) 
+                    VALUES (%s, %s, %s, %s, %s) ON DUPLICATE KEY
+                            UPDATE `id`=%s
+                """, (str(oid), user_id, backer_money, pay_time, modian_entity.pro_id, str(oid)))
 
             msg = '感谢 %s(%s) 支持了%s元, %s\n' % (nickname, user_id, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
             daka_rank, support_days = self.find_user_daka_rank(user_id, modian_entity.pro_id)
@@ -333,6 +369,8 @@ class ModianHandler:
 
         except Exception as e:
             my_logger.exception(e)
+
+        self.alchemy_session.commit()
         # finally:
         #     conn.commit()
         #     cursor.close()
@@ -582,16 +620,23 @@ class ModianHandler:
 
         my_logger.info(msg)
         return msg
-
-
         # QQHandler.send_to_groups(modian_handler.modian_notify_groups, msg)
 
 
 if __name__ == '__main__':
+
     user_id = '123456'
-    back_time = '2018-02-28 12:00'
+    back_time = '2019-02-12 20:30:00'
     oid = uuid.uuid3(uuid.NAMESPACE_OID, user_id+back_time)
     oid2 = uuid.uuid3(uuid.NAMESPACE_OID, user_id+back_time)
+
+    session = DBSession()
+
+    modian_order = ModianOrder(id=str(oid), supporter_id=user_id, backer_money=10.17, pay_time='2019-02-12 20:30:00',
+                               pro_id=47857)
+    session.merge(modian_order)
+    session.commit()
+    session.close()
 
     print(oid == oid2)
 
