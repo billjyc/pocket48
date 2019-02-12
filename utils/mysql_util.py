@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import pymysql
 import logging
+
+import pymysql
+
 try:
     from log.my_logger import logger
 except:
@@ -9,6 +11,9 @@ except:
 
 from DBUtils.PooledDB import PooledDB
 from utils import db_config as Config
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
 
 class MySQLUtil:
@@ -98,6 +103,12 @@ class MySQLUtil:
 
 mysql_util = MySQLUtil()
 
+engine = create_engine('mysql+mysqlconnector://{}:{}@{}:{}/{}'.format(Config.DB_USER, Config.DB_PASSWORD,
+                                                                      Config.DB_HOST, Config.DB_PORT,
+                                                                      Config.DB_DBNAME))
+DBSession = sessionmaker(bind=engine)
+Base = declarative_base()
+
 
 if __name__ == '__main__':
     # mysql_util = MySQLUtil()
@@ -108,12 +119,10 @@ if __name__ == '__main__':
     sql2 = """
         INSERT INTO `supporter` (`id`, `name`) VALUES (%s, %s) 
     """
-    params = (13566, )
-    params2 = (123, '熟练地')
-    rst = mysql_util.query(sql2, params2)
+
+    # params = (13566,)
+    # params2 = (123, '熟练地')
+    # rst = mysql_util.query(sql2, params2)
     # print(rst)
     # print(type(rst))
     # print(rst[0][0])
-
-
-
