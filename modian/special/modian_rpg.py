@@ -235,6 +235,8 @@ class Event:
 
 
 def handle_event(pay_amount, character):
+    if game_is_over(character.id):
+        return '游戏结束'
     result = ''
     event_list_j = event_json[str(int(pay_amount))]
     event_list = []
@@ -564,6 +566,29 @@ def get_all_character():
                                   int(a[4]), int(a[5]), int(a[6]))
             character_list.append(character)
     return character_list
+
+
+def game_is_over(modian_id=None):
+    """
+    游戏是否结束
+    :param modian_id: 当前id
+    :return:
+    """
+    # 20个人拥有梦之碎片
+    rst = mysql_util.select_one("""
+           SELECT count(*) FROM `t_character` WHERE `num_of_fragment`>%s
+       """, (0,))
+    if rst[0] >= 20:
+        return True
+    # 该用户拥有7个梦之碎片
+    if modian_id:
+        rst = mysql_util.select_one("""
+                   SELECT `num_of_fragment` FROM `t_character` WHERE `modian_id`=%s
+               """, (modian_id,))
+        if rst:
+            if rst[0] >= 7:
+                return True
+    return False
 
 
 def read_skill_list():
