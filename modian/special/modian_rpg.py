@@ -132,7 +132,10 @@ class Character:
         random_direction = util.choice(ds)[0]
         random_dist = random.randint(1, GAME_MAP.row)
         my_logger.info('随机移动')
+        result = '移动方向: {}, 移动距离: {}, '.format(random_direction, random_dist)
         self.move(random_direction, random_dist)
+        result += '当前位置: {}\n'.format(self.current_point)
+        return result
 
     def use_good(self, good):
         """
@@ -271,12 +274,12 @@ def handle_event(pay_amount, character):
                 character.use_good(Good('没有被NPC发现', 0, 3, 0, 5, 0))
                 event_id = 4012
             else:
-                result += '{}发现你啦，{}被遣送回学院\n运气-2，专注-5，返回出生点'.format(hit, character.name, character.name)
+                result += '{}发现你啦，{}被遣送回学院\n运气-2，专注-5，返回出生点\n'.format(hit, character.name, character.name)
                 character.use_good(Good('战斗胜利', 0, -5, 0, -2, 0))
                 # 返回出生点
                 character.return_to_origin()
                 event_id = 4013
-        character.random_move()
+        result += character.random_move()
         save_character(character)
     elif choice.id == 402:  # 个体-物品
         idx = random.randint(0, 1)
@@ -322,7 +325,7 @@ def handle_event(pay_amount, character):
             #     character.use_good(Good('奸商', 0, 0, 0, -8, 0))
             #     event_id = 4024
             #     event_remark = equipment.name
-        character.random_move()
+        result += character.random_move()
         save_character(character)
     elif choice.id == 403:  # 互动-相识
         all_character = get_all_character()
@@ -330,11 +333,15 @@ def handle_event(pay_amount, character):
         # locations = ['酒肆', '茶馆', '驿站']
         # location = util.choice(locations)[0]
         result += '【{}】在这看到了一个身影，原来也是偷跑出来的【{}】，认识一下吧。\n'.format(character.name, rand_character.name)
+        result += character.random_move()
+        save_character(character)
         event_remark = rand_character.name
     elif choice.id == 404:  # 互动-交恶
         all_character = get_all_character()
         rand_character = util.choice(all_character)[0]
         result += '【{}】发现，原来这里还有【{}】，不能让他就这么溜过去，让他暴露吧。\n'.format(character.name, rand_character.name)
+        result += character.random_move()
+        save_character(character)
         event_remark = rand_character.name
     elif choice.id == 405:  # 互动-PK
         all_character = get_all_character()
@@ -366,20 +373,21 @@ def handle_event(pay_amount, character):
             character.use_good(Good('PK失败', -6, -5, -5, -3, -8))
             rand_character.use_good(Good('PK胜利', 6, 5, 5, 3, 8))
             event_id = 4052
-        character.random_move()
+        result += character.random_move()
         save_character(character)
         save_character(rand_character)
     elif choice.id == 406:  # 互动-学院势力
         # TODO
         result += '学院压制'
         event_remark = '学院压制'
+        result += character.random_move()
     elif choice.id == 301:  # 学艺-基础
         skill = util.choice(skill1_list)[0]
         character.use_good(skill)
         result += '【{}】刻苦修炼，终于习得【{}】，\n{}\n'.format(character.name, skill.name,
                                                     skill.property_change())
         event_remark = skill.name
-        character.random_move()
+        result += character.random_move()
         save_character(character)
     elif choice.id == 302:  # 学艺-进阶
         skill = util.choice(skill2_list)[0]
@@ -387,7 +395,7 @@ def handle_event(pay_amount, character):
         result += '【{}】刻苦修炼，终于习得【{}】，\n{}\n'.format(character.name, skill.name,
                                                     skill.property_change())
         event_remark = skill.name
-        character.random_move()
+        result += character.random_move()
         save_character(character)
     elif choice.id == 201:  # 门派
         mentor = util.choice(SCHOOLS)[0]
@@ -399,17 +407,19 @@ def handle_event(pay_amount, character):
         character.prop4 += 20
         character.prop5 += 40
         event_remark = mentor
-        character.random_move()
+        result += character.random_move()
         save_character(character)
     elif choice.id == 101:  # 其他-得子
         name = ['子', '女', '哪吒']
         choice_name = util.choice(name)[0]
         result += '行走江湖，总有意外，【{}】十月怀胎，诞下一{}。\n'.format(character.name, choice_name)
         event_remark = choice_name
+        result += character.random_move()
+        save_character(character)
     elif choice.id == 102:  # 其他-称号升级
         result += '【{}】武功日益精进，救死扶伤匡扶正义，昔日的【无名小侠】如今已【名震江湖】，魅力+88\n'.format(character.name, )
         character.prop5 += 88
-        character.random_move()
+        result += character.random_move()
         save_character(character)
         event_remark = '称号升级'
     my_logger.debug('触发事件后属性: %s' % character)
