@@ -470,16 +470,16 @@ def create_character(modian_id, modian_name):
     """, (modian_id, modian_name, prop1, prop2, prop3, prop4, prop5))
 
     intro_words = [
-        "郁雷之声渐响，轰轰不绝。河海尚远，而耳中尽是浪涛之声。 似有一名字伴雷声入耳，仔细辨来，名为：【{}】。".format(modian_name),
-        "湖山深处,但见竹木阴森,苍翠重叠,不雨而润,不烟而晕, 晨雾朦胧处现一少年，“在下【{}】，请问此处可是星梦谷？”".format(modian_name),
-        "月照竹林风飞叶，竹影之下见刀光。小侠籍籍无名，仅有此片竹林识得其名为【{}】".format(modian_name),
-        "嗖的一声，一支羽箭从山坳后射了出来，呜呜声响，划过长空，【{}】松开弓弦，雁落平沙。".format(modian_name),
-        "灯宵月夕，雪际花时，市集喧闹却也听得句柔声细语：“这文书写有【{}】之名，可是你掉的？”".format(modian_name)
+        "樱桃树绽放出粉红的花朵，当微风吹过的时候，花瓣便在树枝上轻轻抖动，在这段沿盘山的小路上走来一位魔法师，胸前的徽章上似乎是一只小熊猫，那是【{}】。".format(modian_name),
+        "一道高大的身影出现在城堡正门前，遮住了门外照进的阳光，他似乎抬头望向了“瘦夫人”的画像，“吾【{}】，请问此处可是“葛绿元少”？”".format(modian_name),
+        "纯血即是正义！我是高贵！纯真！有抱负的【{}】，“丝来特别灵”是我的目标".format(modian_name),
+        "“啊啊啊啊啊”伴随着一阵高昂的惨叫声，“啦闻唠嗑”的塔楼上方划过一道骑着扫帚的身影。那是！恐高症的【{}】".format(modian_name),
+        "⑤	窗外，一阵急促的扑打翅膀的声音传来，一只猫头鹰停在了窗台前，它伸出了左爪将一封有着红色蜡封和盾牌纹章的羊皮信放在了窗台上。【{}】拿起了这封信。".format(modian_name)
     ]
     # 随机挑选一个出场方式
     intro = util.choice(intro_words)
     report_str = '%s\n' % intro[0]
-    report_str += '%s的武侠世界开启, 属性：\n攻: %s, 防: %s, 气: %s, 运: %s, 魅力: %s\n' % (
+    report_str += '%s的的魔法世界开启, 属性：\n攻: %s, 防: %s, 气: %s, 运: %s, 魅力: %s\n' % (
         modian_name, prop1, prop2, prop3, prop4, prop5)
     return report_str
 
