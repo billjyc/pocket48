@@ -486,7 +486,8 @@ def create_character(modian_id, modian_name):
 
 def donate(modian_id, pay_amount, modian_name):
     MIN_AMOUNT = 10
-    pay_amount = pay_amount * 48
+    times = random.randint(10, 200)
+    pay_amount = pay_amount * times
     rst = ''
     has_created, character = created(modian_id)
     if has_created:
