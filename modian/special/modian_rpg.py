@@ -485,7 +485,8 @@ def create_character(modian_id, modian_name):
 
 
 def donate(modian_id, pay_amount, modian_name):
-    MIN_AMOUNT = 1
+    MIN_AMOUNT = 10
+    pay_amount = pay_amount * 48
     rst = ''
     has_created, character = created(modian_id)
     if has_created:
@@ -495,7 +496,7 @@ def donate(modian_id, pay_amount, modian_name):
         if pay_amount < MIN_AMOUNT:
             return ''
         tmp = pay_amount
-        amounts = [20, 10, 5, 2, 1]
+        amounts = [200, 100, 50, 20, 10]
         # amounts = [i / 10 for i in amounts]
         max_event = 3  # 最多触发3次事件
         idx = 0
@@ -503,7 +504,10 @@ def donate(modian_id, pay_amount, modian_name):
             event_time = int(tmp / amounts[idx])
             event_time = max_event if event_time > max_event else event_time
             for i in range(event_time):
-                sub_event_str = handle_event(amounts[idx], character)
+                try:
+                    sub_event_str = handle_event(amounts[idx], character)
+                except Exception as e:
+                    my_logger.exception(e)
                 rst += sub_event_str
                 my_logger.debug(sub_event_str)
                 # rst += '----------------------------\n'
