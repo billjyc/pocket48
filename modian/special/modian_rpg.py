@@ -474,12 +474,12 @@ def create_character(modian_id, modian_name):
         "一道高大的身影出现在城堡正门前，遮住了门外照进的阳光，他似乎抬头望向了“瘦夫人”的画像，“吾【{}】，请问此处可是“葛绿元少”？”".format(modian_name),
         "纯血即是正义！我是高贵！纯真！有抱负的【{}】，“丝来特别灵”是我的目标".format(modian_name),
         "“啊啊啊啊啊”伴随着一阵高昂的惨叫声，“啦闻唠嗑”的塔楼上方划过一道骑着扫帚的身影。那是！恐高症的【{}】".format(modian_name),
-        "⑤	窗外，一阵急促的扑打翅膀的声音传来，一只猫头鹰停在了窗台前，它伸出了左爪将一封有着红色蜡封和盾牌纹章的羊皮信放在了窗台上。【{}】拿起了这封信。".format(modian_name)
+        "窗外，一阵急促的扑打翅膀的声音传来，一只猫头鹰停在了窗台前，它伸出了左爪将一封有着红色蜡封和盾牌纹章的羊皮信放在了窗台上。【{}】拿起了这封信。".format(modian_name)
     ]
     # 随机挑选一个出场方式
     intro = util.choice(intro_words)
     report_str = '%s\n' % intro[0]
-    report_str += '%s的的魔法世界开启, 属性：\n攻: %s, 防: %s, 气: %s, 运: %s, 魅力: %s\n' % (
+    report_str += '【%s】的魔法世界开启, 属性：\n攻: %s, 防: %s, 气: %s, 运: %s, 魅力: %s\n' % (
         modian_name, prop1, prop2, prop3, prop4, prop5)
     return report_str
 
