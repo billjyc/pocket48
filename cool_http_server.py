@@ -128,8 +128,15 @@ def handle_msg(context):
                     get_jizi_ranking_list_by_date(context, 0)
                 elif message == '-yesterday':
                     get_jizi_ranking_list_by_date(context, 1)
-                elif message == '-排行榜':
-                    get_huitui_rank(context)
+                # elif message == '-排行榜':
+                #     get_huitui_rank(context)
+                elif message == '-help':
+                    help_msg = """
+                        查询当前集卡情况: 【-查询 摩点ID】，
+                        积分抽卡（积分数量必须是15的倍数）: 【-积分抽 摩点ID 积分数量】，
+                        补抽卡: 【-补抽 摩点ID 补抽金额】
+                    """
+                    bot.send(context, help_msg)
                 elif message.startswith('-查询'):
                     strs = message.split(' ')
                     if len(strs) == 2:
@@ -158,16 +165,16 @@ def handle_msg(context):
                         draw_missed_card(context, strs[1], strs[2])
                     else:
                         bot.send(context, '格式为【-补抽 摩点ID 补抽金额】的形式，请重试~')
-                elif message.upper() == '-PK':
-                    try:
-                        from modian_plugin import modian_handler
-                        message = modian_handler.pk_modian_activity()
-                        bot.send(context, message)
-                    except Error as e:
-                        logger.exception(e)
-                    except Exception as e:
-                        logger.exception(e)
-                        bot.send(context, '查询PK出现错误！')
+                # elif message.upper() == '-PK':
+                #     try:
+                #         from modian_plugin import modian_handler
+                #         message = modian_handler.pk_modian_activity()
+                #         bot.send(context, message)
+                #     except Error as e:
+                #         logger.exception(e)
+                #     except Exception as e:
+                #         logger.exception(e)
+                #         bot.send(context, '查询PK出现错误！')
             else:
                 bot.send(context, '目前并没有正在进行的集资项目T_T')
     except Error:
