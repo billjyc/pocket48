@@ -208,27 +208,29 @@ class ModianHandler:
 
             # 每次需要更新一下昵称
             try:
-                supporter = Supporter(id=user_id, name=nickname)
-                self.alchemy_session.merge(supporter)
+                # supporter = Supporter(id=user_id, name=nickname)
+                # self.alchemy_session.merge(supporter)
+                mysql_util.query("""
+                                        INSERT INTO `supporter` (`id`, `name`) VALUES (%s, %s)  ON DUPLICATE KEY
+                                            UPDATE `name`=%s
+                                        """, (user_id, nickname, nickname))
             except Exception as e:
                 my_logger.exception(e)
-                mysql_util.query("""
-                        INSERT INTO `supporter` (`id`, `name`) VALUES (%s, %s)  ON DUPLICATE KEY
-                            UPDATE `name`=%s
-                        """, (user_id, nickname, nickname))
+
 
             try:
                 # 创建对象
-                modian_order = ModianOrder(id=str(oid), supporter_id=user_id, backer_money=backer_money, pay_time=pay_time,
-                                           pro_id=modian_entity.pro_id)
-                self.alchemy_session.merge(modian_order)
+                # modian_order = ModianOrder(id=str(oid), supporter_id=user_id, backer_money=backer_money, pay_time=pay_time,
+                #                            pro_id=modian_entity.pro_id)
+                # self.alchemy_session.merge(modian_order)
+                mysql_util.query("""
+                                    INSERT INTO `order` (`id`,`supporter_id`,`backer_money`,`pay_time`, `pro_id`) 
+                                    VALUES (%s, %s, %s, %s, %s) ON DUPLICATE KEY
+                                            UPDATE `id`=%s
+                                """, (str(oid), user_id, backer_money, pay_time, modian_entity.pro_id, str(oid)))
             except Exception as e:
                 my_logger.exception(e)
-                mysql_util.query("""
-                    INSERT INTO `order` (`id`,`supporter_id`,`backer_money`,`pay_time`, `pro_id`) 
-                    VALUES (%s, %s, %s, %s, %s) ON DUPLICATE KEY
-                            UPDATE `id`=%s
-                """, (str(oid), user_id, backer_money, pay_time, modian_entity.pro_id, str(oid)))
+
 
             msg = '感谢 %s(%s) 支持了%s元, %s\n' % (nickname, user_id, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
             daka_rank, support_days = self.find_user_daka_rank(user_id, modian_entity.pro_id)
