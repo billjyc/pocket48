@@ -258,7 +258,7 @@ class Pocket48Handler:
                 if extInfo['role'] != 2:  # 其他成员的消息
                     task.unread_other_member_msg_amount += 1
                     member_name = extInfo['senderName']
-                    if member_name == '你们的小可爱':
+                    if member_name == '19岁了还是小可爱':
                         member_name = 'YBY'
                     if member_name not in task.other_members_names:
                         task.other_members_names.append(member_name)
