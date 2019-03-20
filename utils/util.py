@@ -159,7 +159,7 @@ def weight_choice(candidate, weight):
     weight_sum = int(sum(weight))
 
     if weight_sum != 100:
-        raise RuntimeError('权重设置有误，权重之和不为100')
+        raise RuntimeError('权重设置有误，权重之和不为100，实际值为: {}'.format(weight_sum))
 
     t = random.randint(0, weight_sum*10 - 1) / 10
     for i, val in enumerate(weight):
