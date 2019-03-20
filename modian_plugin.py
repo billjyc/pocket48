@@ -245,7 +245,7 @@ def sync_order():
 
             rst = mysql_util.select_one("""
                     select * from `order` where id='%s'
-                """, (oid,))
+                """, (str(oid),))
             if len(rst) == 0:
                 my_logger.info('该订单不在数据库中')
                 # 每次需要更新一下昵称
