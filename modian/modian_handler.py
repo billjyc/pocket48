@@ -333,7 +333,7 @@ class ModianHandler:
             # 抽卡播报
             card_report = ''
             if global_config.MODIAN_CARD_DRAW:
-                card_report = self.card_draw_handler.draw(user_id, nickname, backer_money * 100, pay_time)
+                card_report = self.card_draw_handler.draw(user_id, nickname, backer_money, pay_time)
 
             # 集五福
             # fu_report = modian_wufu_handler.draw(user_id, nickname, backer_money, pay_time)
