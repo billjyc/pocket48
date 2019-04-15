@@ -342,9 +342,9 @@ class ModianHandler:
                 rand_int = random.randint(0, 1)
                 # if modian_entity.pro_id == four_year_anniversary.HUIHUI_PRO_ID:
                 if rand_int == 0:
-                    point = four_year_anniversary.plus_huihui_points(backer_money * 10.17, modian_entity.pro_id, user_id, oid)
+                    point = four_year_anniversary.plus_huihui_points(backer_money * 10.17, modian_entity.pro_id, user_id, str(oid))
                 else:
-                    point = four_year_anniversary.plus_kuankuan_points(backer_money * 10.17, modian_entity.pro_id, user_id, oid)
+                    point = four_year_anniversary.plus_kuankuan_points(backer_money * 10.17, modian_entity.pro_id, user_id, str(oid))
                 four_year_msg = '积分+{}, \n目前战况：\n'.format(point)
                 kuankuan_point, huihui_point = four_year_anniversary.compute_total_points()
                 if kuankuan_point >= huihui_point:
