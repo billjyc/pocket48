@@ -21,6 +21,22 @@ class Member:
         self.pinyin = pinyin
 
 
+class MessageType:
+    TEXT = 'TEXT'  # 文字消息
+    IMAGE = 'IMAGE'  # 图片消息
+    EXPRESS = 'EXPRESS'  # 大表情
+    AUDIO = 'AUDIO'  # 语音
+    VIDEO = 'VIDEO'  # 视频
+
+
+class TextMessageType:
+    TEXT = 'TEXT'  # 普通文字消息
+    REPLY = 'REPLY'  # 普通翻牌
+    FLIPCARD = 'FLIPCARD'  # 鸡腿翻牌
+    LIVEPUSH = 'LIVEPUSH'  # 直播
+    VOTE = 'VOTE'  # 投票
+
+
 class Pocket48ListenTask:
     def __init__(self, member):
         self.member = member
@@ -86,12 +102,10 @@ class Pocket48Handler:
             logger.error('用户名或密码为空')
             return
 
-        login_url = 'https://puser.48.cn/usersystem/api/user/v1/login/phone'
+        login_url = 'https://pocketapi.48.cn/user/api/v1/login/app/mobile'
         params = {
-            'latitude': '0',
-            'longitude': '0',
-            'password': str(password),
-            'account': str(username),
+            'pwd': str(password),
+            'mobile': str(username),
         }
         res = self.session.post(login_url, json=params, headers=self.login_header_args()).json()
         # 登录成功
@@ -102,7 +116,7 @@ class Pocket48Handler:
             logger.info('TOKEN: %s', self.token)
             return True
         else:
-            logger.error('登录失败')
+            logger.error('登录失败, 原因: {}'.format(res['message']))
         return False
 
     def logout(self):
@@ -146,9 +160,11 @@ class Pocket48Handler:
         if not self.is_login:
             logger.error('尚未登录')
         # url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/chat'
-        url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/mainpage'
+        url = 'https://pocketapi.48.cn/im/api/v1/chatroom/msg/list/homeowner'
         params = {
-            "roomId": task.member.room_id, "lastTime": 0, "limit": limit, "chatType": 0
+            "ownerId": task.member.member_id,
+            "roomId": task.member.room_id,
+            "nextTime": 0
         }
         try:
             r = self.session.post(url, data=json.dumps(params), headers=self.juju_header_args(), verify=False)
@@ -171,20 +187,20 @@ class Pocket48Handler:
             task.unread_msg_amount = 0
 
             r1 = self.get_member_room_msg(task)
-            r2 = self.get_member_room_comment(task)
+            # r2 = self.get_member_room_comment(task)
 
             r1_json = json.loads(r1)
-            r2_json = json.loads(r2)
+            # r2_json = json.loads(r2)
             for r in r1_json['content']['data']:
                 msg_id = r['msgidClient']
                 task.member_room_msg_ids.append(msg_id)
 
-            for r in r2_json['content']['data']:
-                msg_id = r['msgidClient']
-                task.member_room_comment_ids.append(msg_id)
+            # for r in r2_json['content']['data']:
+            #     msg_id = r['msgidClient']
+            #     task.member_room_comment_ids.append(msg_id)
 
             logger.debug('成员{}消息队列: {}'.format(task.member.name, len(task.member_room_msg_ids)))
-            logger.debug('{}房间评论队列: {}'.format(task.member.name, len(task.member_room_comment_ids)))
+            # logger.debug('{}房间评论队列: {}'.format(task.member.name, len(task.member_room_comment_ids)))
             logger.debug('{}房间未读消息数量: {}'.format(task.member.name, task.unread_msg_amount))
         except Exception as e:
             logger.error('初始化{}消息队列失败'.format(task.member.name))
@@ -243,7 +259,7 @@ class Pocket48Handler:
         """
         logger.debug('parse room msg response: %s', response)
         rsp_json = json.loads(response)
-        msgs = rsp_json['content']['data']
+        msgs = rsp_json['content']['message']
         cursor = self.conn.cursor()
 
         message = ''
@@ -255,9 +271,9 @@ class Pocket48Handler:
                 if msg_id in task.member_room_msg_ids:
                     continue
 
-                if extInfo['role'] != 2:  # 其他成员的消息
+                if extInfo['sessionRole'] != 2:  # 其他成员的消息
                     task.unread_other_member_msg_amount += 1
-                    member_name = extInfo['senderName']
+                    member_name = extInfo['user']['nickName']
                     if member_name == '19岁了还是小可爱':
                         member_name = 'YBY'
                     if member_name not in task.other_members_names:
@@ -268,109 +284,124 @@ class Pocket48Handler:
                 logger.debug('成员消息')
                 task.member_room_msg_ids.append(msg_id)
 
-                message_object = extInfo['messageObject']
+                message_object = extInfo['messageType']
+                msg_time = util.convert_timestamp_to_timestr(msg["msgTime"])
 
                 logger.debug('extInfo.keys():' + ','.join(extInfo.keys()))
-                if msg['msgType'] == 0:  # 文字消息
-                    if message_object == 'text':  # 普通消息
+                if msg['msgType'] == MessageType.TEXT:  # 文字消息
+                    if message_object == TextMessageType.TEXT:  # 普通消息
                         logger.debug('普通消息')
                         message = ('【成员消息】[%s]-%s: %s\n' % (
-                            msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])) + message
+                            msg_time, extInfo['user']['nickName'], extInfo['text'])) + message
                         cursor.execute("""
                             INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
                             (?, ?, ?, ?, ?, ?)
                         """, (
-                            msg_id, 100, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'],
+                            msg_id, 100, extInfo['user']['userId'], extInfo['user']['userName'], msg_time,
                             extInfo['text']))
-                    elif message_object == 'faipaiText':  # 翻牌消息
+                    elif message_object == TextMessageType.REPLY:  # 翻牌消息
                         logger.debug('翻牌')
-                        member_msg = extInfo['messageText']
-                        fanpai_msg = extInfo['faipaiContent']
-                        fanpai_id = self.get_fanpai_name(extInfo['faipaiUserId'])
+                        member_msg = extInfo['text']
+                        fanpai_msg = extInfo['replyText']
+                        fanpai_id = extInfo['replyName']
                         # message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s:%s\n' % (msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_id, fanpai_msg)) + message
                         if fanpai_id:
                             message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s: %s\n' % (
-                                msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_id, fanpai_msg)) + message
+                                msg_time, extInfo['user']['nickName'], member_msg, fanpai_id, fanpai_msg)) + message
                         else:
                             message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s\n' % (
-                                msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_msg)) + message
+                                msg_time, extInfo['user']['nickName'], member_msg, fanpai_msg)) + message
                         cursor.execute("""
                                         INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content, fans_comment) VALUES
                                         (?, ?, ?, ?, ?, ?, ?)
                                 """, (
-                            msg_id, 101, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], member_msg,
+                            msg_id, 101, extInfo['user']['userId'], extInfo['user']['nickName'], msg_time, member_msg,
                             fanpai_msg))
-                    # TODO: 直播可以直接在房间里监控
-                    elif message_object == 'diantai':  # 电台直播
-                        logger.debug('电台直播')
-                        reference_content = extInfo['referenceContent']
-                        live_id = extInfo['referenceObjectId']
-                    elif message_object == 'live':  # 露脸直播
-                        logger.debug('露脸直播')
-                        reference_content = extInfo['referenceContent']
-                        live_id = extInfo['referenceObjectId']
-                    elif message_object == 'idolFlip':
+                    elif message_object == TextMessageType.LIVEPUSH:  # 直播
+                        logger.debug('直播')
+                        live_title = extInfo['liveTitle']
+                        live_id = extInfo['liveId']
+                        playStreamPath, playDetail = self.get_live_detail(live_id)
+                        # TODO: 发消息
+                    elif message_object == TextMessageType.VOTE:  # 投票
+                        logger.debug('投票消息')
+                        vote_content = extInfo['text']
+                        message = '[发起投票]{}'.format(vote_content)
+                        cursor.execute("""
+                                        INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, 
+                                        content, fans_comment) VALUES
+                                        (?, ?, ?, ?, ?, ?, ?)
+                                    """, (
+                            msg_id, 104, extInfo['user']['userId'], extInfo['user']['nickName'], msg['msgTime'], vote_content,
+                            ''))
+                    elif message_object == TextMessageType.FLIPCARD:
                         logger.debug('付费翻牌功能')
-                        user_name = extInfo['idolFlipUserName']
-                        title = extInfo['idolFlipTitle']
-                        content = extInfo['idolFlipContent']
+                        # user_name = extInfo['idolFlipUserName']
+                        content = extInfo['question']
 
-                        question_id = extInfo['idolFlipQuestionId']
-                        answer_id = extInfo['idolFlipAnswerId']
-                        source = extInfo['idolFlipSource']
-                        answer = self.parse_idol_flip(question_id, answer_id, source)
+                        question_id = extInfo['questionId']
+                        answer_id = extInfo['answerId']
+                        source = extInfo['sourceId']
+                        answer = extInfo['answer']
 
-                        flip_message = ('【问】%s: %s\n【答】%s: %s\n翻牌时间: %s\n' % (
-                            user_name, content, extInfo['senderName'], answer, msg['msgTimeStr']))
+                        flip_message = ('【问】%s\n【答】%s: %s\n翻牌时间: %s\n' % (
+                            content, extInfo['user']['nickName'], answer, msg_time))
                         message = flip_message + message
                         # QQHandler.send_to_groups(['108323016'], flip_message)
                         cursor.execute("""
                             INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content, fans_comment) VALUES
                             (?, ?, ?, ?, ?, ?, ?)
-                            """, (msg_id, 105, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], answer,
-                                  user_name + ': ' + content))
-                elif msg['msgType'] == 1:  # 图片消息
+                            """, (msg_id, 105, extInfo['user']['userId'], extInfo['user']['nickName'], msg_time, answer,
+                                  content))
+                elif msg['msgType'] == MessageType.IMAGE:  # 图片消息
                     bodys = json.loads(msg['bodys'])
                     logger.debug('图片')
                     if 'url' in bodys.keys():
                         url = bodys['url']
                         if global_config.USING_COOLQ_PRO is True:
                             message = ('【图片】[%s]-%s: [CQ:image,file=%s]\n' % (
-                                msg['msgTimeStr'], extInfo['senderName'], url)) + message
+                                msg_time, extInfo['user']['nickName'], url)) + message
                         else:
-                            message = ('【图片】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
+                            message = ('【图片】[%s]-%s: %s\n' % (msg_time, extInfo['user']['nickName'], url)) + message
                         cursor.execute("""
                            INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
                                                             (?, ?, ?, ?, ?, ?)
-                        """, (msg_id, 200, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], url))
+                        """, (msg_id, 200, extInfo['user']['userId'], extInfo['nickName'], msg_time, url))
 
-                elif msg['msgType'] == 2:  # 语音消息
+                elif msg['msgType'] == MessageType.AUDIO:  # 语音消息
                     logger.debug('语音消息')
                     bodys = json.loads(msg['bodys'])
                     if 'url' in bodys.keys():
                         url = bodys['url']
                         if global_config.USING_COOLQ_PRO is True:
-                            message3 = ('【语音】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url))
+                            message3 = ('【语音】[%s]-%s: %s\n' % (msg_time, extInfo['user']['nickName'], url))
                             logger.info(message3)
                             # 语音消息直接单条发送
                             message2 = '[CQ:record,file=%s]\n' % url
                             QQHandler.send_to_groups(task.member_room_msg_groups, message2)
                         else:
-                            message = ('【语音】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
+                            message = ('【语音】[%s]-%s: %s\n' % (msg_time, extInfo['user']['nickName'], url)) + message
                         cursor.execute("""
                             INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
                                                        (?, ?, ?, ?, ?, ?)
-                         """, (msg_id, 201, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], url))
-                elif msg['msgType'] == 3:  # 小视频
+                         """, (msg_id, 201, extInfo['user']['userId'], extInfo['user']['nickName'], msg_time, url))
+                elif msg['msgType'] == MessageType.VIDEO:  # 小视频
                     logger.debug('房间小视频')
                     bodys = json.loads(msg['bodys'])
                     if 'url' in bodys.keys():
                         url = bodys['url']
-                        message = ('【小视频】[%s]-%s: %s\n' % (msg['msgTimeStr'], extInfo['senderName'], url)) + message
+                        message = ('【小视频】[%s]-%s: %s\n' % (msg_time, extInfo['user']['nickName'], url)) + message
                         cursor.execute("""
                          INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
                                         (?, ?, ?, ?, ?, ?)
-                        """, (msg_id, 202, extInfo['senderId'], extInfo['senderName'], msg['msgTimeStr'], url))
+                        """, (msg_id, 202, extInfo['user']['userId'], extInfo['user']['nickName'], msg_time, url))
+                elif msg['msgType'] == MessageType.EXPRESS:  # 大表情
+                    logger.debug('大表情')
+                    emotion_name = extInfo['emotionName']
+                    cursor.execute("""
+                            INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
+                                                       (?, ?, ?, ?, ?, ?)
+                         """, (msg_id, 203, extInfo['user']['userId'], extInfo['user']['nickName'], msg_time, emotion_name))
 
             if message and len(task.member_room_msg_groups) > 0:
                 QQHandler.send_to_groups(task.member_room_msg_groups, message)
@@ -503,16 +534,18 @@ class Pocket48Handler:
         :return:
         """
         header = {
-            'os': 'android',
-            'User-Agent': 'Mobile_Pocket',
-            'IMEI': global_config.IMEI,
-            'token': '0',
-            'version': global_config.POCKET48_VERSION,
             'Content-Type': 'application/json;charset=utf-8',
-            # 'Content-Length': '74',
-            'Host': 'puser.48.cn',
-            'Connection': 'Keep-Alive',
-            'Accept-Encoding': 'gzip'
+            'User-Agent': 'PocketFans201807/6.0.0 (iPhone; iOS 12.2; Scale/2.00)',
+            'appInfo': {
+                'vendor': 'apple',
+                'deviceId': 0,
+                "appVersion": global_config.POCKET48_VERSION,
+                "appBuild": "190409",
+                "osVersion": "12.2.0",
+                "osType": "ios",
+                "deviceName": "iphone",
+                "os": "ios"
+            }
         }
         return header
 
@@ -522,16 +555,19 @@ class Pocket48Handler:
         :return:
         """
         header = {
-            'os': 'android',
-            'User-Agent': 'Mobile_Pocket',
-            'IMEI': global_config.IMEI,
-            'token': self.token,
-            'version': global_config.POCKET48_VERSION,
             'Content-Type': 'application/json;charset=utf-8',
-            'Host': 'plive.48.cn',
-            'Connection': 'Keep-Alive',
-            'Accept-Encoding': 'gzip'
-            # 'Cache-Control': 'no-cache'
+            'User-Agent': 'PocketFans201807/6.0.0 (iPhone; iOS 12.2; Scale/2.00)',
+            'appInfo': {
+                'vendor': 'apple',
+                'deviceId': 0,
+                "appVersion": global_config.POCKET48_VERSION,
+                "appBuild": "190409",
+                "osVersion": "12.2.0",
+                "osType": "ios",
+                "deviceName": "iphone",
+                "os": "ios"
+            },
+            'token': self.token
         }
         return header
 
@@ -542,16 +578,19 @@ class Pocket48Handler:
         """
         logger.debug('token: %s', self.token)
         header = {
-            'os': 'android',
-            'User-Agent': 'Mobile_Pocket',
-            'IMEI': global_config.IMEI,
-            'token': self.token,
-            'version': global_config.POCKET48_VERSION,
             'Content-Type': 'application/json;charset=utf-8',
-            'Host': 'pjuju.48.cn',
-            'Connection': 'Keep-Alive',
-            'Accept-Encoding': 'gzip'
-            # 'Cache-Control': 'no-cache'
+            'User-Agent': 'PocketFans201807/6.0.0 (iPhone; iOS 12.2; Scale/2.00)',
+            'appInfo': {
+                'vendor': 'apple',
+                'deviceId': 0,
+                "appVersion": global_config.POCKET48_VERSION,
+                "appBuild": "190409",
+                "osVersion": "12.2.0",
+                "osType": "ios",
+                "deviceName": "iphone",
+                "os": "ios"
+            },
+            'token': self.token
         }
         return header
 
@@ -562,15 +601,19 @@ class Pocket48Handler:
         """
         logger.debug('token: %s', self.token)
         header = {
-            'os': 'android',
-            'User-Agent': 'Mobile_Pocket',
-            'IMEI': global_config.IMEI,
-            'token': self.token,
-            'version': global_config.POCKET48_VERSION,
             'Content-Type': 'application/json;charset=utf-8',
-            'Host': 'ppayqa.48.cn',
-            'Connection': 'Keep-Alive',
-            'Accept-Encoding': 'gzip'
+            'User-Agent': 'PocketFans201807/6.0.0 (iPhone; iOS 12.2; Scale/2.00)',
+            'appInfo': {
+                'vendor': 'apple',
+                'deviceId': 0,
+                "appVersion": global_config.POCKET48_VERSION,
+                "appBuild": "190409",
+                "osVersion": "12.2.0",
+                "osType": "ios",
+                "deviceName": "iphone",
+                "os": "ios"
+            },
+            'token': self.token
         }
         return header
 
@@ -613,6 +656,24 @@ class Pocket48Handler:
         except Exception as e:
             logger.exception(e)
             return None
+
+    def get_live_detail(self, live_id):
+        """
+        获取直播详情
+        :param live_id:
+        :return:
+        """
+        url = "https://pocketapi.48.cn/live/api/v1/live/getLiveOne"
+        params = {
+            "liveId": str(live_id)
+        }
+        r = self.session.post(url, data=params, headers=self.live_header_args(), verify=False,
+                              timeout=15).json()
+        if r['status'] == 200:
+            playStreamPath = r['content']['playStreamPath']
+            return playStreamPath, r
+        else:
+            return False, False
 
 
 pocket48_handler = Pocket48Handler()
