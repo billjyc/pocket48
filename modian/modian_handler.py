@@ -21,7 +21,7 @@ from qq.qqhandler import QQHandler
 from utils import global_config, util
 from utils.mysql_util import mysql_util, Base, DBSession
 from sqlalchemy import Column, String, Integer, Float, DateTime
-from modian.special import modian_rpg
+# from modian.special import modian_rpg
 from modian.special import four_year_anniversary
 
 
@@ -365,9 +365,9 @@ class ModianHandler:
             #     msg += self.pk_modian_activity()
 
             QQHandler.send_to_groups(modian_entity.broadcast_groups, msg)
-            rpg_report = modian_rpg.donate(user_id, backer_money, nickname)
-            if rpg_report:
-                QQHandler.send_to_groups(['483548995'], rpg_report)
+            # rpg_report = modian_rpg.donate(user_id, backer_money, nickname)
+            # if rpg_report:
+            #     QQHandler.send_to_groups(['483548995'], rpg_report)
             if four_year_msg:
                 # QQHandler.send_to_groups(['483548995'], four_year_msg)
                 QQHandler.send_to_groups(modian_entity.broadcast_groups, four_year_msg)
