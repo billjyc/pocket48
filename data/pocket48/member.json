@@ -3,223 +3,203 @@
 		"chinese_name": "冯晓菲",
 		"pinyin": "fengxiaofei",
 		"member_id": 6432,
-		"room_id": 5780791,
+		"room_id": 67246079,
 		"weibo_uid": 5461287018
 	},
 	"zhangyuge": {
 		"pinyin": "zhangyuge",
 		"member_id": 1,
 		"chinese_name": "张语格",
-		"room_id": 5776891,
+		"room_id": 67313770,
 		"weibo_uid": 0
 	},
 	"chenguanhui": {
 		"chinese_name": "陈观慧",
 		"pinyin": "chenguanhui",
 		"member_id": 3,
-		"room_id": 5777227,
+		"room_id": 67217593,
 		"weibo_uid": 0
 	},
 	"chenjiaying": {
 		"pinyin": "chenjiaying",
 		"member_id": 4,
 		"chinese_name": "陈佳莹",
-		"room_id": 5780789,
+		"room_id": 67313820,
 		"weibo_uid": 0
 	},
 	"yuanyuzhen": {
 		"pinyin": "yuanyuzhen",
 		"member_id": 5,
 		"chinese_name": "袁雨桢",
-		"room_id": 5770616,
+		"room_id": 67265391,
 		"weibo_uid": 0
 	},
-	"dongyanyun": {
-		"pinyin": "dongyanyun",
-		"member_id": 6,
-		"chinese_name": "董艳芸",
-		"room_id": 5776895,
+	"fengxinduo": {
+		"pinyin": "fengxinduo",
+		"member_id": 7,
+		"chinese_name": "冯薪朵",
+		"room_id": 67236624,
 		"weibo_uid": 0
 	},
 	"sunrui": {
 		"pinyin": "sunrui",
 		"member_id": 8,
 		"chinese_name": "孙芮",
-		"room_id": 5777228,
+		"room_id": 67322480,
 		"weibo_uid": 0
-	},
-	"shenzhilin": {
-		"pinyin": "shenzhilin",
-		"member_id": 9,
-		"chinese_name": "沈之琳",
-		"room_id": 5778524
 	},
 	"hexiaoyu": {
 		"pinyin": "hexiaoyu",
 		"member_id": 10,
 		"chinese_name": "何晓玉",
-		"room_id": 5773743,
+		"room_id": 67370525,
 		"weibo_uid": 0
 	},
 	"wenjingjie": {
-		"pinyin": 10,
+		"pinyin": "wenjingjie",
 		"member_id": 11,
 		"chinese_name": "温晶婕",
-		"room_id": 5783153,
+		"room_id": 67246085,
 		"weibo_uid": 0
 	},
 	"tanganqi": {
 		"pinyin": "tanganqi",
 		"member_id": 12,
 		"chinese_name": "唐安琪",
-		"room_id": 5779208,
+		"room_id": 67313812,
 		"weibo_uid": 0
 	},
 	"xuzixuan": {
 		"pinyin": "xuzixuan",
 		"member_id": 14,
 		"chinese_name": "徐子轩",
-		"room_id": 5777229,
+		"room_id": 67313790,
 		"weibo_uid": 0
 	},
 	"liyitong": {
 		"pinyin": "liyitong",
 		"member_id": 16,
 		"chinese_name": "李艺彤",
-		"room_id": 5771855,
+		"room_id": 67322469,
 		"weibo_uid": 0
 	},
 	"jiangyun": {
 		"pinyin": "jiangyun",
 		"member_id": 17,
 		"chinese_name": "蒋芸",
-		"room_id": 5776896,
+		"room_id": 67256337,
 		"weibo_uid": 0
 	},
 	"xuchenchen": {
 		"pinyin": "xuchenchen",
 		"member_id": 18,
 		"chinese_name": "徐晨辰",
-		"room_id": 5773746,
+		"room_id": 67284386,
 		"weibo_uid": 0
 	},
 	"kongxiaoyin": {
 		"pinyin": "kongxiaoyin",
 		"member_id": 19,
 		"chinese_name": "孔肖吟",
-		"room_id": 5782029,
+		"room_id": 67333101,
 		"weibo_uid": 0
 	},
 	"liyuqi": {
 		"pinyin": "liyuqi",
 		"member_id": 20,
 		"chinese_name": "李宇琪",
-		"room_id": 5782030,
+		"room_id": 67303256,
 		"weibo_uid": 0
 	},
 	"xujiaqi": {
 		"pinyin": "xujiaqi",
 		"member_id": 21,
 		"chinese_name": "许佳琪",
-		"room_id": 5773747,
+		"room_id": 67217577,
 		"weibo_uid": 0
 	},
 	"huangtingting": {
 		"pinyin": "huangtingting",
 		"member_id": 22,
 		"chinese_name": "黄婷婷",
-		"room_id": 5776897,
+		"room_id": 67265435,
 		"weibo_uid": 0
 	},
 	"linsiyi": {
 		"pinyin": "linxiyi",
 		"member_id": 24,
 		"chinese_name": "林思意",
-		"room_id": 5774511,
+		"room_id": 67217583,
 		"weibo_uid": 0
 	},
 	"wanlina": {
 		"pinyin": "wanlina",
 		"member_id": 25,
 		"chinese_name": "万丽娜",
-		"room_id": 5776899,
+		"room_id": 67236607,
 		"weibo_uid": 0
 	},
 	"zhaoyue": {
 		"pinyin": "zhaoyue",
 		"member_id": 27,
 		"chinese_name": "赵粤",
-		"room_id": 5777230,
-		"weibo_uid": 0
-	},
-	"liqingyang": {
-		"pinyin": "liqingyang",
-		"member_id": 28,
-		"chinese_name": "李清扬",
-		"room_id": 5770618,
-		"weibo_uid": 0
-	},
-	"haowanqing": {
-		"pinyin": "haowanqing",
-		"member_id": 32,
-		"chinese_name": "郝婉晴",
-		"room_id": 5778526,
+		"room_id": 67284410,
 		"weibo_uid": 0
 	},
 	"yijiaai": {
 		"pinyin": "yijiaai",
 		"member_id": 33,
 		"chinese_name": "易嘉爱",
-		"room_id": 5776904,
+		"room_id": 67199574,
 		"weibo_uid": 0
 	},
 	"luting": {
 		"pinyin": "luting",
 		"member_id": 34,
 		"chinese_name": "陆婷",
-		"room_id": 5773750,
+		"room_id": 67189770,
 		"weibo_uid": 0
 	},
 	"mohan": {
 		"pinyin": "mohan",
 		"member_id": 35,
 		"chinese_name": "莫寒",
-		"room_id": 5778527,
+		"room_id": 67313807,
 		"weibo_uid": 0
 	},
 	"qianbeiting": {
 		"pinyin": "qianbeiting",
 		"member_id": 36,
 		"chinese_name": "钱蓓婷",
-		"room_id": 5779209,
+		"room_id": 67275458,
 		"weibo_uid": 0
 	},
 	"chensi": {
 		"pinyin": "chensi",
 		"member_id": 37,
 		"chinese_name": "陈思",
-		"room_id": 5779210,
+		"room_id": 67284428,
 		"weibo_uid": 0
 	},
 	"daimeng": {
 		"pinyin": "daimeng",
 		"member_id": 38,
 		"chinese_name": "戴萌",
-		"room_id": 5774514,
+		"room_id": 67199568,
 		"weibo_uid": 0
 	},
 	"wuzhehan": {
 		"pinyin": "wuzhehan",
 		"member_id": 39,
 		"chinese_name": "吴哲晗",
-		"room_id": 5771856,
+		"room_id": 67217571,
 		"weibo_uid": 0
 	},
 	"qiuxinyi": {
 		"pinyin": 10,
 		"member_id": 40,
 		"chinese_name": "邱欣怡",
-		"room_id": 5758962,
+		"room_id": 67352247,
 		"weibo_uid": 0
 	},
 	"xuyiren": {
@@ -233,70 +213,35 @@
 		"pinyin": 10,
 		"member_id": 45,
 		"chinese_name": "谢妮",
-		"room_id": 5778528,
-		"weibo_uid": 0
-	},
-	"liupeixin": {
-		"pinyin": "liupeixin",
-		"member_id": 46,
-		"chinese_name": "刘佩鑫",
-		"room_id": 5770619,
-		"weibo_uid": 0
-	},
-	"wangbaishuo": {
-		"pinyin": "wangbaishuo",
-		"member_id": 47,
-		"chinese_name": "王柏硕",
-		"room_id": 5770620,
+		"room_id": 67342068,
 		"weibo_uid": 0
 	},
 	"yuandanni": {
 		"pinyin": "wangbaishuo",
 		"member_id": 67,
 		"chinese_name": "袁丹妮",
-		"room_id": 5758963,
-		"weibo_uid": 0
-	},
-	"chenwenyan": {
-		"pinyin": "chenwenyan",
-		"member_id": 68,
-		"chinese_name": "陈问言",
-		"room_id": 5774518,
-		"weibo_uid": 0
-	},
-	"liujiongran": {
-		"pinyin": "liujiongran",
-		"member_id": 1544,
-		"chinese_name": "刘炅然",
-		"room_id": 5780790,
+		"room_id": 67352249,
 		"weibo_uid": 0
 	},
 	"xuhan": {
 		"pinyin": "xuhan",
 		"member_id": 2470,
 		"chinese_name": "徐晗",
-		"room_id": 5773753,
+		"room_id": 67333058,
 		"weibo_uid": 0
 	},
 	"zhangxin": {
 		"pinyin": "zhangxin",
 		"member_id": 2508,
 		"chinese_name": "张昕",
-		"room_id": 5776908,
+		"room_id": 67265436,
 		"weibo_uid": 0
 	},
 	"linnan": {
 		"pinyin": "linnan",
 		"member_id": 5562,
 		"chinese_name": "林楠",
-		"room_id": 5776909,
-		"weibo_uid": 0
-	},
-	"wuyanwen": {
-		"pinyin": "wuyanwen",
-		"member_id": 5564,
-		"chinese_name": "吴燕文",
-		"room_id": 5758965,
+		"room_id": 67246064,
 		"weibo_uid": 0
 	},
 	"xuyangyuzhuo": {
@@ -306,403 +251,284 @@
 		"room_id": 5783159,
 		"weibo_uid": 0
 	},
-	"yanghuiting": {
-		"pinyin": "yanghuiting",
-		"member_id": 5567,
-		"chinese_name": "杨惠婷",
-		"room_id": 5776912,
-		"weibo_uid": 0
-	},
 	"zhangyuxin": {
 		"pinyin": "zhangyuxin",
 		"member_id": 5574,
 		"chinese_name": "张雨鑫",
-		"room_id": 5782031,
-		"weibo_uid": 0
-	},
-	"zhaoye": {
-		"pinyin": "zhaoye",
-		"member_id": 6429,
-		"chinese_name": "赵晔",
-		"room_id": 5770621,
+		"room_id": 67217613,
 		"weibo_uid": 0
 	},
 	"chenlin": {
 		"pinyin": "chenlin",
 		"member_id": 6431,
 		"chinese_name": "陈琳",
-		"room_id": 5783160,
-		"weibo_uid": 0
-	},
-	"lijing": {
-		"pinyin": "lijing",
-		"member_id": 6734,
-		"chinese_name": "李晶",
-		"room_id": 5776913,
+		"room_id": 67207851,
 		"weibo_uid": 0
 	},
 	"lizhao": {
 		"pinyin": "lizhao",
 		"member_id": 6735,
 		"chinese_name": "李钊",
-		"room_id": 5779212,
+		"room_id": 67275459,
 		"weibo_uid": 0
 	},
 	"shaoxuecong": {
 		"pinyin": "shaoxuecong",
 		"member_id": 6737,
 		"chinese_name": "邵雪聪",
-		"room_id": 5776914,
+		"room_id": 67275431,
 		"weibo_uid": 0
 	},
 	"songxinran": {
 		"pinyin": "songxinran",
 		"member_id": 6738,
 		"chinese_name": "宋昕冉",
-		"room_id": 5770622,
+		"room_id": 67352254,
 		"weibo_uid": 0
 	},
 	"sunxinwen": {
 		"pinyin": "sunxinwen",
 		"member_id": 6739,
 		"chinese_name": "孙歆文",
-		"room_id": 5783164,
+		"room_id": 67199596,
 		"weibo_uid": 0
 	},
 	"wangjialing": {
 		"pinyin": 10,
 		"member_id": 6740,
 		"chinese_name": "汪佳翎",
-		"room_id": 5780792,
-		"weibo_uid": 0
-	},
-	"wangshu": {
-		"pinyin": "wangshu",
-		"member_id": 6741,
-		"chinese_name": "汪束",
-		"room_id": 5779213,
+		"room_id": 67303255,
 		"weibo_uid": 0
 	},
 	"wangxiaojia": {
 		"pinyin": "wangxiaojia",
 		"member_id": 6742,
 		"chinese_name": "王晓佳",
-		"room_id": 5783166,
+		"room_id": 67390943,
 		"weibo_uid": 0
 	},
 	"xietianyi": {
 		"pinyin": "xietianyi",
 		"member_id": 6743,
 		"chinese_name": "谢天依",
-		"room_id": 5776915,
+		"room_id": 67207831,
 		"weibo_uid": 0
 	},
 	"yangbingyi": {
 		"pinyin": "yangbingyi",
 		"member_id": 6744,
 		"chinese_name": "杨冰怡",
-		"room_id": 5779214,
-		"weibo_uid": 0
-	},
-	"yangyunyu": {
-		"pinyin": "yangyunyu",
-		"member_id": 6746,
-		"chinese_name": "杨韫玉",
-		"room_id": 5771857,
+		"room_id": 67333093,
 		"weibo_uid": 0
 	},
 	"zhangdansan": {
 		"pinyin": 10,
 		"member_id": 6747,
 		"chinese_name": "张丹三",
-		"room_id": 5780793,
-		"weibo_uid": 0
-	},
-	"zhouyi": {
-		"pinyin": "zhouyi",
-		"member_id": 49003,
-		"chinese_name": "周怡",
-		"room_id": 5771860,
+		"room_id": 67256353,
 		"weibo_uid": 0
 	},
 	"shenmengyao": {
 		"pinyin": "shenmengyao",
 		"member_id": 49005,
 		"chinese_name": "沈梦瑶",
-		"room_id": 5773766,
-		"weibo_uid": 0
-	},
-	"wanglujiao": {
-		"pinyin": "wanglujiao",
-		"member_id": 49006,
-		"chinese_name": "王露皎",
-		"room_id": 5779216,
-		"weibo_uid": 0
-	},
-	"chenyunling": {
-		"pinyin": "chenyunling",
-		"member_id": 63551,
-		"chinese_name": "陈韫凌",
-		"room_id": 5776932,
+		"room_id": 67265421,
 		"weibo_uid": 0
 	},
 	"feiqinyuan": {
 		"pinyin": "feiqinyuan",
 		"member_id": 63555,
 		"chinese_name": "费沁源",
-		"room_id": 5782033,
+		"room_id": 67265467,
 		"weibo_uid": 0
 	},
 	"hongpeiyun": {
 		"pinyin": "hongpeiyun",
 		"member_id": 63558,
 		"chinese_name": "洪珮雲",
-		"room_id": 5771863,
+		"room_id": 67313743,
 		"weibo_uid": 0
 	},
 	"jiangshan": {
 		"pinyin": "jiangshan",
 		"member_id": 63560,
 		"chinese_name": "姜杉",
-		"room_id": 5778533,
+		"room_id": 67284424,
 		"weibo_uid": 0
 	},
 	"jiangshuting": {
 		"pinyin": "jiangshuting",
 		"member_id": 63561,
 		"chinese_name": "蒋舒婷",
-		"room_id": 5778534,
+		"room_id": 67333084,
 		"weibo_uid": 0
 	},
 	"liuzengyan": {
 		"pinyin": "liuzengyan",
 		"member_id": 63566,
 		"chinese_name": "刘增艳",
-		"room_id": 5783215,
+		"room_id": 67322491,
 		"weibo_uid": 0
 	},
 	"panyingqi": {
 		"pinyin": "panyingqi",
 		"member_id": 63567,
 		"chinese_name": "潘瑛琪",
-		"room_id": 5777235,
+		"room_id": 67265451,
 		"weibo_uid": 0
 	},
 	"songyushan": {
 		"pinyin": "songyushan",
 		"member_id": 63570,
 		"chinese_name": "宋雨珊",
-		"room_id": 5776953,
-		"weibo_uid": 0
-	},
-	"yanjiaojun": {
-		"pinyin": "yanjiaojun",
-		"member_id": 63574,
-		"chinese_name": "严佼君",
-		"room_id": 5783217,
-		"weibo_uid": 0
-	},
-	"yujiayi": {
-		"pinyin": "yujiayi",
-		"member_id": 63575,
-		"chinese_name": "於佳怡",
-		"room_id": 5773799,
-		"weibo_uid": 0
-	},
-	"zhangwenjing": {
-		"pinyin": "zhangwenjing",
-		"member_id": 63581,
-		"chinese_name": "张文静",
-		"room_id": 5783221,
+		"room_id": 67313782,
 		"weibo_uid": 0
 	},
 	"zhangyi": {
 		"pinyin": "zhangyi",
 		"member_id": 63582,
 		"chinese_name": "张怡",
-		"room_id": 5777238,
-		"weibo_uid": 0
-	},
-	"chengjue": {
-		"pinyin": "chengjue",
-		"member_id": 286973,
-		"chinese_name": "成珏",
-		"room_id": 5776958,
-		"weibo_uid": 0
-	},
-	"huangtongyang": {
-		"pinyin": "huangtongyang",
-		"member_id": 286976,
-		"chinese_name": "黄彤扬",
-		"room_id": 5782036,
+		"room_id": 67303248,
 		"weibo_uid": 0
 	},
 	"sunzhenni": {
 		"pinyin": "sunzhenni",
 		"member_id": 286977,
 		"chinese_name": "孙珍妮",
-		"room_id": 5777239,
+		"room_id": 67390920,
 		"weibo_uid": 0
 	},
 	"zhangjiayu": {
 		"pinyin": "zhangjiayu",
 		"member_id": 286979,
 		"chinese_name": "张嘉予",
-		"room_id": 5770633,
-		"weibo_uid": 0
-	},
-	"linyining": {
-		"pinyin": "linyining",
-		"member_id": 286980,
-		"chinese_name": "林忆宁",
-		"room_id": 5771867,
-		"weibo_uid": 0
-	},
-	"lvmengying": {
-		"pinyin": "lvmengying",
-		"member_id": 286982,
-		"chinese_name": "吕梦莹",
-		"room_id": 5776960,
+		"room_id": 67313734,
 		"weibo_uid": 0
 	},
 	"lijiaen": {
 		"pinyin": "lijiaen",
 		"member_id": 286983,
 		"chinese_name": "李佳恩",
-		"room_id": 5783222,
+		"room_id": 67199599,
 		"weibo_uid": 0
 	},
 	"lvyi": {
 		"pinyin": 10,
 		"member_id": 399631,
 		"chinese_name": "吕一",
-		"room_id": 5758972,
-		"weibo_uid": 0
-	},
-	"panyanqi": {
-		"pinyin": "panyanqi",
-		"member_id": 399652,
-		"chinese_name": "潘燕琦",
-		"room_id": 5780841,
-		"weibo_uid": 0
-	},
-	"zhaohanqian": {
-		"pinyin": "zhaohanqian",
-		"member_id": 399654,
-		"chinese_name": "赵韩倩",
-		"room_id": 5776966,
+		"room_id": 67265389,
 		"weibo_uid": 0
 	},
 	"jiangzhenyi": {
 		"pinyin": "jiangzhenyi",
 		"member_id": 399662,
 		"chinese_name": "江真仪",
-		"room_id": 5773813,
-		"weibo_uid": 0
-	},
-	"liujuzi": {
-		"pinyin": "liujuzi",
-		"member_id": 399664,
-		"chinese_name": "刘菊子",
-		"room_id": 5779222,
-		"weibo_uid": 0
-	},
-	"liuying": {
-		"pinyin": "liuying",
-		"member_id": 399667,
-		"chinese_name": "刘瀛",
-		"room_id": 5770636,
-		"weibo_uid": 0
-	},
-	"xuyi": {
-		"pinyin": "xuyi",
-		"member_id": 399668,
-		"chinese_name": "许逸",
-		"room_id": 5777251,
+		"room_id": 67342039,
 		"weibo_uid": 0
 	},
 	"yuanyiqi": {
 		"pinyin": "yuanyiqi",
 		"member_id": 399669,
 		"chinese_name": "袁一琦",
-		"room_id": 5776968,
+		"room_id": 67275447,
 		"weibo_uid": 0
 	},
 	"qijing": {
 		"pinyin": "qijing",
 		"member_id": 399672,
 		"chinese_name": "祁静",
-		"room_id": 5777252,
+		"room_id": 67313798,
 		"weibo_uid": 0
 	},
-	"zengxiaowen": {
-		"pinyin": "zengxiaowen",
-		"member_id": 399673,
-		"chinese_name": "曾晓雯",
-		"room_id": 5771879,
+	"wangshimeng":{
+		"pinyin": "wangshimeng",
+		"id":459989,
+		"name":"SNH48-王诗蒙",
+		"roomId":67275488,
 		"weibo_uid": 0
 	},
-	"xushiqi": {
-		"pinyin": "zengxiaowen",
-		"member_id": 399674,
-		"chinese_name": "徐诗琪",
-		"room_id": 5771880,
+	"lutianhui":{
+		"pinyin": "lutianhui",
+		"id":459991,
+		"name":"SNH48-卢天惠",
+		"roomId":67189812,
 		"weibo_uid": 0
 	},
-	"yaoyichun": {
-		"pinyin": "yaoyichun",
-		"member_id": 419966,
-		"chinese_name": "姚祎纯",
-		"room_id": 5783243,
+	"zhaojiarui":{
+		"pinyin": "zhaojiarui",
+		"id":460005,
+		"name":"赵佳蕊",
+		"roomId":67275492,
 		"weibo_uid": 0
 	},
-	"guoqianyun": {
-		"pinyin": "guoqianyun",
-		"member_id": 530584,
-		"chinese_name": "郭倩芸",
-		"room_id": 9011537,
+	"liujinghan":{
+		"pinyin": "liujinghan",
+		"id":480667,
+		"name":"SNH48-刘静晗",
+		"roomId":67322504,
 		"weibo_uid": 0
 	},
-	"taoboer": {
-		"pinyin": "taoboer",
-		"member_id": 533852,
-		"chinese_name": "陶波尔",
-		"room_id": 9125456,
+	"gaochong":{
+		"pinyin": "gaochong",
+		"id":530385,
+		"name":"SHY48-高崇",
+		"roomId":67189830,
+		"weibo_uid": 0
+	},
+	"wangfeiyan":{
+		"pinyin": "wangfeiyan",
+		"id":530388,
+		"name":"SNH48-王菲妍",
+		"roomId":67189834,
 		"weibo_uid": 0
 	},
 	"jinyingyue": {
 		"pinyin": "jinyingyue",
 		"member_id": 538735,
 		"chinese_name": "金莹玥",
-		"room_id": 9225254,
-		"weibo_uid": 0
-	},
-	"sunyaping": {
-		"pinyin": "sunyaping",
-		"member_id": 593820,
-		"chinese_name": "孙亚萍",
-		"room_id": 11190812,
+		"room_id": 67370575,
 		"weibo_uid": 0
 	},
 	"wangyi": {
 		"pinyin": "wangyi",
 		"member_id": 594003,
 		"chinese_name": "王奕",
-		"room_id": 17877365,
+		"room_id": 67380608,
 		"weibo_uid": 0
 	},
 	"xiongqinxian": {
 		"pinyin": "xiongqinxian",
 		"member_id": 594005,
 		"chinese_name": "熊沁娴",
-		"room_id": 17870659,
+		"room_id": 67236666,
 		"weibo_uid": 0
 	},
 	"mafan": {
 		"pinyin": "mafan",
 		"member_id": 606343,
 		"chinese_name": "马凡",
-		"room_id": 18054323,
+		"room_id": 67189842,
 		"weibo_uid": 0
+	},
+	"ranwei":{
+        "pinyin": "ranwei",
+		"id":614734,
+		"name":"SNH48-冉蔚",
+		"roomId":67333162,
+        "weibo_uid": 0
+	},
+    "haojingyi":{
+        "pinyin": "haojingyi",
+		"id":614753,
+		"name":"SNH48-郝婧怡",
+		"roomId":67236680,
+        "weibo_uid": 0
+	},
+    "linshuqing":{
+        "pinyin": "linshuqing",
+		"id":614756,
+		"name":"SNH48-林舒晴",
+		"roomId":67256384,
+        "weibo_uid": 0
 	}
 }
