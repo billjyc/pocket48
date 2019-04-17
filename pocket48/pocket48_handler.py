@@ -322,7 +322,7 @@ class Pocket48Handler:
                     elif text_message_type == TextMessageType.VOTE:  # 投票
                         logger.debug('投票消息')
                         vote_content = extInfo['text']
-                        message = '[发起投票]{}\n'.format(vote_content) + message
+                        message = '【发起投票】{}: {}\n'.format(user_name, vote_content) + message
                         self.save_msg_to_db(104, msg_id, user_id, user_name, msg_time, vote_content)
                     elif text_message_type == TextMessageType.FLIPCARD:
                         logger.debug('付费翻牌功能')
@@ -683,6 +683,11 @@ class Pocket48Handler:
 pocket48_handler = Pocket48Handler()
 
 if __name__ == '__main__':
+    member = Member('左婧媛', '327577', '67380556')
+    task = Pocket48ListenTask(member)
+    pocket48_handler.login('***', '***')
+    r = pocket48_handler.get_member_room_msg(task)
+    pocket48_handler.parse_room_msg(r, task)
     # base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     # db_path = os.path.join(base_dir, 'statistic', 'statistics.db')
     # print(db_path)
