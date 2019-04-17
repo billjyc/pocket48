@@ -337,6 +337,7 @@ class ModianHandler:
                 card_report = self.card_draw_handler.draw(user_id, nickname, backer_money, pay_time)
 
             # 四周年活动
+            four_year_msg = ''
             if modian_entity.pro_id in [four_year_anniversary.HUIHUI_PRO_ID, four_year_anniversary.KUANKUAN_PRO_ID]:
                 # import random
                 # rand_int = random.randint(0, 1)
