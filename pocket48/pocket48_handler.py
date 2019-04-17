@@ -191,7 +191,7 @@ class Pocket48Handler:
 
             r1_json = json.loads(r1)
             # r2_json = json.loads(r2)
-            for r in r1_json['content']['data']:
+            for r in r1_json['content']['message']:
                 msg_id = r['msgidClient']
                 task.member_room_msg_ids.append(msg_id)
 
