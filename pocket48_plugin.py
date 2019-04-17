@@ -45,14 +45,14 @@ def get_room_msgs():
 
 
 # @scheduler.scheduled_job('cron', minute='*', second=40)
-def get_member_lives():
-    """
-    获取直播信息
-    :return:
-    """
-    r = pocket48_handler.get_member_live_msg()
-    for task in pocket48_handler.listen_tasks:
-        pocket48_handler.parse_member_live(r, task)
+# def get_member_lives():
+#     """
+#     获取直播信息
+#     :return:
+#     """
+#     r = pocket48_handler.get_member_live_msg()
+#     for task in pocket48_handler.listen_tasks:
+#         pocket48_handler.parse_member_live(r, task)
 
 
 @scheduler.scheduled_job('cron', second=30, minute='20,50', hour='13,18,19', day_of_week='2-6')

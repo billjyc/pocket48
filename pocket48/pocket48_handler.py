@@ -127,28 +127,28 @@ class Pocket48Handler:
         self.is_login = False
         self.token = '0'
 
-    def get_member_live_msg(self, limit=50):
-        """
-        获取所有直播间信息
-        :return:
-        """
-        if not self.is_login:
-            logger.error('尚未登录')
-        url = 'https://plive.48.cn/livesystem/api/live/v1/memberLivePage'
-        params = {
-            "giftUpdTime": int(time.time() * 1000),
-            "groupId": 0,  # SNH48 Group所有人
-            "lastTime": 0,
-            "limit": limit,
-            "memberId": 0,
-            "type": 0
-        }
-        try:
-            r = self.session.post(url, data=json.dumps(params), headers=self.live_header_args(), verify=False)
-        except Exception as e:
-            logger.error('获取成员直播失败')
-            logger.exception(e)
-        return r.text
+    # def get_member_live_msg(self, limit=50):
+    #     """
+    #     获取所有直播间信息
+    #     :return:
+    #     """
+    #     if not self.is_login:
+    #         logger.error('尚未登录')
+    #     url = 'https://plive.48.cn/livesystem/api/live/v1/memberLivePage'
+    #     params = {
+    #         "giftUpdTime": int(time.time() * 1000),
+    #         "groupId": 0,  # SNH48 Group所有人
+    #         "lastTime": 0,
+    #         "limit": limit,
+    #         "memberId": 0,
+    #         "type": 0
+    #     }
+    #     try:
+    #         r = self.session.post(url, data=json.dumps(params), headers=self.live_header_args(), verify=False)
+    #     except Exception as e:
+    #         logger.error('获取成员直播失败')
+    #         logger.exception(e)
+    #     return r.text
 
     def get_member_room_msg(self, task, limit=20):
         """
@@ -284,57 +284,47 @@ class Pocket48Handler:
                 logger.debug('成员消息')
                 task.member_room_msg_ids.append(msg_id)
 
-                message_object = extInfo['messageType']
                 msg_time = util.convert_timestamp_to_timestr(msg["msgTime"])
+                user_id = extInfo['user']['userId']
+                user_name = extInfo['user']['nickName']
 
                 logger.debug('extInfo.keys():' + ','.join(extInfo.keys()))
                 if msg['msgType'] == MessageType.TEXT:  # 文字消息
-                    if message_object == TextMessageType.TEXT:  # 普通消息
+                    text_message_type = extInfo['messageType'].strip()
+                    if text_message_type == TextMessageType.TEXT:  # 普通消息
                         logger.debug('普通消息')
                         message = ('【成员消息】[%s]-%s: %s\n' % (
-                            msg_time, extInfo['user']['nickName'], extInfo['text'])) + message
-                        cursor.execute("""
-                            INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
-                            (?, ?, ?, ?, ?, ?)
-                        """, (
-                            msg_id, 100, extInfo['user']['userId'], extInfo['user']['userName'], msg_time,
-                            extInfo['text']))
-                    elif message_object == TextMessageType.REPLY:  # 翻牌消息
+                            msg_time, user_name, extInfo['text'])) + message
+                        self.save_msg_to_db(100, msg_id, user_id, user_name, msg_time, extInfo['text'])
+                    elif text_message_type == TextMessageType.REPLY:  # 翻牌消息
                         logger.debug('翻牌')
                         member_msg = extInfo['text']
                         fanpai_msg = extInfo['replyText']
                         fanpai_id = extInfo['replyName']
-                        # message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s:%s\n' % (msg['msgTimeStr'], extInfo['senderName'], member_msg, fanpai_id, fanpai_msg)) + message
                         if fanpai_id:
                             message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s: %s\n' % (
-                                msg_time, extInfo['user']['nickName'], member_msg, fanpai_id, fanpai_msg)) + message
+                                msg_time, user_name, member_msg, fanpai_id, fanpai_msg)) + message
+                            self.save_msg_to_db(101, msg_id, user_id, user_name, msg_time, member_msg,
+                                                fanpai_id + ': ' + fanpai_msg)
                         else:
                             message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s\n' % (
-                                msg_time, extInfo['user']['nickName'], member_msg, fanpai_msg)) + message
-                        cursor.execute("""
-                                        INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content, fans_comment) VALUES
-                                        (?, ?, ?, ?, ?, ?, ?)
-                                """, (
-                            msg_id, 101, extInfo['user']['userId'], extInfo['user']['nickName'], msg_time, member_msg,
-                            fanpai_msg))
-                    elif message_object == TextMessageType.LIVEPUSH:  # 直播
+                                msg_time, user_name, member_msg, fanpai_msg)) + message
+                            self.save_msg_to_db(101, msg_id, user_id, user_name, msg_time, member_msg, fanpai_msg)
+                    elif text_message_type == TextMessageType.LIVEPUSH:  # 直播
                         logger.debug('直播')
                         live_title = extInfo['liveTitle']
                         live_id = extInfo['liveId']
                         playStreamPath, playDetail = self.get_live_detail(live_id)
-                        # TODO: 发消息
-                    elif message_object == TextMessageType.VOTE:  # 投票
+                        self.save_msg_to_db(102, msg_id, user_id, user_name, msg_time, live_title)
+
+                        live_message = '你们的崽崽开直播了\n直播标题: {}\n开始时间: {}'.format(live_title, msg_time)
+                        QQHandler.send_to_groups(task.member_room_msg_groups, live_message)
+                    elif text_message_type == TextMessageType.VOTE:  # 投票
                         logger.debug('投票消息')
                         vote_content = extInfo['text']
-                        message = '[发起投票]{}'.format(vote_content)
-                        cursor.execute("""
-                                        INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, 
-                                        content, fans_comment) VALUES
-                                        (?, ?, ?, ?, ?, ?, ?)
-                                    """, (
-                            msg_id, 104, extInfo['user']['userId'], extInfo['user']['nickName'], msg['msgTime'], vote_content,
-                            ''))
-                    elif message_object == TextMessageType.FLIPCARD:
+                        message = '[发起投票]{}\n'.format(vote_content) + message
+                        self.save_msg_to_db(104, msg_id, user_id, user_name, msg_time, vote_content)
+                    elif text_message_type == TextMessageType.FLIPCARD:
                         logger.debug('付费翻牌功能')
                         # user_name = extInfo['idolFlipUserName']
                         content = extInfo['question']
@@ -345,70 +335,84 @@ class Pocket48Handler:
                         answer = extInfo['answer']
 
                         flip_message = ('【问】%s\n【答】%s: %s\n翻牌时间: %s\n' % (
-                            content, extInfo['user']['nickName'], answer, msg_time))
+                            content, user_name, answer, msg_time))
                         message = flip_message + message
-                        # QQHandler.send_to_groups(['108323016'], flip_message)
-                        cursor.execute("""
-                            INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content, fans_comment) VALUES
-                            (?, ?, ?, ?, ?, ?, ?)
-                            """, (msg_id, 105, extInfo['user']['userId'], extInfo['user']['nickName'], msg_time, answer,
-                                  content))
+                        self.save_msg_to_db(105, msg_id, user_id, user_name, msg_time, answer, content)
                 elif msg['msgType'] == MessageType.IMAGE:  # 图片消息
-                    bodys = json.loads(msg['bodys'])
                     logger.debug('图片')
+                    bodys = json.loads(msg['bodys'])
                     if 'url' in bodys.keys():
                         url = bodys['url']
                         if global_config.USING_COOLQ_PRO is True:
                             message = ('【图片】[%s]-%s: [CQ:image,file=%s]\n' % (
-                                msg_time, extInfo['user']['nickName'], url)) + message
+                                msg_time, user_name, url)) + message
                         else:
-                            message = ('【图片】[%s]-%s: %s\n' % (msg_time, extInfo['user']['nickName'], url)) + message
-                        cursor.execute("""
-                           INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
-                                                            (?, ?, ?, ?, ?, ?)
-                        """, (msg_id, 200, extInfo['user']['userId'], extInfo['nickName'], msg_time, url))
-
+                            message = ('【图片】[%s]-%s: %s\n' % (msg_time, user_name, url)) + message
+                        self.save_msg_to_db(200, msg_id, user_id, user_name, msg_time, url)
                 elif msg['msgType'] == MessageType.AUDIO:  # 语音消息
                     logger.debug('语音消息')
                     bodys = json.loads(msg['bodys'])
                     if 'url' in bodys.keys():
                         url = bodys['url']
                         if global_config.USING_COOLQ_PRO is True:
-                            message3 = ('【语音】[%s]-%s: %s\n' % (msg_time, extInfo['user']['nickName'], url))
+                            message3 = ('【语音】[%s]-%s: %s\n' % (msg_time, user_name, url))
                             logger.info(message3)
                             # 语音消息直接单条发送
-                            message2 = '[CQ:record,file=%s]\n' % url
+                            message2 = '[CQ:record,file={}]\n'.format(url)
                             QQHandler.send_to_groups(task.member_room_msg_groups, message2)
                         else:
-                            message = ('【语音】[%s]-%s: %s\n' % (msg_time, extInfo['user']['nickName'], url)) + message
-                        cursor.execute("""
-                            INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
-                                                       (?, ?, ?, ?, ?, ?)
-                         """, (msg_id, 201, extInfo['user']['userId'], extInfo['user']['nickName'], msg_time, url))
+                            message = ('【语音】[%s]-%s: %s\n' % (msg_time, user_name, url)) + message
+                        self.save_msg_to_db(201, msg_id, user_id, user_name, msg_time, url)
                 elif msg['msgType'] == MessageType.VIDEO:  # 小视频
                     logger.debug('房间小视频')
                     bodys = json.loads(msg['bodys'])
                     if 'url' in bodys.keys():
                         url = bodys['url']
-                        message = ('【小视频】[%s]-%s: %s\n' % (msg_time, extInfo['user']['nickName'], url)) + message
-                        cursor.execute("""
-                         INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
-                                        (?, ?, ?, ?, ?, ?)
-                        """, (msg_id, 202, extInfo['user']['userId'], extInfo['user']['nickName'], msg_time, url))
+                        message = ('【小视频】[%s]-%s: %s\n' % (msg_time, user_name, url)) + message
+                        self.save_msg_to_db(202, msg_id, user_id, user_name, msg_time, url)
                 elif msg['msgType'] == MessageType.EXPRESS:  # 大表情
                     logger.debug('大表情')
                     emotion_name = extInfo['emotionName']
-                    cursor.execute("""
-                            INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
-                                                       (?, ?, ?, ?, ?, ?)
-                         """, (msg_id, 203, extInfo['user']['userId'], extInfo['user']['nickName'], msg_time, emotion_name))
-
+                    if global_config.USING_COOLQ_PRO is True:
+                        if 'tsj' in emotion_name:
+                            express_message = '[%s]-%s: [CQ:image,file=%s]' % (
+                            msg_time, user_name, '\\express\\{}.gif'.format(emotion_name))
+                        else:
+                            express_message = '[%s]-%s: [CQ:image,file=%s]' % (
+                                msg_time, user_name, '\\express\\{}.png'.format(emotion_name))
+                        message = express_message + message
+                    self.save_msg_to_db(203, msg_id, user_id, user_name, msg_time, emotion_name)
             if message and len(task.member_room_msg_groups) > 0:
                 QQHandler.send_to_groups(task.member_room_msg_groups, message)
                 self.get_member_room_msg_lite(task)
                 logger.info('message: %s', message)
             logger.debug('成员{}消息队列: {}'.format(task.member.name, len(task.member_room_msg_ids)))
         except Exception as e:
+            logger.exception(e)
+        finally:
+            self.conn.commit()
+            cursor.close()
+
+    def save_msg_to_db(self, op_code, message_id, user_id, user_name, message_time, content, fans_comment=''):
+        """
+        将消息存进db
+        :param op_code:
+        :param message_id:
+        :param user_id:
+        :param user_name:
+        :param message_time:
+        :param content:
+        :param fans_comment:
+        :return:
+        """
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                            INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content, fans_comment) VALUES
+                                                       (?, ?, ?, ?, ?, ?, ?)
+                         """, (message_id, op_code, user_id, user_name, message_time, content, fans_comment))
+        except Exception as e:
+            logger.error('将口袋房间消息存入数据库')
             logger.exception(e)
         finally:
             self.conn.commit()
@@ -423,110 +427,110 @@ class Pocket48Handler:
         res = self.session.post(url, data=json.dumps(params), headers=self.idol_flip_header_args()).json()
         return res['content']['answer']
 
-    def parse_room_comment(self, response, task):
-        """
-        对房间评论进行处理
-        :param response:
-        :param task:
-        :return:
-        """
-        rsp_json = json.loads(response)
-        msgs = rsp_json['content']['data']
-        logger.debug('parse room comment reponse: %s', response)
-        message = ''
-        for msg in msgs:
-            extInfo = json.loads(msg['extInfo'])
-            platform = extInfo['platform']
-            msg_id = msg['msgidClient']
-            message_object = extInfo['messageObject']
+    # def parse_room_comment(self, response, task):
+    #     """
+    #     对房间评论进行处理
+    #     :param response:
+    #     :param task:
+    #     :return:
+    #     """
+    #     rsp_json = json.loads(response)
+    #     msgs = rsp_json['content']['data']
+    #     logger.debug('parse room comment reponse: %s', response)
+    #     message = ''
+    #     for msg in msgs:
+    #         extInfo = json.loads(msg['extInfo'])
+    #         platform = extInfo['platform']
+    #         msg_id = msg['msgidClient']
+    #         message_object = extInfo['messageObject']
+    #
+    #         if msg_id in task.member_room_comment_ids:
+    #             continue
+    #         task.member_room_comment_ids.append(msg_id)
+    #         if extInfo['contentType'] == 1:  # 普通评论
+    #             logger.debug('房间评论')
+    #             message = ('【房间评论】[%s]-%s: %s\n' % (
+    #                 msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])) + message
+    #         elif extInfo['contentType'] == 3:  # 房间礼物
+    #             logger.debug('礼物')
+    #         else:
+    #             logger.debug('其他类型评论')
+    #
+    #     logger.info('message: %s', message)
+    #     logger.debug('length of comment groups: %d', len(task.member_room_comment_msg_groups))
+    #     if message and len(task.member_room_comment_msg_groups) > 0:
+    #         QQHandler.send_to_groups(task.member_room_comment_msg_groups, message)
+    #     logger.debug('房间评论队列: %s', len(task.member_room_comment_ids))
+    #
+    # def get_member_room_comment(self, task, limit=20):
+    #     """
+    #     获取成员房间的粉丝评论
+    #     :param limit:
+    #     :param task:
+    #     :return:
+    #     """
+    #     if not self.is_login:
+    #         logger.error('尚未登录')
+    #     # url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/comment'
+    #     url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/boardpage'
+    #     params = {
+    #         "roomId": task.member.room_id, "lastTime": 0, "limit": limit, "isFirst": "true"
+    #     }
+    #     # 收到响应
+    #     try:
+    #         r = self.session.post(url, data=json.dumps(params), headers=self.juju_header_args(), verify=False)
+    #     except Exception as e:
+    #         logger.error('获取房间评论失败！name: {}, room_id: {}'.format(task.member.name, task.member.room_id))
+    #         logger.exception(e)
+    #     return r.text
 
-            if msg_id in task.member_room_comment_ids:
-                continue
-            task.member_room_comment_ids.append(msg_id)
-            if extInfo['contentType'] == 1:  # 普通评论
-                logger.debug('房间评论')
-                message = ('【房间评论】[%s]-%s: %s\n' % (
-                    msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])) + message
-            elif extInfo['contentType'] == 3:  # 房间礼物
-                logger.debug('礼物')
-            else:
-                logger.debug('其他类型评论')
-
-        logger.info('message: %s', message)
-        logger.debug('length of comment groups: %d', len(task.member_room_comment_msg_groups))
-        if message and len(task.member_room_comment_msg_groups) > 0:
-            QQHandler.send_to_groups(task.member_room_comment_msg_groups, message)
-        logger.debug('房间评论队列: %s', len(task.member_room_comment_ids))
-
-    def get_member_room_comment(self, task, limit=20):
-        """
-        获取成员房间的粉丝评论
-        :param limit:
-        :param task:
-        :return:
-        """
-        if not self.is_login:
-            logger.error('尚未登录')
-        # url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/comment'
-        url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/boardpage'
-        params = {
-            "roomId": task.member.room_id, "lastTime": 0, "limit": limit, "isFirst": "true"
-        }
-        # 收到响应
-        try:
-            r = self.session.post(url, data=json.dumps(params), headers=self.juju_header_args(), verify=False)
-        except Exception as e:
-            logger.error('获取房间评论失败！name: {}, room_id: {}'.format(task.member.name, task.member.room_id))
-            logger.exception(e)
-        return r.text
-
-    def parse_member_live(self, response, task):
-        """
-        对直播列表进行处理，找到正在直播的指定成员
-        :param response:
-        :param task
-        :return:
-        """
-        rsp_json = json.loads(response)
-        # logger.debug('rsp_json: %s' % rsp_json)
-        logger.debug('keys of parse member live: %s', rsp_json['content'].keys())
-        member_id = task.member.member_id
-        # 当前没有人在直播
-        if 'liveList' not in rsp_json['content'].keys():
-            # print 'no live'
-            logger.debug('当前没有人在直播')
-            return
-        live_list = rsp_json['content']["liveList"]
-        logger.debug('当前正在直播的人数: %d', len(live_list))
-        # print '当前正在直播的人数: %d' % len(live_list)
-        msg = ''
-        # logger.debug('直播ID列表: %s', ','.join(self.member_live_ids))
-        for live in live_list:
-            live_id = live['liveId']
-            # logger.debug(live.keys())
-            # print '直播人: %s' % live['memberId']
-            # logger.debug('直播人(response): %s, 类型: %s', live['memberId'], type(live['memberId']))
-            # logger.debug('member_id(参数): %s, 类型: %s', member_id, type(member_id))
-            logger.debug('memberId %s is in live: %s, live_id: %s', live['memberId'], live['title'], live_id)
-            logger.debug('stream path: %s', live['streamPath'])
-            # logger.debug('member_live_ids list: %s', ','.join(self.member_live_ids))
-            # logger.debug('live_id is in member_live_ids: %s', str(live_id in self.member_live_ids))
-            if live['memberId'] == int(member_id) and live_id not in task.member_live_ids:
-                logger.debug('[被监控成员正在直播]member_id: %s, live_id: %s', member_id, live_id)
-                start_time = util.convert_timestamp_to_timestr(live['startTime'])
-                stream_path = live['streamPath']  # 流地址
-                sub_title = live['subTitle']  # 直播名称
-                live_type = live['liveType']
-                url = 'https://h5.48.cn/2017appshare/memberLiveShare/index.html?id=%s' % live_id
-                if live_type == 1:  # 露脸直播
-                    msg += '你的小宝贝儿开露脸直播了: %s\n直播链接: %s\n开始时间: %s' % (sub_title, url, start_time)
-                elif live_type == 2:  # 电台直播
-                    msg += '你的小宝贝儿开电台直播了: %s\n直播链接: %s\n开始时间: %s' % (sub_title, url, start_time)
-                task.member_live_ids.append(live_id)
-
-        logger.debug(msg)
-        if msg and len(task.member_live_groups) > 0:
-            QQHandler.send_to_groups(task.member_live_groups, msg)
+    # def parse_member_live(self, response, task):
+    #     """
+    #     对直播列表进行处理，找到正在直播的指定成员
+    #     :param response:
+    #     :param task
+    #     :return:
+    #     """
+    #     rsp_json = json.loads(response)
+    #     # logger.debug('rsp_json: %s' % rsp_json)
+    #     logger.debug('keys of parse member live: %s', rsp_json['content'].keys())
+    #     member_id = task.member.member_id
+    #     # 当前没有人在直播
+    #     if 'liveList' not in rsp_json['content'].keys():
+    #         # print 'no live'
+    #         logger.debug('当前没有人在直播')
+    #         return
+    #     live_list = rsp_json['content']["liveList"]
+    #     logger.debug('当前正在直播的人数: %d', len(live_list))
+    #     # print '当前正在直播的人数: %d' % len(live_list)
+    #     msg = ''
+    #     # logger.debug('直播ID列表: %s', ','.join(self.member_live_ids))
+    #     for live in live_list:
+    #         live_id = live['liveId']
+    #         # logger.debug(live.keys())
+    #         # print '直播人: %s' % live['memberId']
+    #         # logger.debug('直播人(response): %s, 类型: %s', live['memberId'], type(live['memberId']))
+    #         # logger.debug('member_id(参数): %s, 类型: %s', member_id, type(member_id))
+    #         logger.debug('memberId %s is in live: %s, live_id: %s', live['memberId'], live['title'], live_id)
+    #         logger.debug('stream path: %s', live['streamPath'])
+    #         # logger.debug('member_live_ids list: %s', ','.join(self.member_live_ids))
+    #         # logger.debug('live_id is in member_live_ids: %s', str(live_id in self.member_live_ids))
+    #         if live['memberId'] == int(member_id) and live_id not in task.member_live_ids:
+    #             logger.debug('[被监控成员正在直播]member_id: %s, live_id: %s', member_id, live_id)
+    #             start_time = util.convert_timestamp_to_timestr(live['startTime'])
+    #             stream_path = live['streamPath']  # 流地址
+    #             sub_title = live['subTitle']  # 直播名称
+    #             live_type = live['liveType']
+    #             url = 'https://h5.48.cn/2017appshare/memberLiveShare/index.html?id=%s' % live_id
+    #             if live_type == 1:  # 露脸直播
+    #                 msg += '你的小宝贝儿开露脸直播了: %s\n直播链接: %s\n开始时间: %s' % (sub_title, url, start_time)
+    #             elif live_type == 2:  # 电台直播
+    #                 msg += '你的小宝贝儿开电台直播了: %s\n直播链接: %s\n开始时间: %s' % (sub_title, url, start_time)
+    #             task.member_live_ids.append(live_id)
+    #
+    #     logger.debug(msg)
+    #     if msg and len(task.member_live_groups) > 0:
+    #         QQHandler.send_to_groups(task.member_live_groups, msg)
 
     def login_header_args(self):
         """
