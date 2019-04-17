@@ -536,7 +536,7 @@ class Pocket48Handler:
         header = {
             'Content-Type': 'application/json;charset=utf-8',
             'User-Agent': 'PocketFans201807/6.0.0 (iPhone; iOS 12.2; Scale/2.00)',
-            'appInfo': {
+            'appInfo': json.dumps({
                 'vendor': 'apple',
                 'deviceId': 0,
                 "appVersion": global_config.POCKET48_VERSION,
@@ -545,7 +545,7 @@ class Pocket48Handler:
                 "osType": "ios",
                 "deviceName": "iphone",
                 "os": "ios"
-            }
+            })
         }
         return header
 
@@ -557,7 +557,7 @@ class Pocket48Handler:
         header = {
             'Content-Type': 'application/json;charset=utf-8',
             'User-Agent': 'PocketFans201807/6.0.0 (iPhone; iOS 12.2; Scale/2.00)',
-            'appInfo': {
+            'appInfo': json.dumps({
                 'vendor': 'apple',
                 'deviceId': 0,
                 "appVersion": global_config.POCKET48_VERSION,
@@ -566,7 +566,7 @@ class Pocket48Handler:
                 "osType": "ios",
                 "deviceName": "iphone",
                 "os": "ios"
-            },
+            }),
             'token': self.token
         }
         return header
@@ -580,7 +580,7 @@ class Pocket48Handler:
         header = {
             'Content-Type': 'application/json;charset=utf-8',
             'User-Agent': 'PocketFans201807/6.0.0 (iPhone; iOS 12.2; Scale/2.00)',
-            'appInfo': {
+            'appInfo': json.dumps({
                 'vendor': 'apple',
                 'deviceId': 0,
                 "appVersion": global_config.POCKET48_VERSION,
@@ -589,7 +589,7 @@ class Pocket48Handler:
                 "osType": "ios",
                 "deviceName": "iphone",
                 "os": "ios"
-            },
+            }),
             'token': self.token
         }
         return header
@@ -603,7 +603,7 @@ class Pocket48Handler:
         header = {
             'Content-Type': 'application/json;charset=utf-8',
             'User-Agent': 'PocketFans201807/6.0.0 (iPhone; iOS 12.2; Scale/2.00)',
-            'appInfo': {
+            'appInfo': json.dumps({
                 'vendor': 'apple',
                 'deviceId': 0,
                 "appVersion": global_config.POCKET48_VERSION,
@@ -612,7 +612,7 @@ class Pocket48Handler:
                 "osType": "ios",
                 "deviceName": "iphone",
                 "os": "ios"
-            },
+            }),
             'token': self.token
         }
         return header
