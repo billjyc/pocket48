@@ -270,8 +270,8 @@ class Pocket48Handler:
 
                 if msg_id in task.member_room_msg_ids:
                     continue
-
-                if extInfo['sessionRole'] != 2:  # 其他成员的消息
+                logger.debug('session role: {}'.format(extInfo['sessionRole']))
+                if int(extInfo['sessionRole']) != 2:  # 其他成员的消息
                     task.unread_other_member_msg_amount += 1
                     member_name = extInfo['user']['nickName']
                     if member_name == '19岁了还是小可爱':
@@ -383,9 +383,15 @@ class Pocket48Handler:
                         message = express_message + message
                     self.save_msg_to_db(203, msg_id, user_id, user_name, msg_time, emotion_name)
             if message and len(task.member_room_msg_groups) > 0:
+                express_message = '[CQ:image,file=%s]' % (
+                     '\\express\\tsj000.gif')
+                express_message2 = '[CQ:image,file=%s]' % (
+                     '\\express\\lt001.png')
                 QQHandler.send_to_groups(task.member_room_msg_groups, message)
                 self.get_member_room_msg_lite(task)
                 logger.info('message: %s', message)
+                QQHandler.send_to_groups(task.member_room_msg_groups, express_message)
+                QQHandler.send_to_groups(task.member_room_msg_groups, express_message2)
             logger.debug('成员{}消息队列: {}'.format(task.member.name, len(task.member_room_msg_ids)))
         except Exception as e:
             logger.exception(e)
