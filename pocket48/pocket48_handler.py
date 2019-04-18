@@ -376,17 +376,17 @@ class Pocket48Handler:
                     if global_config.USING_COOLQ_PRO is True:
                         if 'tsj' in emotion_name:
                             express_message = '[%s]-%s: [CQ:image,file=%s]' % (
-                            msg_time, user_name, '\\express\\{}.gif'.format(emotion_name))
+                            msg_time, user_name, 'express\\{}.gif'.format(emotion_name))
                         else:
                             express_message = '[%s]-%s: [CQ:image,file=%s]' % (
-                                msg_time, user_name, '\\express\\{}.png'.format(emotion_name))
+                                msg_time, user_name, 'express\\{}.png'.format(emotion_name))
                         message = express_message + message
                     self.save_msg_to_db(203, msg_id, user_id, user_name, msg_time, emotion_name)
             if message and len(task.member_room_msg_groups) > 0:
                 express_message = '[CQ:image,file=%s]' % (
-                     '\\express\\tsj000.gif')
+                     'express\\tsj000.gif')
                 express_message2 = '[CQ:image,file=%s]' % (
-                     '\\express\\lt001.png')
+                     'express\\lt001.png')
                 QQHandler.send_to_groups(task.member_room_msg_groups, message)
                 self.get_member_room_msg_lite(task)
                 logger.info('message: %s', message)
