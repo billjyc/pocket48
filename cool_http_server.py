@@ -102,6 +102,19 @@ def handle_msg(context):
                 logger.debug('提问内容: %s' % content)
                 reply = ai_bot.nlp_textchat(content, user_id)
                 bot.send(context, reply)
+            elif message == '-express':
+                express_message = '[CQ:image,file=%s]' % (
+                     'express\\tsj000.gif')
+                express_message2 = '[CQ:image,file=%s]' % (
+                     'express\\lt001.png')
+                express_message3 = '[CQ:image,file=%s]' % (
+                    '2BCD92149F0DB753CD7660007F0D96F3.gif.cqimg')
+                logger.debug(express_message)
+                logger.debug(express_message2)
+                logger.debug(express_message3)
+                bot.send(context, express_message)
+                bot.send(context, express_message2)
+                bot.send(context, express_message3)
             # elif message == '抽签':
             #     try:
             #         message = draw_lottery(user_id, group_id)
