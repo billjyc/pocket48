@@ -104,11 +104,11 @@ def handle_msg(context):
                 bot.send(context, reply)
             elif message == '-express':
                 express_message = '[CQ:image,file=%s]' % (
-                     'express\\tsj000.gif')
+                     'lt_020.png')
                 express_message2 = '[CQ:image,file=%s]' % (
-                     'express\\lt001.png')
+                     'tsj_013.gif')
                 express_message3 = '[CQ:image,file=%s]' % (
-                    '2BCD92149F0DB753CD7660007F0D96F3.gif.cqimg')
+                    'xxy_040.png')
                 logger.debug(express_message)
                 logger.debug(express_message2)
                 logger.debug(express_message3)
