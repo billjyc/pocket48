@@ -31,4 +31,4 @@
 31,3,4,黑夜女神,1,http://i2.tiimg.com/667696/0caf917663cd2c77.jpg,0
 32,3,4,逗猫棒,2,http://i1.fuimg.com/667696/3400148d97bc21da.jpg,0
 33,3,4,毒苹果,3,http://i1.fuimg.com/667696/8337dcda68b383e6.jpg,0
-34,3,4,乘风破浪,4,http://i1.fuimg.com/667696/53f211c16b2b7cf3.jpg,1
+34,3,4,乘风破浪,4,http://i1.fuimg.com/667696/53f211c16b2b7cf3.jpg,0
