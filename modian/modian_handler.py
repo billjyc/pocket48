@@ -337,22 +337,22 @@ class ModianHandler:
                 card_report = self.card_draw_handler.draw(user_id, nickname, backer_money, pay_time)
 
             # 四周年活动
-            four_year_msg = ''
-            if modian_entity.pro_id in [four_year_anniversary.HUIHUI_PRO_ID, four_year_anniversary.KUANKUAN_PRO_ID]:
-                # import random
-                # rand_int = random.randint(0, 1)
-                if modian_entity.pro_id == four_year_anniversary.HUIHUI_PRO_ID:
-                # if rand_int == 0:
-                    point = four_year_anniversary.plus_huihui_points(backer_money, modian_entity.pro_id, user_id, str(oid))
-                    four_year_msg = '灰灰阵营积分+{}, \n目前战况：\n'.format(point)
-                else:
-                    point = four_year_anniversary.plus_kuankuan_points(backer_money, modian_entity.pro_id, user_id, str(oid))
-                    four_year_msg = '款款阵营积分+{}, \n目前战况：\n'.format(point)
-                kuankuan_point, huihui_point = four_year_anniversary.compute_total_points()
-                if kuankuan_point >= huihui_point:
-                    four_year_msg += '款款阵营: {}分\n灰灰阵营: {}分\n'.format(kuankuan_point, huihui_point)
-                else:
-                    four_year_msg += '灰灰阵营: {}分\n款款阵营: {}分\n'.format(huihui_point, kuankuan_point)
+            # four_year_msg = ''
+            # if modian_entity.pro_id in [four_year_anniversary.HUIHUI_PRO_ID, four_year_anniversary.KUANKUAN_PRO_ID]:
+            #     # import random
+            #     # rand_int = random.randint(0, 1)
+            #     if modian_entity.pro_id == four_year_anniversary.HUIHUI_PRO_ID:
+            #     # if rand_int == 0:
+            #         point = four_year_anniversary.plus_huihui_points(backer_money, modian_entity.pro_id, user_id, str(oid))
+            #         four_year_msg = '灰灰阵营积分+{}, \n目前战况：\n'.format(point)
+            #     else:
+            #         point = four_year_anniversary.plus_kuankuan_points(backer_money, modian_entity.pro_id, user_id, str(oid))
+            #         four_year_msg = '款款阵营积分+{}, \n目前战况：\n'.format(point)
+            #     kuankuan_point, huihui_point = four_year_anniversary.compute_total_points()
+            #     if kuankuan_point >= huihui_point:
+            #         four_year_msg += '款款阵营: {}分\n灰灰阵营: {}分\n'.format(kuankuan_point, huihui_point)
+            #     else:
+            #         four_year_msg += '灰灰阵营: {}分\n款款阵营: {}分\n'.format(huihui_point, kuankuan_point)
 
             msg += '%s\n集资项目: %s\n链接: %s\n' % (project_info, pro_name, modian_entity.link)
             # msg += jizi_pk_report
@@ -369,11 +369,9 @@ class ModianHandler:
             # rpg_report = modian_rpg.donate(user_id, backer_money, nickname)
             # if rpg_report:
             #     QQHandler.send_to_groups(['483548995'], rpg_report)
-            if four_year_msg:
-                # QQHandler.send_to_groups(['483548995'], four_year_msg)
-                QQHandler.send_to_groups(modian_entity.broadcast_groups, four_year_msg)
             if card_report:
-                QQHandler.send_to_groups(modian_entity.broadcast_groups, card_report)
+                # QQHandler.send_to_groups(modian_entity.broadcast_groups, card_report)
+                QQHandler.send_to_groups(['483548995'], card_report)
 
             self.order_queues[modian_entity.pro_id].add(oid)
 

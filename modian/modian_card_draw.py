@@ -12,23 +12,24 @@ except:
     logger = logging.getLogger(__name__)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ACTIVITY_CARD_ID = [32, 33, 34, 35, 36, 37, 38, 39, 40, 41]
 
 
 class CardType(Enum):
     """
     卡片种类：日，月，星, 特殊
     """
-    SUN = 1
-    MOON = 2
-    STAR = 3
-    SPECIAL = 4
+    # SUN = 1
+    # MOON = 2
+    # STAR = 3
+    NORMAL = 1  # 普通卡
+    SPECIAL = 4  # 限定卡
 
 
 class CardLevel(Enum):
-    SR = 1
-    SSR = 2
-    UR = 3
+    R = 1
+    SR = 2
+    SSR = 3
+    UR = 4
 
 
 class Card:
@@ -63,7 +64,7 @@ class CardDrawHandler:
         # self.read_config()
 
     def read_config(self):
-        config_path = os.path.join(BASE_DIR, 'data/card_draw/cards.txt')
+        config_path = os.path.join(BASE_DIR, 'data/card_draw/cards2.txt')
         weight_path = os.path.join(BASE_DIR, 'data/card_draw/weight.txt')
         card_datas = util.read_txt(config_path)
         weight_datas = util.read_txt(weight_path)[0]
@@ -153,9 +154,10 @@ class CardDrawHandler:
         rst_level = {}
         level_list = [CardLevel.SR, CardLevel.SSR, CardLevel.UR]
         type_dict = {
-            CardType.STAR: '星组',
-            CardType.MOON: '月组',
-            CardType.SUN: '日组',
+            # CardType.STAR: '星组',
+            # CardType.MOON: '月组',
+            # CardType.SUN: '日组',
+            CardType.NORMAL: '普通',
             CardType.SPECIAL: '活动限定'
         }
 
@@ -229,7 +231,8 @@ class CardDrawHandler:
         if CardLevel.UR in rst_level and len(rst_level[CardLevel.UR]) > 0:
             report += '【UR】: '
             for card in rst_level[CardLevel.UR]:
-                report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
+                # report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
+                report += '{}*{}, '.format(card.name, rst[card])
             if img_flag:
                 img = util.choice(rst_level[CardLevel.UR])[0]
                 img_report = '[CQ:image,file={}]\n'.format(img.url)
@@ -238,7 +241,8 @@ class CardDrawHandler:
         if CardLevel.SSR in rst_level and len(rst_level[CardLevel.SSR]) > 0:
             report += '【SSR】: '
             for card in rst_level[CardLevel.SSR]:
-                report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
+                # report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
+                report += '{}*{}, '.format(card.name, rst[card])
             if img_flag:
                 img = util.choice(rst_level[CardLevel.SSR])[0]
                 img_report = '[CQ:image,file={}]\n'.format(img.url)
@@ -247,9 +251,22 @@ class CardDrawHandler:
         if CardLevel.SR in rst_level and len(rst_level[CardLevel.SR]) > 0:
             report += '【SR】: '
             for card in rst_level[CardLevel.SR]:
-                report += '{}{}*{}, '.format(type_dict[card.type0], card.sub_id, rst[card])
+                # report += '{}{}*{}, '.format(type_dict[card.type0], card.sub_id, rst[card])
+                # report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
+                report += '{}*{}, '.format(card.name, rst[card])
             if img_flag:
                 img = util.choice(rst_level[CardLevel.SR])[0]
+                img_report = '[CQ:image,file={}]\n'.format(img.url)
+                img_flag = False
+            report += '\n'
+        if CardLevel.R in rst_level and len(rst_level[CardLevel.R]) > 0:
+            report += '【R】: '
+            for card in rst_level[CardLevel.R]:
+                # report += '{}{}*{}, '.format(type_dict[card.type0], card.sub_id, rst[card])
+                # report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
+                report += '{}*{}, '.format(card.name, rst[card])
+            if img_flag:
+                img = util.choice(rst_level[CardLevel.R])[0]
                 img_report = '[CQ:image,file={}]\n'.format(img.url)
                 img_flag = False
             report += '\n'
@@ -284,11 +301,13 @@ class CardDrawHandler:
         rst_level[CardLevel.UR] = []
         rst_level[CardLevel.SSR] = []
         rst_level[CardLevel.SR] = []
+        rst_level[CardLevel.R] = []
         rst_num = {}
         type_dict = {
-            CardType.STAR: '星组',
-            CardType.MOON: '月组',
-            CardType.SUN: '日组',
+            # CardType.STAR: '星组',
+            # CardType.MOON: '月组',
+            # CardType.SUN: '日组',
+            CardType.NORMAL: '普通',
             CardType.SPECIAL: '活动限定',
         }
         if rst and len(rst) > 0:
@@ -305,19 +324,28 @@ class CardDrawHandler:
         if CardLevel.UR in rst_level and len(rst_level[CardLevel.UR]) > 0:
             report += '【UR】({}/{}): '.format(len(rst_level[CardLevel.UR]), len(self.all_cards[CardLevel.UR]))
             for card in rst_level[CardLevel.UR]:
-                report += '{}-{}, '.format(type_dict[card.type0], card.name)
+                # report += '{}-{}, '.format(type_dict[card.type0], card.name)
+                report += '{}, '.format(card.name)
             report += '\n'
         logger.debug(report)
         if CardLevel.SSR in rst_level and len(rst_level[CardLevel.SSR]) > 0:
             report += '【SSR】({}/{}): '.format(len(rst_level[CardLevel.SSR]), len(self.all_cards[CardLevel.SSR]))
             for card in rst_level[CardLevel.SSR]:
-                report += '{}-{}, '.format(type_dict[card.type0], card.name)
+                # report += '{}-{}, '.format(type_dict[card.type0], card.name)
+                report += '{}, '.format(card.name)
             report += '\n'
         logger.debug(report)
         if CardLevel.SR in rst_level and len(rst_level[CardLevel.SR]) > 0:
             report += '【SR】({}/{}): '.format(len(rst_level[CardLevel.SR]), len(self.all_cards[CardLevel.SR]))
             for card in rst_level[CardLevel.SR]:
-                report += '{}{}, '.format(type_dict[card.type0], card.sub_id)
+                # report += '{}{}, '.format(type_dict[card.type0], card.sub_id)
+                report += '{}, '.format(card.name)
+            report += '\n'
+        if CardLevel.R in rst_level and len(rst_level[CardLevel.R]) > 0:
+            report += '【R】({}/{}): '.format(len(rst_level[CardLevel.R]), len(self.all_cards[CardLevel.R]))
+            for card in rst_level[CardLevel.R]:
+                # report += '{}{}, '.format(type_dict[card.type0], card.sub_id)
+                report += '{}, '.format(card.name)
             report += '\n'
         current_score = self.get_current_score(modian_id)
         report += '当前积分为: {}\n'.format(current_score)
