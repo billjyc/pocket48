@@ -152,7 +152,7 @@ class CardDrawHandler:
         rst = {}
         rst_type = {}
         rst_level = {}
-        level_list = [CardLevel.SR, CardLevel.SSR, CardLevel.UR]
+        level_list = [CardLevel.R, CardLevel.SR, CardLevel.SSR, CardLevel.UR]
         type_dict = {
             # CardType.STAR: '星组',
             # CardType.MOON: '月组',
