@@ -115,6 +115,11 @@ def handle_msg(context):
                 bot.send(context, express_message)
                 bot.send(context, express_message2)
                 bot.send(context, express_message3)
+            elif message == '-audio':
+                import random
+                files = ['1.aac', '2.aac', '3.aac', '4.aac', '5.aac']
+                express_message = '[CQ:record,file=%s]'.format(random.choice(files))
+                bot.send(context, express_message)
             # elif message == '抽签':
             #     try:
             #         message = draw_lottery(user_id, group_id)
