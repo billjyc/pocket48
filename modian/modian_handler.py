@@ -334,7 +334,7 @@ class ModianHandler:
             # 抽卡播报
             card_report = ''
             if global_config.MODIAN_CARD_DRAW:
-                card_report = self.card_draw_handler.draw(user_id, nickname, backer_money * 101.7, pay_time)
+                card_report = self.card_draw_handler.draw(user_id, nickname, backer_money, pay_time)
 
             # 四周年活动
             # four_year_msg = ''
@@ -370,8 +370,8 @@ class ModianHandler:
             # if rpg_report:
             #     QQHandler.send_to_groups(['483548995'], rpg_report)
             if card_report:
-                # QQHandler.send_to_groups(modian_entity.broadcast_groups, card_report)
-                QQHandler.send_to_groups(['483548995'], card_report)
+                QQHandler.send_to_groups(modian_entity.broadcast_groups, card_report)
+                # QQHandler.send_to_groups(['483548995'], card_report)
 
             self.order_queues[modian_entity.pro_id].add(oid)
 

@@ -7,7 +7,7 @@
 7,1,1,书桌,7,http://i2.tiimg.com/667696/dd387333c982c38c.jpg,1
 8,1,1,头饰,8,http://i2.tiimg.com/667696/b40b51366d0da552.jpg,1
 9,1,1,滚球兽,9,http://i2.tiimg.com/667696/4c0998b18ccd5da2.jpg,1
-10,1,1,杰拉托尼,10,http://i2.tiimg.com/667696/1339cef19570310d.jpg,1
+10,1,1,杰拉多尼,10,http://i2.tiimg.com/667696/1339cef19570310d.jpg,1
 11,1,1,逛超市,11,http://i2.tiimg.com/667696/106ab81418ea3f92.jpg,1
 12,1,1,吹吹风,12,http://i2.tiimg.com/667696/e3919c2136018029.jpg,1
 13,1,1,法拉利,13,http://i2.tiimg.com/667696/a7132b24325e4aa8.jpg,1
