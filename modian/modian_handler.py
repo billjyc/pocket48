@@ -642,7 +642,7 @@ class ModianHandler:
             msg += sub_msg
             if wds.pro_id in [59707, 59708, 59710]:
                 teamx_total += wds.current
-            if wds.pro_id in [59709, 59705]:
+            if wds.pro_id in [59709, 59705, 59719]:
                 teamhii_total += wds.current
 
         msg += '\n当前双方阵营金额：\n'
