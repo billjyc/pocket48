@@ -146,6 +146,9 @@ def handle_msg(context):
                     get_jizi_ranking_list_by_date(context, 0)
                 elif message == '-yesterday':
                     get_jizi_ranking_list_by_date(context, 1)
+                elif message == '-战况':
+                    message = get_modian_pk()
+                    bot.send(context, message)
                 # elif message == '-排行榜':
                 #     get_huitui_rank(context)
                 elif message == '-help':
@@ -242,6 +245,16 @@ def draw_lottery(user_id, group_id):
     finally:
         cursor_2.close()
     return res_str
+
+
+def get_modian_pk():
+    """
+    获取当前PK战况
+    :return:
+    """
+    from modian_plugin import modian_handler
+    rst = modian_handler.pk_modian_activity()
+    return rst
 
 
 def solve_lottery(user_id, group_id):

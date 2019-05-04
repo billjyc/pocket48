@@ -633,11 +633,23 @@ class ModianHandler:
         import functools
         pk_list.sort(key=functools.cmp_to_key(cmp_2), reverse=True)
 
+        teamx_total = 0
+        teamhii_total = 0
+
         for i in range(len(pk_list)):
             wds = pk_list[i]
             sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
             msg += sub_msg
+            if wds.pro_id in [59707, 59708, 59710]:
+                teamx_total += wds.current
+            if wds.pro_id in [59709, 59705]:
+                teamhii_total += wds.current
 
+        msg += '\n当前双方阵营金额：\n'
+        if teamx_total >= teamhii_total:
+            msg += 'Team X: {}元\nTeam HII: {}元'.format(teamx_total, teamhii_total)
+        else:
+            msg += 'Team HII: {}元\nTeam X: {}元'.format(teamhii_total, teamx_total)
         my_logger.info(msg)
         return msg
         # QQHandler.send_to_groups(modian_handler.modian_notify_groups, msg)
