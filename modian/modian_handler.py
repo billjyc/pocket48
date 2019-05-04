@@ -647,9 +647,9 @@ class ModianHandler:
 
         msg += '\n当前双方阵营金额：\n'
         if teamx_total >= teamhii_total:
-            msg += 'Team X: {}元\nTeam HII: {}元'.format(teamx_total, teamhii_total)
+            msg += 'Team X: %.2f元\nTeam HII: %.2f元' % (teamx_total, teamhii_total)
         else:
-            msg += 'Team HII: {}元\nTeam X: {}元'.format(teamhii_total, teamx_total)
+            msg += 'Team HII: %.2f元\nTeam X: %.2f元' % (teamhii_total, teamx_total)
         my_logger.info(msg)
         return msg
         # QQHandler.send_to_groups(modian_handler.modian_notify_groups, msg)
