@@ -631,7 +631,10 @@ class ModianHandler:
             modian_entity = ModianEntity('link', 'title', modian_id)
             target, current, pro_name = self.get_current_and_target(modian_entity)
             modian_entity.target = target
-            modian_entity.current = current
+            if modian_id == 59910:
+                modian_entity.current = current + 9220
+            else:
+                modian_entity.current = current
             modian_entity.title = pro_name
             pk_list.append(modian_entity)
 
@@ -648,7 +651,7 @@ class ModianHandler:
             msg += sub_msg
             if wds.pro_id in [59707, 59708, 59710]:
                 teamx_total += wds.current
-            if wds.pro_id in [59709, 59705, 59719]:
+            if wds.pro_id in [59910, 59705, 59719]:
                 teamhii_total += wds.current
 
         msg += '\n当前双方阵营金额：\n'
