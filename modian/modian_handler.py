@@ -283,7 +283,8 @@ class ModianHandler:
                         test_msg = '【%s】, 当前第%s棒\n' \
                                    % (jiebang.name, jiebang.current_stick_num)
                     elif jiebang.need_detail == 3:
-                        test_msg = '抽奖号: {}\n'.format(jiebang.current_stick_num)
+                        numbers = range(jiebang.current_stick_num - stick_num + 1, jiebang.current_stick_num + 1)
+                        test_msg = '抽奖号: {}\n'.format(numbers)
                     my_logger.debug(test_msg)
                     if len(test_msg) > 0:
                         msg += test_msg
