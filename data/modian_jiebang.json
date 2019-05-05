@@ -10,22 +10,13 @@
       "need_detail": 1
     },
     {
-      "jiebang_name": "满100棒追加101.7（阿钰）",
-      "pro_id": "55194",
-      "target_stick_num": 100,
-      "min_stick_amount": 10.17,
-      "start_time": "2019-04-29 12:00:00",
-      "end_time": "2019-04-30 23:59:59",
-      "need_detail": 2
-    },
-    {
-      "jiebang_name": "满200棒追加101.7（黑洞）",
-      "pro_id": "55194",
-      "target_stick_num": 200,
-      "min_stick_amount": 10.17,
-      "start_time": "2019-04-29 12:00:00",
-      "end_time": "2019-04-30 23:59:59",
-      "need_detail": 2
+      "jiebang_name": "团魂抽奖活动",
+      "pro_id": "59708",
+      "target_stick_num": 1000,
+      "min_stick_amount": 50,
+      "start_time": "2019-05-05 11:00:00",
+      "end_time": "2019-05-07 23:59:59",
+      "need_detail": 3
     }
   ]
 }
