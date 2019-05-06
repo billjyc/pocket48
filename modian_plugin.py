@@ -262,7 +262,7 @@ def sync_order():
                 modian_handler.order_queues[modian.pro_id].add(oid)
 
 
-@scheduler.scheduled_job('cron', minute='10,25,40,55', hour='*')
+# @scheduler.scheduled_job('cron', minute='10,25,40,55', hour='*')
 def notify_modian_pk():
     """
     播报摩点集资PK情况
