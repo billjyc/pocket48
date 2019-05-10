@@ -57,6 +57,7 @@ def get_room_msgs():
 @scheduler.scheduled_job('cron', hour='*/2')
 def login_timely():
     my_logger.info('定时登录，刷新token')
+    pocket48_handler.is_login = False
     pocket48_handler.login(username, password)
 
 
