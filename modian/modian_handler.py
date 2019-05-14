@@ -631,9 +631,6 @@ class ModianHandler:
             modian_entity = ModianEntity('link', 'title', modian_id)
             target, current, pro_name = self.get_current_and_target(modian_entity)
             modian_entity.target = target
-            # if modian_id == 59910:
-            #     modian_entity.current = current + 9220
-            # else:
             modian_entity.current = current
             modian_entity.title = pro_name
             pk_list.append(modian_entity)
@@ -642,23 +639,23 @@ class ModianHandler:
         import functools
         pk_list.sort(key=functools.cmp_to_key(cmp_2), reverse=True)
 
-        teamx_total = 0
-        teamhii_total = 0
+        shuihui_total = 0
+        bej_total = 0
 
-        # for i in range(len(pk_list)):
-        #     wds = pk_list[i]
-        #     sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
-        #     msg += sub_msg
-        #     if wds.pro_id in [59707, 59708, 59710]:
-        #         teamx_total += wds.current
-        #     if wds.pro_id in [59910, 59705, 59719]:
-        #         teamhii_total += wds.current
-        #
-        # msg += '\n当前双方阵营金额：\n'
-        # if teamx_total >= teamhii_total:
-        #     msg += 'Team X: %.2f元\nTeam HII: %.2f元' % (teamx_total, teamhii_total)
-        # else:
-        #     msg += 'Team HII: %.2f元\nTeam X: %.2f元' % (teamhii_total, teamx_total)
+        for i in range(len(pk_list)):
+            wds = pk_list[i]
+            sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
+            msg += sub_msg
+            if wds.pro_id in [61410, 61379]:
+                shuihui_total += wds.current
+            if wds.pro_id in [61378, 61381]:
+                bej_total += wds.current
+
+        msg += '\n当前双方阵营金额：\n'
+        if shuihui_total >= bej_total:
+            msg += '冯晓菲&杨冰怡: %.2f元\n陈倩楠&刘姝贤: %.2f元' % (shuihui_total, bej_total)
+        else:
+            msg += '陈倩楠&刘姝贤: %.2f元\n冯晓菲&杨冰怡: %.2f元' % (bej_total, shuihui_total)
         my_logger.info(msg)
         return msg
         # QQHandler.send_to_groups(modian_handler.modian_notify_groups, msg)
