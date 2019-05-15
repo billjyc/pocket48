@@ -17,7 +17,7 @@
   ],
   "modian_postscripts": ["艾虎艾克斯艾虎给你笔芯~", "款款爱你哟~", "给您比个垃圾桶~", "笔芯~", "啵啵~"],
 
-  "modian_need_display_pk": true,
+  "modian_need_display_pk": false,
   "modian_pk_activities": [
     61410, 61378, 61381, 61379
   ],
