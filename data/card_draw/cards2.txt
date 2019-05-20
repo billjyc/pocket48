@@ -33,5 +33,5 @@
 33,4,1,陪你走下去,1,http://i2.tiimg.com/667696/60d15bd8f653a59d.jpg,1
 34,4,1,礼物,2,http://i2.tiimg.com/667696/371e1d9a9aadb2d8.jpg,1
 35,4,1,纯真,3,http://i2.tiimg.com/667696/49f323039edd4c25.jpg,1
-36,3,4,真心话,8,http://i1.fuimg.com/667696/5bd46ff655e8ba4e.jpg,1
-37,4,4,大冒险,4,http://i1.fuimg.com/667696/2b96c8b52d6a651d.jpg,1
+36,1,4,真心话,8,http://i1.fuimg.com/667696/5bd46ff655e8ba4e.jpg,1
+37,2,4,大冒险,4,http://i1.fuimg.com/667696/2b96c8b52d6a651d.jpg,1
