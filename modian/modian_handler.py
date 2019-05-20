@@ -262,7 +262,10 @@ class ModianHandler:
                 my_logger.debug('接棒活动详情: 【%s】', jiebang.name)
                 my_logger.debug('集资金额: %s, 接棒最小金额: %s', backer_money, jiebang.min_stick_amount)
                 if backer_money >= jiebang.min_stick_amount:
-                    stick_num = util.compute_stick_num(jiebang.min_stick_amount, backer_money)
+                    if jiebang.need_detail == 3:
+                        stick_num = 1
+                    else:
+                        stick_num = util.compute_stick_num(jiebang.min_stick_amount, backer_money)
                     jiebang.current_stick_num += stick_num
 
                     # jiebang.last_record_time = util.convert_timestamp_to_timestr(time.time()*1000)
