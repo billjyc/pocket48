@@ -155,6 +155,8 @@ def update_modian_conf():
             """, (pro_id, ))
             if rst:
                 for jiebang in rst:
+                    if '限定卡抽奖活动' in jiebang[0]:
+                        continue
                     # 修正当前棒数
                     my_logger.info('修正接棒棒数')
                     real_stick_num = 0
