@@ -10,13 +10,13 @@
       "need_detail": 1
     },
     {
-      "jiebang_name": "托尼版连连款解锁",
+      "jiebang_name": "限定卡抽奖活动",
       "pro_id": "59267",
-      "target_stick_num": 200,
+      "target_stick_num": 9999,
       "min_stick_amount": 10.17,
-      "start_time": "2019-05-17 19:45:00",
-      "end_time": "2019-05-18 20:59:59",
-      "need_detail": 1
+      "start_time": "2019-05-20 12:50:00",
+      "end_time": "2019-05-22 20:59:59",
+      "need_detail": 3
     }
   ]
 }

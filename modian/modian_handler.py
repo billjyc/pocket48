@@ -21,12 +21,11 @@ from qq.qqhandler import QQHandler
 from utils import global_config, util
 from utils.mysql_util import mysql_util, Base, DBSession
 from sqlalchemy import Column, String, Integer, Float, DateTime
-# from modian.special import modian_rpg
-from modian.special import four_year_anniversary
 
 
 class ModianEntity:
-    def __init__(self, link, title, pro_id, need_display_rank=False, broadcast_groups=[], current=0.0, target=0.0, support_num=0):
+    def __init__(self, link, title, pro_id, need_display_rank=False, broadcast_groups=[], current=0.0, target=0.0,
+                 support_num=0):
         self.link = link
         self.title = title
         self.pro_id = pro_id
@@ -92,7 +91,7 @@ class ModianHandler:
         if not hasattr(cls, 'instance'):
             cls._instance = super().__new__(cls)
         return cls._instance
-    
+
     def __init__(self, modian_notify_groups, modian_project_array):
         self.session = requests.session()
         self.modian_notify_groups = modian_notify_groups
@@ -103,7 +102,7 @@ class ModianHandler:
 
         self.card_draw_handler = card_draw_handler
         self.order_queues = {}
-        self.alchemy_session = DBSession()
+        # self.alchemy_session = DBSession()
 
         # self.mysql_util = MySQLUtil()
 
@@ -218,7 +217,6 @@ class ModianHandler:
             except Exception as e:
                 my_logger.exception(e)
 
-
             try:
                 # 创建对象
                 # modian_order = ModianOrder(id=str(oid), supporter_id=user_id, backer_money=backer_money, pay_time=pay_time,
@@ -232,8 +230,8 @@ class ModianHandler:
             except Exception as e:
                 my_logger.exception(e)
 
-
-            msg = '感谢 %s(%s) 支持了%s元, %s\n' % (nickname, user_id, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
+            msg = '感谢 %s(%s) 支持了%s元, %s\n' % (
+            nickname, user_id, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
             daka_rank, support_days = self.find_user_daka_rank(user_id, modian_entity.pro_id)
 
             if daka_rank != -1 and support_days:
@@ -249,9 +247,14 @@ class ModianHandler:
             rst = mysql_util.select_one("""
                                 select count(distinct(`supporter_id`)) from `order` 
                                 where `pro_id` = %s
-                            """, (modian_entity.pro_id, ))
+                            """, (modian_entity.pro_id,))
             if rst is not None:
                 msg += '当前集资人数: %s\n' % rst[0]
+
+            # 抽卡播报
+            card_report = ''
+            if global_config.MODIAN_CARD_DRAW:
+                card_report = self.card_draw_handler.draw(user_id, nickname, backer_money, pay_time)
 
             '''接棒相关'''
             my_logger.debug('接棒情况更新')
@@ -261,7 +264,7 @@ class ModianHandler:
                 if backer_money >= jiebang.min_stick_amount:
                     stick_num = util.compute_stick_num(jiebang.min_stick_amount, backer_money)
                     jiebang.current_stick_num += stick_num
-                    
+
                     # jiebang.last_record_time = util.convert_timestamp_to_timestr(time.time()*1000)
                     jiebang.last_record_time = util.convert_timestamp_to_timestr(int(time.time() * 1000))
                     # 数据库也要更新
@@ -283,11 +286,13 @@ class ModianHandler:
                         test_msg = '【%s】, 当前第%s棒\n' \
                                    % (jiebang.name, jiebang.current_stick_num)
                     elif jiebang.need_detail == 3:
-                        # numbers = range(jiebang.current_stick_num - stick_num + 1, jiebang.current_stick_num + 1)
-                        if stick_num > 1:
-                            test_msg = '抽奖号: {}~{}\n'.format(jiebang.current_stick_num - stick_num + 1, jiebang.current_stick_num)
-                        else:
-                            test_msg = '抽奖号: {}\n'.format(jiebang.current_stick_num)
+                        if '大冒险' in card_report:
+                            # numbers = range(jiebang.current_stick_num - stick_num + 1, jiebang.current_stick_num + 1)
+                            if stick_num > 1:
+                                test_msg = '抽奖号: {}~{}\n'.format(jiebang.current_stick_num - stick_num + 1,
+                                                                 jiebang.current_stick_num)
+                            else:
+                                test_msg = '抽奖号: {}\n'.format(jiebang.current_stick_num)
                     my_logger.debug(test_msg)
                     if len(test_msg) > 0:
                         msg += test_msg
@@ -337,29 +342,6 @@ class ModianHandler:
                 QQHandler.send_to_groups(['483548995'], count_flag_test_msgs)
                 # msg += flag_test_msgs
 
-            # 抽卡播报
-            card_report = ''
-            if global_config.MODIAN_CARD_DRAW:
-                card_report = self.card_draw_handler.draw(user_id, nickname, backer_money, pay_time)
-
-            # 四周年活动
-            # four_year_msg = ''
-            # if modian_entity.pro_id in [four_year_anniversary.HUIHUI_PRO_ID, four_year_anniversary.KUANKUAN_PRO_ID]:
-            #     # import random
-            #     # rand_int = random.randint(0, 1)
-            #     if modian_entity.pro_id == four_year_anniversary.HUIHUI_PRO_ID:
-            #     # if rand_int == 0:
-            #         point = four_year_anniversary.plus_huihui_points(backer_money, modian_entity.pro_id, user_id, str(oid))
-            #         four_year_msg = '灰灰阵营积分+{}, \n目前战况：\n'.format(point)
-            #     else:
-            #         point = four_year_anniversary.plus_kuankuan_points(backer_money, modian_entity.pro_id, user_id, str(oid))
-            #         four_year_msg = '款款阵营积分+{}, \n目前战况：\n'.format(point)
-            #     kuankuan_point, huihui_point = four_year_anniversary.compute_total_points()
-            #     if kuankuan_point >= huihui_point:
-            #         four_year_msg += '款款阵营: {}分\n灰灰阵营: {}分\n'.format(kuankuan_point, huihui_point)
-            #     else:
-            #         four_year_msg += '灰灰阵营: {}分\n款款阵营: {}分\n'.format(huihui_point, kuankuan_point)
-
             msg += '%s\n集资项目: %s\n链接: %s\n' % (project_info, pro_name, modian_entity.link)
             # msg += jizi_pk_report
 
@@ -372,9 +354,6 @@ class ModianHandler:
             #     msg += self.pk_modian_activity()
 
             QQHandler.send_to_groups(modian_entity.broadcast_groups, msg)
-            # rpg_report = modian_rpg.donate(user_id, backer_money, nickname)
-            # if rpg_report:
-            #     QQHandler.send_to_groups(['483548995'], rpg_report)
             if card_report:
                 QQHandler.send_to_groups(modian_entity.broadcast_groups, card_report)
                 # QQHandler.send_to_groups(['483548995'], card_report)
@@ -396,7 +375,7 @@ class ModianHandler:
         except Exception as e:
             my_logger.exception(e)
 
-        self.alchemy_session.commit()
+        # self.alchemy_session.commit()
         # finally:
         #     conn.commit()
         #     cursor.close()
@@ -429,7 +408,7 @@ class ModianHandler:
                 and CURDATE()=DATE(`order`.pay_time) 
             group by `order`.supporter_id 
             order by total desc;
-        """, (pro_id, ))
+        """, (pro_id,))
         cur_rank = 0
         row_tmp = 0
         last_val = -1
@@ -439,7 +418,7 @@ class ModianHandler:
             if rank[2] != last_val:
                 cur_rank = row_tmp
             last_val = rank[2]
-            rank_tmp = rank + (cur_rank, )
+            rank_tmp = rank + (cur_rank,)
             new_rst.append(rank_tmp)
         my_logger.debug(new_rst)
         return new_rst, total
@@ -452,7 +431,7 @@ class ModianHandler:
         """
         rst = mysql_util.select_all("""
             select supporter_id, sum(backer_money) as total from `order` where pro_id=%s group by supporter_id order by total desc;
-        """, (pro_id, ))
+        """, (pro_id,))
         return rst
 
     # def get_ranking_list(self, modian_entity, type0=1):
@@ -534,7 +513,7 @@ class ModianHandler:
         ranking_list = mysql_util.select_all("""
             select supporter_id, count(distinct(date(pay_time))) as c 
             from `order` where pro_id=%s group by supporter_id order by c desc; 
-        """, (pro_id, ))
+        """, (pro_id,))
         cur_rank = 0
         for temp_id, days in ranking_list:
             cur_rank += 1
@@ -616,11 +595,13 @@ class ModianHandler:
         :param pro_id_list:
         :return:
         """
+
         def cmp_2(x, y):
             if x.current >= y.current:
                 return 1
             else:
                 return -1
+
         if global_config.MODIAN_NEED_DISPLAY_PK is False:
             return '当前没有开启PK！'
         my_logger.info('摩点集资PK播报')
@@ -662,11 +643,10 @@ class ModianHandler:
 
 
 if __name__ == '__main__':
-
     user_id = '123456'
     back_time = '2019-02-12 20:30:00'
-    oid = uuid.uuid3(uuid.NAMESPACE_OID, user_id+back_time)
-    oid2 = uuid.uuid3(uuid.NAMESPACE_OID, user_id+back_time)
+    oid = uuid.uuid3(uuid.NAMESPACE_OID, user_id + back_time)
+    oid2 = uuid.uuid3(uuid.NAMESPACE_OID, user_id + back_time)
 
     session = DBSession()
 
