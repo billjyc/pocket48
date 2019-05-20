@@ -156,15 +156,15 @@ def update_modian_conf():
             if rst:
                 for jiebang in rst:
                     my_logger.debug('jiebang name: {}'.format(str(jiebang[0], encoding='utf-8')))
-                    if '限定卡' in str(jiebang[0], encoding='utf-8'):
-                        my_logger.debug('jiebang: %s, %s, %s, %s, %s, %s, %s, %s, %s',
-                                        jiebang[0], jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
-                                        jiebang[6], jiebang[7], jiebang[8])
-                        jiebang_entity = ModianJiebangEntity(str(jiebang[0], encoding='utf-8'), jiebang[1], jiebang[2],
-                                                             jiebang[3], jiebang[4], jiebang[5],
-                                                             jiebang[6], jiebang[7], jiebang[8])
-                        global_config.MODIAN_JIEBANG_ACTIVITIES[pro_id].append(jiebang_entity)
-                        continue
+                    # if '限定卡' in str(jiebang[0], encoding='utf-8'):
+                    #     my_logger.debug('jiebang: %s, %s, %s, %s, %s, %s, %s, %s, %s',
+                    #                     jiebang[0], jiebang[1], jiebang[2], jiebang[3], jiebang[4], jiebang[5],
+                    #                     jiebang[6], jiebang[7], jiebang[8])
+                    #     jiebang_entity = ModianJiebangEntity(str(jiebang[0], encoding='utf-8'), jiebang[1], jiebang[2],
+                    #                                          jiebang[3], jiebang[4], jiebang[5],
+                    #                                          jiebang[6], jiebang[7], jiebang[8])
+                    #     global_config.MODIAN_JIEBANG_ACTIVITIES[pro_id].append(jiebang_entity)
+                    #     continue
                     # 修正当前棒数
                     my_logger.info('修正接棒棒数')
                     real_stick_num = 0

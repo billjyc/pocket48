@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 # TEST数据库信息
-DB_HOST = "localhost"
+DB_HOST = "112.74.183.47"
 DB_PORT = 3306
 DB_DBNAME = "card_draw"
 DB_USER = "root"

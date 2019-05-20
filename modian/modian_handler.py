@@ -262,13 +262,13 @@ class ModianHandler:
                 my_logger.debug('接棒活动详情: 【%s】', jiebang.name)
                 my_logger.debug('集资金额: %s, 接棒最小金额: %s', backer_money, jiebang.min_stick_amount)
                 if backer_money >= jiebang.min_stick_amount:
-                    if jiebang.need_detail == 3:
-                        if '大冒险' in card_report:
-                            stick_num = 1
-                        else:
-                            stick_num = 0
-                    else:
-                        stick_num = util.compute_stick_num(jiebang.min_stick_amount, backer_money)
+                    # if jiebang.need_detail == 3:
+                    #     if '大冒险' in card_report:
+                    #         stick_num = 1
+                    #     else:
+                    #         stick_num = 0
+                    # else:
+                    stick_num = util.compute_stick_num(jiebang.min_stick_amount, backer_money)
                     jiebang.current_stick_num += stick_num
 
                     # jiebang.last_record_time = util.convert_timestamp_to_timestr(time.time()*1000)
@@ -292,13 +292,13 @@ class ModianHandler:
                         test_msg = '【%s】, 当前第%s棒\n' \
                                    % (jiebang.name, jiebang.current_stick_num)
                     elif jiebang.need_detail == 3:
-                        if '大冒险' in card_report:
-                            # numbers = range(jiebang.current_stick_num - stick_num + 1, jiebang.current_stick_num + 1)
-                            if stick_num > 1:
-                                test_msg = '抽奖号: {}~{}\n'.format(jiebang.current_stick_num - stick_num + 1,
-                                                                 jiebang.current_stick_num)
-                            else:
-                                test_msg = '抽奖号: {}\n'.format(jiebang.current_stick_num)
+                        # if '大冒险' in card_report:
+                        # numbers = range(jiebang.current_stick_num - stick_num + 1, jiebang.current_stick_num + 1)
+                        if stick_num > 1:
+                            test_msg = '抽奖号: {}~{}\n'.format(jiebang.current_stick_num - stick_num + 1,
+                                                             jiebang.current_stick_num)
+                        else:
+                            test_msg = '抽奖号: {}\n'.format(jiebang.current_stick_num)
                     my_logger.debug(test_msg)
                     if len(test_msg) > 0:
                         msg += test_msg
