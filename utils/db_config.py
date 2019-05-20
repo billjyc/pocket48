@@ -1,11 +1,11 @@
 # -*- coding: UTF-8 -*-
 
 # TEST数据库信息
-DB_HOST = "112.74.183.47"
+DB_HOST = "localhost"
 DB_PORT = 3306
 DB_DBNAME = "card_draw"
-DB_USER = "root"
-DB_PASSWORD = "Jyc@1993"
+DB_USER = "***"
+DB_PASSWORD = "***"
 
 # 数据库连接编码
 DB_CHARSET = "utf8"
