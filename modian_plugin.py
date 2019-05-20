@@ -156,7 +156,7 @@ def update_modian_conf():
             if rst:
                 for jiebang in rst:
                     my_logger.debug('jiebang name: {}'.format(str(jiebang[0], encoding='utf-8')))
-                    if '限定卡抽奖活动' in str(jiebang[0], encoding='utf-8'):
+                    if '限定卡' in str(jiebang[0], encoding='utf-8'):
                         continue
                     # 修正当前棒数
                     my_logger.info('修正接棒棒数')
