@@ -262,16 +262,10 @@ class ModianHandler:
                 my_logger.debug('接棒活动详情: 【%s】', jiebang.name)
                 my_logger.debug('集资金额: %s, 接棒最小金额: %s', backer_money, jiebang.min_stick_amount)
                 if backer_money >= jiebang.min_stick_amount:
-                    # if jiebang.need_detail == 3:
-                    #     if '大冒险' in card_report:
-                    #         stick_num = 1
-                    #     else:
-                    #         stick_num = 0
-                    # else:
+
                     stick_num = util.compute_stick_num(jiebang.min_stick_amount, backer_money)
                     jiebang.current_stick_num += stick_num
 
-                    # jiebang.last_record_time = util.convert_timestamp_to_timestr(time.time()*1000)
                     jiebang.last_record_time = util.convert_timestamp_to_timestr(int(time.time() * 1000))
                     # 数据库也要更新
                     try:
@@ -292,8 +286,6 @@ class ModianHandler:
                         test_msg = '【%s】, 当前第%s棒\n' \
                                    % (jiebang.name, jiebang.current_stick_num)
                     elif jiebang.need_detail == 3:
-                        # if '大冒险' in card_report:
-                        # numbers = range(jiebang.current_stick_num - stick_num + 1, jiebang.current_stick_num + 1)
                         if stick_num > 1:
                             test_msg = '抽奖号: {}~{}\n'.format(jiebang.current_stick_num - stick_num + 1,
                                                              jiebang.current_stick_num)
@@ -367,8 +359,6 @@ class ModianHandler:
             self.order_queues[modian_entity.pro_id].add(oid)
 
         # 更新接棒的数据库
-        # conn = sqlite3.connect('data/modian.db', check_same_thread=False)
-        # cursor = conn.cursor()
         try:
             my_logger.debug('更新接棒活动信息:')
             for jiebang in jiebang_activities:
@@ -626,23 +616,23 @@ class ModianHandler:
         import functools
         pk_list.sort(key=functools.cmp_to_key(cmp_2), reverse=True)
 
-        shuihui_total = 0
-        bej_total = 0
+        # shuihui_total = 0
+        # bej_total = 0
 
         for i in range(len(pk_list)):
             wds = pk_list[i]
             sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
             msg += sub_msg
-            if wds.pro_id in [61410, 61379]:
-                shuihui_total += wds.current
-            if wds.pro_id in [61378, 61381]:
-                bej_total += wds.current
+            # if wds.pro_id in [61410, 61379]:
+            #     shuihui_total += wds.current
+            # if wds.pro_id in [61378, 61381]:
+            #     bej_total += wds.current
 
-        msg += '\n当前双方阵营金额：\n'
-        if shuihui_total >= bej_total:
-            msg += '冯晓菲&杨冰怡: %.2f元\n陈倩楠&刘姝贤: %.2f元' % (shuihui_total, bej_total)
-        else:
-            msg += '陈倩楠&刘姝贤: %.2f元\n冯晓菲&杨冰怡: %.2f元' % (bej_total, shuihui_total)
+        # msg += '\n当前双方阵营金额：\n'
+        # if shuihui_total >= bej_total:
+        #     msg += '冯晓菲&杨冰怡: %.2f元\n陈倩楠&刘姝贤: %.2f元' % (shuihui_total, bej_total)
+        # else:
+        #     msg += '陈倩楠&刘姝贤: %.2f元\n冯晓菲&杨冰怡: %.2f元' % (bej_total, shuihui_total)
         my_logger.info(msg)
         return msg
         # QQHandler.send_to_groups(modian_handler.modian_notify_groups, msg)
