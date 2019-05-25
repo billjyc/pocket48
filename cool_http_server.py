@@ -455,6 +455,8 @@ def __get_jizi_ranking_list_by_date_diff(pro_id, day_diff=0):
         row_tmp += 1
         if rank[2] != last_val:
             cur_rank = row_tmp
+        if cur_rank > 10:
+            continue
         last_val = rank[2]
         rank_tmp = rank + (cur_rank,)
         new_rst.append(rank_tmp)
