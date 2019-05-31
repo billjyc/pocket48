@@ -636,6 +636,7 @@ class Pocket48Handler:
         for s in schedules['schedules']:
             logger.debug(s)
             perform_time = util.convert_timestr_to_timestamp(s['time'])
+            logger.debug('【日程提醒】perform_time: {}, current_time: {}'.format(perform_time, time.time()))
             diff = perform_time - time.time()
             if 0 < diff <= 15 * 60:
                 live_link = ''.join(global_config.LIVE_LINK)
