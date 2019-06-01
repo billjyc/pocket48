@@ -634,7 +634,7 @@ class ModianHandler:
         if total >= fxf_total:
             msg += '李梓&卢静: %.2f元\n冯晓菲: %.2f元' % (total, fxf_total)
         else:
-            msg += '冯晓菲: %.2f元\n李梓&卢静: %.2f元' % (total, fxf_total)
+            msg += '冯晓菲: %.2f元\n李梓&卢静: %.2f元' % (fxf_total, total)
         my_logger.info(msg)
         return msg
         # QQHandler.send_to_groups(modian_handler.modian_notify_groups, msg)
