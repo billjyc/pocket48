@@ -616,25 +616,25 @@ class ModianHandler:
         import functools
         pk_list.sort(key=functools.cmp_to_key(cmp_2), reverse=True)
 
-        # total = 0
-        # fxf_total = 0
+        total = 0
+        fxf_total = 0
 
         for i in range(len(pk_list)):
             wds = pk_list[i]
             sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
             msg += sub_msg
-            # if wds.pro_id in [63658, 64133]:
-            #     total += wds.current
-            # else:
-            #     fxf_total = wds.current
+            if wds.pro_id in [63658, 64133]:
+                total += wds.current
+            else:
+                fxf_total = wds.current
             # if wds.pro_id in [61378, 61381]:
             #     bej_total += wds.current
 
-        # msg += '\n当前双方阵营金额：\n'
-        # if total >= fxf_total:
-        #     msg += '李梓&卢静: %.2f元\n冯晓菲: %.2f元' % (total, fxf_total)
-        # else:
-        #     msg += '冯晓菲: %.2f元\n李梓&卢静: %.2f元' % (fxf_total, total)
+        msg += '\n当前双方阵营金额：\n'
+        if total >= fxf_total:
+            msg += '李梓&卢静: %.2f元\n冯晓菲: %.2f元' % (total, fxf_total)
+        else:
+            msg += '冯晓菲: %.2f元\n李梓&卢静: %.2f元' % (fxf_total, total)
         my_logger.info(msg)
         return msg
         # QQHandler.send_to_groups(modian_handler.modian_notify_groups, msg)
