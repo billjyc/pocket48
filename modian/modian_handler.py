@@ -640,7 +640,7 @@ class ModianHandler:
                 sub_msg = '%d. %s\t当前进度: %.2f元\t  -%2.f元\n' % (i + 1, wds.title, wds.current, diff)
             msg += sub_msg
 
-        msg += '当前组合PK战况：\n'
+        msg += '\n当前组合PK战况：\n'
         for i in range(len(pk_list2)):
             wds = pk_list2[i]
             if i == 0:
