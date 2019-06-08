@@ -619,11 +619,11 @@ class ModianHandler:
             modian_entity.current = current
             modian_entity.title = pro_name
             pk_list.append(modian_entity)
-            if modian_id in [65656, 65643]:
+            if modian_id in [65672, 65643]:
                 fxf_szn_entity.current += current
-            elif modian_id in [65675, 65672]:
+            elif modian_id in [65675, 65674]:
                 xyyz_qyz_entity.current += current
-            elif modian_id in [65680, 65674]:
+            elif modian_id in [65680, 65656]:
                 tlj_wxj_entity.current += current
 
         msg = '当前集资PK战况播报:\n'
