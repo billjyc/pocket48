@@ -603,6 +603,14 @@ class ModianHandler:
         my_logger.info('摩点集资PK播报')
 
         pk_list = []
+        pk_list2 = []
+
+        fxf_szn_entity = ModianEntity('link', '冯晓菲&孙珍妮', 1)
+        xyyz_qyz_entity = ModianEntity('link', '许杨玉琢&戚予珠', 2)
+        tlj_wxj_entity = ModianEntity('link', '唐莉佳&王晓佳', 3)
+        pk_list2.append(fxf_szn_entity)
+        pk_list2.append(xyyz_qyz_entity)
+        pk_list2.append(tlj_wxj_entity)
 
         for modian_id in global_config.MODIAN_PK_ARRAY:
             modian_entity = ModianEntity('link', 'title', modian_id)
@@ -611,30 +619,37 @@ class ModianHandler:
             modian_entity.current = current
             modian_entity.title = pro_name
             pk_list.append(modian_entity)
+            if modian_id in [65656, 65643]:
+                fxf_szn_entity.current += current
+            elif modian_id in [65675, 65672]:
+                xyyz_qyz_entity.current += current
+            elif modian_id in [65680, 65674]:
+                tlj_wxj_entity.current += current
 
         msg = '当前集资PK战况播报:\n'
         import functools
         pk_list.sort(key=functools.cmp_to_key(cmp_2), reverse=True)
-
-        total = 0
-        fxf_total = 0
+        pk_list2.sort(key=functools.cmp_to_key(cmp_2), reverse=True)
 
         for i in range(len(pk_list)):
             wds = pk_list[i]
-            sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
+            if i == 0:
+                sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
+            else:
+                diff = pk_list[i].current - pk_list[i-1].current
+                sub_msg = '%d. %s\t当前进度: %.2f元\t-%2.f元\n' % (i + 1, wds.title, wds.current, diff)
             msg += sub_msg
-            # if wds.pro_id in [63658, 64133]:
-            #     total += wds.current
-            # else:
-            #     fxf_total = wds.current
-            # if wds.pro_id in [61378, 61381]:
-            #     bej_total += wds.current
 
-        # msg += '\n当前双方阵营金额：\n'
-        # if total >= fxf_total:
-        #     msg += '李梓&卢静: %.2f元\n冯晓菲: %.2f元' % (total, fxf_total)
-        # else:
-        #     msg += '冯晓菲: %.2f元\n李梓&卢静: %.2f元' % (fxf_total, total)
+        msg += '\n'
+        for i in range(len(pk_list2)):
+            wds = pk_list[i]
+            if i == 0:
+                sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
+            else:
+                diff = pk_list[i].current - pk_list[i-1].current
+                sub_msg = '%d. %s\t当前进度: %.2f元\t-%2.f元\n' % (i + 1, wds.title, wds.current, diff)
+            msg += sub_msg
+
         my_logger.info(msg)
         return msg
         # QQHandler.send_to_groups(modian_handler.modian_notify_groups, msg)
