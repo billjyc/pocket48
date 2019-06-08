@@ -637,17 +637,17 @@ class ModianHandler:
                 sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
             else:
                 diff = pk_list[i].current - pk_list[i-1].current
-                sub_msg = '%d. %s\t当前进度: %.2f元\t-%2.f元\n' % (i + 1, wds.title, wds.current, diff)
+                sub_msg = '%d. %s\t当前进度: %.2f元\t  -%2.f元\n' % (i + 1, wds.title, wds.current, diff)
             msg += sub_msg
 
-        msg += '\n'
+        msg += '当前组合PK战况：\n'
         for i in range(len(pk_list2)):
             wds = pk_list[i]
             if i == 0:
                 sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
             else:
                 diff = pk_list[i].current - pk_list[i-1].current
-                sub_msg = '%d. %s\t当前进度: %.2f元\t-%2.f元\n' % (i + 1, wds.title, wds.current, diff)
+                sub_msg = '%d. %s\t当前进度: %.2f元\t   -%2.f元\n' % (i + 1, wds.title, wds.current, diff)
             msg += sub_msg
 
         my_logger.info(msg)
