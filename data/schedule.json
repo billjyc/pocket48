@@ -1,6 +1,7 @@
 {
   "schedules": [
-    {"name": "Girl X", "time": "2019-05-31 19:30:00", "team": "Team X", "comment": ""},
-    {"name": "Girl X", "time": "2019-06-01 19:00:00", "team": "Team X", "comment": ""}
+    {"name": "Girl X", "time": "2019-06-16 14:00:00", "team": "Team X", "comment": ""},
+    {"name": "命运的X号", "time": "2019-06-19 19:30:00", "team": "Team X", "comment": ""},
+    {"name": "Girl X", "time": "2019-06-23 19:00:00", "team": "Team X", "comment": ""}
   ]
 }
