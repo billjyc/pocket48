@@ -620,6 +620,7 @@ class ModianHandler:
                 modian_entity2.current = 1.2 * current
             elif modian_id == 66888:
                 modian_entity2.current = 1.5 * current
+            pk_list2.append(modian_entity2)
 
         msg = '当前集资PK战况播报:\n'
         import functools
