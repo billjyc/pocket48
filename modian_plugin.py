@@ -150,7 +150,7 @@ def update_modian_conf():
             rst = mysql_util.select_all("""
                 SELECT name, pro_id, current_stick_num, last_record_time, 
                     start_time, end_time, target_stick_num, min_stick_amount, need_detail
-                FROM jiebang where pro_id=%s and start_time <= NOW() 
+                FROM jiebang where pro_id=%s 
                     and end_time >= NOW() and current_stick_num < target_stick_num
             """, (pro_id, ))
             if rst:
