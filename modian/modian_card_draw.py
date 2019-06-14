@@ -64,7 +64,7 @@ class CardDrawHandler:
         # self.read_config()
 
     def read_config(self):
-        config_path = os.path.join(BASE_DIR, 'data/card_draw/cards2.txt')
+        config_path = os.path.join(BASE_DIR, 'data/card_draw/cards3.txt')
         weight_path = os.path.join(BASE_DIR, 'data/card_draw/weight.txt')
         card_datas = util.read_txt(config_path)
         weight_datas = util.read_txt(weight_path)[0]

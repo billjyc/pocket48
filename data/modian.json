@@ -21,6 +21,6 @@
   "modian_pk_activities": [
     66930, 66870, 66888, 66915
   ],
-  "modian_need_card_draw": true,
+  "modian_need_card_draw": false,
   "modian_300_activity": false
 }
