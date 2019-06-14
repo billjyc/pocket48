@@ -31,7 +31,7 @@
 31,2,1,嘟嘴,9,http://i2.tiimg.com/667696/f996e335cae5ce44.jpg,1
 32,2,1,点赞,10,http://i2.tiimg.com/667696/56d8f4855c6cbece.jpg,1
 33,2,1,单马尾,11,http://i2.tiimg.com/667696/77cb6e3d0a973701.jpg,1
-34,2,1,大光明,http://i2.tiimg.com/667696/f3c0e8c3cb2ecad1.jpg,1
+34,2,1,大光明,12,http://i2.tiimg.com/667696/f3c0e8c3cb2ecad1.jpg,1
 35,3,1,水灰,1,http://i2.tiimg.com/667696/4864f75907a57964.jpg,1
 36,3,1,桃灰,2,http://i2.tiimg.com/667696/bc58ba827b0fdfd6.jpg,1
 37,3,1,一口灰,3,http://i2.tiimg.com/667696/4c84b8c264dff34b.jpg,1
