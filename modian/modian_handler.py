@@ -636,7 +636,7 @@ class ModianHandler:
                 sub_msg = '%d. %s\t当前进度: %.2f元\t  -%.2f元\n' % (i + 1, wds.title, wds.current, diff)
             msg += sub_msg
 
-        msg += '\n系数（莫寒：1，刘力菲&苏杉杉：1.2，冯晓菲：1.5）加成后排名：\n'
+        msg += '\n系数加成后排名：\n（莫寒：1，刘力菲&苏杉杉：1.2，冯晓菲：1.5）\n'
         for i in range(len(pk_list2)):
             wds = pk_list2[i]
             if i == 0:
