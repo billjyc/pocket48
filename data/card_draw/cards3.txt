@@ -43,5 +43,5 @@
 43,4,1,love letter,1,http://i2.tiimg.com/667696/2503cae11081bc23.jpg,1
 44,4,1,剧场MVP,2,http://i2.tiimg.com/667696/9dc53d375c8aa279.jpg,1
 45,4,1,锦鲤,3,http://i2.tiimg.com/667696/ea97189d688a007c.gif,1
-46,4,1,百变卡,4,http://i1.fuimg.com/667696/b92241ef768510f5.png,1
-47,3,1,莫灰,9,http://i2.tiimg.com/667696/a79d9a9e589a9409.jpg,1
+46,4,1,百变卡,4,http://i1.fuimg.com/667696/b92241ef768510f5.png,0
+47,3,1,莫灰,9,http://i2.tiimg.com/667696/a79d9a9e589a9409.jpg,0
