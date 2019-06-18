@@ -195,7 +195,7 @@ class Pocket48Handler:
                 msg_id = r['msgidClient']
                 task.member_room_msg_ids.append(msg_id)
 
-            for r in r2_json['content']['data']:
+            for r in r2_json['content']['message']:
                 msg_id = r['msgidClient']
                 task.member_room_comment_ids.append(msg_id)
 
