@@ -10,13 +10,13 @@
       "need_detail": 1
     },
     {
-      "jiebang_name": "源石争夺战30元接棒",
-      "pro_id": "66888",
-      "target_stick_num": 9999,
-      "min_stick_amount": 30,
-      "start_time": "2019-06-14 20:00:00",
-      "end_time": "2019-06-16 20:00:00",
-      "need_detail": 3
+      "jiebang_name": "日常接棒0618",
+      "pro_id": "64735",
+      "target_stick_num": 50,
+      "min_stick_amount": 10.17,
+      "start_time": "2019-06-18 00:00:00",
+      "end_time": "2019-06-18 23:59:59",
+      "need_detail": 1
     }
   ]
 }
