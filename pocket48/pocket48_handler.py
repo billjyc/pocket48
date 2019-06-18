@@ -433,62 +433,72 @@ class Pocket48Handler:
         res = self.session.post(url, data=json.dumps(params), headers=self.idol_flip_header_args()).json()
         return res['content']['answer']
 
-    # def parse_room_comment(self, response, task):
-    #     """
-    #     对房间评论进行处理
-    #     :param response:
-    #     :param task:
-    #     :return:
-    #     """
-    #     rsp_json = json.loads(response)
-    #     msgs = rsp_json['content']['data']
-    #     logger.debug('parse room comment reponse: %s', response)
-    #     message = ''
-    #     for msg in msgs:
-    #         extInfo = json.loads(msg['extInfo'])
-    #         platform = extInfo['platform']
-    #         msg_id = msg['msgidClient']
-    #         message_object = extInfo['messageObject']
-    #
-    #         if msg_id in task.member_room_comment_ids:
-    #             continue
-    #         task.member_room_comment_ids.append(msg_id)
-    #         if extInfo['contentType'] == 1:  # 普通评论
-    #             logger.debug('房间评论')
-    #             message = ('【房间评论】[%s]-%s: %s\n' % (
-    #                 msg['msgTimeStr'], extInfo['senderName'], extInfo['text'])) + message
-    #         elif extInfo['contentType'] == 3:  # 房间礼物
-    #             logger.debug('礼物')
-    #         else:
-    #             logger.debug('其他类型评论')
-    #
-    #     logger.info('message: %s', message)
-    #     logger.debug('length of comment groups: %d', len(task.member_room_comment_msg_groups))
-    #     if message and len(task.member_room_comment_msg_groups) > 0:
-    #         QQHandler.send_to_groups(task.member_room_comment_msg_groups, message)
-    #     logger.debug('房间评论队列: %s', len(task.member_room_comment_ids))
-    #
-    # def get_member_room_comment(self, task, limit=20):
-    #     """
-    #     获取成员房间的粉丝评论
-    #     :param limit:
-    #     :param task:
-    #     :return:
-    #     """
-    #     if not self.is_login:
-    #         logger.error('尚未登录')
-    #     # url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/comment'
-    #     url = 'https://pjuju.48.cn/imsystem/api/im/v1/member/room/message/boardpage'
-    #     params = {
-    #         "roomId": task.member.room_id, "lastTime": 0, "limit": limit, "isFirst": "true"
-    #     }
-    #     # 收到响应
-    #     try:
-    #         r = self.session.post(url, data=json.dumps(params), headers=self.juju_header_args(), verify=False)
-    #     except Exception as e:
-    #         logger.error('获取房间评论失败！name: {}, room_id: {}'.format(task.member.name, task.member.room_id))
-    #         logger.exception(e)
-    #     return r.text
+    def parse_room_comment(self, response, task):
+        """
+        对房间评论进行处理
+        :param response:
+        :param task:
+        :return:
+        """
+        rsp_json = json.loads(response)
+        msgs = rsp_json['content']['message']
+        logger.debug('parse room comment reponse: %s', response)
+        message = ''
+        for msg in msgs:
+            extInfo = json.loads(msg['extInfo'])
+            msg_id = msg['msgidClient']
+            total_msg_type = msg['msgType']
+            msg_type = extInfo['msgType']
+
+            if msg_id in task.member_room_comment_ids:
+                continue
+            task.member_room_comment_ids.append(msg_id)
+            user_id = extInfo['user']['nickName']
+
+            if total_msg_type == 'TEXT':
+                if msg_type == 'TEXT':
+                    logger.debug('房间评论')
+                    logger.debug('【房间评论】[%s]-%s: %s\n' % (
+                        util.convert_timestamp_to_timestr(msg['msgTime']),
+                        user_id, extInfo['text']))
+                elif msg_type == 'PRESENT_TEXT':
+                    gift_num = extInfo['giftInfo']['giftNum']
+                    gift_name = extInfo['giftInfo']['giftName']
+                    if extInfo['giftInfo']['isVote']:
+                        logger.debug('投票')
+                        message = '感谢{}送出的{}票，爱你呦~'.format(user_id, gift_num)
+                        if message and len(task.member_room_msg_groups) > 0:
+                            QQHandler.send_to_groups(task.member_room_msg_groups, message)
+                    else:
+                        logger.debug('礼物')
+                        logger.debug('感谢{}送出的{}个{}，爱你呦~'.format(user_id, gift_num, gift_name))
+                else:
+                    logger.debug('其他类型评论')
+
+        # logger.info('message: %s', message)
+        # logger.debug('length of comment groups: %d', len(task.member_room_comment_msg_groups))
+        logger.debug('房间评论队列: %s', len(task.member_room_comment_ids))
+
+    def get_member_room_comment(self, task, limit=20):
+        """
+        获取成员房间的粉丝评论
+        :param limit:
+        :param task:
+        :return:
+        """
+        if not self.is_login:
+            logger.error('尚未登录')
+        url = 'https://pocketapi.48.cn/im/api/v1/chatroom/msg/list/all'
+        params = {
+            "roomId": task.member.room_id, "ownerId": task.member.member_id
+        }
+        # 收到响应
+        try:
+            r = self.session.post(url, data=json.dumps(params), headers=self.juju_header_args(), verify=False)
+        except Exception as e:
+            logger.error('获取房间评论失败！name: {}, room_id: {}'.format(task.member.name, task.member.room_id))
+            logger.exception(e)
+        return r.text
 
     # def parse_member_live(self, response, task):
     #     """
@@ -690,6 +700,16 @@ class Pocket48Handler:
 pocket48_handler = Pocket48Handler()
 
 if __name__ == '__main__':
+    print(json.dumps({
+        'vendor': 'apple',
+        'deviceId': 0,
+        "appVersion": '6.0.2',
+        "appBuild": "190409",
+        "osVersion": "12.2.0",
+        "osType": "ios",
+        "deviceName": "iphone",
+        "os": "ios"
+    }))
     member = Member('左婧媛', '327577', '67380556')
     task = Pocket48ListenTask(member)
     pocket48_handler.login('***', '***')
