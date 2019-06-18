@@ -447,14 +447,13 @@ class Pocket48Handler:
         for msg in msgs:
             extInfo = json.loads(msg['extInfo'])
             msg_id = msg['msgidClient']
-            logger.debug('comment msg id: {}'.format(msg_id))
             total_msg_type = msg['msgType']
             msg_type = extInfo['messageType']
             msg_time = util.convert_timestamp_to_timestr(msg['msgTime'])
 
             if msg_id in task.member_room_comment_ids:
                 continue
-            logger.debug('该评论不在队列中，需要打印')
+            logger.debug('该评论{}不在队列中，需要打印'.format(msg_id))
             task.member_room_comment_ids.append(msg_id)
             user_id = extInfo['user']['nickName']
 
