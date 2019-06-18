@@ -449,7 +449,7 @@ class Pocket48Handler:
             msg_id = msg['msgidClient']
             logger.debug('comment msg id: {}'.format(msg_id))
             total_msg_type = msg['msgType']
-            msg_type = extInfo['msgType']
+            msg_type = extInfo['messageType']
             msg_time = util.convert_timestamp_to_timestr(msg['msgTime'])
 
             if msg_id in task.member_room_comment_ids:
