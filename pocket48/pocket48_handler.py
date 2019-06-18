@@ -449,6 +449,7 @@ class Pocket48Handler:
             msg_id = msg['msgidClient']
             total_msg_type = msg['msgType']
             msg_type = extInfo['msgType']
+            msg_time = util.convert_timestamp_to_timestr(msg['msgTime'])
 
             if msg_id in task.member_room_comment_ids:
                 continue
@@ -459,14 +460,15 @@ class Pocket48Handler:
                 if msg_type == 'TEXT':
                     logger.debug('房间评论')
                     logger.debug('【房间评论】[%s]-%s: %s\n' % (
-                        util.convert_timestamp_to_timestr(msg['msgTime']),
+                        msg_time,
                         user_id, extInfo['text']))
                 elif msg_type == 'PRESENT_TEXT':
                     gift_num = extInfo['giftInfo']['giftNum']
                     gift_name = extInfo['giftInfo']['giftName']
                     if extInfo['giftInfo']['isVote']:
                         logger.debug('投票')
-                        message = '感谢{}送出的{}票，爱你呦~'.format(user_id, gift_num)
+                        message = '感谢{}送出的{}票，爱你呦~\n【{}】'.format(user_id, gift_num,
+                                                                 msg_time)
                         if message and len(task.member_room_msg_groups) > 0:
                             QQHandler.send_to_groups(task.member_room_msg_groups, message)
                     else:
