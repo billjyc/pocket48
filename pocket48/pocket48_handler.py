@@ -187,20 +187,20 @@ class Pocket48Handler:
             task.unread_msg_amount = 0
 
             r1 = self.get_member_room_msg(task)
-            # r2 = self.get_member_room_comment(task)
+            r2 = self.get_member_room_comment(task)
 
             r1_json = json.loads(r1)
-            # r2_json = json.loads(r2)
+            r2_json = json.loads(r2)
             for r in r1_json['content']['message']:
                 msg_id = r['msgidClient']
                 task.member_room_msg_ids.append(msg_id)
 
-            # for r in r2_json['content']['data']:
-            #     msg_id = r['msgidClient']
-            #     task.member_room_comment_ids.append(msg_id)
+            for r in r2_json['content']['data']:
+                msg_id = r['msgidClient']
+                task.member_room_comment_ids.append(msg_id)
 
             logger.debug('成员{}消息队列: {}'.format(task.member.name, len(task.member_room_msg_ids)))
-            # logger.debug('{}房间评论队列: {}'.format(task.member.name, len(task.member_room_comment_ids)))
+            logger.debug('{}房间评论队列: {}'.format(task.member.name, len(task.member_room_comment_ids)))
             logger.debug('{}房间未读消息数量: {}'.format(task.member.name, task.unread_msg_amount))
         except Exception as e:
             logger.error('初始化{}消息队列失败'.format(task.member.name))
