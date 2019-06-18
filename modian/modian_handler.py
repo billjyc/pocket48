@@ -259,6 +259,8 @@ class ModianHandler:
             '''接棒相关'''
             my_logger.debug('接棒情况更新')
             for jiebang in jiebang_activities:
+                if jiebang.start_time > time.time():
+                    continue
                 my_logger.debug('接棒活动详情: 【%s】', jiebang.name)
                 my_logger.debug('集资金额: %s, 接棒最小金额: %s', backer_money, jiebang.min_stick_amount)
                 if backer_money >= jiebang.min_stick_amount:
