@@ -469,6 +469,7 @@ class Pocket48Handler:
                         logger.debug('投票')
                         message = '感谢{}送出的{}票，爱你呦~\n【{}】'.format(user_id, gift_num,
                                                                  msg_time)
+                        logger.debug(message)
                         if message and len(task.member_room_msg_groups) > 0:
                             QQHandler.send_to_groups(task.member_room_msg_groups, message)
                     else:
