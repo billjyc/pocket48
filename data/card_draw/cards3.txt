@@ -45,3 +45,5 @@
 45,4,1,锦鲤,3,http://i2.tiimg.com/667696/ea97189d688a007c.gif,1
 46,4,1,百变卡,4,http://i1.fuimg.com/667696/b92241ef768510f5.png,0
 47,3,1,莫灰,9,http://i2.tiimg.com/667696/a79d9a9e589a9409.jpg,0
+48,3,1,黄灰,9,http://i2.tiimg.com/667696/a79d9a9e589a9409.jpg,0
+49,3,1,灰冉,9,http://i2.tiimg.com/667696/a79d9a9e589a9409.jpg,0
