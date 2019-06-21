@@ -622,13 +622,13 @@ class ModianHandler:
             elif modian_id == 68117:  # 杨冰怡
                 modian_entity2.current = modian_entity.current - 0
             elif modian_id == 68119:  # 张嘉予
-                modian_entity2.current = modian_entity.current - 0
+                modian_entity2.current = modian_entity.current * 2 - 0
             elif modian_id == 68103:  # 祁静
                 modian_entity2.current = modian_entity.current - 0
             pk_list2.append(modian_entity2)
 
         msg1 = self.pk_list_sort(pk_list, '当前集资PK战况播报')
-        msg2 = self.pk_list_sort(pk_list2, '日增金额排名')
+        msg2 = self.pk_list_sort(pk_list2, '日增金额排名(张嘉予方有2.0的系数)')
         msg = '{}\n{}'.format(msg1, msg2)
         # msg = '当前集资PK战况播报:\n'
         # import functools
