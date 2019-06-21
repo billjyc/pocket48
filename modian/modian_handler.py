@@ -590,7 +590,6 @@ class ModianHandler:
     def pk_modian_activity(self):
         """
         播报摩点PK战况
-        :param pro_id_list:
         :return:
         """
 
@@ -609,21 +608,30 @@ class ModianHandler:
 
         for modian_id in global_config.MODIAN_PK_ARRAY:
             modian_entity = ModianEntity('link', 'title', modian_id)
-            modian_entity2 = ModianEntity('link', 'title', modian_id)
             target, current, pro_name = self.get_current_and_target(modian_entity)
             modian_entity.target = target
             modian_entity.current = current
             modian_entity.title = pro_name
+            pk_list.append(modian_entity)
 
+            modian_entity2 = ModianEntity('link', 'title', modian_id)
             modian_entity2.target = target
             modian_entity2.title = pro_name
-            pk_list.append(modian_entity)
-            if modian_id == 66930 or modian_id == 66870:
-                modian_entity2.current = 1.2 * current
-            elif modian_id == 66888:
-                modian_entity2.current = 1.5 * current
-            else:
-                modian_entity2.current = current
+
+            if modian_id == 68067:  # 冯晓菲
+                modian_entity2.current = modian_entity.current - 0
+            elif modian_id == 68109:  # 李星羽
+                modian_entity2.current = modian_entity.current - 0
+            elif modian_id == 68116:  # 汪佳翎
+                modian_entity2.current = modian_entity.current - 0
+            elif modian_id == 68112:  # 李钊
+                modian_entity2.current = modian_entity.current - 0
+            elif modian_id == 68117:  # 杨冰怡
+                modian_entity2.current = modian_entity.current - 0
+            elif modian_id == 68119:  # 张嘉予
+                modian_entity2.current = modian_entity.current - 0
+            elif modian_id == 68103:  # 祁静
+                modian_entity2.current = modian_entity.current - 0
             pk_list2.append(modian_entity2)
 
         msg = '当前集资PK战况播报:\n'
@@ -640,7 +648,7 @@ class ModianHandler:
                 sub_msg = '%d. %s\t当前进度: %.2f元\t  -%.2f元\n' % (i + 1, wds.title, wds.current, diff)
             msg += sub_msg
 
-        msg += '\n系数加成后排名：\n（莫寒：1，刘力菲&苏杉杉：1.2，冯晓菲：1.5）\n'
+        msg += '\n日增金额排名：\n'
         for i in range(len(pk_list2)):
             wds = pk_list2[i]
             if i == 0:
