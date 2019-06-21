@@ -592,13 +592,6 @@ class ModianHandler:
         播报摩点PK战况
         :return:
         """
-
-        def cmp_2(x, y):
-            if x.current >= y.current:
-                return 1
-            else:
-                return -1
-
         if global_config.MODIAN_NEED_DISPLAY_PK is False:
             return '当前没有开启PK！'
         my_logger.info('摩点集资PK播报')
@@ -634,33 +627,61 @@ class ModianHandler:
                 modian_entity2.current = modian_entity.current - 0
             pk_list2.append(modian_entity2)
 
-        msg = '当前集资PK战况播报:\n'
-        import functools
-        pk_list.sort(key=functools.cmp_to_key(cmp_2), reverse=True)
-        pk_list2.sort(key=functools.cmp_to_key(cmp_2), reverse=True)
-
-        for i in range(len(pk_list)):
-            wds = pk_list[i]
-            if i == 0:
-                sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
-            else:
-                diff = pk_list[i].current - pk_list[i-1].current
-                sub_msg = '%d. %s\t当前进度: %.2f元\t  -%.2f元\n' % (i + 1, wds.title, wds.current, diff)
-            msg += sub_msg
-
-        msg += '\n日增金额排名：\n'
-        for i in range(len(pk_list2)):
-            wds = pk_list2[i]
-            if i == 0:
-                sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
-            else:
-                diff = pk_list2[i].current - pk_list2[i-1].current
-                sub_msg = '%d. %s\t当前进度: %.2f元\t   -%.2f元\n' % (i + 1, wds.title, wds.current, diff)
-            msg += sub_msg
+        msg1 = self.pk_list_sort(pk_list, '当前集资PK战况播报')
+        msg2 = self.pk_list_sort(pk_list2, '日增金额排名')
+        msg = '{}\n{}'.format(msg1, msg2)
+        # msg = '当前集资PK战况播报:\n'
+        # import functools
+        # pk_list.sort(key=functools.cmp_to_key(cmp_2), reverse=True)
+        # pk_list2.sort(key=functools.cmp_to_key(cmp_2), reverse=True)
+        #
+        # for i in range(len(pk_list)):
+        #     wds = pk_list[i]
+        #     if i == 0:
+        #         sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
+        #     else:
+        #         diff = pk_list[i].current - pk_list[i-1].current
+        #         sub_msg = '%d. %s\t当前进度: %.2f元\t  -%.2f元\n' % (i + 1, wds.title, wds.current, diff)
+        #     msg += sub_msg
+        #
+        # msg += '\n日增金额排名：\n'
+        # for i in range(len(pk_list2)):
+        #     wds = pk_list2[i]
+        #     if i == 0:
+        #         sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
+        #     else:
+        #         diff = pk_list2[i].current - pk_list2[i-1].current
+        #         sub_msg = '%d. %s\t当前进度: %.2f元\t   -%.2f元\n' % (i + 1, wds.title, wds.current, diff)
+        #     msg += sub_msg
 
         my_logger.info(msg)
         return msg
-        # QQHandler.send_to_groups(modian_handler.modian_notify_groups, msg)
+
+    def pk_list_sort(self, modian_entity_list, title):
+        """
+        PK活动，对金额进行排序
+        :param modian_entity_list:
+        :param title:
+        :return:
+        """
+        def cmp_2(x, y):
+            if x.current >= y.current:
+                return 1
+            else:
+                return -1
+        import functools
+        modian_entity_list.sort(key=functools.cmp_to_key(cmp_2), reverse=True)
+
+        msg = '{}:\n'.format(title)
+        for i in range(len(modian_entity_list)):
+            wds = modian_entity_list[i]
+            if i == 0:
+                sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
+            else:
+                diff = modian_entity_list[i].current - modian_entity_list[i-1].current
+                sub_msg = '%d. %s\t当前进度: %.2f元\t  -%.2f元\n' % (i + 1, wds.title, wds.current, diff)
+            msg += sub_msg
+        return msg
 
 
 if __name__ == '__main__':
