@@ -48,3 +48,5 @@
 48,3,1,黄灰,10,http://i2.tiimg.com/667696/179c494c6b4a95b1.jpg,1
 49,3,1,灰冉,11,http://i2.tiimg.com/667696/e16bf48cb802db34.jpg,1
 50,3,1,笨灰,12,http://i2.tiimg.com/667696/5535024383b3a3cf.jpg,1
+51,3,1,隆冬季节,13,http://i1.fuimg.com/667696/3c86fd0c5289d28c.jpg,1
+52,3,1,15年生日蛋糕,14,http://i1.fuimg.com/667696/e6c420fd4af5d53d.jpg,1
