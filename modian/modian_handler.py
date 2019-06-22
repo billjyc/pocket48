@@ -612,19 +612,19 @@ class ModianHandler:
             modian_entity2.title = pro_name
 
             if modian_id == 68067:  # 冯晓菲
-                modian_entity2.current = modian_entity.current - 0
+                modian_entity2.current = modian_entity.current - 7617.50
             elif modian_id == 68109:  # 李星羽
-                modian_entity2.current = modian_entity.current - 0
+                modian_entity2.current = modian_entity.current - 7577.08
             elif modian_id == 68116:  # 汪佳翎
-                modian_entity2.current = modian_entity.current - 0
+                modian_entity2.current = modian_entity.current - 4358.00
             elif modian_id == 68112:  # 李钊
-                modian_entity2.current = modian_entity.current - 0
+                modian_entity2.current = modian_entity.current - 8270.83
             elif modian_id == 68117:  # 杨冰怡
-                modian_entity2.current = modian_entity.current - 0
+                modian_entity2.current = modian_entity.current - 4552.77
             elif modian_id == 68119:  # 张嘉予
-                modian_entity2.current = modian_entity.current * 2 - 0
+                modian_entity2.current = (modian_entity.current - 121.00) * 2
             elif modian_id == 68103:  # 祁静
-                modian_entity2.current = modian_entity.current - 0
+                modian_entity2.current = modian_entity.current - 1819.70
             pk_list2.append(modian_entity2)
 
         msg1 = self.pk_list_sort(pk_list, '当前集资PK战况播报')
