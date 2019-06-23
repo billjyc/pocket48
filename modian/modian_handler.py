@@ -629,7 +629,7 @@ class ModianHandler:
 
         msg1 = self.pk_list_sort(pk_list, '当前集资PK战况播报')
         msg2 = self.pk_list_sort(pk_list2, '日增金额排名(张嘉予方有2.0的系数)')
-        msg = '{}\n{}'.format(msg1, msg2)
+        msg = '{}\n{}'.format(msg2, msg1)
         # msg = '当前集资PK战况播报:\n'
         # import functools
         # pk_list.sort(key=functools.cmp_to_key(cmp_2), reverse=True)
