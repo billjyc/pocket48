@@ -681,11 +681,11 @@ class ModianHandler:
         for i in range(len(modian_entity_list)):
             wds = modian_entity_list[i]
             if i == 0:
-                sub_msg = '%d. %s\t支持人数: %s\t当前进度: %.2f元\n' % (i + 1, wds.support_num, wds.title, wds.current)
+                sub_msg = '%d. %s\t支持人数: %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.support_num, wds.current)
             else:
                 diff = modian_entity_list[i].current - modian_entity_list[i - 1].current
-                sub_msg = '%d. %s\t支持人数: %s\t当前进度: %.2f元\t  -%.2f元\n' % (i + 1, wds.support_num,
-                                                                         wds.title, wds.current, diff)
+                sub_msg = '%d. %s\t支持人数: %s\t当前进度: %.2f元\t  -%.2f元\n' % (i + 1, wds.title, wds.support_num,
+                                                                         wds.current, diff)
             msg += sub_msg
         return msg
 
