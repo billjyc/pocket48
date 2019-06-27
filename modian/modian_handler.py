@@ -627,8 +627,8 @@ class ModianHandler:
                 modian_entity2.current = modian_entity.current - 0
             pk_list2.append(modian_entity2)
 
-        msg1 = self.pk_list_sort(pk_list, '当前集资PK战况播报：')
-        msg2 = self.pk_list_sort(pk_list2, '日增金额排名：')
+        msg1 = self.pk_list_sort(pk_list, '当前集资PK战况播报')
+        msg2 = self.pk_list_sort(pk_list2, '日增金额排名')
         msg = '{}\n{}'.format(msg2, msg1)
         # msg = '当前集资PK战况播报:\n'
         # import functools
