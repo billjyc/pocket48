@@ -623,7 +623,7 @@ class ModianHandler:
                 modian_entity2.current = modian_entity.current - 0
             elif modian_id == 69309:  # 沈梦瑶
                 modian_entity2.current = modian_entity.current - 0
-            elif modian_id == 69320:  # 祁静
+            elif modian_id == 69320:  # 田姝丽
                 modian_entity2.current = modian_entity.current - 0
             pk_list2.append(modian_entity2)
 
