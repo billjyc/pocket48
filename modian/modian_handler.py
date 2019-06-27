@@ -183,8 +183,8 @@ class ModianHandler:
         count_flag_activities = global_config.MODIAN_COUNT_FLAG_ACTIVITIES[modian_entity.pro_id]
 
         # 查询集资情况
-        target, current, pro_name = self.get_current_and_target(modian_entity)
-        project_info = '当前进度: %s元, 目标金额: %s元' % (current, target)
+        target, current, pro_name, backer_count = self.get_current_and_target(modian_entity)
+        project_info = '当前进度: %s元, 目标金额: %s元, 支持人数: %s' % (current, target, backer_count)
 
         modian_entity.current = current
         modian_entity.title = pro_name
@@ -231,7 +231,7 @@ class ModianHandler:
                 my_logger.exception(e)
 
             msg = '感谢 %s(%s) 支持了%s元, %s\n' % (
-            nickname, user_id, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
+                nickname, user_id, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
             daka_rank, support_days = self.find_user_daka_rank(user_id, modian_entity.pro_id)
 
             if daka_rank != -1 and support_days:
@@ -537,8 +537,9 @@ class ModianHandler:
             pro_name = data_json['pro_name']
             target = data_json['goal']
             current = data_json['already_raised']
+            backer_count = data_json['backer_count']
             my_logger.info('目标: %s, 当前进度: %s', target, current)
-            return target, current, pro_name
+            return target, current, pro_name, backer_count
         else:
             raise RuntimeError('获取项目筹款结果查询失败')
 
@@ -601,15 +602,17 @@ class ModianHandler:
 
         for modian_id in global_config.MODIAN_PK_ARRAY:
             modian_entity = ModianEntity('link', 'title', modian_id)
-            target, current, pro_name = self.get_current_and_target(modian_entity)
+            target, current, pro_name, backer_count = self.get_current_and_target(modian_entity)
             modian_entity.target = target
             modian_entity.current = current
             modian_entity.title = pro_name
+            modian_entity.support_num = backer_count
             pk_list.append(modian_entity)
 
             modian_entity2 = ModianEntity('link', 'title', modian_id)
             modian_entity2.target = target
             modian_entity2.title = pro_name
+            modian_entity2.support_num = backer_count
 
             if modian_id == 69304:  # 冯晓菲
                 modian_entity2.current = modian_entity.current - 0
@@ -629,7 +632,7 @@ class ModianHandler:
 
         msg1 = self.pk_list_sort(pk_list, '当前集资PK战况播报')
         msg2 = self.pk_list_sort(pk_list2, '日增金额排名')
-        msg = '{}\n{}'.format(msg2, msg1)
+        msg = '{}'.format(msg2)
         # msg = '当前集资PK战况播报:\n'
         # import functools
         # pk_list.sort(key=functools.cmp_to_key(cmp_2), reverse=True)
@@ -664,11 +667,13 @@ class ModianHandler:
         :param title:
         :return:
         """
+
         def cmp_2(x, y):
             if x.current >= y.current:
                 return 1
             else:
                 return -1
+
         import functools
         modian_entity_list.sort(key=functools.cmp_to_key(cmp_2), reverse=True)
 
@@ -676,10 +681,11 @@ class ModianHandler:
         for i in range(len(modian_entity_list)):
             wds = modian_entity_list[i]
             if i == 0:
-                sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
+                sub_msg = '%d. %s\t支持人数: %s\t当前进度: %.2f元\n' % (i + 1, wds.support_num, wds.title, wds.current)
             else:
-                diff = modian_entity_list[i].current - modian_entity_list[i-1].current
-                sub_msg = '%d. %s\t当前进度: %.2f元\t  -%.2f元\n' % (i + 1, wds.title, wds.current, diff)
+                diff = modian_entity_list[i].current - modian_entity_list[i - 1].current
+                sub_msg = '%d. %s\t支持人数: %s\t当前进度: %.2f元\t  -%.2f元\n' % (i + 1, wds.support_num,
+                                                                         wds.title, wds.current, diff)
             msg += sub_msg
         return msg
 
