@@ -611,24 +611,24 @@ class ModianHandler:
             modian_entity2.target = target
             modian_entity2.title = pro_name
 
-            if modian_id == 68067:  # 冯晓菲
-                modian_entity2.current = modian_entity.current - 7617.50
-            elif modian_id == 68109:  # 李星羽
-                modian_entity2.current = modian_entity.current - 7577.08
-            elif modian_id == 68116:  # 汪佳翎
-                modian_entity2.current = modian_entity.current - 4358.00
-            elif modian_id == 68112:  # 李钊
-                modian_entity2.current = modian_entity.current - 8270.83
-            elif modian_id == 68117:  # 杨冰怡
-                modian_entity2.current = modian_entity.current - 4552.77
-            elif modian_id == 68119:  # 张嘉予
-                modian_entity2.current = (modian_entity.current - 121.00) * 2
-            elif modian_id == 68103:  # 祁静
-                modian_entity2.current = modian_entity.current - 1819.70
+            if modian_id == 69304:  # 冯晓菲
+                modian_entity2.current = modian_entity.current - 0
+            elif modian_id == 69324:  # 许杨玉琢
+                modian_entity2.current = modian_entity.current - 0
+            elif modian_id == 69317:  # 戴萌
+                modian_entity2.current = modian_entity.current - 0
+            elif modian_id == 69316:  # 杨冰怡
+                modian_entity2.current = modian_entity.current - 0
+            elif modian_id == 69326:  # 张昕
+                modian_entity2.current = modian_entity.current - 0
+            elif modian_id == 69309:  # 沈梦瑶
+                modian_entity2.current = modian_entity.current - 0
+            elif modian_id == 69320:  # 祁静
+                modian_entity2.current = modian_entity.current - 0
             pk_list2.append(modian_entity2)
 
-        msg1 = self.pk_list_sort(pk_list, '当前集资PK战况播报')
-        msg2 = self.pk_list_sort(pk_list2, '日增金额排名(张嘉予方有2.0的系数)')
+        msg1 = self.pk_list_sort(pk_list, '当前集资PK战况播报：')
+        msg2 = self.pk_list_sort(pk_list2, '日增金额排名：')
         msg = '{}\n{}'.format(msg2, msg1)
         # msg = '当前集资PK战况播报:\n'
         # import functools
