@@ -184,12 +184,12 @@ class ModianHandler:
 
         # 查询集资情况
         target, current, pro_name, backer_count = self.get_current_and_target(modian_entity)
-        project_info = '当前进度: %s元, 目标金额: %s元, 支持人数: %s' % (current, target, backer_count)
+        project_info = '当前进度: %s元, 目标金额: %s元' % (current, target)
 
         modian_entity.current = current
         modian_entity.title = pro_name
         modian_entity.target = target
-        # modian_entity.support_num = len(self.jizi_rank_list)
+        modian_entity.support_num = backer_count
         my_logger.debug('size of order %s queue: %s', modian_entity.pro_id,
                         len(self.order_queues[modian_entity.pro_id]))
 
@@ -244,12 +244,7 @@ class ModianHandler:
             else:
                 pass
             # 统计当前人数
-            rst = mysql_util.select_one("""
-                                select count(distinct(`supporter_id`)) from `order` 
-                                where `pro_id` = %s
-                            """, (modian_entity.pro_id,))
-            if rst is not None:
-                msg += '当前集资人数: %s\n' % rst[0]
+            msg += '当前集资人数: %s\n' % backer_count
 
             # 抽卡播报
             card_report = ''
@@ -432,23 +427,6 @@ class ModianHandler:
         """, (pro_id,))
         return rst
 
-    # def get_ranking_list(self, modian_entity, type0=1):
-    #     """
-    #     获取排名所有的列表
-    #     :param modian_entity:
-    #     :param type0: 1为集资，2为打卡
-    #     :return:
-    #     """
-    #     ranking_list = []
-    #     page = 1
-    #     while True:
-    #         rank_page = self.get_modian_rankings(modian_entity, type0, page)
-    #         if len(rank_page) > 0:
-    #             ranking_list.extend(rank_page)
-    #             page += 1
-    #         else:
-    #             return ranking_list
-
     def get_modian_rankings(self, modian_entity, type0=1, page=1):
         """
         查询项目集资榜和打卡榜
@@ -491,7 +469,7 @@ class ModianHandler:
         my_logger.info('找到id为%s的集资排名', user_id)
         ranking_list = mysql_util.select_all("""
                 select supporter_id, sum(backer_money) as c 
-                    from `order` where pro_id=13566 group by supporter_id order by c desc;
+                    from `order` where pro_id=%s group by supporter_id order by c desc;
                 """, (pro_id,))
         cur_rank = 0
         for temp_id, total in ranking_list:
@@ -556,7 +534,7 @@ class ModianHandler:
 
     def __make_signature(self, post_fields):
         """
-        生成调用微打赏接口所需的签名
+        生成调用摩点接口所需的签名
 
         PHP的例子：
             $post_fields = $_POST;
@@ -580,6 +558,7 @@ class ModianHandler:
         orders = []
         page = 1
         while True:
+            my_logger.debug('获取全部订单，第{}页'.format(page))
             sub_orders = self.query_project_orders(modian_entity, page)
             if len(sub_orders) > 0:
                 orders.extend(sub_orders)
@@ -633,29 +612,6 @@ class ModianHandler:
         msg1 = self.pk_list_sort(pk_list, '当前集资PK战况播报')
         msg2 = self.pk_list_sort(pk_list2, '日增金额排名')
         msg = '{}'.format(msg2)
-        # msg = '当前集资PK战况播报:\n'
-        # import functools
-        # pk_list.sort(key=functools.cmp_to_key(cmp_2), reverse=True)
-        # pk_list2.sort(key=functools.cmp_to_key(cmp_2), reverse=True)
-        #
-        # for i in range(len(pk_list)):
-        #     wds = pk_list[i]
-        #     if i == 0:
-        #         sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
-        #     else:
-        #         diff = pk_list[i].current - pk_list[i-1].current
-        #         sub_msg = '%d. %s\t当前进度: %.2f元\t  -%.2f元\n' % (i + 1, wds.title, wds.current, diff)
-        #     msg += sub_msg
-        #
-        # msg += '\n日增金额排名：\n'
-        # for i in range(len(pk_list2)):
-        #     wds = pk_list2[i]
-        #     if i == 0:
-        #         sub_msg = '%d. %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.current)
-        #     else:
-        #         diff = pk_list2[i].current - pk_list2[i-1].current
-        #         sub_msg = '%d. %s\t当前进度: %.2f元\t   -%.2f元\n' % (i + 1, wds.title, wds.current, diff)
-        #     msg += sub_msg
 
         my_logger.info(msg)
         return msg
