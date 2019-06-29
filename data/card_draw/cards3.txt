@@ -49,4 +49,8 @@
 49,3,1,灰冉,11,http://i2.tiimg.com/667696/e16bf48cb802db34.jpg,1
 50,3,1,笨灰,12,http://i2.tiimg.com/667696/5535024383b3a3cf.jpg,1
 51,3,1,隆冬季节,13,http://i1.fuimg.com/667696/3c86fd0c5289d28c.jpg,1
-52,3,1,15年生日蛋糕,14,http://i1.fuimg.com/667696/e6c420fd4af5d53d.jpg,1
+52,3,1,15年生日蛋糕,14,http://i1.fuimg.com/667696/e6c420fd4af5d53d.jpg,1,
+53,4,1,二选,5,http://i1.fuimg.com/667696/541c45cc3de2ed20.jpg,1
+53,4,1,三选,6,http://i1.fuimg.com/667696/924344169922a65a.jpg,1
+53,4,1,四选,7,http://i1.fuimg.com/667696/d44708c3dc4ab104.jpg,1
+53,4,1,五选,8,http://i1.fuimg.com/667696/fac46d47ad080fde.jpg,1
