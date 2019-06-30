@@ -146,6 +146,9 @@ def handle_msg(context):
                     get_jizi_ranking_list_by_date(context, 0)
                 elif message == '-yesterday':
                     get_jizi_ranking_list_by_date(context, 1)
+                elif message == '-生日集资':
+                    message = get_birthday_donate_rank()
+                    bot.send(context, message)
                 elif message == '-战况':
                     message = get_modian_pk()
                     bot.send(context, message)
@@ -461,7 +464,39 @@ def __get_jizi_ranking_list_by_date_diff(pro_id, day_diff=0):
         rank_tmp = rank + (cur_rank,)
         new_rst.append(rank_tmp)
     logger.debug(new_rst)
-    return new_rst, total
+    return new_rst
+
+
+def get_birthday_donate_rank():
+    """
+    获取生日集资排名
+    :return:
+    """
+    rst = mysql_util.select_all("""
+        select s.id, s.`name`, sum(o.`backer_money`) as c from `order` o, supporter s where o.`supporter_id` = s.`id` 
+        and o.`pro_id` in (69304)
+        group by s.`id`
+        order by c desc limit 25;
+    """)
+    cur_rank = 0
+    row_tmp = 0
+    last_val = -1
+    new_rst = []
+    for rank in rst:
+        row_tmp += 1
+        if rank[2] != last_val:
+            cur_rank = row_tmp
+        if cur_rank > 25:
+            continue
+        last_val = rank[2]
+        rank_tmp = rank + (cur_rank,)
+        new_rst.append(rank_tmp)
+    logger.debug(new_rst)
+    message = ''
+    for rank in new_rst:
+        sub_message = '%s.%s: %s元\n' % (rank[3], str(rank[1], encoding='utf8'), rank[2])
+        message += sub_message
+    return message
 
 
 @bot.on_notice('group_increase')
