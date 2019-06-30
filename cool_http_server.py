@@ -486,7 +486,7 @@ def get_birthday_donate_rank():
         row_tmp += 1
         if rank[2] != last_val:
             cur_rank = row_tmp
-        if cur_rank > 25:
+        if cur_rank > 20:
             continue
         last_val = rank[2]
         rank_tmp = rank + (cur_rank,)
