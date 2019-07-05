@@ -17,6 +17,15 @@
       "start_time": "2019-07-04 00:00:00",
       "end_time": "2019-07-04 23:59:59",
       "need_detail": 1
+    },
+    {
+      "jiebang_name": "中报冲刺接棒",
+      "pro_id": "70956",
+      "target_stick_num": 9999,
+      "min_stick_amount": 30,
+      "start_time": "2019-07-05 10:00:00",
+      "end_time": "2019-07-07 23:59:59",
+      "need_detail": 2
     }
   ]
 }
