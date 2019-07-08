@@ -57,3 +57,4 @@
 57,3,1,爱灰,15,http://i1.fuimg.com/667696/b2f8991aa800dc16.jpg,1
 58,3,1,戴耳环的少女,16,http://i1.fuimg.com/667696/3228b17269b1b72d.jpg,1
 59,3,1,璇灰,17,http://i2.tiimg.com/667696/5a276ffbb7f94c02.jpg,1
+60,3,1,童声款,18,http://i1.fuimg.com/667696/09900b8549e9ade7.jpg,1
