@@ -593,25 +593,25 @@ class ModianHandler:
             modian_entity2.title = pro_name
             modian_entity2.support_num = backer_count
 
-            if modian_id == 69304:  # 冯晓菲
-                modian_entity2.current = modian_entity.current - 83429.18
-            elif modian_id == 69324:  # 许杨玉琢
-                modian_entity2.current = modian_entity.current - 90618.82
-            elif modian_id == 69317:  # 戴萌
-                modian_entity2.current = modian_entity.current - 43029.51
-            elif modian_id == 69316:  # 杨冰怡
-                modian_entity2.current = modian_entity.current - 77920.13
-            elif modian_id == 69326:  # 张昕
-                modian_entity2.current = modian_entity.current - 73232.09
-            elif modian_id == 69309:  # 沈梦瑶
-                modian_entity2.current = modian_entity.current - 121914.84
-            elif modian_id == 69320:  # 田姝丽
-                modian_entity2.current = modian_entity.current - 18694.74
-            pk_list2.append(modian_entity2)
+            # if modian_id == 69304:  # 冯晓菲
+            #     modian_entity2.current = modian_entity.current - 83429.18
+            # elif modian_id == 69324:  # 许杨玉琢
+            #     modian_entity2.current = modian_entity.current - 90618.82
+            # elif modian_id == 69317:  # 戴萌
+            #     modian_entity2.current = modian_entity.current - 43029.51
+            # elif modian_id == 69316:  # 杨冰怡
+            #     modian_entity2.current = modian_entity.current - 77920.13
+            # elif modian_id == 69326:  # 张昕
+            #     modian_entity2.current = modian_entity.current - 73232.09
+            # elif modian_id == 69309:  # 沈梦瑶
+            #     modian_entity2.current = modian_entity.current - 121914.84
+            # elif modian_id == 69320:  # 田姝丽
+            #     modian_entity2.current = modian_entity.current - 18694.74
+            # pk_list2.append(modian_entity2)
 
         msg1 = self.pk_list_sort(pk_list, '当前集资PK战况播报')
-        msg2 = self.pk_list_sort(pk_list2, '日增金额排名')
-        msg = '{}'.format(msg2)
+        # msg2 = self.pk_list_sort(pk_list2, '日增金额排名')
+        msg = '{}'.format(msg1)
 
         my_logger.info(msg)
         return msg
