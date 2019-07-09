@@ -60,3 +60,4 @@
 60,3,1,童声款,18,http://i1.fuimg.com/667696/09900b8549e9ade7.jpg,1
 61,3,1,fxf与水晶球,19,http://i2.tiimg.com/667696/11964a3f1f7ee84c.jpg,1
 62,3,1,可爱的花,20,http://i2.tiimg.com/667696/7aca4101db1fea9d.jpg,1
+63,3,1,神枪手,21,http://i2.tiimg.com/667696/33144fcf3d2072af.jpg,1
