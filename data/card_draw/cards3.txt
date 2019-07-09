@@ -58,3 +58,5 @@
 58,3,1,戴耳环的少女,16,http://i1.fuimg.com/667696/3228b17269b1b72d.jpg,1
 59,3,1,璇灰,17,http://i2.tiimg.com/667696/5a276ffbb7f94c02.jpg,1
 60,3,1,童声款,18,http://i1.fuimg.com/667696/09900b8549e9ade7.jpg,1
+61,3,1,fxf与水晶球,19,http://i2.tiimg.com/667696/11964a3f1f7ee84c.jpg,1
+62,3,1,可爱的花,20,http://i2.tiimg.com/667696/7aca4101db1fea9d.jpg,1
