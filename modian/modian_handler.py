@@ -607,11 +607,12 @@ class ModianHandler:
             #     modian_entity2.current = modian_entity.current - 121914.84
             # elif modian_id == 69320:  # 田姝丽
             #     modian_entity2.current = modian_entity.current - 18694.74
-            # pk_list2.append(modian_entity2)
+            if modian_entity.pro_id == 72535 or modian_entity.pro_id == 72522:
+                pk_list2.append(modian_entity2)
 
-        msg1 = self.pk_list_sort(pk_list, '当前集资PK战况播报')
-        # msg2 = self.pk_list_sort(pk_list2, '日增金额排名')
-        msg = '{}'.format(msg1)
+        msg1 = self.pk_list_sort(pk_list, '总排名')
+        msg2 = self.pk_list_sort(pk_list2, '第一天PK情况')
+        msg = '{}\n{}'.format(msg2, msg1)
 
         my_logger.info(msg)
         return msg
