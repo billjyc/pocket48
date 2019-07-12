@@ -474,7 +474,7 @@ def get_birthday_donate_rank():
     """
     rst = mysql_util.select_all("""
         select s.id, s.`name`, sum(o.`backer_money`) as c from `order` o, supporter s where o.`supporter_id` = s.`id` 
-        and o.`pro_id` in (69304, 70158, 70956, 71842)
+        and o.`pro_id` in (69304, 70158, 70956, 71842, 72535)
         group by s.`id`
         order by c desc limit 20;
     """)
