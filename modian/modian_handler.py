@@ -592,6 +592,7 @@ class ModianHandler:
             modian_entity2.target = target
             modian_entity2.title = pro_name
             modian_entity2.support_num = backer_count
+            modian_entity2.current = current
 
             # if modian_id == 69304:  # 冯晓菲
             #     modian_entity2.current = modian_entity.current - 83429.18
