@@ -63,3 +63,4 @@
 63,3,1,神枪手,21,http://i2.tiimg.com/667696/33144fcf3d2072af.jpg,1
 64,3,1,抱抱,22,http://i2.tiimg.com/667696/f60c93572692a03a.jpg,1
 65,3,1,纽约梦,23,http://i2.tiimg.com/667696/62bffb85b4da6948.jpg,1
+66,3,1,垃圾分类,24,http://i2.tiimg.com/667696/903b8c7a972bc3a2.jpg,1
