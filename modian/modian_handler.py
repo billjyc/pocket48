@@ -579,6 +579,13 @@ class ModianHandler:
         pk_list = []
         pk_list2 = []
 
+        pk1 = ModianEntity('link', '冯晓菲+张雨鑫+刘增艳', 123)
+        pk2 = ModianEntity('link', '朱怡欣+周诗雨+张琼予', 124)
+        pk1.support_num = 'N/A'
+        pk2.support_num = 'N/A'
+        pk_list2.append(pk1)
+        pk_list2.append(pk2)
+
         for modian_id in global_config.MODIAN_PK_ARRAY:
             modian_entity = ModianEntity('link', 'title', modian_id)
             target, current, pro_name, backer_count = self.get_current_and_target(modian_entity)
@@ -608,11 +615,13 @@ class ModianHandler:
             #     modian_entity2.current = modian_entity.current - 121914.84
             # elif modian_id == 69320:  # 田姝丽
             #     modian_entity2.current = modian_entity.current - 18694.74
-            if modian_entity.pro_id == 72535 or modian_entity.pro_id == 72522:
-                pk_list2.append(modian_entity2)
+            if modian_id in [72535, 72534, 72529]:
+                pk1.current += modian_entity.current
+            elif modian_id in [72522, 72517, 72519]:
+                pk2.current += modian_entity.current
 
         msg1 = self.pk_list_sort(pk_list, '总排名')
-        msg2 = self.pk_list_sort(pk_list2, '第一天PK情况')
+        msg2 = self.pk_list_sort(pk_list2, '第二天PK情况')
         msg = '{}\n{}'.format(msg2, msg1)
 
         my_logger.info(msg)
