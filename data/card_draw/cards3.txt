@@ -65,3 +65,4 @@
 65,3,1,纽约梦,23,http://i2.tiimg.com/667696/62bffb85b4da6948.jpg,1
 66,3,1,垃圾分类,24,http://i2.tiimg.com/667696/903b8c7a972bc3a2.jpg,1
 67,3,1,北灰,25,http://i2.tiimg.com/667696/86107ed048d1b276.jpg,1
+68,3,1,残念少女,26,http://i1.fuimg.com/667696/650d92fcc66e3811.jpg,1
