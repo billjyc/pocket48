@@ -579,13 +579,6 @@ class ModianHandler:
         pk_list = []
         pk_list2 = []
 
-        pk1 = ModianEntity('link', '冯晓菲+张雨鑫+刘增艳', 123)
-        pk2 = ModianEntity('link', '朱怡欣+周诗雨+张琼予', 124)
-        pk1.support_num = 'N/A'
-        pk2.support_num = 'N/A'
-        pk_list2.append(pk1)
-        pk_list2.append(pk2)
-
         for modian_id in global_config.MODIAN_PK_ARRAY:
             modian_entity = ModianEntity('link', 'title', modian_id)
             target, current, pro_name, backer_count = self.get_current_and_target(modian_entity)
@@ -601,22 +594,22 @@ class ModianHandler:
             modian_entity2.support_num = backer_count
             modian_entity2.current = current
 
-            if modian_id == 72535:  # 冯晓菲
-                pk1.current += modian_entity.current - 18515.18
-            elif modian_id == 72534:  # 张雨鑫
-                pk1.current += modian_entity.current - 16389.30
-            elif modian_id == 72529:  # 刘增压
-                pk1.current += modian_entity.current - 7657.00
-            elif modian_id == 72522:  # 周诗雨
-                pk2.current += modian_entity.current - 19163.63
-            elif modian_id == 72517:  # 朱怡欣
-                pk2.current += modian_entity.current - 3474.27
-            elif modian_id == 72519:  # 张琼予
-                pk2.current += modian_entity.current - 16504.50
+            # if modian_id == 72535:  # 冯晓菲
+            #     pk1.current += modian_entity.current - 18515.18
+            # elif modian_id == 72534:  # 张雨鑫
+            #     pk1.current += modian_entity.current - 16389.30
+            # elif modian_id == 72529:  # 刘增压
+            #     pk1.current += modian_entity.current - 7657.00
+            # elif modian_id == 72522:  # 周诗雨
+            #     pk2.current += modian_entity.current - 19163.63
+            # elif modian_id == 72517:  # 朱怡欣
+            #     pk2.current += modian_entity.current - 3474.27
+            # elif modian_id == 72519:  # 张琼予
+            #     pk2.current += modian_entity.current - 16504.50
 
         msg1 = self.pk_list_sort(pk_list, '总排名')
-        msg2 = self.pk_list_sort(pk_list2, '第二天PK情况')
-        msg = '{}\n{}'.format(msg2, msg1)
+        # msg2 = self.pk_list_sort(pk_list2, '第二天PK情况')
+        msg = '{}\n{}'.format(msg1)
 
         my_logger.info(msg)
         return msg
