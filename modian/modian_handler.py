@@ -602,9 +602,9 @@ class ModianHandler:
             #     pk1.current += modian_entity.current - 7657.00
             # elif modian_id == 72522:  # 周诗雨
             #     pk2.current += modian_entity.current - 19163.63
-            # elif modian_id == 72517:  # 朱怡欣
+            # elif modian_id == 73919:  # 张雨鑫
             #     pk2.current += modian_entity.current - 3474.27
-            # elif modian_id == 72519:  # 张琼予
+            # elif modian_id == 73957:  # 许杨玉琢
             #     pk2.current += modian_entity.current - 16504.50
 
         msg1 = self.pk_list_sort(pk_list, '总排名')
