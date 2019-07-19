@@ -609,7 +609,7 @@ class ModianHandler:
 
         msg1 = self.pk_list_sort(pk_list, '总排名')
         # msg2 = self.pk_list_sort(pk_list2, '第二天PK情况')
-        msg = '{}\n{}'.format(msg1)
+        msg = '{}\n'.format(msg1)
 
         my_logger.info(msg)
         return msg
