@@ -67,3 +67,4 @@
 67,3,1,北灰,25,http://i2.tiimg.com/667696/86107ed048d1b276.jpg,1
 68,3,1,残念少女,26,http://i1.fuimg.com/667696/650d92fcc66e3811.jpg,1
 69,3,1,小眼睛,27,http://i1.fuimg.com/667696/5003df96ef43d9ac.jpg,1
+70,3,1,小公主,28,http://i1.fuimg.com/667696/07d66acd535cac48.jpg,1

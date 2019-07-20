@@ -594,22 +594,24 @@ class ModianHandler:
             modian_entity2.support_num = backer_count
             modian_entity2.current = current
 
-            # if modian_id == 72535:  # 冯晓菲
-            #     pk1.current += modian_entity.current - 18515.18
-            # elif modian_id == 72534:  # 张雨鑫
-            #     pk1.current += modian_entity.current - 16389.30
-            # elif modian_id == 72529:  # 刘增压
-            #     pk1.current += modian_entity.current - 7657.00
-            # elif modian_id == 72522:  # 周诗雨
-            #     pk2.current += modian_entity.current - 19163.63
-            # elif modian_id == 73919:  # 张雨鑫
-            #     pk2.current += modian_entity.current - 3474.27
-            # elif modian_id == 73957:  # 许杨玉琢
-            #     pk2.current += modian_entity.current - 16504.50
+            if modian_id == 73894:  # 冯晓菲
+                modian_entity2.current += modian_entity.current - 17176.86
+            elif modian_id == 73881:  # 汪佳翎
+                modian_entity2.current += modian_entity.current - 5741.58
+            elif modian_id == 73852:  # 刘增艳
+                modian_entity2.current += modian_entity.current - 5500.02
+            elif modian_id == 73903:  # 沈梦瑶
+                modian_entity2.current += modian_entity.current - 8536.24
+            elif modian_id == 73909:  # 张怡
+                modian_entity2.current += modian_entity.current - 3058.60
+            elif modian_id == 73919:  # 张雨鑫
+                modian_entity2.current += modian_entity.current - 3049.02
+            elif modian_id == 73957:  # 许杨玉琢
+                modian_entity2.current += modian_entity.current - 8102.84
 
         msg1 = self.pk_list_sort(pk_list, '总排名')
-        # msg2 = self.pk_list_sort(pk_list2, '第二天PK情况')
-        msg = '{}\n'.format(msg1)
+        msg2 = self.pk_list_sort(pk_list2, '增幅排名情况(7月20日0点-12点')
+        msg = '{}\n{}'.format(msg2, msg1)
 
         my_logger.info(msg)
         return msg
