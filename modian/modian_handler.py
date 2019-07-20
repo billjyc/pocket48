@@ -595,19 +595,19 @@ class ModianHandler:
             modian_entity2.current = current
 
             if modian_id == 73894:  # 冯晓菲
-                modian_entity2.current += modian_entity.current - 17176.86
+                modian_entity2.current = modian_entity.current - 17176.86
             elif modian_id == 73881:  # 汪佳翎
-                modian_entity2.current += modian_entity.current - 5741.58
+                modian_entity2.current = modian_entity.current - 5741.58
             elif modian_id == 73852:  # 刘增艳
-                modian_entity2.current += modian_entity.current - 5500.02
+                modian_entity2.current = modian_entity.current - 5500.02
             elif modian_id == 73903:  # 沈梦瑶
-                modian_entity2.current += modian_entity.current - 8536.24
+                modian_entity2.current = modian_entity.current - 8536.24
             elif modian_id == 73909:  # 张怡
-                modian_entity2.current += modian_entity.current - 3058.60
+                modian_entity2.current = modian_entity.current - 3058.60
             elif modian_id == 73919:  # 张雨鑫
-                modian_entity2.current += modian_entity.current - 3049.02
+                modian_entity2.current = modian_entity.current - 3049.02
             elif modian_id == 73957:  # 许杨玉琢
-                modian_entity2.current += modian_entity.current - 8102.84
+                modian_entity2.current = modian_entity.current - 8102.84
             pk_list2.append(modian_entity2)
 
         msg1 = self.pk_list_sort(pk_list, '总排名')
