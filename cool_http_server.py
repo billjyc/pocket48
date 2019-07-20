@@ -476,7 +476,7 @@ def get_birthday_donate_rank():
         select s.id, s.`name`, sum(o.`backer_money`) as c from `order` o, supporter s where o.`supporter_id` = s.`id` 
         and o.`pro_id` in (69304, 70158, 70956, 71842, 72535, 73894)
         group by s.`id`
-        order by c desc limit 20;
+        order by c desc limit 25;
     """)
     cur_rank = 0
     row_tmp = 0
@@ -486,7 +486,7 @@ def get_birthday_donate_rank():
         row_tmp += 1
         if rank[2] != last_val:
             cur_rank = row_tmp
-        if cur_rank > 20:
+        if cur_rank > 25:
             continue
         last_val = rank[2]
         rank_tmp = rank + (cur_rank,)
