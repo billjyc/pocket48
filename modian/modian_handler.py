@@ -608,6 +608,7 @@ class ModianHandler:
                 modian_entity2.current += modian_entity.current - 3049.02
             elif modian_id == 73957:  # 许杨玉琢
                 modian_entity2.current += modian_entity.current - 8102.84
+            pk_list2.append(modian_entity2)
 
         msg1 = self.pk_list_sort(pk_list, '总排名')
         msg2 = self.pk_list_sort(pk_list2, '增幅排名情况(7月20日0点-12点')
