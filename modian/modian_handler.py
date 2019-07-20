@@ -595,23 +595,23 @@ class ModianHandler:
             modian_entity2.current = current
 
             if modian_id == 73894:  # 冯晓菲
-                modian_entity2.current = modian_entity.current - 17176.86
+                modian_entity2.current = modian_entity.current - 27071.85
             elif modian_id == 73881:  # 汪佳翎
-                modian_entity2.current = modian_entity.current - 5741.58
+                modian_entity2.current = modian_entity.current - 14767.00
             elif modian_id == 73852:  # 刘增艳
-                modian_entity2.current = modian_entity.current - 5500.02
+                modian_entity2.current = modian_entity.current - 14063.82
             elif modian_id == 73903:  # 沈梦瑶
-                modian_entity2.current = modian_entity.current - 8536.24
+                modian_entity2.current = modian_entity.current - 18384.05
             elif modian_id == 73909:  # 张怡
-                modian_entity2.current = modian_entity.current - 3058.60
+                modian_entity2.current = modian_entity.current - 5775.22
             elif modian_id == 73919:  # 张雨鑫
-                modian_entity2.current = modian_entity.current - 3049.02
+                modian_entity2.current = modian_entity.current - 7634.00
             elif modian_id == 73957:  # 许杨玉琢
-                modian_entity2.current = modian_entity.current - 8102.84
+                modian_entity2.current = modian_entity.current - 18850.00
             pk_list2.append(modian_entity2)
 
         msg1 = self.pk_list_sort(pk_list, '总排名')
-        msg2 = self.pk_list_sort(pk_list2, '增幅排名情况(7月20日0点-12点')
+        msg2 = self.pk_list_sort(pk_list2, '增幅排名情况(7月20日20点-24点')
         msg = '{}\n{}'.format(msg2, msg1)
 
         my_logger.info(msg)
