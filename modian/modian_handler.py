@@ -611,8 +611,8 @@ class ModianHandler:
             pk_list2.append(modian_entity2)
 
         msg1 = self.pk_list_sort(pk_list, '总排名')
-        msg2 = self.pk_list_sort(pk_list2, '增幅排名情况(7月20日20点-24点')
-        msg = '{}\n{}'.format(msg2, msg1)
+        # msg2 = self.pk_list_sort(pk_list2, '增幅排名情况(7月20日20点-24点')
+        msg = '{}\n'.format(msg1)
 
         my_logger.info(msg)
         return msg
