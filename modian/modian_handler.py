@@ -598,14 +598,14 @@ class ModianHandler:
                 modian_entity2.current = modian_entity.current - 27071.85
             elif modian_id == 73881:  # 汪佳翎
                 modian_entity2.current = modian_entity.current - 14767.00
-            elif modian_id == 73852:  # 刘增艳
-                modian_entity2.current = modian_entity.current - 14063.82
+            # elif modian_id == 73852:  # 刘增艳
+            #     modian_entity2.current = modian_entity.current - 14063.82
             elif modian_id == 73903:  # 沈梦瑶
                 modian_entity2.current = modian_entity.current - 18384.05
-            elif modian_id == 73909:  # 张怡
-                modian_entity2.current = modian_entity.current - 5775.22
-            elif modian_id == 73919:  # 张雨鑫
-                modian_entity2.current = modian_entity.current - 7634.00
+            # elif modian_id == 73909:  # 张怡
+            #     modian_entity2.current = modian_entity.current - 5775.22
+            # elif modian_id == 73919:  # 张雨鑫
+            #     modian_entity2.current = modian_entity.current - 7634.00
             elif modian_id == 73957:  # 许杨玉琢
                 modian_entity2.current = modian_entity.current - 18850.00
             pk_list2.append(modian_entity2)
