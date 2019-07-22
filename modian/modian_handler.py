@@ -605,7 +605,7 @@ class ModianHandler:
             # modian_entity2.current = current
             modian_entity.current_percent = "%.2f%%" % (float(modian_entity.current) / current_sum * 100)
             my_logger.debug('【总选PK】{}'.format(modian_entity.current_percent))
-            if modian_id == 73894:  # 冯晓菲
+            if modian_id == 74791:  # 冯晓菲
                 modian_entity.target_percent = '25%'
                 modian_entity.title = '冯晓菲'
             elif modian_id == 74780:  # 汪佳翎
