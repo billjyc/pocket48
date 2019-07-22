@@ -16,6 +16,8 @@ try:
 except:
     my_logger = logging.getLogger(__name__)
 
+print("%.2f%%" % (float('0') / 0.0 * 100))
+
 from modian.modian_card_draw import handler as card_draw_handler
 from qq.qqhandler import QQHandler
 from utils import global_config, util
@@ -586,6 +588,8 @@ class ModianHandler:
             current_sum += float(current)
 
         my_logger.debug('【总选PK】当前总额: {}'.format(current_sum))
+        if current_sum == 0.0:
+            current_sum = 1.0
 
         for modian_id in global_config.MODIAN_PK_ARRAY:
             modian_entity = ModianEntity('link', 'title', modian_id)
@@ -661,6 +665,8 @@ class ModianHandler:
 
 
 if __name__ == '__main__':
+
+
     user_id = '123456'
     back_time = '2019-02-12 20:30:00'
     oid = uuid.uuid3(uuid.NAMESPACE_OID, user_id + back_time)
