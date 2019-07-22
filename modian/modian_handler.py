@@ -600,7 +600,7 @@ class ModianHandler:
             # modian_entity2.support_num = backer_count
             # modian_entity2.current = current
             modian_entity.current_percent = "%.2f%%" % (modian_entity.current / current_sum * 100)
-            print(modian_entity.current_percent)
+            my_logger.debug('【总选PK】{}'.format(modian_entity.current_percent))
             if modian_id == 73894:  # 冯晓菲
                 modian_entity.target_percent = '25%'
                 modian_entity.title = '冯晓菲'
@@ -649,6 +649,7 @@ class ModianHandler:
             sub_msg = '%d. %s\t支持人数: %s\t当前进度: %.2f元\t当前百分比: %s\t目标百分比: %s\n' % (i + 1, wds.title,
                                                                              wds.support_num, wds.current, wds.current_percent,
                                                                              wds.target_percent)
+            my_logger.debug('【总选PK】{}'.format(sub_msg))
             # else:
             #     diff = modian_entity_list[i].current - modian_entity_list[i - 1].current
             #     sub_msg = '%d. %s\t支持人数: %s\t当前进度: %.2f元\t  -%.2f元\n' % (i + 1, wds.title, wds.support_num,
