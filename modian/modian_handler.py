@@ -16,8 +16,6 @@ try:
 except:
     my_logger = logging.getLogger(__name__)
 
-print("%.2f%%" % (float('0') / 0.0 * 100))
-
 from modian.modian_card_draw import handler as card_draw_handler
 from qq.qqhandler import QQHandler
 from utils import global_config, util
