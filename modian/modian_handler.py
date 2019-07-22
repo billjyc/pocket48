@@ -617,9 +617,9 @@ class ModianHandler:
             elif modian_id == 74782:  # 祁静
                 modian_entity.target_percent = '15%'
                 modian_entity.title = '祁静'
-            # elif modian_id == 73909:  # 杨冰怡
-            #     modian_entity.target_percent = '15%'
-            #     modian_entity.title = '杨冰怡'
+            elif modian_id == 74807:  # 杨冰怡
+                modian_entity.target_percent = '15%'
+                modian_entity.title = '杨冰怡'
             # pk_list2.append(modian_entity2)
 
         msg1 = self.pk_list_sort(pk_list, '总排名')
