@@ -600,6 +600,7 @@ class ModianHandler:
             # modian_entity2.support_num = backer_count
             # modian_entity2.current = current
             modian_entity.current_percent = "%.2f%%" % (modian_entity.current / current_sum * 100)
+            print(modian_entity.current_percent)
             if modian_id == 73894:  # 冯晓菲
                 modian_entity.target_percent = '25%'
                 modian_entity.title = '冯晓菲'
