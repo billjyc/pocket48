@@ -584,7 +584,7 @@ class ModianHandler:
             modian_entity = ModianEntity('link', 'title', modian_id)
             target, current, pro_name, backer_count = self.get_current_and_target(modian_entity)
             current_sum += float(current)
-            
+
         my_logger.debug('【总选PK】当前总额: {}'.format(current_sum))
 
         for modian_id in global_config.MODIAN_PK_ARRAY:
@@ -601,7 +601,7 @@ class ModianHandler:
             # modian_entity2.title = pro_name
             # modian_entity2.support_num = backer_count
             # modian_entity2.current = current
-            modian_entity.current_percent = "%.2f%%" % (modian_entity.current / current_sum * 100)
+            modian_entity.current_percent = "%.2f%%" % (float(modian_entity.current) / current_sum * 100)
             my_logger.debug('【总选PK】{}'.format(modian_entity.current_percent))
             if modian_id == 73894:  # 冯晓菲
                 modian_entity.target_percent = '25%'
