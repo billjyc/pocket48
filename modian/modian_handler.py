@@ -579,6 +579,12 @@ class ModianHandler:
         pk_list = []
         pk_list2 = []
 
+        current_sum = 0.0
+        for modian_id in global_config.MODIAN_PK_ARRAY:
+            modian_entity = ModianEntity('link', 'title', modian_id)
+            target, current, pro_name, backer_count = self.get_current_and_target(modian_entity)
+            current_sum += float(current)
+
         for modian_id in global_config.MODIAN_PK_ARRAY:
             modian_entity = ModianEntity('link', 'title', modian_id)
             target, current, pro_name, backer_count = self.get_current_and_target(modian_entity)
@@ -588,27 +594,28 @@ class ModianHandler:
             modian_entity.support_num = backer_count
             pk_list.append(modian_entity)
 
-            modian_entity2 = ModianEntity('link', 'title', modian_id)
-            modian_entity2.target = target
-            modian_entity2.title = pro_name
-            modian_entity2.support_num = backer_count
-            modian_entity2.current = current
-
+            # modian_entity2 = ModianEntity('link', 'title', modian_id)
+            # modian_entity2.target = target
+            # modian_entity2.title = pro_name
+            # modian_entity2.support_num = backer_count
+            # modian_entity2.current = current
+            modian_entity.current_percent = "%.2f%%" % (modian_entity.current / current_sum * 100)
             if modian_id == 73894:  # 冯晓菲
-                modian_entity2.current = modian_entity.current - 27071.85
-            elif modian_id == 73881:  # 汪佳翎
-                modian_entity2.current = modian_entity.current - 14767.00
-            # elif modian_id == 73852:  # 刘增艳
-            #     modian_entity2.current = modian_entity.current - 14063.82
-            elif modian_id == 73903:  # 沈梦瑶
-                modian_entity2.current = modian_entity.current - 18384.05
-            # elif modian_id == 73909:  # 张怡
-            #     modian_entity2.current = modian_entity.current - 5775.22
-            # elif modian_id == 73919:  # 张雨鑫
-            #     modian_entity2.current = modian_entity.current - 7634.00
-            elif modian_id == 73957:  # 许杨玉琢
-                modian_entity2.current = modian_entity.current - 18850.00
-            pk_list2.append(modian_entity2)
+                modian_entity.target_percent = '25%'
+                modian_entity.title = '冯晓菲'
+            elif modian_id == 74780:  # 汪佳翎
+                modian_entity.target_percent = '15%'
+                modian_entity.title = '汪佳翎'
+            elif modian_id == 74779:  # 宋昕冉
+                modian_entity.target_percent = '30%'
+                modian_entity.title = '宋昕冉'
+            elif modian_id == 74782:  # 祁静
+                modian_entity.target_percent = '15%'
+                modian_entity.title = '祁静'
+            # elif modian_id == 73909:  # 杨冰怡
+            #     modian_entity.target_percent = '15%'
+            #     modian_entity.title = '杨冰怡'
+            # pk_list2.append(modian_entity2)
 
         msg1 = self.pk_list_sort(pk_list, '总排名')
         # msg2 = self.pk_list_sort(pk_list2, '增幅排名情况(7月20日20点-24点')
@@ -637,12 +644,14 @@ class ModianHandler:
         msg = '{}:\n'.format(title)
         for i in range(len(modian_entity_list)):
             wds = modian_entity_list[i]
-            if i == 0:
-                sub_msg = '%d. %s\t支持人数: %s\t当前进度: %.2f元\n' % (i + 1, wds.title, wds.support_num, wds.current)
-            else:
-                diff = modian_entity_list[i].current - modian_entity_list[i - 1].current
-                sub_msg = '%d. %s\t支持人数: %s\t当前进度: %.2f元\t  -%.2f元\n' % (i + 1, wds.title, wds.support_num,
-                                                                         wds.current, diff)
+            # if i == 0:
+            sub_msg = '%d. %s\t支持人数: %s\t当前进度: %.2f元\t当前百分比: %s\t目标百分比: %s\n' % (i + 1, wds.title,
+                                                                             wds.support_num, wds.current, wds.current_percent,
+                                                                             wds.target_percent)
+            # else:
+            #     diff = modian_entity_list[i].current - modian_entity_list[i - 1].current
+            #     sub_msg = '%d. %s\t支持人数: %s\t当前进度: %.2f元\t  -%.2f元\n' % (i + 1, wds.title, wds.support_num,
+            #                                                              wds.current, diff)
             msg += sub_msg
         return msg
 
