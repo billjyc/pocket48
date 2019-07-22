@@ -584,6 +584,8 @@ class ModianHandler:
             modian_entity = ModianEntity('link', 'title', modian_id)
             target, current, pro_name, backer_count = self.get_current_and_target(modian_entity)
             current_sum += float(current)
+            
+        my_logger.debug('【总选PK】当前总额: {}'.format(current_sum))
 
         for modian_id in global_config.MODIAN_PK_ARRAY:
             modian_entity = ModianEntity('link', 'title', modian_id)
