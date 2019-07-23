@@ -609,23 +609,23 @@ class ModianHandler:
                 modian_entity.target_percent = '25%'
                 modian_entity.title = '冯晓菲'
             elif modian_id == 74780:  # 汪佳翎
-                modian_entity.target_percent = '15%'
+                modian_entity.target_percent = '20%'
                 modian_entity.title = '汪佳翎'
             elif modian_id == 74779:  # 宋昕冉
-                modian_entity.target_percent = '30%'
+                modian_entity.target_percent = '35%'
                 modian_entity.title = '宋昕冉'
             elif modian_id == 74782:  # 祁静
                 modian_entity.target_percent = '15%'
                 modian_entity.title = '祁静'
             elif modian_id == 74807:  # 杨冰怡
-                modian_entity.target_percent = '15%'
+                modian_entity.target_percent = '20%'
                 modian_entity.title = '杨冰怡'
             # pk_list2.append(modian_entity2)
 
         msg1 = self.pk_list_sort(pk_list, '总排名')
         # msg2 = self.pk_list_sort(pk_list2, '增幅排名情况(7月20日20点-24点')
         msg = '{}\n'.format(msg1)
-
+        msg += '当前集资总额: {}元'.format(current_sum)
         my_logger.info(msg)
         return msg
 
