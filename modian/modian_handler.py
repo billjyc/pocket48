@@ -618,7 +618,7 @@ class ModianHandler:
                 modian_entity.target_percent = '15%'
                 modian_entity.title = '祁静'
             elif modian_id == 74807:  # 杨冰怡
-                modian_entity.target_percent = '20%'
+                modian_entity.target_percent = '25%'
                 modian_entity.title = '杨冰怡'
             # pk_list2.append(modian_entity2)
 
@@ -650,7 +650,7 @@ class ModianHandler:
         for i in range(len(modian_entity_list)):
             wds = modian_entity_list[i]
             # if i == 0:
-            sub_msg = '%d. %s\t支持人数: %s\t当前进度: %.2f元\t当前百分比: %s\t目标百分比: %s\n' % (i + 1, wds.title,
+            sub_msg = '%d. %s\t支持人数: %s\t当前进度: %.2f元\t目标百分比完成情况: 【%s/%s】\n' % (i + 1, wds.title,
                                                                              wds.support_num, wds.current, wds.current_percent,
                                                                              wds.target_percent)
             my_logger.debug('【总选PK】{}'.format(sub_msg))
