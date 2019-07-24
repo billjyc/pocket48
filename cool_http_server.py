@@ -147,9 +147,19 @@ def handle_msg(context):
                 elif message == '-yesterday':
                     get_jizi_ranking_list_by_date(context, 1)
                 elif message == '-生日集资':
+                    from utils import util
+                    admins = util.read_txt(os.path.join(BASE_DIR, 'data', 'card_draw', 'admin.txt'))
+                    if str(user_id) not in admins:
+                        logger.info('QQ：{} 无权限操作！')
+                        return
                     message = get_birthday_donate_rank()
                     bot.send(context, message)
                 elif message == '-战况':
+                    from utils import util
+                    admins = util.read_txt(os.path.join(BASE_DIR, 'data', 'card_draw', 'admin.txt'))
+                    if str(user_id) not in admins:
+                        logger.info('QQ：{} 无权限操作！')
+                        return
                     message = get_modian_pk()
                     bot.send(context, message)
                 # elif message == '-排行榜':
