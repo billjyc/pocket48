@@ -68,3 +68,7 @@
 68,3,1,残念少女,26,http://i1.fuimg.com/667696/650d92fcc66e3811.jpg,1
 69,3,1,小眼睛,27,http://i1.fuimg.com/667696/5003df96ef43d9ac.jpg,1
 70,3,1,小公主,28,http://i1.fuimg.com/667696/07d66acd535cac48.jpg,1
+71,3,1,总裁卡,29,http://i1.fuimg.com/667696/b4af81d28e968907.jpg,1
+72,3,1,灰鸭,30,http://i1.fuimg.com/667696/9783c37e95bd0fb7.jpg,1
+73,3,1,冯款和作作,31,http://i1.fuimg.com/667696/367179649dc416ff.jpg,1
+74,3,1,模糊时代,32,http://i1.fuimg.com/667696/40a81ef35bf2674c.jpg,1
