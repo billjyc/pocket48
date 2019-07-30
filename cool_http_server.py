@@ -154,6 +154,14 @@ def handle_msg(context):
                         return
                     message = get_birthday_donate_rank()
                     bot.send(context, message)
+                elif message == '-2019':
+                    from utils import util
+                    admins = util.read_txt(os.path.join(BASE_DIR, 'data', 'card_draw', 'admin.txt'))
+                    if str(user_id) not in admins:
+                        logger.info('QQ：{} 无权限操作！')
+                        return
+                    message = get_2019_donate_rank()
+                    bot.send(context, message)
                 elif message == '-战况':
                     from utils import util
                     admins = util.read_txt(os.path.join(BASE_DIR, 'data', 'card_draw', 'admin.txt'))
@@ -485,6 +493,40 @@ def get_birthday_donate_rank():
     rst = mysql_util.select_all("""
         select s.id, s.`name`, sum(o.`backer_money`) as c from `order` o, supporter s where o.`supporter_id` = s.`id` 
         and o.`pro_id` in (69304, 70158, 70956, 71842, 72535, 73894, 74791, 75412)
+        group by s.`id`
+        order by c desc limit 25;
+    """)
+    cur_rank = 0
+    row_tmp = 0
+    last_val = -1
+    new_rst = []
+    for rank in rst:
+        row_tmp += 1
+        if rank[2] != last_val:
+            cur_rank = row_tmp
+        if cur_rank > 25:
+            continue
+        last_val = rank[2]
+        rank_tmp = rank + (cur_rank,)
+        new_rst.append(rank_tmp)
+    logger.debug(new_rst)
+    message = ''
+    for rank in new_rst:
+        sub_message = '%s.%s: %s元\n' % (rank[3], str(rank[1], encoding='utf8'), rank[2])
+        message += sub_message
+    return message
+
+
+def get_2019_donate_rank():
+    """
+    获取2019集资排名
+    :return:
+    """
+    rst = mysql_util.select_all("""
+        select s.id, s.`name`, sum(o.`backer_money`) as c from `order` o, supporter s where o.`supporter_id` = s.`id` 
+        and o.`pro_id` in (44611, 45584, 47645, 47863, 48285, 50755, 51567, 54590, 55194, 57085, 57083, 59267,
+        59708, 61410, 62988, 64096, 64735, 65643, 66888, 68067,
+        69304, 70158, 70956, 71842, 72535, 73894, 74791, 75412)
         group by s.`id`
         order by c desc limit 25;
     """)
