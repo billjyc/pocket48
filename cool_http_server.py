@@ -526,7 +526,7 @@ def get_2019_donate_rank():
         select s.id, s.`name`, sum(o.`backer_money`) as c from `order` o, supporter s where o.`supporter_id` = s.`id` 
         and o.`pro_id` in (44611, 45584, 47645, 47863, 48285, 50755, 51567, 54590, 55194, 57085, 57083, 59267,
         59708, 61410, 62988, 64096, 64735, 65643, 66888, 68067,
-        69304, 70158, 70956, 71842, 72535, 73894, 74791, 75412)
+        69304, 70158, 70956, 71842, 72535, 73894, 74791, 75412, 79264)
         group by s.`id`
         order by c desc limit 25;
     """)
