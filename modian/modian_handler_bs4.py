@@ -91,7 +91,7 @@ class ModianHandlerBS4:
         """
         my_logger.info('获取集资项目基本资料, 摩点id: {}'.format(modian_entity.pro_id))
         url = 'https://zhongchou.modian.com/realtime/get_simple_product?jsonpcallback=jQuery1_1&ids={}&if_all=1&_=2'.format(modian_entity.pro_id)
-        rsp = self.session.get(url).text
+        rsp = self.session.get(url, headers=self.modian_header()).text
         # 中间结果是个json字符串，需要把头尾过滤掉
         rsp = rsp[41: -3]
         my_logger.info('返回结果: {}'.format(rsp))
@@ -111,7 +111,7 @@ class ModianHandlerBS4:
         """
         my_logger.info('查询项目订单, pro_id: %s', modian_entity.pro_id)
         api = 'https://zhongchou.modian.com/comment/ajax_comments?jsonpcallback=jQuery1_1&post_id={}&pro_class={}&page=1&page_size=10&_=2'.format(modian_entity.post_id, modian_entity.pro_class)
-        r = self.session.get(api).text
+        r = self.session.get(api, headers=self.modian_header()).text
         r = r[41: -2]
         order_html = json.loads(r, encoding='utf-8')['html']
 
@@ -120,6 +120,17 @@ class ModianHandlerBS4:
 
     def parse_order_details(self, orders, modian_entity):
         pass
+
+    def modian_header(self):
+        """
+        微打赏header信息
+        """
+        header = {
+            'Accept': 'text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01',
+            'Host': 'zhongchou.modian.com',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.104 Safari/537.36 Core/1.53.3408.400 QQBrowser/9.6.12028.40',
+        }
+        return header
 
 
 if __name__ == '__main__':
