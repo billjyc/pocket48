@@ -5,3 +5,4 @@ PyMySQL
 cqhttp
 SQLalchemy
 mysql-connector
+beautifulsoup4
