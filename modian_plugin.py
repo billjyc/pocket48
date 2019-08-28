@@ -3,7 +3,8 @@
 from log.my_logger import modian_logger as my_logger
 
 from utils.config_reader import ConfigReader
-from modian.modian_handler import ModianHandler, ModianEntity, ModianJiebangEntity, ModianFlagEntity, ModianCountFlagEntity
+from modian.modian_handler import ModianJiebangEntity, ModianFlagEntity, ModianCountFlagEntity
+from modian.modian_handler_bs4 import ModianHandlerBS4, ModianEntity
 from utils import global_config
 from qq.qqhandler import QQHandler
 import uuid
@@ -228,7 +229,7 @@ def monitor_modian():
 #     my_logger.debug('更新排名榜单所用时间: %s', time.time() - time0)
 
 
-@scheduler.scheduled_job('cron', minute='*/30')
+# @scheduler.scheduled_job('cron', minute='*/30')
 def sync_order():
     global modian_handler
     my_logger.info('同步订单')
@@ -275,6 +276,6 @@ def notify_modian_pk():
     QQHandler.send_to_groups(modian_handler.modian_notify_groups, msg)
 
 
-modian_handler = ModianHandler([], [])
+modian_handler = ModianHandlerBS4([], [])
 update_modian_conf()
 # modian_handler.init_order_queues()

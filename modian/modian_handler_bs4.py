@@ -351,6 +351,24 @@ class ModianHandlerBS4:
                 return cur_rank, days
         return -1, -1
 
+    def get_all_orders(self, modian_entity):
+        """
+        获取全部订单
+        :return:
+        """
+        orders = []
+        page = 1
+        while True:
+            my_logger.debug('获取全部订单，第{}页'.format(page))
+            sub_orders = self.query_project_orders(modian_entity, page)
+            # TODO: 这里需要处理
+            if len(sub_orders) > 0:
+                orders.extend(sub_orders)
+                page += 1
+            else:
+                break
+        return orders
+
     def modian_header(self):
         """
         微打赏header信息
