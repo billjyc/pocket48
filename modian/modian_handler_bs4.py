@@ -101,7 +101,7 @@ class ModianHandlerBS4:
         modian_entity.support_num = project_profile_json['backer_count']
         modian_entity.post_id = project_profile_json['moxi_post_id']
         modian_entity.title = project_profile_json['name']
-        return modian_entity.target, modian_entity.current, modian_entity.title, modian_entity.supporter_num
+        return modian_entity.target, modian_entity.current, modian_entity.title, modian_entity.support_num
 
     def query_project_orders(self, modian_entity, page=1, page_size=20):
         """
