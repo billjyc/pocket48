@@ -3,14 +3,11 @@
 六选之后，摩点关闭了粉丝应援类项目，API就不能使用了，在这里临时改为直接爬取网页
 """
 
-import hashlib
+import json
+import logging
 import time
-import urllib.parse
-import uuid
 
 import requests
-import logging
-import json
 from bs4 import BeautifulSoup
 
 try:
@@ -21,10 +18,7 @@ except:
 from modian.modian_card_draw import handler as card_draw_handler
 from qq.qqhandler import QQHandler
 from utils import global_config, util
-from utils.mysql_util import mysql_util, Base, DBSession
-from sqlalchemy import Column, String, Integer, Float, DateTime
-
-from modian.modian_handler import ModianCountFlagEntity, ModianJiebangEntity
+from utils.mysql_util import mysql_util
 
 
 class ModianEntity:
@@ -74,10 +68,14 @@ class ModianHandlerBS4:
                 orders = self.query_project_orders(modian_entity)
 
                 for order in orders:
-                    user_id = order['user_id']
-                    pay_time = order['pay_time']
+                    backer_money_icon = order.find(class_='icon-payment')
+                    if not backer_money_icon:  # 纯评论，直接跳过
+                        continue
+                    comment_id = order.get('data-reply-id')
 
-                    oid = uuid.uuid3(uuid.NAMESPACE_OID, str(user_id) + pay_time)
+                    # oid使用项目id和评论id拼装
+                    oid = str(modian_entity.pro_id) + str(comment_id)
+                    my_logger.debug('oid: %s', oid)
                     self.order_queues[modian_entity.pro_id].add(oid)
             except Exception as e:
                 my_logger.error('初始化订单队列失败！')
@@ -90,7 +88,8 @@ class ModianHandlerBS4:
         :return:
         """
         my_logger.info('获取集资项目基本资料, 摩点id: {}'.format(modian_entity.pro_id))
-        url = 'https://zhongchou.modian.com/realtime/get_simple_product?jsonpcallback=jQuery1_1&ids={}&if_all=1&_=2'.format(modian_entity.pro_id)
+        url = 'https://zhongchou.modian.com/realtime/get_simple_product?jsonpcallback=jQuery1_1&ids={}&if_all=1&_=2'.format(
+            modian_entity.pro_id)
         rsp = self.session.get(url, headers=self.modian_header()).text
         # 中间结果是个json字符串，需要把头尾过滤掉
         rsp = rsp[41: -3]
@@ -101,25 +100,256 @@ class ModianHandlerBS4:
         modian_entity.current = project_profile_json['backer_money']
         modian_entity.support_num = project_profile_json['backer_count']
         modian_entity.post_id = project_profile_json['moxi_post_id']
+        modian_entity.title = project_profile_json['name']
+        return modian_entity.target, modian_entity.current, modian_entity.title, modian_entity.supporter_num
 
-    def query_project_orders(self, modian_entity, page=1):
+    def query_project_orders(self, modian_entity, page=1, page_size=20):
         """
         查询项目订单（bs4版本）
+        :param page_size:
         :param page:
         :param modian_entity:
         :return:
         """
         my_logger.info('查询项目订单, pro_id: %s', modian_entity.pro_id)
-        api = 'https://zhongchou.modian.com/comment/ajax_comments?jsonpcallback=jQuery1_1&post_id={}&pro_class={}&page=1&page_size=10&_=2'.format(modian_entity.post_id, modian_entity.pro_class)
+        api = 'https://zhongchou.modian.com/comment/ajax_comments?jsonpcallback=jQuery1_1&post_id={}&pro_class={}&page={}&page_size={}&_=2'.format(
+            modian_entity.post_id,
+            modian_entity.pro_class, page, page_size)
         r = self.session.get(api, headers=self.modian_header()).text
-        r = r[41: -2]
+        r = r[40: -2]
         order_html = json.loads(r, encoding='utf-8')['html']
-
         soup = BeautifulSoup(order_html, 'lxml')
-        print(soup.prettify())
+        # print(soup.prettify())
+        # 对评论列表进行处理
+        comment_list = soup.find_all(name='li')
+        return comment_list
 
     def parse_order_details(self, orders, modian_entity):
-        pass
+        if len(self.order_queues[modian_entity.pro_id]) == 0 and len(orders) == 0:
+            my_logger.debug('订单队列为空')
+            return
+        jiebang_activities = global_config.MODIAN_JIEBANG_ACTIVITIES[modian_entity.pro_id]
+        flag_activities = global_config.MODIAN_FLAG_ACTIVITIES[modian_entity.pro_id]
+        count_flag_activities = global_config.MODIAN_COUNT_FLAG_ACTIVITIES[modian_entity.pro_id]
+
+        # 查询集资情况
+        target, current, pro_name, backer_count = self.get_project_profiles(modian_entity)
+        project_info = '当前进度: %s元, 目标金额: %s元' % (modian_entity.current, modian_entity.target)
+
+        my_logger.debug('size of order %s queue: %s', modian_entity.pro_id,
+                        len(self.order_queues[modian_entity.pro_id]))
+
+        for comment in orders:
+            user_id = comment.find(class_='comment-replay').get('data-reply_ruid')
+            nickname = comment.find(class_='nickname').get_text().strip('\n')
+            pay_time = util.convert_timestamp_to_timestr(time.time() * 1000)
+            backer_money_icon = comment.find(class_='icon-payment')
+            if not backer_money_icon:  # 纯评论，直接跳过
+                continue
+            backer_money = comment.find(class_='comment-txt').get_text().strip()[4:-1]
+            backer_money = float(backer_money)
+            comment_id = comment.get('data-reply-id')
+
+            # oid使用项目id和评论id拼装
+            oid = str(modian_entity.pro_id) + str(comment_id)
+            my_logger.debug('oid: %s', oid)
+
+            if oid in self.order_queues[modian_entity.pro_id]:
+                continue
+            my_logger.debug('项目%s队列长度: %s', modian_entity.pro_id, len(self.order_queues[modian_entity.pro_id]))
+
+            # 每次需要更新一下昵称
+            try:
+                mysql_util.query("""
+                                INSERT INTO `supporter` (`id`, `name`) VALUES (%s, %s)  ON DUPLICATE KEY
+                                    UPDATE `name`=%s
+                        """, (user_id, nickname, nickname))
+            except Exception as e:
+                my_logger.exception(e)
+
+            try:
+                mysql_util.query("""
+                                INSERT INTO `order` (`id`,`supporter_id`,`backer_money`,`pay_time`, `pro_id`) 
+                                    VALUES (%s, %s, %s, %s, %s) ON DUPLICATE KEY
+                                    UPDATE `id`=%s
+                        """, (str(oid), user_id, backer_money, pay_time, modian_entity.pro_id, str(oid)))
+            except Exception as e:
+                my_logger.exception(e)
+
+            msg = '感谢 %s(%s) 支持了%s元, %s\n' % (
+                nickname, user_id, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
+
+            daka_rank, support_days = self.find_user_daka_rank(user_id, modian_entity.pro_id)
+
+            if daka_rank != -1 and support_days:
+                msg += '当前项目已打卡%s天\n' % support_days
+
+            if modian_entity.need_display_rank is True:
+                jizi_rank, backer_money = self.find_user_jizi_rank(user_id, modian_entity.pro_id)
+                if jizi_rank != -1:
+                    msg += '当前项目已集资%s元, 排名: %s' % (backer_money, jizi_rank)
+            else:
+                pass
+            # 统计当前人数
+            msg += '当前集资人数: %s\n' % backer_count
+
+            # 抽卡播报
+            card_report = ''
+            if global_config.MODIAN_CARD_DRAW:
+                card_report = self.card_draw_handler.draw(user_id, nickname, backer_money, pay_time)
+
+            '''接棒相关'''
+            my_logger.debug('接棒情况更新')
+            for jiebang in jiebang_activities:
+                # if jiebang.start_time > time.time():
+                #     continue
+                my_logger.debug('接棒活动详情: 【%s】', jiebang.name)
+                my_logger.debug('集资金额: %s, 接棒最小金额: %s', backer_money, jiebang.min_stick_amount)
+                if backer_money >= jiebang.min_stick_amount:
+
+                    stick_num = util.compute_stick_num(jiebang.min_stick_amount, backer_money)
+                    jiebang.current_stick_num += stick_num
+
+                    jiebang.last_record_time = util.convert_timestamp_to_timestr(int(time.time() * 1000))
+                    # 数据库也要更新
+                    try:
+                        mysql_util.query("""
+                                        UPDATE jiebang SET `current_stick_num`=%s, `last_record_time`=%s WHERE `name`=%s
+                                    """, (jiebang.current_stick_num, jiebang.last_record_time, jiebang.name))
+                    except Exception as e:
+                        my_logger.error('更新接棒数据失败')
+                        my_logger.exception(e)
+                    my_logger.debug('数据库接棒数据更新完成')
+                    test_msg = ''
+                    if jiebang.need_detail == 1:
+                        test_msg = '【%s】, 当前第%s棒, 目标%s棒\n' \
+                                   % (jiebang.name, jiebang.current_stick_num, jiebang.target_stick_num)
+                    elif jiebang.need_detail == 0:
+                        test_msg = '【%s】\n' % jiebang.name
+                    elif jiebang.need_detail == 2:
+                        test_msg = '【%s】, 当前第%s棒\n' \
+                                   % (jiebang.name, jiebang.current_stick_num)
+                    elif jiebang.need_detail == 3:
+                        if stick_num > 1:
+                            test_msg = '抽奖号: {}~{}\n'.format(jiebang.current_stick_num - stick_num + 1,
+                                                             jiebang.current_stick_num)
+                        else:
+                            test_msg = '抽奖号: {}\n'.format(jiebang.current_stick_num)
+                    my_logger.debug(test_msg)
+                    if len(test_msg) > 0:
+                        msg += test_msg
+                        QQHandler.send_to_groups(['483548995'], test_msg)
+
+            '''金额类flag相关'''
+            my_logger.debug('flag情况更新')
+            flag_test_msgs = ''
+            for flag in flag_activities:
+                my_logger.debug('Flag活动详情: %s', flag.name)
+                my_logger.debug('Flag金额: %s, 结束时间: %s', flag.target_flag_amount, flag.end_time)
+                diff = flag.target_flag_amount - current
+                test_msgs = '【%s】, 目标金额: %s元, ' % (flag.name, flag.target_flag_amount)
+                if diff > 0:
+                    test_msgs += '距离目标还差%s元\n' % round(diff, 2)
+                    flag_test_msgs += test_msgs
+                else:
+                    test_msgs += '已经达成目标\n'
+            my_logger.debug(flag_test_msgs)
+            if len(flag_test_msgs) > 0:
+                QQHandler.send_to_groups(['483548995'], flag_test_msgs)
+                # msg += flag_test_msgs
+
+            '''人头类flag相关'''
+            my_logger.debug('人头flag情况更新')
+            count_flag_test_msgs = ''
+            for flag in count_flag_activities:
+                my_logger.debug('人头Flag活动详情: %s', flag.name)
+                my_logger.debug('人头Flag目标: %s, 开始时间: %s, 结束时间: %s', flag.target_flag_amount,
+                                flag.start_time, flag.end_time)
+                target = flag.target_flag_amount
+
+                # 统计当前人数
+                rst = mysql_util.select_one("""
+                                select count(distinct(`supporter_id`)) from `order` 
+                                where `pro_id` = %s and `pay_time` <= %s and `pay_time` >= %s
+                            """, (modian_entity.pro_id, flag.end_time, flag.start_time))
+
+                # 目标人数为0，代表特殊类flag，只报人数
+                if target == 0:
+                    count_flag_test_msgs += '【%s】, 当前人数: %s ' % (flag.name, rst[0])
+                else:
+                    count_flag_test_msgs += '【%s】, 当前人数: %s, 目标人数: %s ' % (flag.name, rst[0], flag.target_flag_amount)
+
+            my_logger.debug(count_flag_test_msgs)
+            if len(count_flag_test_msgs) > 0:
+                QQHandler.send_to_groups(['483548995'], count_flag_test_msgs)
+                # msg += flag_test_msgs
+
+            msg += '%s\n集资项目: %s\n链接: %s\n' % (project_info, pro_name, modian_entity.link)
+            # msg += jizi_pk_report
+
+            my_logger.info(msg)
+            if global_config.USING_COOLQ_PRO is True:
+                my_logger.debug('使用酷Q PRO发送图片')
+                msg += '\n[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]\n'
+
+            # if global_config.MODIAN_NEED_DISPLAY_PK:
+            #     msg += self.pk_modian_activity()
+
+            QQHandler.send_to_groups(modian_entity.broadcast_groups, msg)
+            if card_report:
+                QQHandler.send_to_groups(modian_entity.broadcast_groups, card_report)
+                # QQHandler.send_to_groups(['483548995'], card_report)
+            self.order_queues[modian_entity.pro_id].add(oid)
+
+        # 更新接棒的数据库
+        try:
+            my_logger.debug('更新接棒活动信息:')
+            for jiebang in jiebang_activities:
+                my_logger.debug('current_stick_num: %s, last_record_time: %s, name: %s',
+                                jiebang.current_stick_num, jiebang.last_record_time, jiebang.name)
+                mysql_util.query("""
+                            UPDATE jiebang SET current_stick_num=%s WHERE name=%s
+                        """, (jiebang.current_stick_num, jiebang.name))
+        except Exception as e:
+            my_logger.exception(e)
+
+    def find_user_jizi_rank(self, user_id, pro_id):
+        """
+        在集资榜中找到用户的排名
+        :param user_id:
+        :param pro_id:
+        :return:
+        """
+        my_logger.info('找到id为%s的集资排名', user_id)
+        ranking_list = mysql_util.select_all("""
+                select supporter_id, sum(backer_money) as c 
+                    from `order` where pro_id=%s group by supporter_id order by c desc;
+                """, (pro_id,))
+        cur_rank = 0
+        for temp_id, total in ranking_list:
+            cur_rank += 1
+            if temp_id == user_id:
+                return cur_rank, total
+        return -1, -1
+
+    def find_user_daka_rank(self, user_id, pro_id):
+        """
+        在打卡榜中找到用户的排名
+        :param user_id:
+        :param pro_id:
+        :return:
+        """
+        my_logger.info('找到用户id为%s的打卡排名', user_id)
+        ranking_list = mysql_util.select_all("""
+            select supporter_id, count(distinct(date(pay_time))) as c 
+            from `order` where pro_id=%s group by supporter_id order by c desc; 
+        """, (pro_id,))
+        cur_rank = 0
+        for temp_id, days in ranking_list:
+            cur_rank += 1
+            if temp_id == user_id:
+                return cur_rank, days
+        return -1, -1
 
     def modian_header(self):
         """
@@ -134,10 +364,8 @@ class ModianHandlerBS4:
 
 
 if __name__ == '__main__':
-    text = """window[decodeURIComponent('jQuery1_1')
-]({
-    "status": 1,
-    "comment_count": "31",
-    "html": "    <!--   精彩评论列表  -->\n    \n    <!--  精彩评论分割线  -->\n    \n    <!--   普通评论列表   -->\n            <ul class=\"comment-lists\">\n                            <li class=\"comment-list\" data-reply-id=\"1023064\" data-isshow=\"1\">\n    <div class=\"comment-item-top clearfix\">\n        <div class=\"top-left\">\n            <div class=\"avater\">\n                <a href=\"https://me.modian.com/u/detail?uid=1684035\">\n                    <img src=\"https://p.moimg.net/ico/2018/03/18/20180318_1521366215_3346.jpg\" onerror=\"javascript:this.src='https://s.moimg.net/img/web4-0/default_profile@3x.png'\" alt=\"\">\n                                            \n                                    </a>\n            </div>\n            <div class=\"user-info\">\n                <p class=\"nickname\">\n                    <a href=\"https://me.modian.com/u/detail?uid=1684035\">billjyc1_h4u</a>\n                                            <span class=\"honor gold_pig_8\"></span><span class=\"honor commenter_3\"></span><span class=\"honor big_star_3\"></span>\n                                    </p>\n                <p class=\"time\">今天17:08</p>\n            </div>\n        </div>\n                    <div class=\"top-right\">\n                <span style=\"display:none\">\n                    <i class=\"iconfont icon-report\"></i> <i>举报</i>\n                </span>\n                <span class=\"comment-replay\" data-cur=\"parent\" data-reply_rid=\"1023064\" data-post_id=\"106056\" data-reply_ruid=\"1684035\">\n                    <i class=\"iconfont icon-edit\"></i> <i>回复</i>\n                </span>\n                <span  data-post_id=\"106056\" data-favor_uid=\"1684035\" data-favor_count=\"0\" data-reply_id=\"1023064\">\n                    <i class=\"iconfont icon-like\"></i> <i class=\"favor_count\"></i>\n                </span>\n            </div>\n            </div>\n    <div class=\"comment-txt\">\n                test\n    </div>\n\n    \n    <!--   二级评论  -->\n        <!--   二级评论  -->\n</li>\n                            <li class=\"comment-list\" data-reply-id=\"1022993\" data-isshow=\"1\">\n    <div class=\"comment-item-top clearfix\">\n        <div class=\"top-left\">\n            <div class=\"avater\">\n                <a href=\"https://me.modian.com/u/detail?uid=3933343\">\n                    <img src=\"https://p.moimg.net/ico/2019/04/18/20190418_1555580252_9213.jpg?imageMogr2/auto-orient/strip\" onerror=\"javascript:this.src='https://s.moimg.net/img/web4-0/default_profile@3x.png'\" alt=\"\">\n                                            \n                                    </a>\n            </div>\n            <div class=\"user-info\">\n                <p class=\"nickname\">\n                    <a href=\"https://me.modian.com/u/detail?uid=3933343\">弥晨</a>\n                                            <span class=\"honor gold_pig_8\"></span><span class=\"honor commenter_3\"></span>\n                                    </p>\n                <p class=\"time\">今天16:19</p>\n            </div>\n        </div>\n                    <div class=\"top-right\">\n                <span style=\"display:none\">\n                    <i class=\"iconfont icon-report\"></i> <i>举报</i>\n                </span>\n                <span class=\"comment-replay\" data-cur=\"parent\" data-reply_rid=\"1022993\" data-post_id=\"106056\" data-reply_ruid=\"3933343\">\n                    <i class=\"iconfont icon-edit\"></i> <i>回复</i>\n                </span>\n                <span  data-post_id=\"106056\" data-favor_uid=\"3933343\" data-favor_count=\"0\" data-reply_id=\"1022993\">\n                    <i class=\"iconfont icon-like\"></i> <i class=\"favor_count\"></i>\n                </span>\n            </div>\n            </div>\n    <div class=\"comment-txt\">\n                    <i class=\"iconfont icon-payment\" style=\"color:#7a8087;\"></i>\n                支持了 203.4 元\n    </div>\n\n    \n    <!--   二级评论  -->\n        <!--   二级评论  -->\n</li>\n                            <li class=\"comment-list\" data-reply-id=\"1022943\" data-isshow=\"1\">\n    <div class=\"comment-item-top clearfix\">\n        <div class=\"top-left\">\n            <div class=\"avater\">\n                <a href=\"https://me.modian.com/u/detail?uid=2134888\">\n                    <img src=\"https://qzapp.qlogo.cn/qzapp/101119044/5ECF6CC524045EBEC3D26A73FCE36348/30\" onerror=\"javascript:this.src='https://s.moimg.net/img/web4-0/default_profile@3x.png'\" alt=\"\">\n                                            \n                                    </a>\n            </div>\n            <div class=\"user-info\">\n                <p class=\"nickname\">\n                    <a href=\"https://me.modian.com/u/detail?uid=2134888\">木殇</a>\n                                            <span class=\"honor gold_pig_8\"></span><span class=\"honor commenter_3\"></span>\n                                    </p>\n                <p class=\"time\">今天15:38</p>\n            </div>\n        </div>\n                    <div class=\"top-right\">\n                <span style=\"display:none\">\n                    <i class=\"iconfont icon-report\"></i> <i>举报</i>\n                </span>\n                <span class=\"comment-replay\" data-cur=\"parent\" data-reply_rid=\"1022943\" data-post_id=\"106056\" data-reply_ruid=\"2134888\">\n                    <i class=\"iconfont icon-edit\"></i> <i>回复</i>\n                </span>\n                <span  data-post_id=\"106056\" data-favor_uid=\"2134888\" data-favor_count=\"0\" data-reply_id=\"1022943\">\n                    <i class=\"iconfont icon-like\"></i> <i class=\"favor_count\"></i>\n                </span>\n            </div>\n            </div>\n    <div class=\"comment-txt\">\n                    <i class=\"iconfont icon-payment\" style=\"color:#7a8087;\"></i>\n                支持了 101.7 元\n    </div>\n\n    \n    <!--   二级评论  -->\n        <!--   二级评论  -->\n</li>\n                            <li class=\"comment-list\" data-reply-id=\"1022787\" data-isshow=\"1\">\n    <div class=\"comment-item-top clearfix\">\n        <div class=\"top-left\">\n            <div class=\"avater\">\n                <a href=\"https://me.modian.com/u/detail?uid=1363430\">\n                    <img src=\"https://p.moimg.net/ico/2018/06/06/20180606_1528253464_2879.jpg?imageMogr2/auto-orient/strip\" onerror=\"javascript:this.src='https://s.moimg.net/img/web4-0/default_profile@3x.png'\" alt=\"\">\n                                            \n                                    </a>\n            </div>\n            <div class=\"user-info\">\n                <p class=\"nickname\">\n                    <a href=\"https://me.modian.com/u/detail?uid=1363430\">远方0327</a>\n                                            <span class=\"honor gold_pig_8\"></span><span class=\"honor commenter_3\"></span><span class=\"honor big_star_3\"></span>\n                                    </p>\n                <p class=\"time\">今天13:15</p>\n            </div>\n        </div>\n                    <div class=\"top-right\">\n                <span style=\"display:none\">\n                    <i class=\"iconfont icon-report\"></i> <i>举报</i>\n                </span>\n                <span class=\"comment-replay\" data-cur=\"parent\" data-reply_rid=\"1022787\" data-post_id=\"106056\" data-reply_ruid=\"1363430\">\n                    <i class=\"iconfont icon-edit\"></i> <i>回复</i>\n                </span>\n                <span  data-post_id=\"106056\" data-favor_uid=\"1363430\" data-favor_count=\"0\" data-reply_id=\"1022787\">\n                    <i class=\"iconfont icon-like\"></i> <i class=\"favor_count\"></i>\n                </span>\n            </div>\n            </div>\n    <div class=\"comment-txt\">\n                    <i class=\"iconfont icon-payment\" style=\"color:#7a8087;\"></i>\n                支持了 101.7 元\n    </div>\n\n    \n    <!--   二级评论  -->\n        <!--   二级评论  -->\n</li>\n                            <li class=\"comment-list\" data-reply-id=\"1022770\" data-isshow=\"1\">\n    <div class=\"comment-item-top clearfix\">\n        <div class=\"top-left\">\n            <div class=\"avater\">\n                <a href=\"https://me.modian.com/u/detail?uid=1166034\">\n                    <img src=\"https://p.moimg.net/ico/2019/04/29/20190429_1556470414_8195.jpg?imageMogr2/auto-orient/strip\" onerror=\"javascript:this.src='https://s.moimg.net/img/web4-0/default_profile@3x.png'\" alt=\"\">\n                                            \n                                    </a>\n            </div>\n            <div class=\"user-info\">\n                <p class=\"nickname\">\n                    <a href=\"https://me.modian.com/u/detail?uid=1166034\">浪漫幻想家天崽</a>\n                                            <span class=\"honor gold_pig_8\"></span><span class=\"honor commenter_3\"></span>\n                                    </p>\n                <p class=\"time\">今天13:05</p>\n            </div>\n        </div>\n                    <div class=\"top-right\">\n                <span style=\"display:none\">\n                    <i class=\"iconfont icon-report\"></i> <i>举报</i>\n                </span>\n                <span class=\"comment-replay\" data-cur=\"parent\" data-reply_rid=\"1022770\" data-post_id=\"106056\" data-reply_ruid=\"1166034\">\n                    <i class=\"iconfont icon-edit\"></i> <i>回复</i>\n                </span>\n                <span  data-post_id=\"106056\" data-favor_uid=\"1166034\" data-favor_count=\"0\" data-reply_id=\"1022770\">\n                    <i class=\"iconfont icon-like\"></i> <i class=\"favor_count\"></i>\n                </span>\n            </div>\n            </div>\n    <div class=\"comment-txt\">\n                    <i class=\"iconfont icon-payment\" style=\"color:#7a8087;\"></i>\n                支持了 153.7 元\n    </div>\n\n    \n    <!--   二级评论  -->\n        <!--   二级评论  -->\n</li>\n                            <li class=\"comment-list\" data-reply-id=\"1022629\" data-isshow=\"1\">\n    <div class=\"comment-item-top clearfix\">\n        <div class=\"top-left\">\n            <div class=\"avater\">\n                <a href=\"https://me.modian.com/u/detail?uid=2134888\">\n                    <img src=\"https://qzapp.qlogo.cn/qzapp/101119044/5ECF6CC524045EBEC3D26A73FCE36348/30\" onerror=\"javascript:this.src='https://s.moimg.net/img/web4-0/default_profile@3x.png'\" alt=\"\">\n                                            \n                                    </a>\n            </div>\n            <div class=\"user-info\">\n                <p class=\"nickname\">\n                    <a href=\"https://me.modian.com/u/detail?uid=2134888\">木殇</a>\n                                            <span class=\"honor gold_pig_8\"></span><span class=\"honor commenter_3\"></span>\n                                    </p>\n                <p class=\"time\">今天10:56</p>\n            </div>\n        </div>\n                    <div class=\"top-right\">\n                <span style=\"display:none\">\n                    <i class=\"iconfont icon-report\"></i> <i>举报</i>\n                </span>\n                <span class=\"comment-replay\" data-cur=\"parent\" data-reply_rid=\"1022629\" data-post_id=\"106056\" data-reply_ruid=\"2134888\">\n                    <i class=\"iconfont icon-edit\"></i> <i>回复</i>\n                </span>\n                <span  data-post_id=\"106056\" data-favor_uid=\"2134888\" data-favor_count=\"0\" data-reply_id=\"1022629\">\n                    <i class=\"iconfont icon-like\"></i> <i class=\"favor_count\"></i>\n                </span>\n            </div>\n            </div>\n    <div class=\"comment-txt\">\n                    <i class=\"iconfont icon-payment\" style=\"color:#7a8087;\"></i>\n                支持了 10.17 元\n    </div>\n\n    \n    <!--   二级评论  -->\n        <!--   二级评论  -->\n</li>\n                            <li class=\"comment-list\" data-reply-id=\"1022620\" data-isshow=\"1\">\n    <div class=\"comment-item-top clearfix\">\n        <div class=\"top-left\">\n            <div class=\"avater\">\n                <a href=\"https://me.modian.com/u/detail?uid=2113312\">\n                    <img src=\"https://qzapp.qlogo.cn/qzapp/101119044/8D975E534CB782BF8AF67BE61DD5D99B/30\" onerror=\"javascript:this.src='https://s.moimg.net/img/web4-0/default_profile@3x.png'\" alt=\"\">\n                                            \n                                    </a>\n            </div>\n            <div class=\"user-info\">\n                <p class=\"nickname\">\n                    <a href=\"https://me.modian.com/u/detail?uid=2113312\">欠揍青年</a>\n                                            <span class=\"honor gold_pig_8\"></span><span class=\"honor commenter_3\"></span>\n                                    </p>\n                <p class=\"time\">今天10:46</p>\n            </div>\n        </div>\n                    <div class=\"top-right\">\n                <span style=\"display:none\">\n                    <i class=\"iconfont icon-report\"></i> <i>举报</i>\n                </span>\n                <span class=\"comment-replay\" data-cur=\"parent\" data-reply_rid=\"1022620\" data-post_id=\"106056\" data-reply_ruid=\"2113312\">\n                    <i class=\"iconfont icon-edit\"></i> <i>回复</i>\n                </span>\n                <span  data-post_id=\"106056\" data-favor_uid=\"2113312\" data-favor_count=\"0\" data-reply_id=\"1022620\">\n                    <i class=\"iconfont icon-like\"></i> <i class=\"favor_count\"></i>\n                </span>\n            </div>\n            </div>\n    <div class=\"comment-txt\">\n                    <i class=\"iconfont icon-payment\" style=\"color:#7a8087;\"></i>\n                支持了 10.17 元\n    </div>\n\n    \n    <!--   二级评论  -->\n        <!--   二级评论  -->\n</li>\n                            <li class=\"comment-list\" data-reply-id=\"1022612\" data-isshow=\"1\">\n    <div class=\"comment-item-top clearfix\">\n        <div class=\"top-left\">\n            <div class=\"avater\">\n                <a href=\"https://me.modian.com/u/detail?uid=1179445\">\n                    <img src=\"https://p.moimg.net/ico/1179445_1484279412.jpg\" onerror=\"javascript:this.src='https://s.moimg.net/img/web4-0/default_profile@3x.png'\" alt=\"\">\n                                            \n                                    </a>\n            </div>\n            <div class=\"user-info\">\n                <p class=\"nickname\">\n                    <a href=\"https://me.modian.com/u/detail?uid=1179445\">didi滴滴滴滴</a>\n                                            <span class=\"honor gold_pig_8\"></span><span class=\"honor commenter_3\"></span>\n                                    </p>\n                <p class=\"time\">今天10:43</p>\n            </div>\n        </div>\n                    <div class=\"top-right\">\n                <span style=\"display:none\">\n                    <i class=\"iconfont icon-report\"></i> <i>举报</i>\n                </span>\n                <span class=\"comment-replay\" data-cur=\"parent\" data-reply_rid=\"1022612\" data-post_id=\"106056\" data-reply_ruid=\"1179445\">\n                    <i class=\"iconfont icon-edit\"></i> <i>回复</i>\n                </span>\n                <span  data-post_id=\"106056\" data-favor_uid=\"1179445\" data-favor_count=\"0\" data-reply_id=\"1022612\">\n                    <i class=\"iconfont icon-like\"></i> <i class=\"favor_count\"></i>\n                </span>\n            </div>\n            </div>\n    <div class=\"comment-txt\">\n                    <i class=\"iconfont icon-payment\" style=\"color:#7a8087;\"></i>\n                支持了 10.17 元\n    </div>\n\n    \n    <!--   二级评论  -->\n        <!--   二级评论  -->\n</li>\n                            <li class=\"comment-list\" data-reply-id=\"1022607\" data-isshow=\"1\">\n    <div class=\"comment-item-top clearfix\">\n        <div class=\"top-left\">\n            <div class=\"avater\">\n                <a href=\"https://me.modian.com/u/detail?uid=1184642\">\n                    <img src=\"https://p.moimg.net/project/project_20190621_1561119768_1049_crop.png?imageMogr2/auto-orient/strip\" onerror=\"javascript:this.src='https://s.moimg.net/img/web4-0/default_profile@3x.png'\" alt=\"\">\n                                            \n                                    </a>\n            </div>\n            <div class=\"user-info\">\n                <p class=\"nickname\">\n                    <a href=\"https://me.modian.com/u/detail?uid=1184642\">我会有黄灰的</a>\n                                            <span class=\"honor gold_pig_8\"></span><span class=\"honor commenter_3\"></span>\n                                    </p>\n                <p class=\"time\">今天10:41</p>\n            </div>\n        </div>\n                    <div class=\"top-right\">\n                <span style=\"display:none\">\n                    <i class=\"iconfont icon-report\"></i> <i>举报</i>\n                </span>\n                <span class=\"comment-replay\" data-cur=\"parent\" data-reply_rid=\"1022607\" data-post_id=\"106056\" data-reply_ruid=\"1184642\">\n                    <i class=\"iconfont icon-edit\"></i> <i>回复</i>\n                </span>\n                <span  data-post_id=\"106056\" data-favor_uid=\"1184642\" data-favor_count=\"0\" data-reply_id=\"1022607\">\n                    <i class=\"iconfont icon-like\"></i> <i class=\"favor_count\"></i>\n                </span>\n            </div>\n            </div>\n    <div class=\"comment-txt\">\n                    <i class=\"iconfont icon-payment\" style=\"color:#7a8087;\"></i>\n                支持了 101.7 元\n    </div>\n\n    \n    <!--   二级评论  -->\n        <!--   二级评论  -->\n</li>\n                            <li class=\"comment-list\" data-reply-id=\"1022606\" data-isshow=\"1\">\n    <div class=\"comment-item-top clearfix\">\n        <div class=\"top-left\">\n            <div class=\"avater\">\n                <a href=\"https://me.modian.com/u/detail?uid=1592253\">\n                    <img src=\"https://p.moimg.net/icon/2018/01/26/1592253_1516976409.jpeg\" onerror=\"javascript:this.src='https://s.moimg.net/img/web4-0/default_profile@3x.png'\" alt=\"\">\n                                            \n                                    </a>\n            </div>\n            <div class=\"user-info\">\n                <p class=\"nickname\">\n                    <a href=\"https://me.modian.com/u/detail?uid=1592253\">慕容</a>\n                                            <span class=\"honor gold_pig_8\"></span><span class=\"honor commenter_3\"></span>\n                                    </p>\n                <p class=\"time\">今天10:40</p>\n            </div>\n        </div>\n                    <div class=\"top-right\">\n                <span style=\"display:none\">\n                    <i class=\"iconfont icon-report\"></i> <i>举报</i>\n                </span>\n                <span class=\"comment-replay\" data-cur=\"parent\" data-reply_rid=\"1022606\" data-post_id=\"106056\" data-reply_ruid=\"1592253\">\n                    <i class=\"iconfont icon-edit\"></i> <i>回复</i>\n                </span>\n                <span  data-post_id=\"106056\" data-favor_uid=\"1592253\" data-favor_count=\"0\" data-reply_id=\"1022606\">\n                    <i class=\"iconfont icon-like\"></i> <i class=\"favor_count\"></i>\n                </span>\n            </div>\n            </div>\n    <div class=\"comment-txt\">\n                    <i class=\"iconfont icon-payment\" style=\"color:#7a8087;\"></i>\n                支持了 101.7 元\n    </div>\n\n    \n    <!--   二级评论  -->\n        <!--   二级评论  -->\n</li>\n                    </ul>\n    "
-});"""
-    print(text[41:-2])
+    entity_array = []
+    entity1 = ModianEntity('http://www.baidu.com', 'test', 79264)
+    entity_array.append(entity1)
+    handler = ModianHandlerBS4(['483548995'], entity_array)
+    handler.init_order_queues()

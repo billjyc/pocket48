@@ -6,3 +6,4 @@ cqhttp
 SQLalchemy
 mysql-connector
 beautifulsoup4
+lxml
