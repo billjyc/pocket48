@@ -43,7 +43,7 @@
 43,4,1,love letter,1,http://i2.tiimg.com/667696/2503cae11081bc23.jpg,1
 44,4,1,剧场MVP,2,http://i2.tiimg.com/667696/9dc53d375c8aa279.jpg,1
 45,4,1,锦鲤,3,http://i2.tiimg.com/667696/ea97189d688a007c.gif,1
-46,4,1,百变卡,4,http://i1.fuimg.com/667696/b92241ef768510f5.png,1
+46,4,1,百变卡,4,http://i1.fuimg.com/667696/b92241ef768510f5.png,0
 47,3,1,莫灰,9,http://i2.tiimg.com/667696/a79d9a9e589a9409.jpg,1
 48,3,1,黄灰,10,http://i2.tiimg.com/667696/179c494c6b4a95b1.jpg,1
 49,3,1,灰冉,11,http://i2.tiimg.com/667696/e16bf48cb802db34.jpg,1
@@ -72,8 +72,8 @@
 72,3,1,灰鸭,30,http://i1.fuimg.com/667696/9783c37e95bd0fb7.jpg,1
 73,3,1,冯款和作作,31,http://i1.fuimg.com/667696/367179649dc416ff.jpg,1
 74,3,1,模糊时代,32,http://i1.fuimg.com/667696/40a81ef35bf2674c.jpg,1
-75,2,1,咸蛋黄月饼,13,http://i2.tiimg.com/667696/218bcd94ed39d54e.png,1
-76,2,1,鲜肉月饼,14,http://i2.tiimg.com/667696/a15ab7c9c9f958be.png,1
-77,2,1,五仁月饼,15,http://i2.tiimg.com/667696/b360d88e7b9de5da.png,1
-78,2,1,椰蓉月饼,16,http://i2.tiimg.com/667696/05d3464d445a5b7f.png,1
-79,3,1,冰淇淋月饼,33,http://i2.tiimg.com/667696/4267832231c129ed.png,1
+75,2,1,咸蛋黄月饼,13,http://i2.tiimg.com/667696/218bcd94ed39d54e.png,0
+76,2,1,鲜肉月饼,14,http://i2.tiimg.com/667696/a15ab7c9c9f958be.png,0
+77,2,1,五仁月饼,15,http://i2.tiimg.com/667696/b360d88e7b9de5da.png,0
+78,2,1,椰蓉月饼,16,http://i2.tiimg.com/667696/05d3464d445a5b7f.png,0
+79,3,1,冰淇淋月饼,33,http://i2.tiimg.com/667696/4267832231c129ed.png,0
