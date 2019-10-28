@@ -443,8 +443,8 @@ class CardDrawHandler:
         bol_auto_place = False  # auto place the image as a squared image， if 'True', ignore var 'row' and 'col' below
         row = 10  # row number which means col number images per row
         col = 10  # col number which means row number images per col
-        nw = 92  # sub image size, nw x nh
-        nh = 122
+        nw = 46  # sub image size, nw x nh
+        nh = 61
         wgap = 20
 
         dest_im = Image.new('RGBA', (col * (nw + wgap), row * nh),
