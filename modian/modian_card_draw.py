@@ -479,7 +479,8 @@ class CardDrawHandler:
 
         try:
             dest_im.save('/home/coolq/data/image/result.png', 'png', quality=50)
-        except:
+        except Exception as e:
+            logger.exception(e)
             dest_im.save('result.png', 'png', quality=50)
         # dest_im.show()  # finish
 
