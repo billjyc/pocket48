@@ -5,6 +5,7 @@ from utils import util
 import logging
 from utils.mysql_util import mysql_util
 from enum import Enum
+import requests
 
 try:
     from log.my_logger import modian_logger as logger
@@ -70,7 +71,7 @@ class CardDrawHandler:
         weight_datas = util.read_txt(weight_path)[0]
         self.weights = []  # SR,SSR,UR卡的概率
         self.cards = {}  # 所有卡，按等级分，不包含已过期卡牌
-        self.all_cards = {} # 所有卡，按等级分，包含已下架卡牌
+        self.all_cards = {}  # 所有卡，按等级分，包含已下架卡牌
         self.cards_single = {}  # 根据ID查询卡
 
         for line in card_datas:
@@ -320,6 +321,9 @@ class CardDrawHandler:
             return '摩点ID: {}, 当前暂未抽中任何卡片 \n'.format(modian_id)
         logger.debug(rst_level)
         logger.debug(rst_num)
+
+        self.generate_card_pic(rst_level, modian_id)
+
         report = '摩点ID: {}, 当前已抽中的卡片有: \n'.format(modian_id)
         if CardLevel.UR in rst_level and len(rst_level[CardLevel.UR]) > 0:
             report += '【UR】({}/{}): '.format(len(rst_level[CardLevel.UR]), len(self.all_cards[CardLevel.UR]))
@@ -424,14 +428,71 @@ class CardDrawHandler:
             result += self.draw(modian_id, '补抽用户', money, util.convert_timestamp_to_timestr(int(time.time() * 1000)))
             return result
 
+    def generate_card_pic(self, current_cards, user_id):
+        """
+        将当前获取的卡片拼接成一张大图，方便查看
+        :param current_cards:
+        :param user_id:
+        :return:
+        """
+        import matplotlib.pyplot as plt
+        import numpy
+
+        # plt.subplots_adjust(wspace=20, hspace=20)
+        fig, axs = plt.subplots(nrows=10, ncols=10, figsize=(15, 15))
+        plt.axis('off')
+        fig.suptitle('ID: {}'.format(user_id))
+        for i in range(len(axs)):
+            for j in range(len(axs[i])):
+                axs[i][j].set_axis_off()
+
+        # UR
+        ur_num = len(self.all_cards[CardLevel.UR])
+        ur_row = ur_num / axs.shape[1] + 1
+
+        cur_row = 0
+        cur_col = 0
+        for card in self.all_cards[CardLevel.UR]:
+            axs[cur_row][cur_col].imshow(self.download_pic(card.url))
+            if cur_col + 1 >= axs.shape[1]:
+                cur_row += 1
+            cur_col = (cur_col + 1) % axs.shape[1]
+        plt.show()
+
+    def download_pic(self, url):
+        """
+        下载图片
+        :param url:
+        :return:
+        """
+        from PIL import ImageFile
+        import urllib.request as ulb
+        import numpy as np
+        # 这是一个图片的url
+        try:
+            response = ulb.Request(url)
+            fp = ulb.urlopen(response)  # 打开网络图像文件句柄
+            p = ImageFile.Parser()  # 定义图像IO
+            while 1:  # 开始图像读取
+                s = fp.read(1024)
+                if not s:
+                    break
+                p.feed(s)
+            im = p.close()  # 得到图像
+            return im
+        except Exception as ex:
+            print("--------出错继续----")
+            pass
+
 
 handler = CardDrawHandler()
 
 if __name__ == '__main__':
     # handler = CardDrawHandler()
-    # handler.read_config()
+    handler.read_config()
     # rst = handler.draw('1236666', 'billjyc1', 200, '2018-03-24 12:54:00')
     # print(rst)
     # handler.draw_missed_cards('1236666')
     # handler.get_current_score('1236666')
+    handler.get_cards(1909786)
     pass

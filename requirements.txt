@@ -7,3 +7,6 @@ SQLalchemy
 mysql-connector
 beautifulsoup4
 lxml
+numpy
+matplotlib
+pillow
