@@ -482,7 +482,7 @@ class CardDrawHandler:
             logger.info('图片已保存')
         except Exception as e:
             logger.exception(e)
-            dest_im.save('result.png', 'png', quality=50)
+            dest_im.save('result.jpg', 'jpg', quality=50)
         # dest_im.show()  # finish
 
     def has_card(self, card, my_cards):
