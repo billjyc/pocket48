@@ -478,7 +478,7 @@ class CardDrawHandler:
                     pass
 
         try:
-            dest_im.save('/home/coolq/data/image/result.png', 'png', quality=50)
+            dest_im.save('/home/coolq/data/image/result.jpg', 'jpg')
             logger.info('图片已保存')
         except Exception as e:
             logger.exception(e)
