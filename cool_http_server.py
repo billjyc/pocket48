@@ -342,6 +342,7 @@ def search_card(context, modian_id):
             return
         report = card_draw_handler.get_cards(int(modian_id))
         bot.send(context, report)
+        bot.send(context, '[CQ:image,file={}]'.format('result.png'))
     except Error as e:
         logger.error(e)
         # bot.send(context, '查询出现错误！\n{}'.format(traceback.print_exc()))

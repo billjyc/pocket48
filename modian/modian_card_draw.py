@@ -435,54 +435,83 @@ class CardDrawHandler:
         :param user_id:
         :return:
         """
-        import matplotlib.pyplot as plt
-        import numpy
+        from PIL import Image, ImageFont, ImageDraw
 
-        # plt.subplots_adjust(wspace=20, hspace=20)
-        fig, axs = plt.subplots(nrows=10, ncols=10, figsize=(15, 15))
-        plt.axis('off')
-        fig.suptitle('ID: {}'.format(user_id))
-        for i in range(len(axs)):
-            for j in range(len(axs[i])):
-                axs[i][j].set_axis_off()
+        #####################################################
+        # parameter setting                                 #
+        #####################################################
+        bol_auto_place = False  # auto place the image as a squared image， if 'True', ignore var 'row' and 'col' below
+        row = 10  # row number which means col number images per row
+        col = 10  # col number which means row number images per col
+        nw = 92  # sub image size, nw x nh
+        nh = 122
+        wgap = 20
 
-        # UR
-        ur_num = len(self.all_cards[CardLevel.UR])
-        ur_row = ur_num / axs.shape[1] + 1
+        dest_im = Image.new('RGBA', (col * (nw + wgap), row * nh),
+                            (255, 255, 255))  # the image size of splicing image, background color is white
 
-        cur_row = 0
-        cur_col = 0
-        for card in self.all_cards[CardLevel.UR]:
-            axs[cur_row][cur_col].imshow(self.download_pic(card.url))
-            if cur_col + 1 >= axs.shape[1]:
-                cur_row += 1
-            cur_col = (cur_col + 1) % axs.shape[1]
-        plt.show()
+        for x in range(1, col + 1):  # loop place the sub image
+            for y in range(1, row + 1):
+                try:
+                    card_id = x + (y - 1) * col
+                    if card_id not in self.cards_single.keys():
+                        continue
+                    card = self.cards_single[card_id]
 
-    def download_pic(self, url):
+                    if self.has_card(card, current_cards):
+                        src_im = Image.open("../data/card_draw/imgs3/%s.png" % str(x + (y - 1) * col))  # open files in order
+                    else:
+                        src_im = Image.open("../data/card_draw/imgs3/unknown.jpg")
+                        src_im = src_im.resize((nw, nh), Image.ANTIALIAS)  # resize again
+                        # # 创建Font对象:
+                        # font = ImageFont.truetype('STSong.ttc', 36)
+                        # # 创建Draw对象:
+                        # draw = ImageDraw.Draw(src_im)
+                        # text = '{}-{}'.format(card.level.value, card.name)
+                        # # 输出文字:
+                        #
+                        # position = (40, 100)
+                        # draw.text(position, text, font=font, fill="#000000", spacing=0, align='left')
+                    resize_im = src_im.resize((nw, nh), Image.ANTIALIAS)  # resize again
+                    dest_im.paste(resize_im, ((x - 1) * (nw + wgap), (y - 1) * nh))  # paste to dest_im
+                except IOError:
+                    pass
+
+        try:
+            dest_im.save('/home/coolq/data/image/result.png', 'png', quality=50)
+        except:
+            dest_im.save('result.png', 'png', quality=50)
+        # dest_im.show()  # finish
+
+    def has_card(self, card, my_cards):
+        """
+        是否拥有该卡片
+        :param card:
+        :param my_cards:
+        :return:
+        """
+        for k_card in my_cards[card.level]:
+            if card.id == k_card.id:
+                return True
+        return False
+
+    def download_pic(self, url, id):
         """
         下载图片
         :param url:
+        :param id: 卡id
         :return:
         """
-        from PIL import ImageFile
-        import urllib.request as ulb
-        import numpy as np
+        import requests
+        logger.info('url: {}; id: {}'.format(url, id))
         # 这是一个图片的url
         try:
-            response = ulb.Request(url)
-            fp = ulb.urlopen(response)  # 打开网络图像文件句柄
-            p = ImageFile.Parser()  # 定义图像IO
-            while 1:  # 开始图像读取
-                s = fp.read(1024)
-                if not s:
-                    break
-                p.feed(s)
-            im = p.close()  # 得到图像
-            return im
-        except Exception as ex:
-            print("--------出错继续----")
-            pass
+            response = requests.get(url)
+            img = response.content
+            with open('../data/card_draw/imgs3/{}.png'.format(id), 'wb') as f:
+                f.write(img)
+        except Exception as e:
+            logger.exception(e)
 
 
 handler = CardDrawHandler()
@@ -495,4 +524,8 @@ if __name__ == '__main__':
     # handler.draw_missed_cards('1236666')
     # handler.get_current_score('1236666')
     handler.get_cards(1909786)
+    # for k in handler.all_cards.keys():
+    #     cards = handler.all_cards[k]
+    #     for card in cards:
+    #         handler.download_pic(card.url, card.id)
     pass
