@@ -447,7 +447,7 @@ class CardDrawHandler:
         nh = 61
         wgap = 20
 
-        dest_im = Image.new('RGBA', (col * (nw + wgap), row * nh),
+        dest_im = Image.new('RGB', (col * (nw + wgap), row * nh),
                             (255, 255, 255))  # the image size of splicing image, background color is white
 
         for x in range(1, col + 1):  # loop place the sub image
