@@ -342,7 +342,7 @@ def search_card(context, modian_id):
             return
         report = card_draw_handler.get_cards(int(modian_id))
         bot.send(context, report)
-        pic = '[CQ:image,file=%s]' % 'result.png'
+        pic = '[CQ:image,file=%s]' % 'result.jpg'
         logger.debug(pic)
         bot.send(context, pic)
     except Error as e:
