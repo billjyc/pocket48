@@ -14,6 +14,7 @@ import os
 import sqlite3
 import datetime
 from datetime import date
+import traceback
 
 AUTO_REPLY = {}
 items = ConfigReader.get_section('auto_reply')
@@ -349,7 +350,8 @@ def search_card(context, modian_id):
         logger.error(e)
         # bot.send(context, '查询出现错误！\n{}'.format(traceback.print_exc()))
     except Exception as exp:
-        logger.error(exp)
+        logger.exception(exp)
+        logger.exception(traceback.print_exc())
         # bot.send(context, '查询出现异常！\n{}'.format(traceback.print_exc()))
 
 
