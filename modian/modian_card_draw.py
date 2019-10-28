@@ -443,8 +443,8 @@ class CardDrawHandler:
         bol_auto_place = False  # auto place the image as a squared image， if 'True', ignore var 'row' and 'col' below
         row = 10  # row number which means col number images per row
         col = 10  # col number which means row number images per col
-        nw = 46  # sub image size, nw x nh
-        nh = 61
+        nw = 138  # sub image size, nw x nh
+        nh = 183
         wgap = 20
 
         dest_im = Image.new('RGB', (col * (nw + wgap), row * nh),
@@ -459,9 +459,11 @@ class CardDrawHandler:
                     card = self.cards_single[card_id]
 
                     if self.has_card(card, current_cards):
-                        src_im = Image.open("../data/card_draw/imgs3/%s.png" % str(x + (y - 1) * col))  # open files in order
+                        pic_path = os.path.join(BASE_DIR, 'data', 'card_draw', 'imgs3', '{}.png'.format(card_id))
+                        src_im = Image.open(pic_path)  # open files in order
                     else:
-                        src_im = Image.open("../data/card_draw/imgs3/unknown.jpg")
+                        pic_path = os.path.join(BASE_DIR, 'data', 'card_draw', 'imgs3', 'unknown.jpg')
+                        src_im = Image.open(pic_path)
                         src_im = src_im.resize((nw, nh), Image.ANTIALIAS)  # resize again
                         # # 创建Font对象:
                         # font = ImageFont.truetype('STSong.ttc', 36)
