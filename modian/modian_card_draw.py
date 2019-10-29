@@ -227,6 +227,7 @@ class CardDrawHandler:
                 rst_type[card.type0].append(card)
         print(insert_sql[:-1])
         logger.debug(insert_sql[:-1])
+        logger.debug('摩点ID: {}, 抽到的新卡片: {}'.format(user_id, card_new))
 
         img_flag = True
         img_report = ''
