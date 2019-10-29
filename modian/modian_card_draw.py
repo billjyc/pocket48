@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-import os
-import json
-from utils import util
 import logging
-from utils.mysql_util import mysql_util
+import os
+import emojis
 from enum import Enum
-import requests
+
+from utils import util
+from utils.mysql_util import mysql_util
 
 try:
     from log.my_logger import modian_logger as logger
@@ -239,7 +239,7 @@ class CardDrawHandler:
                 # report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
                 new_flag = ''
                 if card.id in card_new:
-                    new_flag = '(NEW!)'
+                    new_flag = emojis.encode('(:new:)')
                     card_new_list.append(self.cards_single[card.id])
                 report += '{}*{}{}, '.format(card.name, rst[card], new_flag)
             if img_flag:
@@ -256,7 +256,7 @@ class CardDrawHandler:
                 # report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
                 new_flag = ''
                 if card.id in card_new:
-                    new_flag = '(NEW!)'
+                    new_flag = emojis.encode('(:new:)')
                     card_new_list.append(self.cards_single[card.id])
                 report += '{}*{}{}, '.format(card.name, rst[card], new_flag)
             if img_flag:
@@ -274,7 +274,7 @@ class CardDrawHandler:
                 # report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
                 new_flag = ''
                 if card.id in card_new:
-                    new_flag = '(NEW!)'
+                    new_flag = emojis.encode('(:new:)')
                     card_new_list.append(self.cards_single[card.id])
                 report += '{}*{}{}, '.format(card.name, rst[card], new_flag)
             if img_flag:
@@ -292,7 +292,7 @@ class CardDrawHandler:
                 # report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
                 new_flag = ''
                 if card.id in card_new:
-                    new_flag = '(NEW!)'
+                    new_flag = emojis.encode('(:new:)')
                     card_new_list.append(self.cards_single[card.id])
                 report += '{}*{}{}, '.format(card.name, rst[card], new_flag)
             if img_flag:
@@ -467,7 +467,7 @@ class CardDrawHandler:
         :param user_id:
         :return:
         """
-        from PIL import Image, ImageFont, ImageDraw
+        from PIL import Image
 
         #####################################################
         # parameter setting                                 #
