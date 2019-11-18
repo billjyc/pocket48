@@ -51,6 +51,7 @@ class MySQLUtil:
         else:
             cursor.execute(sql, param)
         row_id = cursor.lastrowid
+        conn.commit()
         cursor.close()
         conn.close()
         return row_id
