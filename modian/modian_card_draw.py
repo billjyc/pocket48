@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-import os
-import json
-from utils import util
 import logging
-from utils.mysql_util import mysql_util
+import os
+import emojis
 from enum import Enum
-import requests
+
+from utils import util
+from utils.mysql_util import mysql_util
 
 try:
     from log.my_logger import modian_logger as logger
@@ -166,7 +166,8 @@ class CardDrawHandler:
         rst_tmp = mysql_util.select_all("""
             SELECT distinct(`card_id`) from `draw_record` where supporter_id=%s
         """, (user_id,))
-        card_has = set()
+        card_has = set()  # 该用户已经拥有的卡片
+        card_new = set()  # 该用户收集到的新卡
         if rst_tmp and len(rst_tmp) > 0:
             for tmp in rst_tmp:
                 card_has.add(tmp[0])
@@ -193,7 +194,8 @@ class CardDrawHandler:
                 logger.debug('卡片{}已经拥有，积分+1')
                 # 如果已经拥有该卡片，积分+1
                 score_add += 1
-
+            else:
+                card_new.add(card.id)
             card_has.add(card.id)
 
             # card = self.base_cards[card_index]
@@ -225,17 +227,26 @@ class CardDrawHandler:
                 rst_type[card.type0].append(card)
         print(insert_sql[:-1])
         logger.debug(insert_sql[:-1])
+        logger.debug('摩点ID: {}, 抽到的新卡片: {}'.format(user_id, card_new))
 
         img_flag = True
         img_report = ''
         report = '恭喜抽中:\n'
+        card_new_list = []  # 用来发图的
         if CardLevel.UR in rst_level and len(rst_level[CardLevel.UR]) > 0:
             report += '【UR】: '
             for card in rst_level[CardLevel.UR]:
                 # report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
-                report += '{}*{}, '.format(card.name, rst[card])
+                new_flag = ''
+                if card.id in card_new:
+                    new_flag = emojis.encode('(:new:)')
+                    card_new_list.append(self.cards_single[card.id])
+                report += '{}*{}{}, '.format(card.name, rst[card], new_flag)
             if img_flag:
-                img = util.choice(rst_level[CardLevel.UR])[0]
+                if len(card_new_list) > 0:
+                    img = util.choice(card_new_list)[0]
+                else:
+                    img = util.choice(rst_level[CardLevel.UR])[0]
                 img_report = '[CQ:image,file={}]\n'.format(img.url)
                 img_flag = False
             report += '\n'
@@ -243,9 +254,16 @@ class CardDrawHandler:
             report += '【SSR】: '
             for card in rst_level[CardLevel.SSR]:
                 # report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
-                report += '{}*{}, '.format(card.name, rst[card])
+                new_flag = ''
+                if card.id in card_new:
+                    new_flag = emojis.encode('(:new:)')
+                    card_new_list.append(self.cards_single[card.id])
+                report += '{}*{}{}, '.format(card.name, rst[card], new_flag)
             if img_flag:
-                img = util.choice(rst_level[CardLevel.SSR])[0]
+                if len(card_new_list) > 0:
+                    img = util.choice(card_new_list)[0]
+                else:
+                    img = util.choice(rst_level[CardLevel.SSR])[0]
                 img_report = '[CQ:image,file={}]\n'.format(img.url)
                 img_flag = False
             report += '\n'
@@ -254,9 +272,16 @@ class CardDrawHandler:
             for card in rst_level[CardLevel.SR]:
                 # report += '{}{}*{}, '.format(type_dict[card.type0], card.sub_id, rst[card])
                 # report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
-                report += '{}*{}, '.format(card.name, rst[card])
+                new_flag = ''
+                if card.id in card_new:
+                    new_flag = emojis.encode('(:new:)')
+                    card_new_list.append(self.cards_single[card.id])
+                report += '{}*{}{}, '.format(card.name, rst[card], new_flag)
             if img_flag:
-                img = util.choice(rst_level[CardLevel.SR])[0]
+                if len(card_new_list) > 0:
+                    img = util.choice(card_new_list)[0]
+                else:
+                    img = util.choice(rst_level[CardLevel.SR])[0]
                 img_report = '[CQ:image,file={}]\n'.format(img.url)
                 img_flag = False
             report += '\n'
@@ -265,9 +290,16 @@ class CardDrawHandler:
             for card in rst_level[CardLevel.R]:
                 # report += '{}{}*{}, '.format(type_dict[card.type0], card.sub_id, rst[card])
                 # report += '{}-{}*{}, '.format(type_dict[card.type0], card.name, rst[card])
-                report += '{}*{}, '.format(card.name, rst[card])
+                new_flag = ''
+                if card.id in card_new:
+                    new_flag = emojis.encode('(:new:)')
+                    card_new_list.append(self.cards_single[card.id])
+                report += '{}*{}{}, '.format(card.name, rst[card], new_flag)
             if img_flag:
-                img = util.choice(rst_level[CardLevel.R])[0]
+                if len(card_new_list) > 0:
+                    img = util.choice(card_new_list)[0]
+                else:
+                    img = util.choice(rst_level[CardLevel.R])[0]
                 img_report = '[CQ:image,file={}]\n'.format(img.url)
                 img_flag = False
             report += '\n'
@@ -435,7 +467,7 @@ class CardDrawHandler:
         :param user_id:
         :return:
         """
-        from PIL import Image, ImageFont, ImageDraw
+        from PIL import Image
 
         #####################################################
         # parameter setting                                 #
