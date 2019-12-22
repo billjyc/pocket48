@@ -54,17 +54,17 @@ def update_modian_conf():
         #                           modian_j['broadcast_groups'])
         global_config.MODIAN_ARRAY.append(modian)
 
-    modian_handler.modian_project_array = global_config.MODIAN_ARRAY
+    modian_handler.group_account_project_array = global_config.MODIAN_ARRAY
 
     # modian_handler.init_order_queues()
     modian_handler.card_draw_handler.read_config()
 
     global_config.JIZI_NOTIFY_GROUPS = ConfigReader.get_property('qq_conf', 'jizi_notify_groups').split(';')
     modian_groups = global_config.JIZI_NOTIFY_GROUPS
-    modian_handler.modian_notify_groups = modian_groups
+    modian_handler.group_account_notify_groups = modian_groups
 
     my_logger.debug('JIZI_NOTIFY_GROUPS: %s, length: %d', ','.join(global_config.JIZI_NOTIFY_GROUPS),
-                    len(modian_handler.modian_notify_groups))
+                    len(modian_handler.group_account_notify_groups))
 
     my_logger.debug('读取正在进行中的flag活动')
     global_config.MODIAN_FLAG_ACTIVITIES = {}
