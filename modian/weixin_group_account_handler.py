@@ -124,7 +124,7 @@ class WeixinGroupAccountHandler:
         r = self.session.post(api, data=data, headers=self.weixin_header()).json()
         if int(r['retcode']) == 0:
             name = r['name']
-            current = r['balance']
+            current = float(r['balance']) / 100
             user_num = r['user_num']
             my_logger.info('支持人数: %s, 当前进度: %s', user_num, current)
             return name, current, user_num
@@ -151,10 +151,10 @@ class WeixinGroupAccountHandler:
                         len(self.order_queues[group_account_entity.group_account_id]))
 
         for order in orders:
-            user_id = order['bkid']
+            user_id = order['nickname']
             nickname = order['nickname']
             pay_time = order['time']
-            backer_money = float(order['balance']) / 100
+            backer_money = float(order['fee']) / 100
             listid = int(order['listid'])
 
             my_logger.debug('oid: %s', listid)
