@@ -4,9 +4,10 @@ from log.my_logger import modian_logger as my_logger
 
 from utils.config_reader import ConfigReader
 from modian.modian_handler import ModianJiebangEntity, ModianFlagEntity, ModianCountFlagEntity
-from modian.modian_handler_bs4 import ModianHandlerBS4, ModianEntity
+# from modian.modian_handler_bs4 import ModianHandlerBS4, ModianEntity
+from modian.weixin_group_account_handler import GroupAccountEntity, WeixinGroupAccountHandler
 from utils import global_config
-from qq.qqhandler import QQHandler
+# from qq.qqhandler import QQHandler
 import uuid
 import json
 import time
@@ -23,7 +24,8 @@ def update_modian_conf():
     time0 = time.time()
     my_logger.info('读取摩点配置')
     ConfigReader.read_conf()
-    modian_json = json.load(open("data/modian.json", encoding='utf8'))
+    # modian_json = json.load(open("data/modian.json", encoding='utf8'))
+    modian_json = json.load(open("data/weixin_group_account.json", encoding='utf8'))
 
     global_config.MODIAN_POSTSCRIPTS = modian_json['modian_postscripts']
 
@@ -42,12 +44,14 @@ def update_modian_conf():
     global_config.MODIAN_ARRAY = []
 
     for modian_j in modian_json['monitor_activities']:
-        if modian_j['modian_need_display_rank'] is False:
-            modian = ModianEntity(modian_j['modian_link'], modian_j['modian_title'], modian_j['modian_pro_id'], False,
-                                  modian_j['broadcast_groups'])
-        elif modian_j['wds_need_display_rank'] is True:
-            modian = ModianEntity(modian_j['modian_link'], modian_j['modian_title'], modian_j['modian_pro_id'], True,
-                                  modian_j['broadcast_groups'])
+        # if modian_j['modian_need_display_rank'] is False:
+            # modian = ModianEntity(modian_j['modian_link'], modian_j['modian_title'], modian_j['modian_pro_id'], False,
+            #                       modian_j['broadcast_groups'])
+        modian = GroupAccountEntity(modian_j['modian_link'], modian_j['modian_title'], modian_j['modian_pro_id'],
+                                    modian_j['broadcast_groups'])
+        # elif modian_j['wds_need_display_rank'] is True:
+        #     modian = ModianEntity(modian_j['modian_link'], modian_j['modian_title'], modian_j['modian_pro_id'], True,
+        #                           modian_j['broadcast_groups'])
         global_config.MODIAN_ARRAY.append(modian)
 
     modian_handler.modian_project_array = global_config.MODIAN_ARRAY
@@ -66,7 +70,7 @@ def update_modian_conf():
     global_config.MODIAN_FLAG_ACTIVITIES = {}
     flag_json = json.load(open('data/modian_flag.json', encoding='utf8'))['activities']
     for modian in global_config.MODIAN_ARRAY:
-        pro_id = modian.pro_id
+        pro_id = modian.group_account_id
         global_config.MODIAN_FLAG_ACTIVITIES[pro_id] = []
     for activity in flag_json:
         pro_id = activity['pro_id']
@@ -81,7 +85,7 @@ def update_modian_conf():
     global_config.MODIAN_COUNT_FLAG_ACTIVITIES = {}
     count_flag_json = json.load(open('data/modian_count_flag.json', encoding='utf8'))['activities']
     for modian in global_config.MODIAN_ARRAY:
-        pro_id = modian.pro_id
+        pro_id = modian.group_account_id
         global_config.MODIAN_COUNT_FLAG_ACTIVITIES[pro_id] = []
     for activity in count_flag_json:
         pro_id = activity['pro_id']
@@ -144,7 +148,7 @@ def update_modian_conf():
     my_logger.debug('读取正在进行中的接棒活动')
     global_config.MODIAN_JIEBANG_ACTIVITIES = {}
     for modian in global_config.MODIAN_ARRAY:
-        pro_id = modian.pro_id
+        pro_id = modian.group_account_id
         global_config.MODIAN_JIEBANG_ACTIVITIES[pro_id] = []
         try:
             # cursor = conn.cursor()
@@ -234,7 +238,7 @@ def sync_order():
     global modian_handler
     my_logger.info('同步订单')
     for modian in global_config.MODIAN_ARRAY:
-        pro_id = modian.pro_id
+        pro_id = modian.group_account_id
         orders = modian_handler.get_all_orders(modian)
         for order in orders:
             user_id = order['user_id']
@@ -261,7 +265,7 @@ def sync_order():
                     """ % (oid, user_id, backer_money, pay_time, pro_id))
                 msg = '【机器人补播报】感谢 %s 支持了%s元, %s\n' % (nickname, backer_money, util.random_str(global_config.MODIAN_POSTSCRIPTS))
                 QQHandler.send_to_groups(['483548995'], msg)
-                modian_handler.order_queues[modian.pro_id].add(oid)
+                modian_handler.order_queues[modian.group_account_id].add(oid)
 
 
 # @scheduler.scheduled_job('cron', minute='10,25,40,55', hour='8-22')
@@ -276,6 +280,7 @@ def notify_modian_pk():
     QQHandler.send_to_groups(modian_handler.modian_notify_groups, msg)
 
 
-modian_handler = ModianHandlerBS4([], [])
+# modian_handler = ModianHandlerBS4([], [])
+modian_handler = WeixinGroupAccountHandler([], [])
 update_modian_conf()
 # modian_handler.init_order_queues()
