@@ -23,12 +23,13 @@ from utils.mysql_util import mysql_util
 
 
 class GroupAccountEntity:
-    def __init__(self, link, title, group_account_id, broadcast_groups=[], current=0.0, support_num=0):
+    def __init__(self, link, title, group_account_id, broadcast_groups=[], qrcode='', current=0.0, support_num=0):
         self.link = link
         self.title = title
         self.group_account_id = group_account_id
         # self.need_display_rank = need_display_rank
         self.broadcast_groups = broadcast_groups
+        self.qrcode = qrcode
         self.current = current
         # self.target = target
         self.support_num = support_num
@@ -297,7 +298,7 @@ class WeixinGroupAccountHandler:
             my_logger.info(msg)
             if global_config.USING_COOLQ_PRO is True:
                 my_logger.debug('使用酷Q PRO发送图片')
-                msg += '\n[CQ:image,file=http://wx1.sinaimg.cn/large/439a9f3fgy1fpllweknr6j201i01g0lz.jpg]\n'
+                msg += '\n[CQ:image,file={}]\n'.format(group_account_entity.qrcode)
 
             # if global_config.MODIAN_NEED_DISPLAY_PK:
             #     msg += self.pk_modian_activity()

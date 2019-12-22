@@ -48,7 +48,7 @@ def update_modian_conf():
             # modian = ModianEntity(modian_j['modian_link'], modian_j['modian_title'], modian_j['modian_pro_id'], False,
             #                       modian_j['broadcast_groups'])
         modian = GroupAccountEntity(modian_j['modian_link'], modian_j['modian_title'], modian_j['modian_pro_id'],
-                                    modian_j['broadcast_groups'])
+                                    modian_j['broadcast_groups'], modian_j['qrcode'])
         # elif modian_j['wds_need_display_rank'] is True:
         #     modian = ModianEntity(modian_j['modian_link'], modian_j['modian_title'], modian_j['modian_pro_id'], True,
         #                           modian_j['broadcast_groups'])
