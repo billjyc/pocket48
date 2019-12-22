@@ -292,7 +292,7 @@ class WeixinGroupAccountHandler:
                 QQHandler.send_to_groups(['483548995'], count_flag_test_msgs)
                 # msg += flag_test_msgs
 
-            msg += '%s\n集资项目: %s\n链接: %s\n' % (project_info, pro_name, group_account_entity.link)
+            msg += '%s\n集资项目: %s\n集资方式: %s\n' % (project_info, pro_name, group_account_entity.link)
             # msg += jizi_pk_report
 
             my_logger.info(msg)
