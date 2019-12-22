@@ -132,7 +132,7 @@ class WeixinGroupAccountHandler:
             raise RuntimeError('获取项目筹款结果查询失败')
 
     def parse_order_details(self, orders, group_account_entity):
-        if len(self.order_queues[group_account_entity.pro_id]) == 0 and len(orders) == 0:
+        if len(self.order_queues[group_account_entity.group_account_id]) == 0 and len(orders) == 0:
             my_logger.debug('订单队列为空')
             return
         jiebang_activities = global_config.MODIAN_JIEBANG_ACTIVITIES[group_account_entity.group_account_id]
