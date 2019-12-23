@@ -120,13 +120,14 @@ class CardDrawHandler:
         :param backer_money:
         :return:
         """
-        if backer_money < 10.17:
+        SINGLE = 0.01
+        if backer_money < SINGLE:
             return 0
-        elif backer_money < 101.7:
-            return int(backer_money // 10.17)
+        elif backer_money < SINGLE * 10:
+            return int(backer_money // SINGLE)
         else:
-            tmp1 = int(backer_money // 101.7) * 11
-            tmp2 = int((backer_money % 101.7) // 10.17)
+            tmp1 = int(backer_money // (SINGLE * 10)) * 11
+            tmp2 = int((backer_money % (SINGLE * 10)) // SINGLE)
             return tmp1 + tmp2
 
     def can_draw(self):
