@@ -199,7 +199,7 @@ class CardDrawHandler:
             card_has.add(card.id)
 
             # card = self.base_cards[card_index]
-            insert_sql += '(%s, %s, \'%s\', %s),' % (user_id, card.id, pay_time, backer_money)
+            insert_sql += '(\'%s\', %s, \'%s\', %s),' % (user_id, card.id, pay_time, backer_money)
 
             # 此种类型的卡如果已经达到了1张，则将该卡片从卡池中移除
             # if card.id in ACTIVITY_CARD_ID:
