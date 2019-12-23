@@ -368,9 +368,9 @@ def draw_card_using_score(context, modian_id, score):
     card_draw_handler.read_config()
     score_is_digit = util.is_positive_integer(score)
     modian_id_is_digit = util.is_positive_integer(modian_id)
-    if not modian_id_is_digit:
-        bot.send(context, '输入的摩点ID不符合规范，请重试~')
-        return
+    # if not modian_id_is_digit:
+    #     bot.send(context, '输入的摩点ID不符合规范，请重试~')
+    #     return
     if not score_is_digit:
         bot.send(context, '输入的积分数不符合规范，请重试~')
     try:
@@ -395,9 +395,9 @@ def draw_missed_card(context, modian_id, backer_money):
     card_draw_handler.read_config()
     money_is_digit = util.is_digit(backer_money)
     modian_id_is_digit = util.is_positive_integer(modian_id)
-    if not modian_id_is_digit:
-        bot.send(context, '输入的摩点ID不符合规范，请重试~')
-        return
+    # if not modian_id_is_digit:
+    #     bot.send(context, '输入的摩点ID不符合规范，请重试~')
+    #     return
     if not money_is_digit:
         bot.send(context, '输入的金额不符合规范，请重试~')
     try:
