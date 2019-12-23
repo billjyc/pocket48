@@ -337,10 +337,10 @@ def search_card(context, modian_id):
         card_draw_handler = CardDrawHandler()
         card_draw_handler.read_config()
         from utils import util
-        is_digit = util.is_positive_integer(modian_id)
-        if not is_digit:
-            bot.send('摩点ID为纯数字，请重试~')
-            return
+        # is_digit = util.is_positive_integer(modian_id)
+        # if not is_digit:
+        #     bot.send('摩点ID为纯数字，请重试~')
+        #     return
         report = card_draw_handler.get_cards(int(modian_id))
         bot.send(context, report)
         pic = '[CQ:image,file=%s]' % 'result.jpg'
