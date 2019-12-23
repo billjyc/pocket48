@@ -153,7 +153,7 @@ class WeixinGroupAccountHandler:
 
         for order in orders:
             user_id = order['nickname']
-            nickname = order['remark']
+            nickname = order['nickname']
             pay_time = order['time']
             backer_money = float(order['fee']) / 100
             listid = int(order['listid'])
