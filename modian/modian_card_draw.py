@@ -314,7 +314,7 @@ class CardDrawHandler:
         if score_add > 0:
             mysql_util.query("""
                 INSERT INTO `t_card_score` (`modian_id`, `score`) VALUES 
-                    (%s, %s)
+                    (\'%s\', %s)
             """, (user_id, score_add))
             report += '通过重复卡获取积分: {}\n'.format(score_add)
         report += '当前积分为: {}\n'.format(self.get_current_score(user_id))
