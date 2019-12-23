@@ -78,7 +78,7 @@ class WeixinGroupAccountHandler:
         """
         header = {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Cookie': 'grp_qlskey=v0ae788b1125dff7aa0b864c99931173;grp_qluin=4d014cbbf6a58752db8d4182fc02a58d',  # cookie要换成自己的
+            'Cookie': 'grp_qlskey=v0ae789cc115e00b0a1c1ca186f09b45;grp_qluin=91be027df85334c678b99fe50566e8eb',  # cookie要换成自己的
             'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/7.0.8(0x17000820) NetType/WIFI Language/zh_CN',
         }
         return header
@@ -153,7 +153,7 @@ class WeixinGroupAccountHandler:
 
         for order in orders:
             user_id = order['nickname']
-            nickname = order['nickname']
+            nickname = order['remark']
             pay_time = order['time']
             backer_money = float(order['fee']) / 100
             listid = int(order['listid'])
