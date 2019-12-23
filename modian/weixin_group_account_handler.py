@@ -152,8 +152,12 @@ class WeixinGroupAccountHandler:
                         len(self.order_queues[group_account_entity.group_account_id]))
 
         for order in orders:
-            user_id = order['nickname']
-            nickname = order['nickname']
+            if 'remark' in order.keys():
+                user_id = order['remark']
+                nickname = order['remark']
+            else:
+                user_id = order['nickname']
+                nickname = order['nickname']
             pay_time = order['time']
             backer_money = float(order['fee']) / 100
             listid = int(order['listid'])
