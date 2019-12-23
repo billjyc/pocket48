@@ -341,7 +341,7 @@ def search_card(context, modian_id):
         # if not is_digit:
         #     bot.send('摩点ID为纯数字，请重试~')
         #     return
-        report = card_draw_handler.get_cards(int(modian_id))
+        report = card_draw_handler.get_cards(modian_id)
         bot.send(context, report)
         pic = '[CQ:image,file=%s]' % 'result.jpg'
         logger.debug(pic)
