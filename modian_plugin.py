@@ -204,7 +204,7 @@ def update_modian_conf():
     modian_handler.init_order_queues()
 
 
-@scheduler.scheduled_job('cron', second='10,30,50')
+@scheduler.scheduled_job('cron', second='15,45')
 def monitor_modian():
     """
     监控摩点

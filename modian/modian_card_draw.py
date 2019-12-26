@@ -120,7 +120,7 @@ class CardDrawHandler:
         :param backer_money:
         :return:
         """
-        SINGLE = 0.01
+        SINGLE = 10.17
         if backer_money < SINGLE:
             return 0
         elif backer_money < SINGLE * 10:
