@@ -314,7 +314,7 @@ class CardDrawHandler:
         if score_add > 0:
             mysql_util.query("""
                 INSERT INTO `t_card_score` (`modian_id`, `score`) VALUES 
-                    (\'%s\', %s)
+                    (%s, %s)
             """, (user_id, score_add))
             report += '通过重复卡获取积分: {}\n'.format(score_add)
         report += '当前积分为: {}\n'.format(self.get_current_score(user_id))
@@ -355,7 +355,7 @@ class CardDrawHandler:
         logger.debug(rst_level)
         logger.debug(rst_num)
 
-        self.generate_card_pic(rst_level, modian_id)
+        # self.generate_card_pic(rst_level, modian_id)
 
         report = '摩点ID: {}, 当前已抽中的卡片有: \n'.format(modian_id)
         if CardLevel.UR in rst_level and len(rst_level[CardLevel.UR]) > 0:
@@ -560,9 +560,10 @@ if __name__ == '__main__':
     # print(rst)
     # handler.draw_missed_cards('1236666')
     # handler.get_current_score('1236666')
-    handler.get_cards(1909786)
+    # print(handler.get_cards('弥晨'))
     # for k in handler.all_cards.keys():
     #     cards = handler.all_cards[k]
     #     for card in cards:
     #         handler.download_pic(card.url, card.id)
+    print(handler.draw('test', 'test', 101.7, '2019-12-26 17:20:00'))
     pass
