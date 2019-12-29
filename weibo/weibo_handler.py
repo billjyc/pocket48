@@ -9,6 +9,7 @@ import requests
 import time
 from utils import util
 from log.my_logger import weibo_logger as my_logger
+from bs4 import BeautifulSoup
 
 
 class WeiboListenTask:
@@ -120,10 +121,11 @@ class WeiboMonitor:
                         self.echoMsg('Info', 'Got a new weibo')
                         # @ return returnDict dict
                         return_dict['created_at'] = i['mblog']['created_at']
-                        return_dict['text'] = util.filter_tags(i['mblog']['text'])
+                        return_dict['text'] = self.handle_weibo_text(i['mblog']['text'])
                         return_dict['source'] = i['mblog']['source']
                         return_dict['nickName'] = i['mblog']['user']['screen_name']
                         return_dict['scheme'] = i['scheme']
+                        return_dict['pics'] = i['pics']
                         my_logger.debug(i['mblog']['text'])
                         # if has photos
                         if 'pics' in i['mblog']:
@@ -131,7 +133,11 @@ class WeiboMonitor:
                             for j in i['mblog']['pics']:
                                 return_dict['picUrls'].append(j['url'])
                                 my_logger.debug(j['url'])
-
+                        # 如果有视频
+                        if 'page_info' in i['mblog']:
+                            page_info = i['mblog']
+                            if page_info['type'] == 'video':
+                                return_dict['video_url'] = page_info['media_info']['h5_url']
                         return return_dict
             my_logger.info('微博队列共有 %d 条' % len(task.itemIds))
             # self.echoMsg('Info', '微博队列共有 %d 条' % len(self.itemIds))
@@ -151,9 +157,21 @@ class WeiboMonitor:
         elif level == 'Error':
             my_logger.debug(msg)
 
+    def handle_weibo_text(self, weibo_text):
+        """
+        处理微博文字，去除html标签
+        :param weibo_text:
+        :return:
+        """
+        soup = BeautifulSoup(weibo_text.replace('<br />', '\n').replace('<br/>', '\n'), 'lxml')
+        return soup.text
+
 
 if __name__ == '__main__':
-    # handler = WeiboMonitor()
+    weibo_text = """<a  href="https://m.weibo.cn/search?containerid=231522type%3D1%26t%3D10%26q%3D%23SNH48%E5%B9%B4%E5%BA%A6%E9%87%91%E6%9B%B2%E5%A4%A7%E8%B5%8F%23&luicode=10000011&lfid=1076032689280541" data-hide=""><span class="surl-text">#SNH48年度金曲大赏#</span></a> 精彩回顾<br /><a  href="https://m.weibo.cn/p/index?containerid=1008086bd7cfe0bc1b396eede72d35bf433f4f&extparam=SNH48&luicode=10000011&lfid=1076032689280541" data-hide=""><span class='url-icon'><img style='width: 1rem;height: 1rem' src='http://n.sinaimg.cn/photo/5213b46e/20181127/timeline_card_small_super_default.png'></span><span class="surl-text">SNH48超话</span></a>《Who I Am》<br /><a href='/n/SNH48-莫寒'>@SNH48-莫寒</a> <a href='/n/SNH48-戴萌'>@SNH48-戴萌</a>  <br />现场的证据是我故意<br />特别为你而设下的局<br /><a  href="https://m.weibo.cn/search?containerid=231522type%3D1%26t%3D10%26q%3D%23%E6%88%91%E7%9A%84%E5%B9%B4%E5%BA%A6%E9%87%91%E6%9B%B2%23&isnewpage=1&luicode=10000011&lfid=1076032689280541" data-hide=""><span class="surl-text">#我的年度金曲#</span></a><a  href="https://m.weibo.cn/search?containerid=231522type%3D1%26t%3D10%26q%3D%23%E6%97%A9%E5%AE%89SNH48%23&luicode=10000011&lfid=1076032689280541" data-hide=""><span class="surl-text">#早安SNH48#</span></a> <br /><a data-url="http://t.cn/AiFXwfzI" href="https://m.weibo.cn/p/index?containerid=2304444454806354591746&url_type=39&object_type=video&pos=1&luicode=10000011&lfid=1076032689280541" data-hide=""><span class='url-icon'><img style='width: 1rem;height: 1rem' src='https://h5.sinaimg.cn/upload/2015/09/25/3/timeline_card_small_video_default.png'></span><span class="surl-text">SNH48的微博视频</span></a> """
+    ret = weibo_text.find('<br />')
+    handler = WeiboMonitor()
+    handler.handle_weibo_text(weibo_text)
     # handler.login('***', '****')
     # uid = ConfigReader.get_property('weibo', 'fengxiaofei')
     # uid = 1134206783

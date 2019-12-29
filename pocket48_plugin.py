@@ -34,6 +34,8 @@ def update_conf():
 @scheduler.scheduled_job('cron', minute='*', second=10)
 def get_room_msgs():
     for task in pocket48_handler.listen_tasks:
+        if task.member.member_id == 0:
+            continue
         start_t = time.time()
         r1 = pocket48_handler.get_member_room_msg(task)
         pocket48_handler.parse_room_msg(r1, task)

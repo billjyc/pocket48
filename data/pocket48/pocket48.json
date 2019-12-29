@@ -9,6 +9,12 @@
       "broadcast_message_detail_groups": ["483548995", "108323016"],
       "broadcast_message_lite_groups": ["483548995", "101724227"],
       "broadcast_room_comment_groups": []
+    },
+    {
+      "name": "SNH48",
+      "broadcast_message_detail_groups": ["483548995", "108323016"],
+      "broadcast_message_lite_groups": ["483548995", "101724227"],
+      "broadcast_room_comment_groups": []
     }
   ]
 }
