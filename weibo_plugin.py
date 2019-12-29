@@ -45,7 +45,7 @@ def monitor_member_weibo():
                 # if '冯晓菲' in weibo_text:
                 message = 'SNH48发博啦，大家快去转评赞~:\n{}'.format(weibo_text)
                 if newWB['created_at'] == '刚刚':
-                    QQHandler.send_to_groups(member_weibo_groups, message)
+                    QQHandler.send_to_groups(['483548995'], message)
                     if 'picUrls' in newWB.keys():
                         for pic in newWB['picUrls']:
                             QQHandler.send_to_groups(['483548995'], '[CQ:image,file={}]'.format(pic))
