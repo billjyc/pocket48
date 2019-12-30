@@ -153,7 +153,7 @@ class WeiboMonitor:
                         # 如果有视频
                         if 'page_info' in i['mblog'].keys():
                             my_logger.debug('有视频')
-                            page_info = i['mblog']
+                            page_info = i['mblog']['page_info']
                             if page_info['type'] == 'video':
                                 my_logger.debug('视频地址: {}'.format(page_info['media_info']['h5_url']))
                                 return_dict['video_url'] = page_info['media_info']['h5_url']
@@ -161,7 +161,7 @@ class WeiboMonitor:
             my_logger.info('微博队列共有 %d 条' % len(task.itemIds))
             # self.echoMsg('Info', '微博队列共有 %d 条' % len(self.itemIds))
         except Exception as e:
-            my_logger.error(e)
+            my_logger.exception(e)
             # print(e)
             # sys.exit()
 
