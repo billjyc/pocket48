@@ -43,14 +43,14 @@ def monitor_member_weibo():
 
             if task.member.member_id == 0:
                 # if '冯晓菲' in weibo_text:
-                message = 'SNH48发博啦，大家快去转评赞~:\n{}'.format(weibo_text)
+                message = 'SNH48发博啦，大家快去转评赞~:\n{}\n{}'.format(weibo_text, newWB['scheme'])
                 if newWB['created_at'] == '刚刚':
                     QQHandler.send_to_groups(['483548995'], message)
                     if 'picUrls' in newWB.keys():
                         # for pic in newWB['picUrls']:
                         QQHandler.send_to_groups(['483548995'], '[CQ:image,file={}]'.format(newWB['picUrls'][0]))
             else:
-                message = '你的小宝贝儿发微博啦!\n{}'.format(weibo_text)
+                message = '你的小宝贝儿发微博啦!\n{}\n{}'.format(weibo_text, newWB['scheme'])
                 if newWB['created_at'] == '刚刚':
                     QQHandler.send_to_groups(member_weibo_groups, message)
                     if 'picUrls' in newWB.keys():
