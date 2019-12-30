@@ -6,9 +6,11 @@
 
 import json
 import requests
-import time
-from utils import util
-from log.my_logger import weibo_logger as my_logger
+import logging
+try:
+    from log.my_logger import weibo_logger as my_logger
+except Exception as e:
+    my_logger = logging.getLogger(__name__)
 from bs4 import BeautifulSoup
 
 
@@ -96,7 +98,19 @@ class WeiboMonitor:
             for i in r.json()['data']['cards']:
                 if i['card_type'] == 9:
                     task.itemIds.append(i['mblog']['id'])
-                    my_logger.debug('微博内容: {}'.format(self.handle_weibo_text(i['mblog']['text'])))
+                    whole_weibo_text = self.get_whole_weibo_content(i['mblog']['id'])
+                    my_logger.debug('微博内容: {}'.format(
+                        self.handle_weibo_text(whole_weibo_text)))
+                    if 'pics' in i['mblog'].keys():
+                        my_logger.debug('有图片')
+                        for j in i['mblog']['pics']:
+                            my_logger.debug(j['url'])
+                    # 如果有视频
+                    if 'page_info' in i['mblog'].keys():
+                        page_info = i['mblog']['page_info']
+                        if page_info['type'] == 'video':
+                            my_logger.debug('有视频')
+                            my_logger.debug('视频地址: {}'.format(page_info['media_info']['h5_url']))
             self.echoMsg('Info', 'Got weibos')
             self.echoMsg('Info', 'Has %d weibo id(s)' % len(task.itemIds))
         except Exception as e:
@@ -122,7 +136,8 @@ class WeiboMonitor:
                         self.echoMsg('Info', 'Got a new weibo')
                         # @ return returnDict dict
                         return_dict['created_at'] = i['mblog']['created_at']
-                        return_dict['text'] = self.handle_weibo_text(i['mblog']['text'])
+                        whole_weibo_text = self.get_whole_weibo_content(i['mblog']['id'])
+                        return_dict['text'] = self.handle_weibo_text(whole_weibo_text)
                         return_dict['source'] = i['mblog']['source']
                         return_dict['nickName'] = i['mblog']['user']['screen_name']
                         return_dict['scheme'] = i['scheme']
@@ -167,15 +182,31 @@ class WeiboMonitor:
         :param weibo_text:
         :return:
         """
+        weibo_text = '<div>' + weibo_text + '</div>'
         soup = BeautifulSoup(weibo_text.replace('<br />', '\n').replace('<br/>', '\n'), 'lxml')
         return soup.text
 
+    def get_whole_weibo_content(self, weibo_id):
+        """
+        获取微博全文
+        :param weibo_id:
+        :return:
+        """
+        url = "https://m.weibo.cn/statuses/extend?id={}".format(weibo_id)
+        try:
+            r = self.session.get(url, headers=self.reqHeaders).json()
+            if r['ok'] == 1:
+                return r['data']['longTextContent']
+        except Exception as e:
+            my_logger.exception(e)
+            return None
+
 
 if __name__ == '__main__':
-    weibo_text = """<a  href="https://m.weibo.cn/search?containerid=231522type%3D1%26t%3D10%26q%3D%23SNH48%E5%B9%B4%E5%BA%A6%E9%87%91%E6%9B%B2%E5%A4%A7%E8%B5%8F%23&luicode=10000011&lfid=1076032689280541" data-hide=""><span class="surl-text">#SNH48年度金曲大赏#</span></a> 精彩回顾<br /><a  href="https://m.weibo.cn/p/index?containerid=1008086bd7cfe0bc1b396eede72d35bf433f4f&extparam=SNH48&luicode=10000011&lfid=1076032689280541" data-hide=""><span class='url-icon'><img style='width: 1rem;height: 1rem' src='http://n.sinaimg.cn/photo/5213b46e/20181127/timeline_card_small_super_default.png'></span><span class="surl-text">SNH48超话</span></a>《Who I Am》<br /><a href='/n/SNH48-莫寒'>@SNH48-莫寒</a> <a href='/n/SNH48-戴萌'>@SNH48-戴萌</a>  <br />现场的证据是我故意<br />特别为你而设下的局<br /><a  href="https://m.weibo.cn/search?containerid=231522type%3D1%26t%3D10%26q%3D%23%E6%88%91%E7%9A%84%E5%B9%B4%E5%BA%A6%E9%87%91%E6%9B%B2%23&isnewpage=1&luicode=10000011&lfid=1076032689280541" data-hide=""><span class="surl-text">#我的年度金曲#</span></a><a  href="https://m.weibo.cn/search?containerid=231522type%3D1%26t%3D10%26q%3D%23%E6%97%A9%E5%AE%89SNH48%23&luicode=10000011&lfid=1076032689280541" data-hide=""><span class="surl-text">#早安SNH48#</span></a> <br /><a data-url="http://t.cn/AiFXwfzI" href="https://m.weibo.cn/p/index?containerid=2304444454806354591746&url_type=39&object_type=video&pos=1&luicode=10000011&lfid=1076032689280541" data-hide=""><span class='url-icon'><img style='width: 1rem;height: 1rem' src='https://h5.sinaimg.cn/upload/2015/09/25/3/timeline_card_small_video_default.png'></span><span class="surl-text">SNH48的微博视频</span></a> """
-    ret = weibo_text.find('<br />')
+    weibo_text = """第六届<a  href="https://m.weibo.cn/search?containerid=231522type%3D1%26t%3D10%26q%3D%23SNH48%E5%B9%B4%E5%BA%A6%E9%87%91%E6%9B%B2%E5%A4%A7%E8%B5%8F%23" data-hide=""><span class="surl-text">#SNH48年度金曲大赏#</span></a> <br />Live音源（下）咪咕首发🎧<a data-url="http://t.cn/AiFUXBEG" href="http://c.migu.cn/003Jyu?ifrom=c8a1221dbcd2d3c4eeda2da0526d9b9e" data-hide=""><span class='url-icon'><img style='width: 1rem;height: 1rem' src='https://h5.sinaimg.cn/upload/2015/09/25/3/timeline_card_small_web_default.png'></span><span class="surl-text">网页链接</span></a> <br /><br />由最受年轻群体喜爱的哈尔滨啤酒冠名赞助呈现，独家战略音乐合作平台及独家互联网直播平台咪咕音乐全程支持的<a  href="https://m.weibo.cn/p/index?extparam=SNH48&containerid=1008086bd7cfe0bc1b396eede72d35bf433f4f" data-hide=""><span class='url-icon'><img style='width: 1rem;height: 1rem' src='https://n.sinaimg.cn/photo/5213b46e/20180926/timeline_card_small_super_default.png'></span><span class="surl-text">SNH48</span></a> GROUP第六届年度金曲大赏BEST50 REQUEST TIME歌曲总决选演唱会在广州体育馆圆满落幕，来自SNH48、<a href='/n/BEJ48'>@BEJ48</a>、<a href='/n/GNZ48'>@GNZ48</a> 三团成员共同献唱，为观众们呈现了一场精彩绝伦的音乐视听盛宴。年度队歌、年度荣耀队歌、炽曈组6首入围人气金曲及歌曲《浪漫圣诞夜》。SNH48 Team NII陆婷和冯薪朵《Hold Me Tight》荣获本届金曲大赏年度金曲；SNH48 Team NII《花之祭》荣膺本届年度荣耀队歌。帅气动感、活泼动人，精彩不断！"""
+    # ret = weibo_text.find('<br />')
     handler = WeiboMonitor()
-    handler.handle_weibo_text(weibo_text)
+    print(handler.handle_weibo_text(weibo_text))
     # handler.login('***', '****')
     # uid = ConfigReader.get_property('weibo', 'fengxiaofei')
     # uid = 1134206783

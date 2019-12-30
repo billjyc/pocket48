@@ -47,15 +47,16 @@ def monitor_member_weibo():
                 if newWB['created_at'] == '刚刚':
                     QQHandler.send_to_groups(['483548995'], message)
                     if 'picUrls' in newWB.keys():
-                        for pic in newWB['picUrls']:
-                            QQHandler.send_to_groups(['483548995'], '[CQ:image,file={}]'.format(pic))
+                        # for pic in newWB['picUrls']:
+                        QQHandler.send_to_groups(['483548995'], '[CQ:image,file={}]'.format(newWB['picUrls'][0]))
             else:
                 message = '你的小宝贝儿发微博啦!\n{}'.format(weibo_text)
                 if newWB['created_at'] == '刚刚':
                     QQHandler.send_to_groups(member_weibo_groups, message)
                     if 'picUrls' in newWB.keys():
-                        for pic in newWB['picUrls']:
-                            QQHandler.send_to_groups(member_weibo_groups, '[CQ:image,file={}]'.format(pic))
+                        # for pic in newWB['picUrls']:
+                        # 发一张图就可以了
+                        QQHandler.send_to_groups(member_weibo_groups, '[CQ:image,file={}]'.format(newWB['picUrls'][0]))
 
 
 weibo_monitor = WeiboMonitor()
