@@ -144,15 +144,15 @@ class WeiboMonitor:
                         # return_dict['pics'] = i['pics']
                         my_logger.debug(i['mblog']['text'])
                         # if has photos
-                        my_logger.debug('有图片')
                         if 'pics' in i['mblog'].keys():
+                            my_logger.debug('有图片')
                             return_dict['picUrls'] = []
                             for j in i['mblog']['pics']:
                                 return_dict['picUrls'].append(j['url'])
                                 my_logger.debug(j['url'])
                         # 如果有视频
-                        my_logger.debug('有视频')
                         if 'page_info' in i['mblog'].keys():
+                            my_logger.debug('有视频')
                             page_info = i['mblog']
                             if page_info['type'] == 'video':
                                 my_logger.debug('视频地址: {}'.format(page_info['media_info']['h5_url']))
