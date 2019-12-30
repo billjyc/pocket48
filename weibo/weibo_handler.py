@@ -96,6 +96,7 @@ class WeiboMonitor:
             for i in r.json()['data']['cards']:
                 if i['card_type'] == 9:
                     task.itemIds.append(i['mblog']['id'])
+                    my_logger.debug('微博内容: {}'.format(self.handle_weibo_text(i['mblog']['text'])))
             self.echoMsg('Info', 'Got weibos')
             self.echoMsg('Info', 'Has %d weibo id(s)' % len(task.itemIds))
         except Exception as e:
@@ -125,18 +126,21 @@ class WeiboMonitor:
                         return_dict['source'] = i['mblog']['source']
                         return_dict['nickName'] = i['mblog']['user']['screen_name']
                         return_dict['scheme'] = i['scheme']
-                        return_dict['pics'] = i['pics']
+                        # return_dict['pics'] = i['pics']
                         my_logger.debug(i['mblog']['text'])
                         # if has photos
-                        if 'pics' in i['mblog']:
+                        my_logger.debug('有图片')
+                        if 'pics' in i['mblog'].keys():
                             return_dict['picUrls'] = []
                             for j in i['mblog']['pics']:
                                 return_dict['picUrls'].append(j['url'])
                                 my_logger.debug(j['url'])
                         # 如果有视频
-                        if 'page_info' in i['mblog']:
+                        my_logger.debug('有视频')
+                        if 'page_info' in i['mblog'].keys():
                             page_info = i['mblog']
                             if page_info['type'] == 'video':
+                                my_logger.debug('视频地址: {}'.format(page_info['media_info']['h5_url']))
                                 return_dict['video_url'] = page_info['media_info']['h5_url']
                         return return_dict
             my_logger.info('微博队列共有 %d 条' % len(task.itemIds))
