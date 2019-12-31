@@ -184,7 +184,7 @@ class WeiboMonitor:
                                                                            retweeted_user['screen_name']))
                             retweeted_text = self.handle_weibo_text(self.get_whole_weibo_content(retweeted_status['id']))
                             my_logger.debug('转发微博内容: {}'.format(retweeted_text))
-                            return_dict['retweeted_status']['user'] = retweeted_user
+                            return_dict['retweeted_status']['user'] = retweeted_user['screen_name']
                             return_dict['retweeted_status']['text'] = retweeted_text
                         return return_dict
             my_logger.info('微博队列共有 %d 条' % len(task.itemIds))
