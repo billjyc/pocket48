@@ -39,7 +39,7 @@ def monitor_member_weibo():
             weibo_text = newWB['text']
 
             if task.member.member_id == 0:
-                message = 'SNH48发博啦:\n{}\n原文链接: {}'.format(weibo_text, newWB['scheme'])
+                message = 'SNH48发博啦:\n{}\n原文链接: {}\n'.format(weibo_text, newWB['scheme'])
                 if newWB['created_at'] == '刚刚':
                     if '冯晓菲' in weibo_text or 'team x' in weibo_text.lower() or 'X队' in weibo_text.lower() or \
                             'teamx' in weibo_text.lower():
@@ -61,7 +61,7 @@ def monitor_member_weibo():
                         if 'retweeted_status' in newWB.keys():
                             if '冯晓菲' in newWB['retweeted_status']['user']:
                                 message = 'SNH48转发了微博:\n{}\n原文链接: {}\n'.format(weibo_text, newWB['scheme'])
-                                text = message + '转发微博:\n@{}: {}'.format(newWB['retweeted_status']['user'],
+                                text = message + '\n转发微博:\n@{}: {}'.format(newWB['retweeted_status']['user'],
                                                              newWB['retweeted_status']['text'])
                                 QQHandler.send_to_groups(member_weibo_groups, text)
                             else:
