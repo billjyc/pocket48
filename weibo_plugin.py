@@ -52,28 +52,43 @@ def monitor_member_weibo():
                             QQHandler.send_to_groups(member_weibo_groups, '[CQ:image,file={}]'.format(newWB['picUrls'][0]))
                     else:
                         QQHandler.send_to_groups(['483548995'], '不包含关键词微博')
-                        QQHandler.send_to_groups(['483548995'], message)
-                        if 'video_url' in newWB.keys():
-                            QQHandler.send_to_groups(['483548995'], '[CQ:image,file={}]'.format(newWB['video_url']))
-                        if 'picUrls' in newWB.keys():
-                            # for pic in newWB['picUrls']:
-                            QQHandler.send_to_groups(['483548995'], '[CQ:image,file={}]'.format(newWB['picUrls'][0]))
                         if 'retweeted_status' in newWB.keys():
                             if '冯晓菲' in newWB['retweeted_status']['user']:
                                 message = 'SNH48转发了微博:\n{}\n原文链接: {}\n'.format(weibo_text, newWB['scheme'])
                                 text = message + '\n转发微博:\n@{}: {}'.format(newWB['retweeted_status']['user'],
                                                              newWB['retweeted_status']['text'])
                                 QQHandler.send_to_groups(member_weibo_groups, text)
+                                if 'video_url' in newWB.keys():
+                                    QQHandler.send_to_groups(member_weibo_groups, '[CQ:image,file={}]'.format(newWB['video_url']))
+                                if 'picUrls' in newWB.keys():
+                                    # for pic in newWB['picUrls']:
+                                    QQHandler.send_to_groups(member_weibo_groups,
+                                                             '[CQ:image,file={}]'.format(newWB['picUrls'][0]))
                             else:
                                 text = message + '转发微博:\n@{}: {}'.format(newWB['retweeted_status']['user'],
                                                                         newWB['retweeted_status']['text'])
                                 QQHandler.send_to_groups(['483548995'], text)
+                                if 'video_url' in newWB.keys():
+                                    QQHandler.send_to_groups(['483548995'], '[CQ:image,file={}]'.format(newWB['video_url']))
+                                if 'picUrls' in newWB.keys():
+                                    # for pic in newWB['picUrls']:
+                                    QQHandler.send_to_groups(['483548995'],
+                                                             '[CQ:image,file={}]'.format(newWB['picUrls'][0]))
+                        else:
+                            QQHandler.send_to_groups(['483548995'], message)
+                            if 'video_url' in newWB.keys():
+                                QQHandler.send_to_groups(['483548995'], '[CQ:image,file={}]'.format(newWB['video_url']))
+                            if 'picUrls' in newWB.keys():
+                                # for pic in newWB['picUrls']:
+                                QQHandler.send_to_groups(['483548995'],
+                                                         '[CQ:image,file={}]'.format(newWB['picUrls'][0]))
+
             else:
                 message = '{}发微博啦!\n{}\n{}'.format(task.member.name, weibo_text, newWB['scheme'])
                 if newWB['created_at'] == '刚刚':
                     QQHandler.send_to_groups(member_weibo_groups, message)
                     if 'video_url' in newWB.keys():
-                        QQHandler.send_to_groups(['483548995'], '[CQ:image,file={}]'.format(newWB['video_url']))
+                        QQHandler.send_to_groups(member_weibo_groups, '[CQ:image,file={}]'.format(newWB['video_url']))
                     if 'picUrls' in newWB.keys():
                         # for pic in newWB['picUrls']:
                         # 发一张图就可以了
