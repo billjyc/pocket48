@@ -49,7 +49,8 @@ def monitor_member_weibo():
                             QQHandler.send_to_groups(member_weibo_groups, '[CQ:image,file={}]'.format(newWB['video_url']))
                         if 'picUrls' in newWB.keys():
                             # for pic in newWB['picUrls']:
-                            QQHandler.send_to_groups(member_weibo_groups, '[CQ:image,file={}]'.format(newWB['picUrls'][0]))
+                            # QQHandler.send_to_groups(member_weibo_groups, '[CQ:image,file={}]'.format(newWB['picUrls'][0]))
+                            pass
                     else:
                         QQHandler.send_to_groups(['483548995'], '不包含关键词微博')
                         if 'retweeted_status' in newWB.keys():
@@ -62,8 +63,9 @@ def monitor_member_weibo():
                                     QQHandler.send_to_groups(member_weibo_groups, '[CQ:image,file={}]'.format(newWB['video_url']))
                                 if 'picUrls' in newWB.keys():
                                     # for pic in newWB['picUrls']:
-                                    QQHandler.send_to_groups(member_weibo_groups,
-                                                             '[CQ:image,file={}]'.format(newWB['picUrls'][0]))
+                                    # QQHandler.send_to_groups(member_weibo_groups,
+                                    #                          '[CQ:image,file={}]'.format(newWB['picUrls'][0]))
+                                    pass
                             else:
                                 text = message + '转发微博:\n@{}: {}'.format(newWB['retweeted_status']['user'],
                                                                         newWB['retweeted_status']['text'])
@@ -72,16 +74,18 @@ def monitor_member_weibo():
                                     QQHandler.send_to_groups(['483548995'], '[CQ:image,file={}]'.format(newWB['video_url']))
                                 if 'picUrls' in newWB.keys():
                                     # for pic in newWB['picUrls']:
-                                    QQHandler.send_to_groups(['483548995'],
-                                                             '[CQ:image,file={}]'.format(newWB['picUrls'][0]))
+                                    # QQHandler.send_to_groups(['483548995'],
+                                    #                          '[CQ:image,file={}]'.format(newWB['picUrls'][0]))
+                                    pass
                         else:
                             QQHandler.send_to_groups(['483548995'], message)
                             if 'video_url' in newWB.keys():
                                 QQHandler.send_to_groups(['483548995'], '[CQ:image,file={}]'.format(newWB['video_url']))
                             if 'picUrls' in newWB.keys():
                                 # for pic in newWB['picUrls']:
-                                QQHandler.send_to_groups(['483548995'],
-                                                         '[CQ:image,file={}]'.format(newWB['picUrls'][0]))
+                                # QQHandler.send_to_groups(['483548995'],
+                                #                          '[CQ:image,file={}]'.format(newWB['picUrls'][0]))
+                                pass
 
             else:
                 message = '{}发微博啦!\n{}\n{}'.format(task.member.name, weibo_text, newWB['scheme'])
