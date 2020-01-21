@@ -147,13 +147,20 @@ def handle_msg(context):
                     get_jizi_ranking_list_by_date(context, 0)
                 elif message == '-yesterday':
                     get_jizi_ranking_list_by_date(context, 1)
-                elif message == '-生日集资':
+                elif message.startswith('-集资排名'):
                     from utils import util
                     admins = util.read_txt(os.path.join(BASE_DIR, 'data', 'card_draw', 'admin.txt'))
                     if str(user_id) not in admins:
                         logger.info('QQ：{} 无权限操作！')
                         return
-                    message = get_birthday_donate_rank()
+                    strs = message.split(' ')
+                    if len(strs) != 3:
+                        num = 25
+                        start_date = '1970-01-01'
+                    else:
+                        start_date = strs[1]
+                        num = int(strs[2])
+                    message = get_donate_rank(start_date, num)
                     bot.send(context, message)
                 elif message == '-2019':
                     from utils import util
@@ -490,17 +497,20 @@ def __get_jizi_ranking_list_by_date_diff(pro_id, day_diff=0):
     return new_rst
 
 
-def get_birthday_donate_rank():
+def get_donate_rank(start_date, num):
     """
     获取生日集资排名
+    :param start_date:
+    :param num:
     :return:
     """
+
     rst = mysql_util.select_all("""
         select s.id, s.`name`, sum(o.`backer_money`) as c from `order` o, supporter s where o.`supporter_id` = s.`id` 
-        and o.`pro_id` in (69304, 70158, 70956, 71842, 72535, 73894, 74791, 75412, 79264)
+        and o.`pro_id` in ('4mr9Xz920100009000043331') and o.`pay_time` >= '{}'
         group by s.`id`
-        order by c desc limit 25;
-    """)
+        order by c desc limit {};
+    """.format(start_date, num))
     cur_rank = 0
     row_tmp = 0
     last_val = -1
