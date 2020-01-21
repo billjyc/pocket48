@@ -101,7 +101,7 @@ class WeixinGroupAccountHandler:
             "lastbkid": '',
             "offset": page - 1,
             "limit": limit,
-            "type": 1,
+            "type": 2,
             "target_unionid": ""
         }
         r = self.session.post(url=url, data=data, headers=self.weixin_header()).json()
