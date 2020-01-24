@@ -12,9 +12,8 @@ except:
     my_logger = logging.getLogger(__name__)
 import time
 
-
-FU_POOL = ['学业福', '魔法福', '吹风福', '冲冲福', '聚款福', '拍立得', '签名', '口头祝福', '大礼包', '乐高', '赫敏大头']
-FU_CHANCE = [22, 6, 8, 23, 1, 3, 3, 25, 3, 3, 3]
+FU_POOL = ['健康福', '好运福', '巨款福', '事业福', '和平福']
+FU_CHANCE = [1, 4, 15, 20, 60]
 
 
 def compute_draw_nums(backer_money):
@@ -46,9 +45,9 @@ def can_draw():
     return rst[0] < 1
 
 
-def draw( user_id, nickname, backer_money, pay_time):
+def draw(user_id, nickname, backer_money, pay_time):
     my_logger.info('抽卡: user_id: %s, nickname: %s, backer_money: %s, pay_time: %s',
-                user_id, nickname, backer_money, pay_time)
+                   user_id, nickname, backer_money, pay_time)
     # 计算抽卡张数
     card_num = compute_draw_nums(backer_money)
 
@@ -89,4 +88,3 @@ def draw( user_id, nickname, backer_money, pay_time):
 
 if __name__ == "__main__":
     draw('987758', 'Nanjo恩恩', 10.17, '2019-02-08 12:00:41')
-

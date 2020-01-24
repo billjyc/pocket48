@@ -16,7 +16,7 @@ except:
 
 from modian.modian_card_draw import handler as card_draw_handler
 from urllib.parse import unquote
-import uuid
+from modian.special import modian_wufu_handler
 from qq.qqhandler import QQHandler
 from utils import global_config, util
 from utils.mysql_util import mysql_util
@@ -311,6 +311,11 @@ class WeixinGroupAccountHandler:
             if card_report:
                 QQHandler.send_to_groups(group_account_entity.broadcast_groups, card_report)
                 # QQHandler.send_to_groups(['483548995'], card_report)
+
+            # 集五福
+            wufu_report = modian_wufu_handler.draw(user_id, nickname, backer_money, pay_time)
+            if wufu_report:
+                QQHandler.send_to_groups(group_account_entity.broadcast_groups, wufu_report)
 
             self.order_queues[group_account_entity.group_account_id].add(listid)
 
