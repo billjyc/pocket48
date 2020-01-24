@@ -12,8 +12,8 @@ except:
     my_logger = logging.getLogger(__name__)
 import time
 
-FU_POOL = ['健康福', '好运福', '巨款福', '事业福', '和平福']
-FU_CHANCE = [1, 4, 15, 20, 60]
+FU_POOL = ['健康福', '好运福', '巨款福', '事业福', '和平福', '口头祝福']
+FU_CHANCE = [1, 4, 10, 10, 25, 50]
 
 
 def compute_draw_nums(backer_money):
