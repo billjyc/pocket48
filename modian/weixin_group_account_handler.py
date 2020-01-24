@@ -344,4 +344,5 @@ if __name__ == "__main__":
     handler = WeixinGroupAccountHandler([], [entity])
     handler.init_order_queues()
     # orders = handler.query_project_orders(entity)
+    pass
 

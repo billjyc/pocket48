@@ -88,3 +88,4 @@ def draw(user_id, nickname, backer_money, pay_time):
 
 if __name__ == "__main__":
     draw('987758', 'Nanjo恩恩', 10.17, '2019-02-08 12:00:41')
+    pass
