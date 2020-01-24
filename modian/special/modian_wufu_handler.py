@@ -12,7 +12,7 @@ except:
     my_logger = logging.getLogger(__name__)
 import time
 
-FU_POOL = ['健康福', '好运福', '巨款福', '事业福', '和平福', '口头祝福']
+FU_POOL = ['健康福', '好运福', '巨款福', '事业福', '和平福', '解锁一条新年祝福:鼠年吉祥，祝你2020新年快乐呀']
 FU_CHANCE = [1, 4, 10, 10, 25, 50]
 
 
