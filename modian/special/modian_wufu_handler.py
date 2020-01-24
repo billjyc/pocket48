@@ -67,7 +67,7 @@ def draw(user_id, nickname, backer_money, pay_time):
         flag = True
         idx = util.weight_choice(FU_POOL, FU_CHANCE)
 
-        insert_sql += '({}, {}, \'{}\', \'{}\'), '.format(user_id, idx, FU_POOL[idx],
+        insert_sql += '(\'{}\', {}, \'{}\', \'{}\'), '.format(user_id, idx, FU_POOL[idx],
                                                           util.convert_timestamp_to_timestr(int(time.time() * 1000)))
         if idx not in fu_dict:
             fu_dict[idx] = 1
