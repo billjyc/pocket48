@@ -87,5 +87,11 @@ def draw(user_id, nickname, backer_money, pay_time):
 
 
 if __name__ == "__main__":
-    draw('987758', 'Nanjo恩恩', 10.17, '2019-02-08 12:00:41')
+    # draw('987758', 'Nanjo恩恩', 10.17, '2019-02-08 12:00:41')
+    # print(draw('阿钰', '阿钰', 52, '2020-01-24 20:56:57'))
+    # print(draw('阿钰', '阿钰', 10.17, '2020-01-24 22:44:50'))
+    print(draw("Umi'Mimori", "Umi'Mimori", 10.17, '2020-01-25 03:27:22'))
+    # print(draw("Dack", "Dack", 10.17, '2020-01-24 21:29:07'))
+    # print(draw("Dack", "Dack", 10.17, '2020-01-24 20:52:51'))
+    # print(draw("kakaxi", "kakaxi", 10.17, '2020-01-24 20:56:50'))
     pass

@@ -342,6 +342,7 @@ class WeixinGroupAccountHandler:
 if __name__ == "__main__":
     entity = GroupAccountEntity('ssss', '400场', '4mr9Xz920100009000043331')
     handler = WeixinGroupAccountHandler([], [entity])
+
     handler.init_order_queues()
     # orders = handler.query_project_orders(entity)
     pass

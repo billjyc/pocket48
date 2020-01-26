@@ -165,7 +165,7 @@ class CardDrawHandler:
 
         # 获取此ID已抽中的全部卡牌
         rst_tmp = mysql_util.select_all("""
-            SELECT distinct(`card_id`) from `draw_record` where supporter_id=%s
+            SELECT distinct(`card_id`) from `draw_record` where supporter_id="%s"
         """, (user_id,))
         card_has = set()  # 该用户已经拥有的卡片
         card_new = set()  # 该用户收集到的新卡
@@ -200,7 +200,7 @@ class CardDrawHandler:
             card_has.add(card.id)
 
             # card = self.base_cards[card_index]
-            insert_sql += '(\'%s\', %s, \'%s\', %s),' % (user_id, card.id, pay_time, backer_money)
+            insert_sql += """("%s", %s, '%s', %s),""" % (user_id, card.id, pay_time, backer_money)
 
             # 此种类型的卡如果已经达到了1张，则将该卡片从卡池中移除
             # if card.id in ACTIVITY_CARD_ID:
@@ -565,5 +565,10 @@ if __name__ == '__main__':
     #     cards = handler.all_cards[k]
     #     for card in cards:
     #         handler.download_pic(card.url, card.id)
-    print(handler.draw('test', 'test', 101.7, '2019-12-26 17:20:00'))
+    # print(handler.draw('阿钰', '阿钰', 52, '2020-01-24 20:56:57'))
+    # print(handler.draw('阿钰', '阿钰', 10.17, '2020-01-24 22:44:50'))
+    print(handler.draw("Umi'Mimori", "Umi'Mimori", 10.17, '2020-01-25 03:27:22'))
+    # print(handler.draw("Dack", "Dack", 10.17, '2020-01-24 21:29:07'))
+    # print(handler.draw("Dack", "Dack", 10.17, '2020-01-24 20:52:51'))
+    # print(handler.draw("kakaxi", "kakaxi", 10.17, '2020-01-24 20:56:50'))
     pass
