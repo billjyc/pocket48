@@ -313,9 +313,9 @@ class WeixinGroupAccountHandler:
                 # QQHandler.send_to_groups(['483548995'], card_report)
 
             # 集五福
-            wufu_report = modian_wufu_handler.draw(user_id, nickname, backer_money, pay_time)
-            if wufu_report:
-                QQHandler.send_to_groups(group_account_entity.broadcast_groups, wufu_report)
+            # wufu_report = modian_wufu_handler.draw(user_id, nickname, backer_money, pay_time)
+            # if wufu_report:
+            #     QQHandler.send_to_groups(group_account_entity.broadcast_groups, wufu_report)
 
             self.order_queues[group_account_entity.group_account_id].add(listid)
 
