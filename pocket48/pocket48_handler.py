@@ -77,7 +77,7 @@ class Pocket48Handler:
 
         cursor.execute("""
                 CREATE TABLE IF NOT EXISTS room_message (
-                    message_id   VARCHAR,
+                    message_id   VARCHAR PRIMARY KEY UNIQUE,
                     type         INTEGER,
                     user_id      INTEGER,
                     user_name    VARCHAR,
@@ -293,9 +293,14 @@ class Pocket48Handler:
                     text_message_type = extInfo['messageType'].strip()
                     if text_message_type == TextMessageType.TEXT:  # 普通消息
                         logger.debug('普通消息')
-                        message = ('【成员消息】[%s]-%s: %s\n' % (
-                            msg_time, user_name, extInfo['text'])) + message
-                        self.save_msg_to_db(100, msg_id, user_id, user_name, msg_time, extInfo['text'])
+                        if msg['bodys'] == '红包消息':
+                            print('红包消息')
+                            content = '【红包】{}'.format(extInfo['redPackageTitle'])
+                            self.save_msg_to_db(106, msg_id, user_id, user_name, msg_time, content)
+                        else:
+                            message = ('【成员消息】[%s]-%s: %s\n' % (
+                                msg_time, user_name, extInfo['text'])) + message
+                            self.save_msg_to_db(100, msg_id, user_id, user_name, msg_time, extInfo['text'])
                     elif text_message_type == TextMessageType.REPLY:  # 翻牌消息
                         logger.debug('翻牌')
                         member_msg = extInfo['text']
