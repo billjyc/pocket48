@@ -489,6 +489,13 @@
 		"roomId":67189834,
 		"weibo_uid": 0
 	},
+	"wangruiqi":{
+		"pinyin": "wangruiqi",
+		"id":530390,
+		"name":"SNH48-王睿琦",
+		"roomId":67362328,
+		"weibo_uid": 0
+	},
 	"jinyingyue": {
 		"pinyin": "jinyingyue",
 		"member_id": 538735,
@@ -536,6 +543,104 @@
 		"id":614756,
 		"name":"SNH48-林舒晴",
 		"roomId":67256384,
+        "weibo_uid": 0
+	},
+	"chenpan":{
+        "pinyin": "chenpan",
+		"id":677395,
+		"name":"SNH48-陈盼",
+		"roomId":67391008,
+        "weibo_uid": 0
+	},
+	"lixingyu":{
+        "pinyin": "lixingyu",
+		"id":677397,
+		"name":"SNH48-李星羽",
+		"roomId":67199656,
+        "weibo_uid": 0
+	},
+	"liyuqian":{
+        "pinyin": "liyuqian",
+		"id":677398,
+		"name":"SNH48-李玉倩",
+		"roomId":67189874,
+        "weibo_uid": 0
+	},
+	"wangxinyantiantian":{
+        "pinyin": "wangxinyantiantian",
+		"id":677400,
+		"name":"SNH48-王欣颜甜甜",
+		"roomId":67284484,
+        "weibo_uid": 0
+	},
+	"zhangxi":{
+        "pinyin": "zhangxi",
+		"id":677403,
+		"name":"SNH48-张茜",
+		"roomId":67370606,
+        "weibo_uid": 0
+	},
+	"zhoushiyu":{
+        "pinyin": "zhoushiyu",
+		"id":677404,
+		"name":"SNH48-周诗雨",
+		"roomId":67275553,
+        "weibo_uid": 0
+	},
+	"yangyuxin":{
+        "pinyin": "yangyuxin",
+		"id":711741,
+		"name":"SNH48-杨宇馨",
+		"roomId":67275547,
+        "weibo_uid": 0
+	},
+	"lujingping":{
+        "pinyin": "lujingping",
+		"id":869171,
+		"name":"SNH48-鲁静萍",
+		"roomId":67199663,
+        "weibo_uid": 0
+	},
+	"liujie":{
+        "pinyin": "liujie",
+		"id":868352,
+		"name":"SNH48-刘洁",
+		"roomId":67284493,
+        "weibo_uid": 0
+	},
+	"qiyuzhu":{
+        "pinyin": "qiyuzhu",
+		"id":820988,
+		"name":"SNH48-戚予珠",
+		"roomId":67313934,
+        "weibo_uid": 0
+	},
+	"yanqin":{
+        "pinyin": "yanqin",
+		"id":881190,
+		"name":"SNH48-颜沁",
+		"roomId":67256413,
+        "weibo_uid": 0
+	},
+	"chenyuzi":{
+        "pinyin": "chenyuzi",
+		"id":4344250371,
+		"name":"SNH48-陈雨孜",
+		"roomId":147283635,
+        "weibo_uid": 0
+	},
+	"liuliqian":{
+        "pinyin": "liuliqian",
+		"id":4344250372,
+		"name":"SNH48-刘丽千",
+		"roomId":147269132,
+        "weibo_uid": 0
+	},
+	"panluyao":{
+        "pinyin": "panluyao",
+		"id":4344250374,
+		"name":"SNH48-潘璐瑶",
+		"roomId":144655472,
         "weibo_uid": 0
 	}
 }
