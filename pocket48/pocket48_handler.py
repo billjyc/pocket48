@@ -84,7 +84,8 @@ class Pocket48Handler:
                     user_name    VARCHAR,
                     message_time DATETIME,
                     content      VARCHAR,
-                    fans_comment VARCHAR
+                    fans_comment VARCHAR,
+                    fans_name VARCHAR
                 );
                 """)
         cursor.close()
@@ -306,7 +307,7 @@ class Pocket48Handler:
                             message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s: %s\n' % (
                                 msg_time, user_name, member_msg, fanpai_id, fanpai_msg)) + message
                             self.save_msg_to_db(101, msg_id, user_id, user_name, msg_time, member_msg,
-                                                fanpai_id + ': ' + fanpai_msg)
+                                                fanpai_msg, fanpai_id)
                         else:
                             message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s\n' % (
                                 msg_time, user_name, member_msg, fanpai_msg)) + message
@@ -335,14 +336,16 @@ class Pocket48Handler:
                         answer = extInfo['answer']
 
                         fan_name = self.get_idol_flip_name(answer_id, question_id)
-                        if user_name:
+                        if fan_name:
                             flip_message = ('【问】%s: %s\n【答】%s: %s\n翻牌时间: %s\n' % (
                                 fan_name, content, user_name, answer, msg_time))
+                            self.save_msg_to_db(105, msg_id, user_id, user_name, msg_time, answer, content, fan_name)
                         else:
                             flip_message = ('【问】%s\n【答】%s: %s\n翻牌时间: %s\n' % (
                                 content, user_name, answer, msg_time))
+                            self.save_msg_to_db(105, msg_id, user_id, user_name, msg_time, answer, content)
                         message = flip_message + message
-                        self.save_msg_to_db(105, msg_id, user_id, user_name, msg_time, answer, content)
+
                     elif text_message_type == TextMessageType.PASSWORD_REDPACKAGE:
                         print('红包消息')
                         content = '【红包】{}'.format(extInfo['redPackageTitle'])
@@ -385,7 +388,7 @@ class Pocket48Handler:
                     if global_config.USING_COOLQ_PRO is True:
                         if 'tsj' in emotion_name:
                             express_message = '[%s]-%s: [CQ:image,file=%s]' % (
-                            msg_time, user_name, '{}.gif'.format(emotion_name))
+                                msg_time, user_name, '{}.gif'.format(emotion_name))
                         else:
                             express_message = '[%s]-%s: [CQ:image,file=%s]' % (
                                 msg_time, user_name, '{}.png'.format(emotion_name))
@@ -408,9 +411,11 @@ class Pocket48Handler:
             self.conn.commit()
             cursor.close()
 
-    def save_msg_to_db(self, op_code, message_id, user_id, user_name, message_time, content, fans_comment=''):
+    def save_msg_to_db(self, op_code, message_id, user_id, user_name, message_time, content, fans_comment='',
+                       fans_name=''):
         """
         将消息存进db
+        :param fans_name:
         :param op_code:
         :param message_id:
         :param user_id:
@@ -423,9 +428,9 @@ class Pocket48Handler:
         cursor = self.conn.cursor()
         try:
             cursor.execute("""
-                            INSERT INTO 'room_message' (message_id, type, user_id, user_name, message_time, content, fans_comment) VALUES
-                                                       (?, ?, ?, ?, ?, ?, ?)
-                         """, (message_id, op_code, user_id, user_name, message_time, content, fans_comment))
+                            INSERT OR IGNORE INTO 'room_message' (message_id, type, user_id, user_name, message_time, content, fans_comment) VALUES
+                                                       (?, ?, ?, ?, ?, ?, ?, ?)
+                         """, (message_id, op_code, user_id, user_name, message_time, content, fans_comment, fans_name))
         except Exception as e:
             logger.error('将口袋房间消息存入数据库')
             logger.exception(e)
@@ -533,8 +538,6 @@ class Pocket48Handler:
             logger.error('签到失败！')
             logger.exception(e)
             return False
-
-
 
     # def parse_member_live(self, response, task):
     #     """
@@ -692,27 +695,27 @@ class Pocket48Handler:
                 logger.info('notify str: %s', notify_str)
                 QQHandler.send_to_groups(self.auto_reply_groups, notify_str)
 
-    def get_fanpai_name(self, fanpai_user_id):
-        """
-        获取普通翻牌用户的昵称
-        :param fanpai_user_id:
-        :return:
-        """
-        if not self.is_login:
-            logger.exception('尚未登录')
-            return
-        url = 'http://zhibo.ckg48.com/Recharge/ajax_post_checkinfo'
-        params = {
-            "pocket_id": int(fanpai_user_id)
-        }
-        try:
-            r = requests.post(url, data=params, verify=False).json()
-            logger.info('获取普通翻牌用户的昵称，user_id: {}'.format(fanpai_user_id))
-            logger.info(r)
-            return r['nickName']
-        except Exception as e:
-            logger.exception(e)
-            return None
+    # def get_fanpai_name(self, fanpai_user_id):
+    #     """
+    #     获取普通翻牌用户的昵称
+    #     :param fanpai_user_id:
+    #     :return:
+    #     """
+    #     if not self.is_login:
+    #         logger.exception('尚未登录')
+    #         return
+    #     url = 'http://zhibo.ckg48.com/Recharge/ajax_post_checkinfo'
+    #     params = {
+    #         "pocket_id": int(fanpai_user_id)
+    #     }
+    #     try:
+    #         r = requests.post(url, data=params, verify=False, header=self.idol_flip_header_args()).json()
+    #         logger.info('获取普通翻牌用户的昵称，user_id: {}'.format(fanpai_user_id))
+    #         logger.info(r)
+    #         return r['nickName']
+    #     except Exception as e:
+    #         logger.exception(e)
+    #         return None
 
     def get_idol_flip_name(self, answer_id, question_id):
         """
@@ -730,14 +733,13 @@ class Pocket48Handler:
             "questionId": str(question_id)
         }
         try:
-            r = requests.post(url, data=params, verify=False).json()
-            logger.info('获取付费翻牌用户的昵称，user_id: {}'.format())
+            r = requests.post(url, data=json.dumps(params), verify=False, headers=self.idol_flip_header_args()).json()
+            logger.info('获取付费翻牌用户的昵称，user_id: {}'.format(r['content']['userName']))
             logger.info(r)
             return r['content']['userName']
         except Exception as e:
             logger.exception(e)
             return None
-
 
     def get_live_detail(self, live_id):
         """

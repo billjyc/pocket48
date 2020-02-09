@@ -20,7 +20,8 @@ cursor.execute("""
                     user_name    VARCHAR,
                     message_time DATETIME,
                     content      VARCHAR,
-                    fans_comment VARCHAR
+                    fans_comment VARCHAR,
+                    fans_name VARCHAR
                 );
 """)
 cursor.close()
@@ -40,19 +41,10 @@ class TextMessageType:
     FLIPCARD = 'FLIPCARD'  # 鸡腿翻牌
     LIVEPUSH = 'LIVEPUSH'  # 直播
     VOTE = 'VOTE'  # 投票
-    PASSWORD_REDPACKAGE = 'PASSWORD_REDPACKAGE' # 红包消息
+    PASSWORD_REDPACKAGE = 'PASSWORD_REDPACKAGE'  # 红包消息
 
 
-def get_room_history_msg(member_id, room_id, start_time):
-    next_start_time = _get_room_msg(member_id, room_id, start_time, 30)
-    while next_start_time != -1:
-        next_start_time = _get_room_msg(member_id, room_id, next_start_time, 30)
-    print('done')
-
-
-def _get_room_msg(member_id, room_id, last_time, limit):
-    time.sleep(15)
-    url = 'https://pocketapi.48.cn/im/api/v1/chatroom/msg/list/homeowner'
+def get_header():
     header = {
         'Content-Type': 'application/json;charset=utf-8',
         'User-Agent': 'PocketFans201807/6.0.10 (iPhone; iOS 13.3; Scale/2.00)',
@@ -66,15 +58,28 @@ def _get_room_msg(member_id, room_id, last_time, limit):
             "deviceName": "iphone",
             "os": "ios"
         }),
-        'token': "kFFso//c716Gf7RqgecQ2yQDPGKsJWRuDaYUf3yz7/QDKSmSsCAgMs1u96dvRX+bS+tFljpzyNM="
+        'token': "KFHc3Tt/QGVsM1brHpgN3b9flmouEuDxW7Lg7E51yyqoqxYPFWazG74xkW9uRsCmzlfYDdAC2DQ="
     }
+    return header
+
+
+def get_room_history_msg(member_id, room_id, start_time):
+    next_start_time = _get_room_msg(member_id, room_id, start_time, 30)
+    while next_start_time != -1:
+        next_start_time = _get_room_msg(member_id, room_id, next_start_time, 30)
+    print('done')
+
+
+def _get_room_msg(member_id, room_id, last_time, limit):
+    time.sleep(10)
+    url = 'https://pocketapi.48.cn/im/api/v1/chatroom/msg/list/homeowner'
     params = {
         "ownerId": member_id,
         "roomId": room_id,
         "nextTime": last_time
     }
     try:
-        r = requests.post(url, data=json.dumps(params), headers=header, verify=False).text
+        r = requests.post(url, data=json.dumps(params), headers=get_header(), verify=False).text
     except Exception as e:
         print(e)
 
@@ -102,10 +107,7 @@ def _get_room_msg(member_id, room_id, last_time, limit):
                 text_message_type = extInfo['messageType'].strip()
                 if text_message_type == MessageType.TEXT:  # 普通消息
                     print('普通消息: %s' % extInfo['text'])
-                    cursor.execute("""
-                        INSERT OR IGNORE INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
-                        (?, ?, ?, ?, ?, ?)
-                    """, (msg_id, 100, user_id, user_name, msg_time, extInfo['text']))
+                    save_msg_to_db(cursor, 100, msg_id, user_id, user_name, msg_time, extInfo['text'])
                 elif text_message_type == TextMessageType.REPLY:  # 翻牌消息
                     print('翻牌')
                     member_msg = extInfo['text']
@@ -115,7 +117,7 @@ def _get_room_msg(member_id, room_id, last_time, limit):
                         message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s: %s\n' % (
                             msg_time, user_name, member_msg, fanpai_id, fanpai_msg))
                         save_msg_to_db(cursor, 101, msg_id, user_id, user_name, msg_time, member_msg,
-                                            fanpai_id + ': ' + fanpai_msg)
+                                       fanpai_msg, fanpai_id)
                     else:
                         message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s\n' % (
                             msg_time, user_name, member_msg, fanpai_msg))
@@ -126,11 +128,13 @@ def _get_room_msg(member_id, room_id, last_time, limit):
                     print('露脸直播')
                     live_title = extInfo['liveTitle']
                     live_id = extInfo['liveId']
+                    print(live_title + ' ' + live_id)
                     save_msg_to_db(cursor, 102, msg_id, user_id, user_name, msg_time, live_title)
                 elif text_message_type == TextMessageType.VOTE:  # 投票
                     logger.debug('投票消息')
                     vote_content = extInfo['text']
                     message = '【发起投票】{}: {}\n'.format(user_name, vote_content)
+                    print(message)
                     save_msg_to_db(cursor, 104, msg_id, user_id, user_name, msg_time, vote_content)
                 elif text_message_type == TextMessageType.FLIPCARD:
                     print('付费翻牌功能')
@@ -141,29 +145,38 @@ def _get_room_msg(member_id, room_id, last_time, limit):
                     source = extInfo['sourceId']
                     answer = extInfo['answer']
 
-                    flip_message = ('【问】%s\n【答】%s: %s\n翻牌时间: %s\n' % (
-                        content, user_name, answer, msg_time))
+                    fan_name = get_idol_flip_name(answer_id, question_id)
+                    if fan_name:
+                        print('付费翻牌id: {}'.format(fan_name))
+                        flip_message = ('【问】%s: %s\n【答】%s: %s\n翻牌时间: %s\n' % (
+                            fan_name, content, user_name, answer, msg_time))
+                        save_msg_to_db(cursor, 105, msg_id, user_id, user_name, msg_time, answer, content, fan_name)
+                    else:
+                        flip_message = ('【问】%s\n【答】%s: %s\n翻牌时间: %s\n' % (
+                            content, user_name, answer, msg_time))
+                        save_msg_to_db(cursor, 105, msg_id, user_id, user_name, msg_time, answer, content)
                     message = flip_message
-                    save_msg_to_db(cursor, 105, msg_id, user_id, user_name, msg_time, answer, content)
+                    print(message)
                 elif text_message_type == TextMessageType.PASSWORD_REDPACKAGE:
                     print('红包消息')
                     content = '【红包】{}'.format(extInfo['redPackageTitle'])
+                    print(content)
                     save_msg_to_db(cursor, 106, msg_id, user_id, user_name, msg_time, content)
             elif msg['msgType'] == MessageType.IMAGE:  # 图片消息
                 print('图片')
                 bodys = json.loads(msg['bodys'])
                 if 'url' in bodys.keys():
                     url = bodys['url']
-
                     message = ('【图片】[%s]-%s: %s\n' % (msg_time, user_name, url))
+                    print(message)
                     save_msg_to_db(cursor, 200, msg_id, user_id, user_name, msg_time, url)
-
             elif msg['msgType'] == MessageType.AUDIO:  # 语音消息
                 print('语音消息')
                 bodys = json.loads(msg['bodys'])
                 if 'url' in bodys.keys():
                     url = bodys['url']
                     message = ('【语音】[%s]-%s: %s\n' % (msg_time, user_name, url))
+                    print(message)
                 save_msg_to_db(cursor, 201, msg_id, user_id, user_name, msg_time, url)
             elif msg['msgType'] == MessageType.VIDEO:  # 小视频
                 print('房间小视频')
@@ -171,10 +184,12 @@ def _get_room_msg(member_id, room_id, last_time, limit):
                 if 'url' in bodys.keys():
                     url = bodys['url']
                     message = ('【小视频】[%s]-%s: %s\n' % (msg_time, user_name, url))
+                    print(message)
                     save_msg_to_db(cursor, 202, msg_id, user_id, user_name, msg_time, url)
             elif msg['msgType'] == MessageType.EXPRESS:  # 大表情
                 logger.debug('大表情')
                 emotion_name = extInfo['emotionName']
+                print(emotion_name)
                 save_msg_to_db(cursor, 203, msg_id, user_id, user_name, msg_time, emotion_name)
             msg_time = msg['msgTime']
     except Exception as e:
@@ -185,9 +200,12 @@ def _get_room_msg(member_id, room_id, last_time, limit):
         return msg_time
 
 
-def save_msg_to_db(cursor, op_code, message_id, user_id, user_name, message_time, content, fans_comment=''):
+def save_msg_to_db(cursor, op_code, message_id, user_id, user_name, message_time, content, fans_comment='',
+                   fans_name=''):
     """
     将消息存进db
+    :param fans_name:
+    :param cursor:
     :param op_code:
     :param message_id:
     :param user_id:
@@ -199,35 +217,37 @@ def save_msg_to_db(cursor, op_code, message_id, user_id, user_name, message_time
     """
     try:
         cursor.execute("""
-                        INSERT OR IGNORE INTO 'room_message' (message_id, type, user_id, user_name, message_time, content, fans_comment) VALUES
-                                                   (?, ?, ?, ?, ?, ?, ?)
-                     """, (message_id, op_code, user_id, user_name, message_time, content, fans_comment))
+        INSERT OR REPLACE INTO 'room_message' (message_id, type, user_id, user_name, message_time, 
+        content, fans_comment, fans_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                     """, (message_id, op_code, user_id, user_name, message_time, content, fans_comment, fans_name))
     except Exception as e:
         logger.error('将口袋房间消息存入数据库')
         logger.exception(e)
 
 
-def parse_idol_flip(question_id, answer_id, source):
-    url = 'https://ppayqa.48.cn/idolanswersystem/api/idolanswer/v1/question_answer/detail'
-    header = {
-        'os': 'android',
-        'User-Agent': 'Mobile_Pocket',
-        'IMEI': '863526430773465',
-        'token': 'HqSvVhnlxN89rywJREAtaCuzlDt3VtE8Md6Ye223vbuooVH3NaSAwoMEdjvq93Fn1zpDQgt3ayw=',
-        'version': '6.0.0',
-        'Content-Type': 'application/json;charset=utf-8',
-        'Host': 'ppayqa.48.cn',
-        'Connection': 'Keep-Alive',
-        'Accept-Encoding': 'gzip'
-    }
+def get_idol_flip_name(answer_id, question_id):
+    """
+    获取付费翻牌的提问id
+    :param answer_id:
+    :param question_id:
+    :return:
+    """
+    url = 'https://pocketapi.48.cn/idolanswer/api/idolanswer/v1/question_answer/detail'
     params = {
-            "questionId": question_id, "answerId": answer_id, "idolFlipSource": source
+        "answerId": str(answer_id),
+        "questionId": str(question_id)
     }
-
-    res = requests.post(url, data=json.dumps(params), headers=header).json()
-    return res['content']['answer']
+    try:
+        r = requests.post(url, data=json.dumps(params), verify=False, headers=get_header()).json()
+        logger.info('获取付费翻牌用户的昵称，user_id: {}'.format(r['content']['userName']))
+        logger.info(r)
+        return r['content']['userName']
+    except Exception as e:
+        logger.exception(e)
+        return None
 
 
 if __name__ == '__main__':
     import time
-    get_room_history_msg(6432, 67246079, 1581211152160)
+
+    get_room_history_msg(6432, 67246079, 0)
