@@ -35,6 +35,7 @@ class TextMessageType:
     FLIPCARD = 'FLIPCARD'  # 鸡腿翻牌
     LIVEPUSH = 'LIVEPUSH'  # 直播
     VOTE = 'VOTE'  # 投票
+    PASSWORD_REDPACKAGE = 'PASSWORD_REDPACKAGE'  # 红包消息
 
 
 class Pocket48ListenTask:
@@ -293,14 +294,9 @@ class Pocket48Handler:
                     text_message_type = extInfo['messageType'].strip()
                     if text_message_type == TextMessageType.TEXT:  # 普通消息
                         logger.debug('普通消息')
-                        if msg['bodys'] == '红包消息':
-                            print('红包消息')
-                            content = '【红包】{}'.format(extInfo['redPackageTitle'])
-                            self.save_msg_to_db(106, msg_id, user_id, user_name, msg_time, content)
-                        else:
-                            message = ('【成员消息】[%s]-%s: %s\n' % (
-                                msg_time, user_name, extInfo['text'])) + message
-                            self.save_msg_to_db(100, msg_id, user_id, user_name, msg_time, extInfo['text'])
+                        message = ('【成员消息】[%s]-%s: %s\n' % (
+                            msg_time, user_name, extInfo['text'])) + message
+                        self.save_msg_to_db(100, msg_id, user_id, user_name, msg_time, extInfo['text'])
                     elif text_message_type == TextMessageType.REPLY:  # 翻牌消息
                         logger.debug('翻牌')
                         member_msg = extInfo['text']
@@ -343,6 +339,10 @@ class Pocket48Handler:
                             content, user_name, answer, msg_time))
                         message = flip_message + message
                         self.save_msg_to_db(105, msg_id, user_id, user_name, msg_time, answer, content)
+                    elif text_message_type == TextMessageType.PASSWORD_REDPACKAGE:
+                        print('红包消息')
+                        content = '【红包】{}'.format(extInfo['redPackageTitle'])
+                        self.save_msg_to_db(106, msg_id, user_id, user_name, msg_time, content)
                 elif msg['msgType'] == MessageType.IMAGE:  # 图片消息
                     logger.debug('图片')
                     bodys = json.loads(msg['bodys'])
@@ -508,6 +508,29 @@ class Pocket48Handler:
             logger.error('获取房间评论失败！name: {}, room_id: {}'.format(task.member.name, task.member.room_id))
             logger.exception(e)
         return r.text
+
+    def checkin(self):
+        """
+        签到
+        :return:
+        """
+        if not self.is_login:
+            logger.error('尚未登录')
+        url = 'https://pocketapi.48.cn/user/api/v1/checkin'
+        # 收到响应
+        try:
+            r = self.session.post(url, headers=self.juju_header_args(), verify=False).json()
+            if r['status'] == 200:
+                logger.info('签到成功，经验+{}, 应援力+{}'.format(r['content']['addExp'], r['content']['addSupport']))
+                return True
+            else:
+                return False
+        except Exception as e:
+            logger.error('签到失败！')
+            logger.exception(e)
+            return False
+
+
 
     # def parse_member_live(self, response, task):
     #     """

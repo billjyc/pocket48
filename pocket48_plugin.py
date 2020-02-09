@@ -63,6 +63,12 @@ def login_timely():
     pocket48_handler.login(username, password)
 
 
+@scheduler.scheduled_job('cron', hour='5', minute='39')
+def login_timely():
+    my_logger.info('签到')
+    pocket48_handler.checkin()
+
+
 @scheduler.scheduled_job('cron', second=30, minute='20,50', hour='13,18,19', day_of_week='2-6')
 def notify_performance():
     my_logger.info('检查公演日程')
