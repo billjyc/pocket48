@@ -50,22 +50,22 @@ def get_room_history_msg(member_id, room_id, start_time):
 
 
 def _get_room_msg(member_id, room_id, last_time, limit):
-    time.sleep(30)
+    time.sleep(15)
     url = 'https://pocketapi.48.cn/im/api/v1/chatroom/msg/list/homeowner'
     header = {
         'Content-Type': 'application/json;charset=utf-8',
-        'User-Agent': 'PocketFans201807/6.0.0 (iPhone; iOS 12.2; Scale/2.00)',
+        'User-Agent': 'PocketFans201807/6.0.10 (iPhone; iOS 13.3; Scale/2.00)',
         'appInfo': json.dumps({
             'vendor': 'apple',
             'deviceId': 0,
-            "appVersion": "6.0.0",
-            "appBuild": "190409",
-            "osVersion": "12.2.0",
+            "appVersion": "6.0.10",
+            "appBuild": "200120",
+            "osVersion": "13.3.0",
             "osType": "ios",
             "deviceName": "iphone",
             "os": "ios"
         }),
-        'token': "HqSvVhnlxN89rywJREAtaCuzlDt3VtE8Md6Ye223vbuooVH3NaSAwoMEdjvq93Fn1zpDQgt3ayw="
+        'token': "yMSKOykEsD+8u6jTBAg5m4PkNRhttI0DmqI9ZWADjpyG/omNfCnSX622NLFn8OU2jMjJuBc4te0="
     }
     params = {
         "ownerId": member_id,
@@ -230,4 +230,4 @@ def parse_idol_flip(question_id, answer_id, source):
 
 if __name__ == '__main__':
     import time
-    get_room_history_msg(6432, 67246079, int(time.time()*1000))
+    get_room_history_msg(6432, 5780791, 0)

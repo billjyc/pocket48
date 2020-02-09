@@ -564,17 +564,17 @@ class Pocket48Handler:
         """
         header = {
             'Content-Type': 'application/json;charset=utf-8',
-            'User-Agent': 'PocketFans201807/6.0.0 (iPhone; iOS 12.2; Scale/2.00)',
+            'User-Agent': 'PocketFans201807/6.0.10 (iPhone; iOS 13.3; Scale/2.00)',
             'appInfo': json.dumps({
                 'vendor': 'apple',
                 'deviceId': 0,
                 "appVersion": global_config.POCKET48_VERSION,
-                "appBuild": "190409",
-                "osVersion": "12.2.0",
+                "appBuild": "200120",
+                "osVersion": "13.4.0",
                 "osType": "ios",
                 "deviceName": "iphone",
                 "os": "ios"
-            })
+            }),
         }
         return header
 
@@ -585,13 +585,13 @@ class Pocket48Handler:
         """
         header = {
             'Content-Type': 'application/json;charset=utf-8',
-            'User-Agent': 'PocketFans201807/6.0.0 (iPhone; iOS 12.2; Scale/2.00)',
+            'User-Agent': 'PocketFans201807/6.0.10 (iPhone; iOS 13.3; Scale/2.00)',
             'appInfo': json.dumps({
                 'vendor': 'apple',
                 'deviceId': 0,
                 "appVersion": global_config.POCKET48_VERSION,
-                "appBuild": "190409",
-                "osVersion": "12.2.0",
+                "appBuild": "200120",
+                "osVersion": "13.4.0",
                 "osType": "ios",
                 "deviceName": "iphone",
                 "os": "ios"
@@ -608,13 +608,13 @@ class Pocket48Handler:
         logger.debug('token: %s', self.token)
         header = {
             'Content-Type': 'application/json;charset=utf-8',
-            'User-Agent': 'PocketFans201807/6.0.0 (iPhone; iOS 12.2; Scale/2.00)',
+            'User-Agent': 'PocketFans201807/6.0.10 (iPhone; iOS 13.3; Scale/2.00)',
             'appInfo': json.dumps({
                 'vendor': 'apple',
                 'deviceId': 0,
                 "appVersion": global_config.POCKET48_VERSION,
-                "appBuild": "190409",
-                "osVersion": "12.2.0",
+                "appBuild": "200120",
+                "osVersion": "13.4.0",
                 "osType": "ios",
                 "deviceName": "iphone",
                 "os": "ios"
@@ -631,13 +631,13 @@ class Pocket48Handler:
         logger.debug('token: %s', self.token)
         header = {
             'Content-Type': 'application/json;charset=utf-8',
-            'User-Agent': 'PocketFans201807/6.0.0 (iPhone; iOS 12.2; Scale/2.00)',
+            'User-Agent': 'PocketFans201807/6.0.10 (iPhone; iOS 13.3; Scale/2.00)',
             'appInfo': json.dumps({
                 'vendor': 'apple',
                 'deviceId': 0,
                 "appVersion": global_config.POCKET48_VERSION,
-                "appBuild": "190409",
-                "osVersion": "12.2.0",
+                "appBuild": "200120",
+                "osVersion": "13.4.0",
                 "osType": "ios",
                 "deviceName": "iphone",
                 "os": "ios"
