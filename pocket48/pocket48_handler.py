@@ -327,7 +327,6 @@ class Pocket48Handler:
                         self.save_msg_to_db(104, msg_id, user_id, user_name, msg_time, vote_content)
                     elif text_message_type == TextMessageType.FLIPCARD:
                         logger.debug('付费翻牌功能')
-                        # user_name = extInfo['idolFlipUserName']
                         content = extInfo['question']
 
                         question_id = extInfo['questionId']
@@ -335,8 +334,13 @@ class Pocket48Handler:
                         source = extInfo['sourceId']
                         answer = extInfo['answer']
 
-                        flip_message = ('【问】%s\n【答】%s: %s\n翻牌时间: %s\n' % (
-                            content, user_name, answer, msg_time))
+                        fan_name = self.get_idol_flip_name(answer_id, question_id)
+                        if user_name:
+                            flip_message = ('【问】%s: %s\n【答】%s: %s\n翻牌时间: %s\n' % (
+                                fan_name, content, user_name, answer, msg_time))
+                        else:
+                            flip_message = ('【问】%s\n【答】%s: %s\n翻牌时间: %s\n' % (
+                                content, user_name, answer, msg_time))
                         message = flip_message + message
                         self.save_msg_to_db(105, msg_id, user_id, user_name, msg_time, answer, content)
                     elif text_message_type == TextMessageType.PASSWORD_REDPACKAGE:
@@ -709,6 +713,31 @@ class Pocket48Handler:
         except Exception as e:
             logger.exception(e)
             return None
+
+    def get_idol_flip_name(self, answer_id, question_id):
+        """
+        获取付费翻牌的提问id
+        :param answer_id:
+        :param question_id:
+        :return:
+        """
+        if not self.is_login:
+            logger.exception('尚未登录')
+            return
+        url = 'https://pocketapi.48.cn/idolanswer/api/idolanswer/v1/question_answer/detail'
+        params = {
+            "answerId": str(answer_id),
+            "questionId": str(question_id)
+        }
+        try:
+            r = requests.post(url, data=params, verify=False).json()
+            logger.info('获取付费翻牌用户的昵称，user_id: {}'.format())
+            logger.info(r)
+            return r['content']['userName']
+        except Exception as e:
+            logger.exception(e)
+            return None
+
 
     def get_live_detail(self, live_id):
         """
