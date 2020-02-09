@@ -40,6 +40,7 @@ class TextMessageType:
     FLIPCARD = 'FLIPCARD'  # 鸡腿翻牌
     LIVEPUSH = 'LIVEPUSH'  # 直播
     VOTE = 'VOTE'  # 投票
+    PASSWORD_REDPACKAGE = 'PASSWORD_REDPACKAGE' # 红包消息
 
 
 def get_room_history_msg(member_id, room_id, start_time):
@@ -65,7 +66,7 @@ def _get_room_msg(member_id, room_id, last_time, limit):
             "deviceName": "iphone",
             "os": "ios"
         }),
-        'token': "yMSKOykEsD+8u6jTBAg5m4PkNRhttI0DmqI9ZWADjpyG/omNfCnSX622NLFn8OU2jMjJuBc4te0="
+        'token': "kFFso//c716Gf7RqgecQ2yQDPGKsJWRuDaYUf3yz7/QDKSmSsCAgMs1u96dvRX+bS+tFljpzyNM="
     }
     params = {
         "ownerId": member_id,
@@ -100,16 +101,11 @@ def _get_room_msg(member_id, room_id, last_time, limit):
             if msg['msgType'] == MessageType.TEXT:  # 文字消息
                 text_message_type = extInfo['messageType'].strip()
                 if text_message_type == MessageType.TEXT:  # 普通消息
-                    if msg['bodys'] == '红包消息':
-                        print('红包消息')
-                        content = '【红包】{}'.format(extInfo['redPackageTitle'])
-                        save_msg_to_db(cursor, 106, msg_id, user_id, user_name, msg_time, content)
-                    else:
-                        print('普通消息: %s' % extInfo['text'])
-                        cursor.execute("""
-                            INSERT OR IGNORE INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
-                            (?, ?, ?, ?, ?, ?)
-                        """, (msg_id, 100, user_id, user_name, msg_time, extInfo['text']))
+                    print('普通消息: %s' % extInfo['text'])
+                    cursor.execute("""
+                        INSERT OR IGNORE INTO 'room_message' (message_id, type, user_id, user_name, message_time, content) VALUES
+                        (?, ?, ?, ?, ?, ?)
+                    """, (msg_id, 100, user_id, user_name, msg_time, extInfo['text']))
                 elif text_message_type == TextMessageType.REPLY:  # 翻牌消息
                     print('翻牌')
                     member_msg = extInfo['text']
@@ -149,6 +145,10 @@ def _get_room_msg(member_id, room_id, last_time, limit):
                         content, user_name, answer, msg_time))
                     message = flip_message
                     save_msg_to_db(cursor, 105, msg_id, user_id, user_name, msg_time, answer, content)
+                elif text_message_type == TextMessageType.PASSWORD_REDPACKAGE:
+                    print('红包消息')
+                    content = '【红包】{}'.format(extInfo['redPackageTitle'])
+                    save_msg_to_db(cursor, 106, msg_id, user_id, user_name, msg_time, content)
             elif msg['msgType'] == MessageType.IMAGE:  # 图片消息
                 print('图片')
                 bodys = json.loads(msg['bodys'])
@@ -230,4 +230,4 @@ def parse_idol_flip(question_id, answer_id, source):
 
 if __name__ == '__main__':
     import time
-    get_room_history_msg(6432, 5780791, 0)
+    get_room_history_msg(6432, 67246079, 1581211152160)
