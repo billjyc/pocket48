@@ -428,7 +428,8 @@ class Pocket48Handler:
         cursor = self.conn.cursor()
         try:
             cursor.execute("""
-                            INSERT OR IGNORE INTO 'room_message' (message_id, type, user_id, user_name, message_time, content, fans_comment) VALUES
+                            INSERT OR IGNORE INTO 'room_message' (message_id, type, user_id, user_name, message_time, 
+                            content, fans_comment, fans_name) VALUES
                                                        (?, ?, ?, ?, ?, ?, ?, ?)
                          """, (message_id, op_code, user_id, user_name, message_time, content, fans_comment, fans_name))
         except Exception as e:
