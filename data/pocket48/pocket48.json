@@ -1,6 +1,6 @@
 {
   "IMEI": "863526430773465",
-  "version": "6.0.0",
+  "version": "6.0.10",
   "username": "***",
   "password": "***",
   "monitor_members": [
@@ -14,6 +14,12 @@
       "name": "SNH48",
       "broadcast_message_detail_groups": ["483548995", "108323016"],
       "broadcast_message_lite_groups": ["483548995", "101724227"],
+      "broadcast_room_comment_groups": []
+    },
+    {
+      "name": "zhangxin",
+      "broadcast_message_detail_groups": [],
+      "broadcast_message_lite_groups": [],
       "broadcast_room_comment_groups": []
     }
   ]

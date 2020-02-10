@@ -107,20 +107,18 @@ class StatisticHandler:
                     """, (member_name,))
             super_tag = c.fetchone()[0]
 
-            r = self.session.get(super_tag)
-            soup = BeautifulSoup(r.content, 'lxml')
-
-            tb_counter = soup.find_all(class_='tb_counter')[0]
-            fans_number = tb_counter.find_all(class_='S_line1')[2].find_all('strong').contents[0]
-
-            cur_date = util.convert_timestamp_to_timestr(time.time() * 1000)
-
-            my_logger.debug('统计：成员: %s, 超话: %s, 人数: %d, 时间: %s', member_name, super_tag, fans_number, cur_date)
-            cursor.execute("""
-                    INSERT INTO `super_tag` (`member_name`, `link`, `size`, `date`) VALUES
-                    (?, ?, ?, ?)
-                    """, (member_name, super_tag, fans_number, cur_date))
-            self.conn.commit()
+            r = self.session.get(super_tag).json()
+            if r['ok'] == 1:
+                desc_more = r['data']['pageInfo']['desc_more'][0]
+                desc_arr = desc_more.strip().split('\u3000')
+                fans_number = int(desc_arr[2][2:])
+                cur_date = util.convert_timestamp_to_timestr(time.time() * 1000)
+                my_logger.debug('统计：成员: %s, 超话: %s, 人数: %d, 时间: %s', member_name, super_tag, fans_number, cur_date)
+                cursor.execute("""
+                        INSERT INTO `super_tag` (`member_name`, `link`, `size`, `date`) VALUES
+                        (?, ?, ?, ?)
+                        """, (member_name, super_tag, fans_number, cur_date))
+                self.conn.commit()
         except Exception as e:
             my_logger.error(e)
         finally:
@@ -146,13 +144,14 @@ class StatisticHandler:
 
 if __name__ == "__main__":
     statistic_handler = StatisticHandler('statistics.db')
-    cursor = statistic_handler.conn.cursor()
-    cursor.execute("""
-        select `date`, `group_size` from `group` LIMIT 30
-    """)
-    list2 = cursor.fetchall()
-    x = [datetime.date.strftime(datetime.datetime.strptime(i[0], '%Y-%m-%d %H:%M:%S').date(), '%Y-%m-%d') for i in list2]
-    y = [i[1] for i in list2]
+    # cursor = statistic_handler.conn.cursor()
+    # cursor.execute("""
+    #     select `date`, `group_size` from `group` LIMIT 30
+    # """)
+    # list2 = cursor.fetchall()
+    # x = [datetime.date.strftime(datetime.datetime.strptime(i[0], '%Y-%m-%d %H:%M:%S').date(), '%Y-%m-%d') for i in list2]
+    # y = [i[1] for i in list2]
     # statistic_handler.draw_line_plot(x, y, title='fengxiaofei应援群人数变化')
     # statistic_handler.update_group_size('fengxiaofei')
     # statistic_handler.get_super_tag_size('fengxiaofei')
+    statistic_handler.get_super_tag_size('zhangxin')

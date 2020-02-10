@@ -58,7 +58,7 @@ def get_header():
             "deviceName": "iphone",
             "os": "ios"
         }),
-        'token': "KFHc3Tt/QGVsM1brHpgN3b9flmouEuDxW7Lg7E51yyqoqxYPFWazG74xkW9uRsCmzlfYDdAC2DQ="
+        'token': "3yMRrRZMgdFvcsWZpV2Uxe1SaN4DsbW4Fbezlk3IPXPaOTS/Fn9YNv6CbHzFqt6HaWG/froKMW0="
     }
     return header
 

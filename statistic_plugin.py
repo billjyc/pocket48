@@ -22,12 +22,14 @@ def record_data():
     :return:
     """
     global statistic_handler
-    my_logger.debug('记录群人数数据')
     try:
         my_logger.debug(global_config.POCKET48_LISTEN_TASKS)
         for task in global_config.POCKET48_LISTEN_TASKS:
             my_logger.debug('member name: %s', task.member.name)
+            my_logger.debug('记录群人数数据')
             statistic_handler.update_group_size(task.member.pinyin)
+            my_logger.debug('记录超话数据')
+            statistic_handler.get_super_tag_size(task.member.pinyin)
     except Exception as exp:
         my_logger.exception(exp)
 
