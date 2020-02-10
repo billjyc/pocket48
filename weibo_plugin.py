@@ -38,7 +38,7 @@ def monitor_member_weibo():
             member_weibo_groups = global_config.MEMBER_WEIBO_GROUPS
             weibo_text = newWB['text']
 
-            if task.member.member_id == 0:
+            if task.member.member_id == 5973:
                 message = 'SNH48发博啦:\n{}\n原文链接: {}\n'.format(weibo_text, newWB['scheme'])
                 if newWB['created_at'] == '刚刚':
                     if '冯晓菲' in weibo_text or 'team x' in weibo_text.lower() or 'X队' in weibo_text.lower() or \
