@@ -87,7 +87,7 @@ def monitor_member_weibo():
                                 #                          '[CQ:image,file={}]'.format(newWB['picUrls'][0]))
                                 pass
 
-            else:
+            elif task.member.member_id == 6432:
                 message = '{}发微博啦!\n{}\n{}'.format(task.member.name, weibo_text, newWB['scheme'])
                 if newWB['created_at'] == '刚刚':
                     QQHandler.send_to_groups(member_weibo_groups, message)
