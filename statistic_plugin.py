@@ -34,5 +34,15 @@ def record_data():
         my_logger.exception(exp)
 
 
+@scheduler.scheduled_job('cron', hour=3, minute=10)
+def record_bilibili_data():
+    global statistic_handler
+    try:
+        my_logger.info('记录b站数据')
+        statistic_handler.get_bilibili_stat()
+    except Exception as e:
+        my_logger.exception(e)
+
+
 statistic_handler = StatisticHandler('statistics.db')
 read_statistic_conf()

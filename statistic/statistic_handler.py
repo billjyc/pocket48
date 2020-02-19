@@ -5,6 +5,7 @@ import os
 import time
 import sqlite3
 import requests
+import json
 
 from qq.qqhandler import QQHandler
 from utils import util
@@ -124,6 +125,53 @@ class StatisticHandler:
         finally:
             cursor.close()
 
+    def get_bilibili_stat(self):
+        """
+        获取b站数据
+        :return:
+        """
+        cursor = self.conn.cursor()
+        try:
+            member_json = json.load(open('../data/bilibili.json', encoding='utf8'))['stats']
+            for member in member_json:
+                bilibili_id = member['bid']
+                member_name = member['name']
+                my_logger.info(member_name)
+
+                url1 = 'https://api.bilibili.com/x/relation/stat?vmid={}&jsonp=jsonp&callback=__jp4'.format(bilibili_id)
+                header = {
+                    'Referer': 'https://space.bilibili.com/{}'.format(bilibili_id),
+                    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'
+                }
+                rsp = self.session.get(url1, headers=header).text
+                rsp_json = json.loads(rsp[6: -1])
+                fan_number = rsp_json['data']['follower']
+
+                url2 = 'https://api.bilibili.com/x/space/upstat?mid={}&jsonp=jsonp&callback=__jp5'.format(bilibili_id)
+                rsp = self.session.get(url2, headers=header).text
+
+                rsp_json = json.loads(rsp[6: -1])
+                view = rsp_json['data']['archive']['view']
+                print(rsp_json)
+
+                url3 = 'https://api.bilibili.com/x/space/acc/info?mid={}&jsonp=jsonp'.format(bilibili_id)
+                rsp = self.session.get(url3, headers=header).json()
+                bilibili_name = rsp['data']['name']
+
+                cur_date = util.convert_timestamp_to_timestr(time.time() * 1000)
+
+                cursor.execute("""
+                    INSERT INTO `bilibili` (`member_name`, `bilibili_id`, `bilibili_name`, `fans_num`, `video_view`, `update_time`)
+                    VALUES
+                    (?, ?, ?, ?, ?, ?)
+                """, (member_name, bilibili_id, bilibili_name, fan_number, view, cur_date))
+                self.conn.commit()
+                time.sleep(2)
+        except Exception as e:
+            my_logger.exception(e)
+        finally:
+            cursor.close()
+
     # def draw_line_plot(self, x, y, title=''):
     #     """
     #     绘制折线图
@@ -154,4 +202,5 @@ if __name__ == "__main__":
     # statistic_handler.draw_line_plot(x, y, title='fengxiaofei应援群人数变化')
     # statistic_handler.update_group_size('fengxiaofei')
     # statistic_handler.get_super_tag_size('fengxiaofei')
-    statistic_handler.get_super_tag_size('zhangxin')
+    # statistic_handler.get_super_tag_size('zhangxin')
+    statistic_handler.get_bilibili_stat()
