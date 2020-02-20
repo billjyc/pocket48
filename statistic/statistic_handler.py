@@ -6,6 +6,7 @@ import time
 import sqlite3
 import requests
 import json
+import datetime
 
 from qq.qqhandler import QQHandler
 from utils import util
@@ -14,10 +15,12 @@ from log.my_logger import statistic_logger as my_logger
 from bs4 import BeautifulSoup
 
 import datetime
+
 # import matplotlib.pyplot as plt
 # from pylab import mpl
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 # mpl.rcParams['font.sans-serif'] = ['FangSong']  # 指定默认字体
 # mpl.rcParams['axes.unicode_minus'] = False  # 解决保存图像是负号'-'显示为方块的问题
@@ -72,7 +75,7 @@ class StatisticHandler:
             my_logger.debug('获取成员群号')
             c = cursor.execute("""
                 select group_number from member WHERE member_name=?
-            """, (member_name, ))
+            """, (member_name,))
             group_number = c.fetchone()[0]
             my_logger.debug('群号: %s', group_number)
             number = QQHandler.get_group_number(str(group_number))
@@ -172,6 +175,46 @@ class StatisticHandler:
         finally:
             cursor.close()
 
+    def pocket_msgs(self):
+        from pocket48 import others
+        cursor = self.conn.cursor()
+        today = datetime.date.today().strftime('%Y-%m-%d %H:%M:%S')
+        today_timestamp = int(util.convert_timestr_to_timestamp(today)) * 1000
+        yesterday_timestamp = today_timestamp - 60*24*60*1000
+        room_list = others.get_room_list()
+
+        try:
+            for room in room_list:
+                others.member_messages = {'id': room['id'], 'name': room['name'], 'room_id': room['room_id'], '100': 0,
+                                   '101': 0, '102': 0, '103': 0, '104': 0, '105': 0, '106': 0, '200': 0, '201': 0,
+                                   '202': 0, '203': 0}
+                my_logger.debug(room['name'])
+                if room['id'] in [63, 327683, 327682, 5973]:
+                    continue
+
+                others.get_room_history_msg(room['id'], room['room_id'], today_timestamp - 1, yesterday_timestamp)
+
+                my_logger.debug(others.member_messages)
+                cur_date = util.convert_timestamp_to_timestr(time.time() * 1000)
+
+                sum = others.member_messages['100'] + others.member_messages['101'] + others.member_messages['102'] + others.member_messages[
+                    '103'] + others.member_messages['104'] + others.member_messages['105'] + others.member_messages['106'] + others.member_messages[
+                          '201'] + others.member_messages['202'] + others.member_messages['203']
+                cursor.execute("""
+                    INSERT INTO `pocket_message` (`member_id`, `room_id`, `member_name`, `text`, `reply`, `live`, `vote`,
+                    `idol_flip`, `red_packet`, `pic`, `voice`, `video`, `total_num`, `update_time`) VALUES 
+                    (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    others.member_messages['id'], others.member_messages['room_id'], others.member_messages['name'], others.member_messages['100'],
+                    others.member_messages['101'], others.member_messages['102'], others.member_messages['104'], others.member_messages['105'],
+                    others.member_messages['106'], others.member_messages['200'], others.member_messages['201'], others.member_messages['202'],
+                    sum, cur_date))
+            self.conn.commit()
+        except Exception as e:
+            my_logger.exception(e)
+        finally:
+            cursor.close()
+
     # def draw_line_plot(self, x, y, title=''):
     #     """
     #     绘制折线图
@@ -203,4 +246,7 @@ if __name__ == "__main__":
     # statistic_handler.update_group_size('fengxiaofei')
     # statistic_handler.get_super_tag_size('fengxiaofei')
     # statistic_handler.get_super_tag_size('zhangxin')
-    statistic_handler.get_bilibili_stat()
+    # statistic_handler.get_bilibili_stat()
+    from utils import global_config
+    global_config.POCKET48_TOKEN = 'jFsXxBNA/11fCR5UY20ky1tctWAtJNQIYZuudgzuIhPzPIiCjzECbgpea0THSR7SLNxRPUk/MTk='
+    statistic_handler.pocket_msgs()

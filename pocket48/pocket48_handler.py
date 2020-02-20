@@ -113,6 +113,7 @@ class Pocket48Handler:
         # 登录成功
         if res['status'] == 200:
             self.token = res['content']['token']
+            global_config.POCKET48_TOKEN = res['content']['token']
             self.is_login = True
             logger.info('登录成功, 用户名: %s', username)
             logger.info('TOKEN: %s', self.token)

@@ -44,5 +44,15 @@ def record_bilibili_data():
         my_logger.exception(e)
 
 
+@scheduler.scheduled_job('cron', hour=1, minute=5)
+def record_pocket_room_data():
+    global statistic_handler
+    try:
+        my_logger.info('记录口袋房间数据')
+        statistic_handler.pocket_msgs()
+    except Exception as e:
+        my_logger.exception(e)
+
+
 statistic_handler = StatisticHandler('statistics.db')
 read_statistic_conf()

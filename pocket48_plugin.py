@@ -69,6 +69,7 @@ def login_timely():
     pocket48_handler.checkin()
 
 
+@scheduler.scheduled_job('cron', hour='10', minute='17')
 def kuan_time_broadcast():
     my_logger.info('款时播报')
     pocket48_handler.kuan_time_broadcast()

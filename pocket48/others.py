@@ -5,10 +5,32 @@ import time
 
 import requests
 import xlwt
+from utils import util
+import traceback
+from utils import global_config
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-workbook = xlwt.Workbook(encoding = 'utf-8')
+workbook = xlwt.Workbook(encoding='utf-8')
 worksheet = workbook.add_sheet('My Worksheet')
+
+member_messages = {}
+
+
+class MessageType:
+    TEXT = 'TEXT'  # 文字消息
+    IMAGE = 'IMAGE'  # 图片消息
+    EXPRESS = 'EXPRESS'  # 大表情
+    AUDIO = 'AUDIO'  # 语音
+    VIDEO = 'VIDEO'  # 视频
+
+
+class TextMessageType:
+    TEXT = 'TEXT'  # 普通文字消息
+    REPLY = 'REPLY'  # 普通翻牌
+    FLIPCARD = 'FLIPCARD'  # 鸡腿翻牌
+    LIVEPUSH = 'LIVEPUSH'  # 直播
+    VOTE = 'VOTE'  # 投票
+    PASSWORD_REDPACKAGE = 'PASSWORD_REDPACKAGE'  # 红包消息
 
 
 def get_header():
@@ -25,14 +47,21 @@ def get_header():
             "deviceName": "iphone",
             "os": "ios"
         }),
-        'token': "1WmtLFXVWnOSG36rlCa1v7leX71Cj1IjIvX/cSe9JiRxttXyp/VHZ3AtL0dTOh1ccMSn3nbVHb0="
+        'token': global_config.POCKET48_TOKEN
     }
     return header
 
 
-def get_room_msg(member_id, room_id, last_time):
+def get_room_history_msg(member_id, room_id, start_time, end_time=1555344000000):
+    next_start_time = get_room_msg(member_id, room_id, start_time, end_time)
+    while next_start_time >= end_time:
+        next_start_time = get_room_msg(member_id, room_id, next_start_time, end_time)
+    print('done')
+
+
+def get_room_msg(member_id, room_id, last_time, end_time):
     print('member_id: {}, room id: {}'.format(member_id, room_id))
-    time.sleep(10)
+    time.sleep(5)
     url = 'https://pocketapi.48.cn/im/api/v1/chatroom/msg/list/homeowner'
     params = {
         "ownerId": member_id,
@@ -44,13 +73,115 @@ def get_room_msg(member_id, room_id, last_time):
     except Exception as e:
         print(e)
 
-    rsp_json = json.loads(r)
     try:
+        rsp_json = json.loads(r)
         msgs = rsp_json['content']['message']
-        return msgs
+        if not msgs:
+            return -1
+        parse_room_msg(msgs, end_time)
+        next_time = rsp_json['content']['nextTime']
+        return next_time
     except Exception as e:
         print(e)
-        return []
+        return -1
+
+
+def parse_room_msg(msgs, end_time):
+    try:
+        for msg in msgs:
+            extInfo = json.loads(msg['extInfo'])
+            msg_id = msg['msgidClient']  # 消息id
+            # rst = cursor.execute("""
+            #     SELECT * FROM 'room_message' WHERE message_id=?
+            # """, msg_id)
+
+            msg_time_0 = msg["msgTime"]
+            if msg_time_0 < end_time:
+                return
+
+            msg_time = util.convert_timestamp_to_timestr(msg["msgTime"])
+            user_id = extInfo['user']['userId']
+            user_name = extInfo['user']['nickName']
+            if int(user_id) != member_messages['id']:
+                continue
+            # print('extInfo.keys():' + ','.join(extInfo.keys()))
+            if msg['msgType'] == MessageType.TEXT:  # 文字消息
+                text_message_type = extInfo['messageType'].strip()
+                if text_message_type == MessageType.TEXT:  # 普通消息
+                    print('普通消息: %s' % extInfo['text'])
+                    member_messages['100'] += 1
+                elif text_message_type == TextMessageType.REPLY:  # 翻牌消息
+                    print('翻牌')
+                    member_msg = extInfo['text']
+                    fanpai_msg = extInfo['replyText']
+                    fanpai_id = extInfo['replyName']
+                    if fanpai_id:
+                        message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s: %s\n' % (
+                            msg_time, user_name, member_msg, fanpai_id, fanpai_msg))
+                    else:
+                        message = ('【翻牌】[%s]-%s: %s\n【被翻牌】%s\n' % (
+                            msg_time, user_name, member_msg, fanpai_msg))
+                    print(message)
+                    member_messages['101'] += 1
+                elif text_message_type == TextMessageType.LIVEPUSH:  # 露脸直播
+                    print('露脸直播')
+                    live_title = extInfo['liveTitle']
+                    live_id = extInfo['liveId']
+                    print(live_title + ' ' + live_id)
+                    member_messages['102'] += 1
+                elif text_message_type == TextMessageType.VOTE:  # 投票
+                    print('投票消息')
+                    vote_content = extInfo['text']
+                    message = '【发起投票】{}: {}\n'.format(user_name, vote_content)
+                    print(message)
+                    member_messages['104'] += 1
+                elif text_message_type == TextMessageType.FLIPCARD:
+                    print('付费翻牌功能')
+                    content = extInfo['question']
+                    question_id = extInfo['questionId']
+                    answer_id = extInfo['answerId']
+                    source = extInfo['sourceId']
+                    answer = extInfo['answer']
+
+                    message = '【问】{}\n【答】{}'.format(content, answer)
+                    print(message)
+                    member_messages['105'] += 1
+                elif text_message_type == TextMessageType.PASSWORD_REDPACKAGE:
+                    print('红包消息')
+                    content = '【红包】{}'.format(extInfo['redPackageTitle'])
+                    print(content)
+                    member_messages['106'] += 1
+            elif msg['msgType'] == MessageType.IMAGE:  # 图片消息
+                print('图片')
+                bodys = json.loads(msg['bodys'])
+                if 'url' in bodys.keys():
+                    url = bodys['url']
+                    message = ('【图片】[%s]-%s: %s\n' % (msg_time, user_name, url))
+                    print(message)
+                    member_messages['200'] += 1
+            elif msg['msgType'] == MessageType.AUDIO:  # 语音消息
+                print('语音消息')
+                bodys = json.loads(msg['bodys'])
+                if 'url' in bodys.keys():
+                    url = bodys['url']
+                    message = ('【语音】[%s]-%s: %s\n' % (msg_time, user_name, url))
+                    print(message)
+                    member_messages['201'] += 1
+            elif msg['msgType'] == MessageType.VIDEO:  # 小视频
+                print('房间小视频')
+                bodys = json.loads(msg['bodys'])
+                if 'url' in bodys.keys():
+                    url = bodys['url']
+                    message = ('【小视频】[%s]-%s: %s\n' % (msg_time, user_name, url))
+                    print(message)
+                    member_messages['202'] += 1
+            elif msg['msgType'] == MessageType.EXPRESS:  # 大表情
+                print('大表情')
+                emotion_name = extInfo['emotionName']
+                print(emotion_name)
+                member_messages['203'] += 1
+    except Exception as e:
+        print(e)
 
 
 def get_device_info(msgs):
@@ -92,8 +223,8 @@ def get_room_list():
             continue
         room = {
             "name": conv['ownerName'],
-            "id": conv['ownerId'],
-            "room_id": conv['targetId']
+            "id": int(conv['ownerId']),
+            "room_id": int(conv['targetId'])
         }
         rst.append(room)
     return rst
@@ -102,24 +233,70 @@ def get_room_list():
 if __name__ == '__main__':
     # msgs = get_room_msg(9, 67313805, 0)
     # print(get_device_info(msgs))
-    try:
-        room_list = get_room_list()
-        line = 1
-        worksheet.write(0, 0, '姓名')
-        worksheet.write(0, 1, '手机')
-        worksheet.write(0, 2, '版本')
-        worksheet.write(0, 3, '运营商')
-        for room in room_list:
-            msgs = get_room_msg(room['id'], room['room_id'], 0)
-            print(room['name'])
-            worksheet.write(line, 0, room['name'])
-            device_info = get_device_info(msgs)
-            if device_info:
-                worksheet.write(line, 1, device_info['phoneName'])
-                worksheet.write(line, 2, device_info['phoneSystemVersion'])
-                worksheet.write(line, 3, device_info['mobileOperators'])
-            line += 1
-    except Exception as e:
-        print(e)
-    finally:
-        workbook.save('device_list.xls')
+    # 获取房间列表
+    # try:
+    #     room_list = get_room_list()
+    #     line = 1
+    #     worksheet.write(0, 0, '姓名')
+    #     worksheet.write(0, 1, '手机')
+    #     worksheet.write(0, 2, '版本')
+    #     worksheet.write(0, 3, '运营商')
+    #     for room in room_list:
+    #         msgs = get_room_msg(room['id'], room['room_id'], 0)
+    #         print(room['name'])
+    #         worksheet.write(line, 0, room['name'])
+    #         device_info = get_device_info(msgs)
+    #         if device_info:
+    #             worksheet.write(line, 1, device_info['phoneName'])
+    #             worksheet.write(line, 2, device_info['phoneSystemVersion'])
+    #             worksheet.write(line, 3, device_info['mobileOperators'])
+    #         line += 1
+    # except Exception as e:
+    #     print(e)
+    # finally:
+    #     workbook.save('device_list.xls')
+    # try:
+    #     room_list = get_room_list()
+    #     line = 1
+    #     worksheet.write(0, 0, 'ID')
+    #     worksheet.write(0, 1, '姓名')
+    #     worksheet.write(0, 2, '房间id')
+    #     worksheet.write(0, 3, '文字消息数')
+    #     worksheet.write(0, 4, '普通翻牌数')
+    #     worksheet.write(0, 5, '直播')
+    #     worksheet.write(0, 6, '投票')
+    #     worksheet.write(0, 7, '付费翻牌')
+    #     worksheet.write(0, 8, '红包')
+    #     worksheet.write(0, 9, '图片')
+    #     worksheet.write(0, 10, '语音')
+    #     worksheet.write(0, 11, '视频')
+    #     worksheet.write(0, 12, '总数')
+    #     for room in room_list:
+    #         member_messages = {'id': room['id'], 'name': room['name'], 'room_id': room['room_id'], '100': 0, '101': 0,
+    #                            '102': 0, '103': 0, '104': 0, '105': 0, '106': 0, '200': 0, '201': 0, '202': 0, '203': 0}
+    #         print(room['name'])
+    #         if room['id'] in [63, 327683, 21, 8, 63554, 6738, 38, 1, 327597, 5566, 327682, 5973]:
+    #             continue
+    #         get_room_history_msg(room['id'], room['room_id'], 1581177599000)
+    #         print(member_messages)
+    #         sum = member_messages['100'] + member_messages['101'] + member_messages['102'] + member_messages['103'] + member_messages['104'] + member_messages['105'] + member_messages['106'] + member_messages['201'] + member_messages['202'] + member_messages['203']
+    #         worksheet.write(line, 0, member_messages['id'])
+    #         worksheet.write(line, 1, member_messages['name'])
+    #         worksheet.write(line, 2, member_messages['room_id'])
+    #         worksheet.write(line, 3, member_messages['100'])
+    #         worksheet.write(line, 4, member_messages['101'])
+    #         worksheet.write(line, 5, member_messages['102'])
+    #         worksheet.write(line, 6, member_messages['104'])
+    #         worksheet.write(line, 7, member_messages['105'])
+    #         worksheet.write(line, 8, member_messages['106'])
+    #         worksheet.write(line, 9, member_messages['200'])
+    #         worksheet.write(line, 10, member_messages['201'])
+    #         worksheet.write(line, 11, member_messages['202'])
+    #         worksheet.write(line, 12, sum)
+    #         line += 1
+    # except Exception as e:
+    #     print(e)
+    #     traceback.print_exc()
+    # finally:
+    #     workbook.save('spring_festival.xls')
+    pass
