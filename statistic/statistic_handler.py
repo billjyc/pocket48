@@ -135,7 +135,8 @@ class StatisticHandler:
         """
         cursor = self.conn.cursor()
         try:
-            member_json = json.load(open('../data/bilibili.json', encoding='utf8'))['stats']
+            bilibili_path = os.path.join(BASE_DIR, 'data', 'bilibili.json')
+            member_json = json.load(open(bilibili_path, encoding='utf8'))['stats']
             for member in member_json:
                 bilibili_id = member['bid']
                 member_name = member['name']
