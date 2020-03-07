@@ -27,7 +27,7 @@ def update_modian_conf():
     ConfigReader.read_conf()
     # modian_json = json.load(open("data/modian.json", encoding='utf8'))
     # modian_json = json.load(open("data/weixin_group_account.json", encoding='utf8'))
-    modian_json = json.load(open("data/taoba_account.json.json", encoding='utf8'))
+    modian_json = json.load(open("data/taoba_account.json", encoding='utf8'))
 
     modian_handler.login(modian_json['taoba_account'], modian_json['taoba_passwd'])
 
@@ -76,7 +76,7 @@ def update_modian_conf():
     global_config.MODIAN_FLAG_ACTIVITIES = {}
     flag_json = json.load(open('data/modian_flag.json', encoding='utf8'))['activities']
     for modian in global_config.MODIAN_ARRAY:
-        pro_id = modian.group_account_id
+        pro_id = modian.taoba_id
         global_config.MODIAN_FLAG_ACTIVITIES[pro_id] = []
     for activity in flag_json:
         pro_id = activity['pro_id']
@@ -91,7 +91,7 @@ def update_modian_conf():
     global_config.MODIAN_COUNT_FLAG_ACTIVITIES = {}
     count_flag_json = json.load(open('data/modian_count_flag.json', encoding='utf8'))['activities']
     for modian in global_config.MODIAN_ARRAY:
-        pro_id = modian.group_account_id
+        pro_id = modian.taoba_id
         global_config.MODIAN_COUNT_FLAG_ACTIVITIES[pro_id] = []
     for activity in count_flag_json:
         pro_id = activity['pro_id']
@@ -154,7 +154,7 @@ def update_modian_conf():
     my_logger.debug('读取正在进行中的接棒活动')
     global_config.MODIAN_JIEBANG_ACTIVITIES = {}
     for modian in global_config.MODIAN_ARRAY:
-        pro_id = modian.group_account_id
+        pro_id = modian.taoba_id
         global_config.MODIAN_JIEBANG_ACTIVITIES[pro_id] = []
         try:
             # cursor = conn.cursor()
