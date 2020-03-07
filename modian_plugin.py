@@ -60,7 +60,7 @@ def update_modian_conf():
         #                           modian_j['broadcast_groups'])
         global_config.MODIAN_ARRAY.append(modian)
 
-    modian_handler.group_account_project_array = global_config.MODIAN_ARRAY
+    modian_handler.taoba_project_array = global_config.MODIAN_ARRAY
 
     # modian_handler.init_order_queues()
     modian_handler.card_draw_handler.read_config()
