@@ -127,6 +127,8 @@ class TaoBaAccountHandler:
             raise RuntimeError('获取项目筹款结果查询失败')
 
     def parse_order_details(self, orders, taoba_entity):
+        my_logger.debug('taoba_entity: {}'.format(taoba_entity.taoba_id))
+        my_logger.debug('keys: {}'.format(self.order_queues.keys()))
         if len(self.order_queues[taoba_entity.taoba_id]) == 0 and len(orders) == 0:
             my_logger.debug('订单队列为空')
             return
