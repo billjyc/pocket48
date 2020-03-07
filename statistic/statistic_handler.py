@@ -249,5 +249,5 @@ if __name__ == "__main__":
     # statistic_handler.get_super_tag_size('zhangxin')
     # statistic_handler.get_bilibili_stat()
     from utils import global_config
-    global_config.POCKET48_TOKEN = 'jFsXxBNA/11fCR5UY20ky1tctWAtJNQIYZuudgzuIhPzPIiCjzECbgpea0THSR7SLNxRPUk/MTk='
+    global_config.POCKET48_TOKEN = '8kqaSdMzuM56NTZLhzqQgUEasxvfa1WpuvuBoNY+AHdVBG2qew4+9l8rh5FOa9Vwrk3PPJEhz+s='
     statistic_handler.pocket_msgs()

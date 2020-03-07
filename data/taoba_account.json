@@ -1,0 +1,21 @@
+{
+  "monitor_activities": [
+    {
+      "modian_link": "https://www.tao-ba.club/#/pages/idols/detail?id=1053",
+      "modian_title": "冯款款♥3月日常集资",
+      "modian_pro_id": "1053",
+      "modian_need_display_rank": false,
+      "broadcast_groups": ["483548995"],
+      "qrcode": "http://i2.tiimg.com/667696/b0f9164363e4adb2.jpg"
+    }
+  ],
+  "taoba_account": "account",
+  "taoba_passwd": "password",
+  "modian_postscripts": ["艾虎艾克斯艾虎给你笔芯~", "款款爱你哟~", "给您比个垃圾桶~", "笔芯~", "啵啵~"],
+
+  "modian_need_display_pk": false,
+  "modian_pk_activities": [
+    74791, 74779, 74780, 74782, 74807
+  ],
+  "modian_need_card_draw": true
+}

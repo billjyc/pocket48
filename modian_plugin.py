@@ -5,7 +5,8 @@ from log.my_logger import modian_logger as my_logger
 from utils.config_reader import ConfigReader
 from modian.modian_handler import ModianJiebangEntity, ModianFlagEntity, ModianCountFlagEntity
 # from modian.modian_handler_bs4 import ModianHandlerBS4, ModianEntity
-from modian.weixin_group_account_handler import GroupAccountEntity, WeixinGroupAccountHandler
+# from modian.weixin_group_account_handler import GroupAccountEntity, WeixinGroupAccountHandler
+from modian.taoba_handler import TaoBaAccountHandler, TaoBaEntity
 from utils import global_config
 # from qq.qqhandler import QQHandler
 import uuid
@@ -25,7 +26,10 @@ def update_modian_conf():
     my_logger.info('读取摩点配置')
     ConfigReader.read_conf()
     # modian_json = json.load(open("data/modian.json", encoding='utf8'))
-    modian_json = json.load(open("data/weixin_group_account.json", encoding='utf8'))
+    # modian_json = json.load(open("data/weixin_group_account.json", encoding='utf8'))
+    modian_json = json.load(open("data/taoba_account.json.json", encoding='utf8'))
+
+    modian_handler.login(modian_json['taoba_account'], modian_json['taoba_passwd'])
 
     global_config.MODIAN_POSTSCRIPTS = modian_json['modian_postscripts']
 
@@ -47,7 +51,9 @@ def update_modian_conf():
         # if modian_j['modian_need_display_rank'] is False:
             # modian = ModianEntity(modian_j['modian_link'], modian_j['modian_title'], modian_j['modian_pro_id'], False,
             #                       modian_j['broadcast_groups'])
-        modian = GroupAccountEntity(modian_j['modian_link'], modian_j['modian_title'], modian_j['modian_pro_id'],
+        # modian = GroupAccountEntity(modian_j['modian_link'], modian_j['modian_title'], modian_j['modian_pro_id'],
+        #                             modian_j['broadcast_groups'], modian_j['qrcode'])
+        modian = TaoBaEntity(modian_j['modian_link'], modian_j['modian_title'], modian_j['modian_pro_id'],
                                     modian_j['broadcast_groups'], modian_j['qrcode'])
         # elif modian_j['wds_need_display_rank'] is True:
         #     modian = ModianEntity(modian_j['modian_link'], modian_j['modian_title'], modian_j['modian_pro_id'], True,
@@ -281,6 +287,7 @@ def notify_modian_pk():
 
 
 # modian_handler = ModianHandlerBS4([], [])
-modian_handler = WeixinGroupAccountHandler([], [])
+# modian_handler = WeixinGroupAccountHandler([], [])
+modian_handler = TaoBaAccountHandler([], [])
 update_modian_conf()
 # modian_handler.init_order_queues()
