@@ -156,7 +156,7 @@ class TaoBaAccountHandler:
             single_price = order['amount']
             pay_amount = order['nums']
 
-            backer_money = single_price * pay_amount
+            backer_money = single_price
             listid = int(order['id'])
 
             my_logger.debug('oid: %s', listid)
