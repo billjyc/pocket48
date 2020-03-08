@@ -170,8 +170,8 @@ class TaoBaAccountHandler:
             try:
                 mysql_util.query("""
                                         INSERT INTO `supporter` (`id`, `name`) VALUES (%s, %s)  ON DUPLICATE KEY
-                                            UPDATE `name`=%s
-                                        """, (user_id, nickname, nickname))
+                                            UPDATE `id`=%s
+                                        """, (user_id, nickname, user_id))
             except Exception as e:
                 my_logger.exception(e)
 
