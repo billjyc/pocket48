@@ -274,6 +274,13 @@ def sync_order():
                 modian_handler.order_queues[modian.group_account_id].add(oid)
 
 
+@scheduler.scheduled_job('cron', hour='*')
+def taoba_login():
+    global modian_handler
+    modian_json = json.load(open("data/taoba_account.json", encoding='utf8'))
+    modian_handler.login(modian_json['taoba_account'], modian_json['taoba_passwd'])
+
+
 # @scheduler.scheduled_job('cron', minute='10,25,40,55', hour='8-22')
 def notify_modian_pk():
     """
