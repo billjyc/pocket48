@@ -8,6 +8,7 @@ import xlwt
 from utils import util
 import traceback
 from utils import global_config
+import urllib.request
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 workbook = xlwt.Workbook(encoding='utf-8')
@@ -48,6 +49,7 @@ def get_header():
             "os": "ios"
         }),
         'token': global_config.POCKET48_TOKEN
+        # 'token': 'z4Jy8aeTC2CVoC/LLulzuHrCv84qaYfPxwLijUOsjPD7s1eKk0oITczIz42VyZ7bBWrGHjP8/mg='
     }
     return header
 
@@ -230,6 +232,92 @@ def get_room_list():
     return rst
 
 
+def get_member_all_posts(member_id, next_id="0"):
+    """
+    获取成员全部动态
+    :param member_id: 
+    :param next_id: 
+    :return: 
+    """
+    url = 'https://pocketapi.48.cn/posts/api/v1/posts/timeline/home/new'
+    print('next_id: {}'.format(next_id))
+    params = {
+        "nextId": next_id,
+        "userId": member_id
+    }
+    r = requests.post(url, data=json.dumps(params), headers=get_header(), verify=False).json()
+    if r['status'] == 200:
+        next_id = r['content']['nextId']
+        post_list = r['content']['postsInfo']
+
+        for post in post_list:
+            post = post['data']['postsInfo']
+            print(util.convert_timestamp_to_timestr(int(post['createAt'])))
+            print(handle_weibo_text(post['postContent'].rstrip('\n')))
+            if 'previewImg' in post and post['previewImg']:
+                print("图片：")
+                for img in post['previewImg']:
+                    print('https://source.48.cn/{}'.format(img['imgUrl']))
+
+        get_member_all_posts(member_id, next_id)
+
+
+def handle_weibo_text(weibo_text):
+    """
+    处理动态文字，去除html标签
+    :param weibo_text:
+    :return:
+    """
+    from bs4 import BeautifulSoup
+    weibo_text = '<div>' + weibo_text + '</div>'
+    soup = BeautifulSoup(weibo_text.replace('<br />', '\n').replace('<br/>', '\n'), 'lxml')
+    return soup.text
+
+
+def get_member_all_images(member_id, next_id="0"):
+    """
+    获取成员全部图片
+    :param member_id:
+    :param next_id:
+    :return:
+    """
+    url = 'https://pocketapi.48.cn/posts/api/v1/posts/img/list'
+    print('next_id: {}'.format(next_id))
+    params = {
+        "nextId": next_id,
+        "userId": member_id
+    }
+    r = requests.post(url, data=json.dumps(params), headers=get_header(), verify=False).json()
+    if r['status'] == 200:
+        img_list = r['content']['list']
+        next_id = r['content']['next']
+        img_header = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36',
+            'upgrade-insecure-requests': '1',
+            'accept-encoding': 'gzip, deflate, br',
+        }
+
+        for img in img_list:
+            img_url = 'https://source.48.cn/{}'.format(img['imgUrl'])
+            print(img_url)
+
+            # 生成图片名
+            strs = img['imgUrl'].split('/')
+            if len(strs) >= 3:
+                date_str = strs[len(strs) - 2]
+                file_name = strs[len(strs) - 1]
+
+            if not os.path.exists('./{}'.format(date_str)):
+                os.mkdir(date_str)
+            img_name = './{}/{}'.format(date_str, file_name)
+            html = requests.get(img_url, headers=img_header, verify=False)
+            with open(img_name, 'wb') as f:
+                f.write(html.content)
+            f.close()
+
+        get_member_all_images(member_id, next_id)
+
+
 if __name__ == '__main__':
     # msgs = get_room_msg(9, 67313805, 0)
     # print(get_device_info(msgs))
@@ -299,4 +387,5 @@ if __name__ == '__main__':
     #     traceback.print_exc()
     # finally:
     #     workbook.save('spring_festival.xls')
-    pass
+    # get_member_all_images(6432, "61674")
+    get_member_all_posts(6432, "0")
