@@ -416,7 +416,7 @@ class TaoBaAccountHandler:
 if __name__ == "__main__":
     entity = TaoBaEntity('ssss', '400场', '1053')
     handler = TaoBaAccountHandler([], [entity])
-    handler.login('13738817290', 'linshi1017')
+    handler.login('*', '*')
     handler.init_order_queues()
     # print(handler.decrypt(
     #     '209$XZw+jnQOtzAoBKHiRoV2TEcI+KNB4NiCaJEKoTyhNcT8a/h5UFcGnxMY1pPvoSWUy9Q/q4QWw8HS4ipHmHxu/kndw+OCWOQYRVa7Rx+sAmh72KJhu3wGecT3vwLE0UAiMWsVLR8o/i2AK2tGTtsySN7xUl3k4ZUQmb/TB7giMg9Uo1xMvr7BK91AnkRbf4YEKFR5KtRFakpw8JQT2mYx1ztGaTy4'))
