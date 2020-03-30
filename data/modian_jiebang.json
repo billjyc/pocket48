@@ -10,12 +10,12 @@
       "need_detail": 1
     },
     {
-      "jiebang_name": "24元接棒test",
+      "jiebang_name": "24元接棒",
       "pro_id": "1634",
       "target_stick_num": 9999,
-      "min_stick_amount": 0.01,
+      "min_stick_amount": 24,
       "start_time": "2020-03-30 00:00:00",
-      "end_time": "2020-03-31 23:59:59",
+      "end_time": "2020-04-30 23:59:59",
       "need_detail": 1
     },
     {
