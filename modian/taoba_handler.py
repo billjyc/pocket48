@@ -200,6 +200,10 @@ class TaoBaAccountHandler:
             #     pass
 
             # 统计当前人数
+            count = mysql_util.select_one("""
+                SELECT COUNT(distinct(`supporter_id`)) FROM `order` WHERE `pro_id`=%s
+            """, (taoba_entity.taoba_id, ))
+            backer_count = count[0]
             msg += '当前集资人数: %s\n' % backer_count
 
             # 抽卡播报
