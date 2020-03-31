@@ -93,22 +93,29 @@ class TaoBaAccountHandler:
         :param limit:
         :return:
         """
+        all_orders = []
         my_logger.info('查询项目订单, id: %s', taoba_entity.taoba_id)
         url = 'https://www.tao-ba.club/idols/refund/orders'
-        data = {'id': taoba_entity.taoba_id, 'offset': 0, 'ismore': False, 'requestTime': int(time.time() * 1000),
-                'pf': 'h5'}
-        my_logger.info('taoba token: {}'.format(self.token))
-        my_logger.debug('data: {}'.format(data))
-        my_logger.debug('data: {}'.format(self.encrypt(data)))
-        my_logger.debug('header: {}'.format(self.taoba_header()))
-        r = self.session.post(url=url, data=self.encrypt(data), headers=self.taoba_header())
-        r = self.decrypt(r.text)
+        page = 0
+        while True:
+            data = {'id': taoba_entity.taoba_id, 'offset': page * 25, 'ismore': False, 'requestTime': int(time.time() * 1000),
+                    'pf': 'h5'}
+            my_logger.info('taoba token: {}'.format(self.token))
+            my_logger.debug('data: {}'.format(data))
+            my_logger.debug('data: {}'.format(self.encrypt(data)))
+            my_logger.debug('header: {}'.format(self.taoba_header()))
+            r = self.session.post(url=url, data=self.encrypt(data), headers=self.taoba_header())
+            r = self.decrypt(r.text)
 
-        if int(r['code']) != 0:
-            raise RuntimeError('获取订单信息失败')
-        orders = r['list']
-        my_logger.info('项目订单: page: %s, orders: %s', page, orders)
-        return orders
+            if int(r['code']) != 0:
+                raise RuntimeError('获取订单信息失败')
+            orders = r['list']
+            my_logger.info('项目订单: page: %s, orders: %s, len: %s', page + 1, orders, len(orders))
+            if not orders:
+                break
+            all_orders.extend(orders)
+            page += 1
+        return all_orders
 
     def get_current_and_target(self, taoba_entity):
         """
@@ -424,8 +431,8 @@ class TaoBaAccountHandler:
 if __name__ == "__main__":
     entity = TaoBaEntity('ssss', '400场', '1053')
     handler = TaoBaAccountHandler([], [entity])
-    handler.login('*', '*')
-    handler.init_order_queues()
+    # handler.login('*', '*')
+    # handler.init_order_queues()
     # print(handler.decrypt(
     #     '209$XZw+jnQOtzAoBKHiRoV2TEcI+KNB4NiCaJEKoTyhNcT8a/h5UFcGnxMY1pPvoSWUy9Q/q4QWw8HS4ipHmHxu/kndw+OCWOQYRVa7Rx+sAmh72KJhu3wGecT3vwLE0UAiMWsVLR8o/i2AK2tGTtsySN7xUl3k4ZUQmb/TB7giMg9Uo1xMvr7BK91AnkRbf4YEKFR5KtRFakpw8JQT2mYx1ztGaTy4'))
     # print(handler.decrypt(
@@ -433,6 +440,9 @@ if __name__ == "__main__":
     # print(handler.decrypt('1059$XZyWkApP9zA0xeHL6AG77aC/KExmJAY6cRAskw1q5jYujX1UYr8elwFAYCVgAXlOKU/ze1i/TtSvJgSJWyz6MWv5iYOcgXF6UpY9yEbcb7d1obEkc8DGQu8jDQX/Nwncyj3KcL4geyIf1PAJ93SzNBWRoAJxl6PsO1XyIupVE68Mfh1pyFY6WCo8NNTWKB/ej6lulR1D8w5m2IXtJQ+9YZHOI/p9mwB1+EmSTpcUk9+su1DRskm32cAd+auY2GaScK2pMgixhlrA1K/AP90Lzye9zs3fRN5XecFI8f/Cit/xUH+zRP7cLNGPGISfIFWJ24ijddXUXSxioeLt1+hiXrsFbAtYysMjuHhx2YFFQ22lo5mWsurOQMG0ROYz7XPhrjb+bNHT057Cb+5ftu9XIBbj'))
     #
     # print(handler.decrypt('61$XZyIVv/J+M0IUewyF9B3yhxLb05Dst/M49To0uHioJDv3BQlHEN2C0ATBgM/I1dDLUs4paQ0divhDBWlBAAHXDup'))
-    # print(handler.encrypt({'limit': 20, 'offset': 0, 'requestTime': 1583460827179, 'pf': 'h5'}))
+    print(handler.encrypt({'id': '1634', 'offset': 0, 'ismore': True, 'requestTime': int(time.time() * 1000), 'pf': 'h5'}))
     #
-    # print(handler.decrypt('108$XZw2iQwStDAoA6Hiv0JviGre1gakmNShIVIb/CjRWlaYj5TLrawsQDvkiQ9tpVCdvFZfdob0VoHocWDPLvtquBNuVOD7jWKrJeaDTynJl/TkW5SHHs02LsoHnohzZA=='))
+    rst = '6485$XZzmWO5uLzc0/ctiumVFZmvDz99EN+9rhk0xt33ciDDVQnVqI1n1xasazd8PVLRGFVnwwqssbBD/lAfuRx7fORmfv/qEieYRtIrWYB8rrX7KVDiaxohdG/PJ3zQd0n8Cv0CWvSM6AWfGqfz0qdsJExDTdHF3nGgQJIAViBxiwZfeGktNlSsgg4dQli+E57dlzXpNrdjrjjdYYiOdQabgMSLWwUy605lV9yPh+Yb9xuYK0b/G0GKEGMhakiv9D5Lz8ixI1hU6WW3E2cWD2ISxxd6gGdB1RsL616h5s/flwSZt7MZ6ywJkXVkwmd/h+iNss9Bh81wJlX2pCybyYavK0T7ZPOBqAKVF+sBTR8PxHnjCa+yB7o0Z7c/SdVKNBp7s4eIHMfI+QUcEbOQNYgLGz5zi1TsKdNYcExl9kMQOsP1eo6EN9okJYNKzE+zx/p+wthSm7s8llQlswEA8aOMeoVuTBJc8dCBXf92aEgk6P96TNq0+uPq4LkC0r0B8SK916Jh0V3OvHqz4EzWoRo8iMHnoHgEUjTwFBWBS3K038EMJfkYBOvZ2Abm3xRa6i1cynh2W2QhXdQDmXa70nl1LAfZ2Gm1r7tRvM1hHP1ev7NPAqoZfudyGe2WY9DFBl2Ge899e/p4BYsS64HvsFXzB0ayfqkH0HS0foCf40SCfWB9wy3pX+Q3Cb/iYkUB+vbcC6q/QHI6ysC4zaHOFobsbhcmJv4Kw3QNlew1MOvF5MCThrW6ZsaG1st5OkZICBfnRd0fQ7rPpPRzKJUoqPpfhBPJ0atv+bgwqPQJRYgZ0XsOlyqoQWdO1E0isJ0xxhCT7+Ik9ku5sroWP573lSgZU1REaKllxorESGVhz1Lg10CeksgoPx8GDg1pCRAUDNfPoWeVoGnFIcRLTw5fkAjghdOVXpPZ5cp7pFbZiB8czCD/LGfJ3+okkrXEnvQwlQ63IY4PE8IxFuDfbePql0mD2To1aBHSlhNwvpvWzGTrvvROZWSYOjZq/GBUhl5CqLloTtJeBbfeIMGyd3ABAlQ3oubl5K/qNB9M045nXnvG7HdI2+4vqlIxu13JbTzX+AeVBUlf4vYriLEeaab4CKrUyeYpwosNaR8h5D4xF3MWiNRQ75QINW48n/XJOLD0mestv1SI/tvgGigne0BOAZ53a7/rB7O4lJio5IG+g8p1L7pYsrwr6MPkGCWbu2L4LRZoFFLXMAm3qdAMVhrMP6v8gT2iiRW43CeQw9M3JtIm7zwJ8K2VKATJRcCcJ++PAwKZ7bzj6pzg4qM2wgCoWWt+IRMHNpOP3OeOurOIBIjUGxzw9HGYVBcsYSuA2G+OVdo6qu3EnfUxh0XW11PuUEJxBhQrV8hhP1nl9J0eL4/ZDNpV38l2y3v9IGs4ef06F9Cvu+xE4j5QW87OO44ncbTObNur0Nv3GPLneqZM+8nKesYGXsU5XS6vTWwqVxTncG6KQ528uaBNWxFXCqsbjux/mwOUqtsqBmkxgRbFI7jVpLKtFoaIojIvzpPpSb7/tDZb9OvfZAImUC8Y='
+    rst = handler.decrypt(rst)
+    print(rst)
+    print(len(rst['list']))
