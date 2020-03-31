@@ -98,8 +98,12 @@ class TaoBaAccountHandler:
         data = {'id': taoba_entity.taoba_id, 'offset': 0, 'ismore': False, 'requestTime': int(time.time() * 1000),
                 'pf': 'h5'}
         my_logger.info('taoba token: {}'.format(self.token))
+        my_logger.debug('data: {}'.format(data))
+        my_logger.debug('data: {}'.format(self.encrypt(data)))
+        my_logger.debug('header: {}'.format(self.taoba_header()))
         r = self.session.post(url=url, data=self.encrypt(data), headers=self.taoba_header())
         r = self.decrypt(r.text)
+
         if int(r['code']) != 0:
             raise RuntimeError('获取订单信息失败')
         orders = r['list']
