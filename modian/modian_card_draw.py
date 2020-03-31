@@ -351,13 +351,13 @@ class CardDrawHandler:
                 if card not in rst_level[card.level]:
                     rst_level[card.level].append(card)
         else:
-            return '摩点ID: {}, 当前暂未抽中任何卡片 \n'.format(modian_id)
+            return '桃叭ID: {}, 当前暂未抽中任何卡片 \n'.format(modian_id)
         logger.debug(rst_level)
         logger.debug(rst_num)
 
         self.generate_card_pic(rst_level, modian_id)
 
-        report = '摩点ID: {}, 当前已抽中的卡片有: \n'.format(modian_id)
+        report = '桃叭ID: {}, 当前已抽中的卡片有: \n'.format(modian_id)
         if CardLevel.UR in rst_level and len(rst_level[CardLevel.UR]) > 0:
             report += '【UR】({}/{}): '.format(len(rst_level[CardLevel.UR]), len(self.all_cards[CardLevel.UR]))
             for card in rst_level[CardLevel.UR]:
@@ -450,9 +450,9 @@ class CardDrawHandler:
             return '消耗的积分必须是15的倍数！'
         current_score = int(self.get_current_score(modian_id))
         if current_score < score:
-            return '摩点ID：{}的当前积分: {}，少于需要消耗的积分: {}，不能补抽！'.format(modian_id, current_score, score)
+            return '桃叭ID：{}的当前积分: {}，少于需要消耗的积分: {}，不能补抽！'.format(modian_id, current_score, score)
         else:
-            result = '摩点ID：{}，积分抽卡，当前积分-{}\n'.format(modian_id, score)
+            result = '桃叭ID：{}，积分抽卡，当前积分-{}\n'.format(modian_id, score)
             mysql_util.query("""
                             INSERT INTO `t_card_score` (`modian_id`, `score`) VALUES 
                                 (%s, %s)

@@ -182,9 +182,9 @@ def handle_msg(context):
                 #     get_huitui_rank(context)
                 elif message == '-help':
                     help_msg = """
-                        查询当前集卡情况: 【-查询 摩点ID】，
-                        积分抽卡（积分数量必须是15的倍数）: 【-积分抽 摩点ID 积分数量】，
-                        补抽卡: 【-补抽 摩点ID 补抽金额】
+                        查询当前集卡情况: 【-查询 桃叭ID】，
+                        积分抽卡（积分数量必须是15的倍数）: 【-积分抽 摩点ID 桃叭数量】，
+                        补抽卡: 【-补抽 桃叭ID 补抽金额】
                     """
                     bot.send(context, help_msg)
                 elif message.startswith('-查询'):
@@ -192,7 +192,7 @@ def handle_msg(context):
                     if len(strs) == 2:
                         search_card(context, strs[1])
                     else:
-                        bot.send(context, '格式为【-查询 摩点ID】的形式，请重试~')
+                        bot.send(context, '格式为【-查询 桃叭ID】的形式，请重试~')
                 elif message.startswith('-积分抽'):
                     from utils import util
                     admins = util.read_txt(os.path.join(BASE_DIR, 'data', 'card_draw', 'admin.txt'))
@@ -203,7 +203,7 @@ def handle_msg(context):
                     if len(strs) == 3:
                         draw_card_using_score(context, strs[1], strs[2])
                     else:
-                        bot.send(context, '格式为【-积分抽 摩点ID 积分数量】的形式，请重试~')
+                        bot.send(context, '格式为【-积分抽 桃叭ID 积分数量】的形式，请重试~')
                 elif message.startswith('-补抽'):
                     from utils import util
                     admins = util.read_txt(os.path.join(BASE_DIR, 'data', 'card_draw', 'admin.txt'))
@@ -214,7 +214,7 @@ def handle_msg(context):
                     if len(strs) == 3:
                         draw_missed_card(context, strs[1], strs[2])
                     else:
-                        bot.send(context, '格式为【-补抽 摩点ID 补抽金额】的形式，请重试~')
+                        bot.send(context, '格式为【-补抽 桃叭ID 补抽金额】的形式，请重试~')
                 # elif message.upper() == '-PK':
                 #     try:
                 #         from modian_plugin import modian_handler
@@ -350,9 +350,10 @@ def search_card(context, modian_id):
         #     return
         report = card_draw_handler.get_cards(modian_id)
         bot.send(context, report)
-        pic = '[CQ:image,file=%s]' % 'result.jpg'
-        logger.debug(pic)
-        bot.send(context, pic)
+        if '当前暂未抽中任何卡片' not in report:
+            pic = '[CQ:image,file=%s]' % 'result.jpg'
+            logger.debug(pic)
+            bot.send(context, pic)
     except Error as e:
         logger.error(e)
         # bot.send(context, '查询出现错误！\n{}'.format(traceback.print_exc()))
