@@ -10,13 +10,13 @@
       "need_detail": 1
     },
     {
-      "jiebang_name": "24元接棒",
+      "jiebang_name": "10.17元接棒",
       "pro_id": "1634",
       "target_stick_num": 9999,
-      "min_stick_amount": 24,
-      "start_time": "2020-03-30 00:00:00",
+      "min_stick_amount": 10.17,
+      "start_time": "2020-04-17 13:00:00",
       "end_time": "2020-04-30 23:59:59",
-      "need_detail": 1
+      "need_detail": 2
     },
     {
       "jiebang_name": "30.51元接棒无上限",
