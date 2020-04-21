@@ -181,10 +181,10 @@ def handle_msg(context):
                 # elif message == '-排行榜':
                 #     get_huitui_rank(context)
                 elif message == '-help':
-                    help_msg = """
-                        查询当前集卡情况: 【-查询 桃叭ID】，
+                    help_msg = """查询当前集卡情况: 【-查询 桃叭ID】，
                         积分抽卡（积分数量必须是15的倍数）: 【-积分抽 摩点ID 桃叭数量】，
-                        补抽卡: 【-补抽 桃叭ID 补抽金额】
+                        补抽卡: 【-补抽 桃叭ID 补抽金额】，
+                        消息以"%"开头，机器人可免费陪聊，每日数额有限
                     """
                     bot.send(context, help_msg)
                 elif message.startswith('-查询'):
