@@ -121,24 +121,24 @@ def handle_msg(context):
                 files = ['1.aac', '2.aac', '3.aac', '4.aac', '5.aac']
                 express_message = '[CQ:record,file=%s]'.format(random.choice(files))
                 bot.send(context, express_message)
-            # elif message == '抽签':
-            #     try:
-            #         message = draw_lottery(user_id, group_id)
-            #         bot.send(context, message)
-            #     except Error as err:
-            #         logger.exception(err)
-            #     except Exception as e:
-            #         logger.exception(e)
-            #         bot.send(context, '抽签出现错误！')
-            # elif message == '解签':
-            #     try:
-            #         message = solve_lottery(user_id, group_id)
-            #         bot.send(context, message)
-            #     except Error as err:
-            #         logger.exception(err)
-            #     except Exception as e:
-            #         logger.exception(e)
-            #         bot.send(context, '解签出现错误！')
+            elif message == '抽签':
+                try:
+                    message = draw_lottery(user_id, group_id)
+                    bot.send(context, message)
+                except Error as err:
+                    logger.exception(err)
+                except Exception as e:
+                    logger.exception(e)
+                    bot.send(context, '抽签出现错误！')
+            elif message == '解签':
+                try:
+                    message = solve_lottery(user_id, group_id)
+                    bot.send(context, message)
+                except Error as err:
+                    logger.exception(err)
+                except Exception as e:
+                    logger.exception(e)
+                    bot.send(context, '解签出现错误！')
 
         # 查询集资
         if str(group_id) in groups:
