@@ -7,6 +7,7 @@ import hashlib
 import requests
 import json
 import base64
+import string
 import urllib.parse
 import csv
 
@@ -233,6 +234,15 @@ def read_csv(file_path):
         read = csv.DictReader(csv_file)
         rows = [row for row in read]
     return rows
+
+
+def generate_random_string(length=10):
+    """
+    生成随机长度字符串
+    :param length:
+    :return:
+    """
+    return ''.join(random.sample(string.ascii_letters + string.digits, length))
 
 
 if __name__ == '__main__':

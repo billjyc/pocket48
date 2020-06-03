@@ -7,6 +7,7 @@ IMEI = ''
 POCKET48_JSON = {}
 POCKET48_LISTEN_TASKS = []
 POCKET48_TOKEN = ''
+POCKET48_PA = ''
 
 # 所有成员的个人信息
 MEMBER_JSON = {}

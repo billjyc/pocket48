@@ -48,13 +48,13 @@ def get_header():
             "deviceName": "iphone",
             "os": "ios"
         }),
-        'token': global_config.POCKET48_TOKEN
-        # 'token': 'z4Jy8aeTC2CVoC/LLulzuHrCv84qaYfPxwLijUOsjPD7s1eKk0oITczIz42VyZ7bBWrGHjP8/mg='
+        # 'token': global_config.POCKET48_TOKEN
+        'token': 'Cvz8OVaCoQpLYCS7r+3NlUuZB1cnEN8Y/vgq4cZwaFAUy7IeT6axMdGjFVvOpBtyXaYcOHfPaj4='
     }
     return header
 
 
-def get_room_history_msg(member_id, room_id, start_time, end_time=1555344000000):
+def get_room_history_msg(member_id, room_id, start_time, end_time=0):
     next_start_time = get_room_msg(member_id, room_id, start_time, end_time)
     while next_start_time >= end_time:
         next_start_time = get_room_msg(member_id, room_id, next_start_time, end_time)
@@ -104,8 +104,8 @@ def parse_room_msg(msgs, end_time):
             msg_time = util.convert_timestamp_to_timestr(msg["msgTime"])
             user_id = extInfo['user']['userId']
             user_name = extInfo['user']['nickName']
-            if int(user_id) != member_messages['id']:
-                continue
+            # if int(user_id) != member_messages['id']:
+            #     continue
             # print('extInfo.keys():' + ','.join(extInfo.keys()))
             if msg['msgType'] == MessageType.TEXT:  # 文字消息
                 text_message_type = extInfo['messageType'].strip()
@@ -161,6 +161,11 @@ def parse_room_msg(msgs, end_time):
                     message = ('【图片】[%s]-%s: %s\n' % (msg_time, user_name, url))
                     print(message)
                     member_messages['200'] += 1
+                    img_name = './口袋图/{}.png'.format(msg_time)
+                    html = requests.get(url, verify=False)
+                    with open(img_name, 'wb') as f:
+                        f.write(html.content)
+                    f.close()
             elif msg['msgType'] == MessageType.AUDIO:  # 语音消息
                 print('语音消息')
                 bodys = json.loads(msg['bodys'])
@@ -318,6 +323,39 @@ def get_member_all_images(member_id, next_id="0"):
         get_member_all_images(member_id, next_id)
 
 
+def get_all_images_from_excel(file_path):
+    """
+
+    :param file_path:
+    :return:
+    """
+    import xlrd
+    data = xlrd.open_workbook(file_path)
+    sheets = data.sheets()
+    for i in range(1, len(sheets)):
+        work_sheet = sheets[i]
+        print(work_sheet.name)
+        nrows = work_sheet.nrows
+        for j in range(1, nrows):
+            row = work_sheet.row_values(j)
+            message_type = int(work_sheet.cell_value(j, 0))
+            if message_type == 200:
+                message_time = xlrd.xldate_as_tuple(work_sheet.cell_value(j, 3), 0)
+                content = work_sheet.cell_value(j, 4)
+                print(message_time)
+                date_str = ''
+                for z in message_time:
+                    if z < 10:
+                        date_str += '0'
+                    date_str += str(z)
+                print(date_str)
+                img_name = './口袋图/{}.png'.format(date_str)
+                html = requests.get(content, verify=False)
+                with open(img_name, 'wb') as f:
+                    f.write(html.content)
+                f.close()
+
+
 if __name__ == '__main__':
     # msgs = get_room_msg(9, 67313805, 0)
     # print(get_device_info(msgs))
@@ -388,4 +426,8 @@ if __name__ == '__main__':
     # finally:
     #     workbook.save('spring_festival.xls')
     # get_member_all_images(6432, "61674")
-    get_member_all_posts(6432, "0")
+    # get_member_all_posts(6432, "0")
+    # get_all_images_from_excel('款款语录.xlsx')
+    member_messages = {'id': 6432, 'name': '冯晓菲', 'room_id': 67246079, '100': 0, '101': 0,
+                                                  '102': 0, '103': 0, '104': 0, '105': 0, '106': 0, '200': 0, '201': 0, '202': 0, '203': 0}
+    get_room_history_msg(6432, 67246079, 0)

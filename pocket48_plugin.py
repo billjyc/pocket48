@@ -6,6 +6,7 @@ from pocket48.pocket48_handler import pocket48_handler
 from utils import global_config
 from utils.config_reader import ConfigReader
 from utils.scheduler import scheduler
+from utils import util
 
 
 # @scheduler.scheduled_job('cron', minute='*')
@@ -79,6 +80,13 @@ def kuan_time_broadcast():
 def notify_performance():
     my_logger.info('检查公演日程')
     pocket48_handler.notify_performance()
+
+
+@scheduler.scheduled_job('cron', second=30, minute='*/5')
+def generate_pa():
+    my_logger.info('生成pa')
+    global_config.POCKET48_PA = util.generate_random_string(68)
+    my_logger.info('pa: {}'.format(global_config.POCKET48_PA))
 
 
 username = global_config.POCKET48_JSON["username"]
