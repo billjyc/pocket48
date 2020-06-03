@@ -776,19 +776,20 @@ class Pocket48Handler:
 pocket48_handler = Pocket48Handler()
 
 if __name__ == '__main__':
-    print(json.dumps({
-        'vendor': 'apple',
-        'deviceId': 0,
-        "appVersion": '6.0.2',
-        "appBuild": "190409",
-        "osVersion": "12.2.0",
-        "osType": "ios",
-        "deviceName": "iphone",
-        "os": "ios"
-    }))
+    # print(json.dumps({
+    #     'vendor': 'apple',
+    #     'deviceId': 0,
+    #     "appVersion": '6.0.2',
+    #     "appBuild": "190409",
+    #     "osVersion": "12.2.0",
+    #     "osType": "ios",
+    #     "deviceName": "iphone",
+    #     "os": "ios"
+    # }))
+    global_config.POCKET48_PA = 'MTU5MTE5NzQzNjAwMCwzNTcxLDNDRTAxM0ZCNTk1NUI0RUE2RURCOENFN0IzMjBCNzdG'
     member = Member('左婧媛', '327577', '67380556')
     task = Pocket48ListenTask(member)
-    pocket48_handler.login('***', '***')
+    pocket48_handler.login('**', '**')
     r = pocket48_handler.get_member_room_msg(task)
     pocket48_handler.parse_room_msg(r, task)
     # base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

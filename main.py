@@ -19,7 +19,7 @@ global_config.AUTO_REPLY_GROUPS = ConfigReader.get_property('qq_conf', 'auto_rep
 global_config.TEST_GROUPS = ConfigReader.get_property('qq_conf', 'test_groups').split(';')
 global_config.PERFORMANCE_NOTIFY = ConfigReader.get_property('profile', 'performance_notify')
 global_config.LIVE_LINK = ConfigReader.get_property('auto_reply', '公演直播')
-global_config.POCKET48_PA = util.generate_random_string(68)
+# global_config.POCKET48_PA = util.generate_random_string(68)
 
 using_pro = ConfigReader.get_property('root', 'using_coolq_pro')
 if using_pro == 'yes':
