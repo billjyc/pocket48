@@ -242,10 +242,17 @@ def generate_random_string(length=10):
     :param length:
     :return:
     """
-    return ''.join(random.sample(string.ascii_letters + string.digits, length))
+    H = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+
+    salt = ''
+    for i in range(length):
+        salt += random.choice(H)
+
+    return salt
 
 
 if __name__ == '__main__':
+    print(generate_random_string(68))
     # save_image('https://nos.netease.com/nim/NDA5MzEwOA==/bmltYV8xNzc5NzQyNDlfMTUxNTAzODQyMzkyN182OGMzZTA2OS00NzUwLTQ2MWYtOWI3NC1jODNiNmMzMDhhMzM=')
     # strs = filter_tags("""
     # test<span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_tu-65768ccc23.png\" style=\"width:1em;height:1em;\" alt=\"[吐]\"></span><span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_haha-bdd6ceb619.png\" style=\"width:1em;height:1em;\" alt=\"[哈哈]\"></span><span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_tu-65768ccc23.png\" style=\"width:1em;height:1em;\" alt=\"[吐]\"></span><span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/others/l_xin-8e9a1a0346.png\" style=\"width:1em;height:1em;\" alt=\"[心]\"></span><br/><a class='k' href='https://m.weibo.cn/k/test?from=feed'>#test#</a>
