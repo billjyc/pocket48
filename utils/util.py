@@ -8,8 +8,10 @@ import requests
 import json
 import base64
 import string
+import math
 import urllib.parse
 import csv
+from log.my_logger import pocket48_logger as logger
 
 
 def convert_timestamp_to_timestr(timestamp):
@@ -236,23 +238,30 @@ def read_csv(file_path):
     return rows
 
 
-def generate_random_string(length=10):
+def generate_pa():
     """
-    生成随机长度字符串
+    生成口袋48的pa值
     :param length:
     :return:
     """
-    H = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    salt = 'K4bMWJawAtnyyTNOa70S'
+    current_timestamp = int(time.time())
+    random_num = math.floor(random.random() * 9999)
+    mix_data = hashlib.md5()
+    mix_data.update((str(current_timestamp) + str(random_num) + salt).encode(encoding='utf-8'))
+    mix_data.hexdigest()
 
-    salt = ''
-    for i in range(length):
-        salt += random.choice(H)
+    source = str(current_timestamp) + ',' + str(random_num) + ',' + str(mix_data).upper()
+    rst = base64.b64encode(source.encode(encoding='utf-8'))
 
-    return salt
+    logger.info('pa: {}'.format(str(rst, encoding='utf-8')))
+
+    return str(rst, encoding='utf-8')
 
 
 if __name__ == '__main__':
-    print(generate_random_string(68))
+    rst = generate_pa()
+    print(rst)
     # save_image('https://nos.netease.com/nim/NDA5MzEwOA==/bmltYV8xNzc5NzQyNDlfMTUxNTAzODQyMzkyN182OGMzZTA2OS00NzUwLTQ2MWYtOWI3NC1jODNiNmMzMDhhMzM=')
     # strs = filter_tags("""
     # test<span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_tu-65768ccc23.png\" style=\"width:1em;height:1em;\" alt=\"[吐]\"></span><span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_haha-bdd6ceb619.png\" style=\"width:1em;height:1em;\" alt=\"[哈哈]\"></span><span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_tu-65768ccc23.png\" style=\"width:1em;height:1em;\" alt=\"[吐]\"></span><span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/others/l_xin-8e9a1a0346.png\" style=\"width:1em;height:1em;\" alt=\"[心]\"></span><br/><a class='k' href='https://m.weibo.cn/k/test?from=feed'>#test#</a>

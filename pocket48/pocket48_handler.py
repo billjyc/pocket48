@@ -604,7 +604,7 @@ class Pocket48Handler:
         header = {
             'Content-Type': 'application/json;charset=utf-8',
             'User-Agent': 'PocketFans201807/6.0.13 (iPad; iOS 13.5; Scale/2.00)',
-            'pa': 'MTU5MTE5NzQzNjAwMCwzNTcxLDNDRTAxM0ZCNTk1NUI0RUE2RURCOENFN0IzMjBCNzdG',
+            'pa': util.generate_pa(),
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',
@@ -627,7 +627,7 @@ class Pocket48Handler:
         header = {
             'Content-Type': 'application/json;charset=utf-8',
             'User-Agent': 'PocketFans201807/6.0.13 (iPad; iOS 13.5; Scale/2.00)',
-            'pa': 'MTU5MTE5NzQzNjAwMCwzNTcxLDNDRTAxM0ZCNTk1NUI0RUE2RURCOENFN0IzMjBCNzdG',
+            'pa': util.generate_pa(),
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',
@@ -652,7 +652,7 @@ class Pocket48Handler:
         header = {
             'Content-Type': 'application/json;charset=utf-8',
             'User-Agent': 'PocketFans201807/6.0.13 (iPad; iOS 13.5; Scale/2.00)',
-            'pa': 'MTU5MTE5NzQzNjAwMCwzNTcxLDNDRTAxM0ZCNTk1NUI0RUE2RURCOENFN0IzMjBCNzdG',
+            'pa': util.generate_pa(),
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',
@@ -677,7 +677,7 @@ class Pocket48Handler:
         header = {
             'Content-Type': 'application/json;charset=utf-8',
             'User-Agent': 'PocketFans201807/6.0.13 (iPad; iOS 13.5; Scale/2.00)',
-            'pa': 'MTU5MTE5NzQzNjAwMCwzNTcxLDNDRTAxM0ZCNTk1NUI0RUE2RURCOENFN0IzMjBCNzdG',
+            'pa': util.generate_pa(),
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',
@@ -790,10 +790,9 @@ if __name__ == '__main__':
     #     "deviceName": "iphone",
     #     "os": "ios"
     # }))
-    global_config.POCKET48_PA = util.generate_random_string(68)
     member = Member('左婧媛', '327577', '67380556')
     task = Pocket48ListenTask(member)
-    pocket48_handler.login('****', '***')
+    pocket48_handler.login('17011967934', '19930727')
     r = pocket48_handler.get_member_room_msg(task)
     pocket48_handler.parse_room_msg(r, task)
     # base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

@@ -82,11 +82,11 @@ def notify_performance():
     pocket48_handler.notify_performance()
 
 
-@scheduler.scheduled_job('cron', second=30, minute='*/5')
-def generate_pa():
-    my_logger.info('生成pa')
-    # global_config.POCKET48_PA = util.generate_random_string(68)
-    my_logger.info('pa: {}'.format(global_config.POCKET48_PA))
+# @scheduler.scheduled_job('cron', second=30, minute='*/5')
+# def generate_pa():
+#     my_logger.info('生成pa')
+#     global_config.POCKET48_PA = util.generate_pa()
+#     my_logger.info('pa: {}'.format(global_config.POCKET48_PA))
 
 
 username = global_config.POCKET48_JSON["username"]
