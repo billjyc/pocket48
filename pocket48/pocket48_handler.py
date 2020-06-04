@@ -608,7 +608,7 @@ class Pocket48Handler:
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',
-                'deviceId': '1A9A4601-4D1A-49AD-AEF0-EE2462025A2C',
+                'deviceId': '0',
                 "appVersion": global_config.POCKET48_VERSION,
                 "appBuild": "200513",
                 "osVersion": "13.5.0",
@@ -631,7 +631,7 @@ class Pocket48Handler:
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',
-                'deviceId': '1A9A4601-4D1A-49AD-AEF0-EE2462025A2C',
+                'deviceId': '0',
                 "appVersion": global_config.POCKET48_VERSION,
                 "appBuild": "200513",
                 "osVersion": "13.5.0",
@@ -656,7 +656,7 @@ class Pocket48Handler:
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',
-                'deviceId': '1A9A4601-4D1A-49AD-AEF0-EE2462025A2C',
+                'deviceId': '0',
                 "appVersion": global_config.POCKET48_VERSION,
                 "appBuild": "200513",
                 "osVersion": "13.5.0",
@@ -681,7 +681,7 @@ class Pocket48Handler:
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',
-                'deviceId': '1A9A4601-4D1A-49AD-AEF0-EE2462025A2C',
+                'deviceId': '0',
                 "appVersion": global_config.POCKET48_VERSION,
                 "appBuild": "200513",
                 "osVersion": "13.5.0",
