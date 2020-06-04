@@ -245,13 +245,12 @@ def generate_pa():
     :return:
     """
     salt = 'K4bMWJawAtnyyTNOa70S'
-    current_timestamp = int(time.time())
-    random_num = math.floor(random.random() * 9999)
-    mix_data = hashlib.md5()
-    mix_data.update((str(current_timestamp) + str(random_num) + salt).encode(encoding='utf-8'))
-    mix_data.hexdigest()
+    current_timestamp = int(time.time()) * 1000
+    random_num = random.randint(1000, 9999)
+    mix_data = hashlib.md5((str(current_timestamp) + str(random_num) + salt).encode(encoding='utf-8'))
+    mix_str = mix_data.hexdigest()
 
-    source = str(current_timestamp) + ',' + str(random_num) + ',' + str(mix_data).upper()
+    source = str(current_timestamp) + ',' + str(random_num) + ',' + mix_str
     rst = base64.b64encode(source.encode(encoding='utf-8'))
 
     logger.info('pa: {}'.format(str(rst, encoding='utf-8')))
