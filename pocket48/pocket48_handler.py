@@ -793,7 +793,7 @@ if __name__ == '__main__':
     global_config.POCKET48_PA = util.generate_random_string(68)
     member = Member('左婧媛', '327577', '67380556')
     task = Pocket48ListenTask(member)
-    pocket48_handler.login('17011967934', '19930727')
+    pocket48_handler.login('****', '***')
     r = pocket48_handler.get_member_room_msg(task)
     pocket48_handler.parse_room_msg(r, task)
     # base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
