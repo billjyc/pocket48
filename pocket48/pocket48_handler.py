@@ -604,15 +604,16 @@ class Pocket48Handler:
         header = {
             'Content-Type': 'application/json;charset=utf-8',
             'User-Agent': 'PocketFans201807/6.0.13 (iPad; iOS 13.5; Scale/2.00)',
-            'pa': global_config.POCKET48_PA,
+            'pa': 'MTU5MTE5NzQzNjAwMCwzNTcxLDNDRTAxM0ZCNTk1NUI0RUE2RURCOENFN0IzMjBCNzdG',
+            'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',
-                'deviceId': 0,
+                'deviceId': '1A9A4601-4D1A-49AD-AEF0-EE2462025A2C',
                 "appVersion": global_config.POCKET48_VERSION,
                 "appBuild": "200513",
                 "osVersion": "13.5.0",
                 "osType": "ios",
-                "deviceName": "iphone",
+                "deviceName": "unknow",
                 "os": "ios"
             }),
         }
@@ -627,14 +628,15 @@ class Pocket48Handler:
             'Content-Type': 'application/json;charset=utf-8',
             'User-Agent': 'PocketFans201807/6.0.13 (iPad; iOS 13.5; Scale/2.00)',
             'pa': 'MTU5MTE5NzQzNjAwMCwzNTcxLDNDRTAxM0ZCNTk1NUI0RUE2RURCOENFN0IzMjBCNzdG',
+            'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',
-                'deviceId': 0,
+                'deviceId': '1A9A4601-4D1A-49AD-AEF0-EE2462025A2C',
                 "appVersion": global_config.POCKET48_VERSION,
                 "appBuild": "200513",
                 "osVersion": "13.5.0",
                 "osType": "ios",
-                "deviceName": "iphone",
+                "deviceName": "unknow",
                 "os": "ios"
             }),
             'token': self.token
@@ -651,14 +653,15 @@ class Pocket48Handler:
             'Content-Type': 'application/json;charset=utf-8',
             'User-Agent': 'PocketFans201807/6.0.13 (iPad; iOS 13.5; Scale/2.00)',
             'pa': 'MTU5MTE5NzQzNjAwMCwzNTcxLDNDRTAxM0ZCNTk1NUI0RUE2RURCOENFN0IzMjBCNzdG',
+            'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',
-                'deviceId': 0,
+                'deviceId': '1A9A4601-4D1A-49AD-AEF0-EE2462025A2C',
                 "appVersion": global_config.POCKET48_VERSION,
                 "appBuild": "200513",
                 "osVersion": "13.5.0",
                 "osType": "ios",
-                "deviceName": "iphone",
+                "deviceName": "unknow",
                 "os": "ios"
             }),
             'token': self.token
@@ -675,14 +678,15 @@ class Pocket48Handler:
             'Content-Type': 'application/json;charset=utf-8',
             'User-Agent': 'PocketFans201807/6.0.13 (iPad; iOS 13.5; Scale/2.00)',
             'pa': 'MTU5MTE5NzQzNjAwMCwzNTcxLDNDRTAxM0ZCNTk1NUI0RUE2RURCOENFN0IzMjBCNzdG',
+            'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',
-                'deviceId': 0,
+                'deviceId': '1A9A4601-4D1A-49AD-AEF0-EE2462025A2C',
                 "appVersion": global_config.POCKET48_VERSION,
                 "appBuild": "200513",
                 "osVersion": "13.5.0",
                 "osType": "ios",
-                "deviceName": "iphone",
+                "deviceName": "unknow",
                 "os": "ios"
             }),
             'token': self.token
