@@ -10,28 +10,29 @@ import traceback
 from utils import global_config
 import urllib.request
 
-
 rst = {}
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 workbook = xlwt.Workbook(encoding='utf-8')
 worksheet = workbook.add_sheet('My Worksheet')
 
+
 def get_header():
     header = {
         'Content-Type': 'application/json;charset=utf-8',
-        'User-Agent': 'PocketFans201807/6.0.11 (iPhone; iOS 13.3; Scale/2.00)',
+        'User-Agent': 'PocketFans201807/6.0.13 (iPad; iOS 13.5; Scale/2.00)',
+        'pa': util.generate_pa(),
+        'Host': 'pocketapi.48.cn',
         'appInfo': json.dumps({
             'vendor': 'apple',
-            'deviceId': 0,
-            "appVersion": "6.0.10",
-            "appBuild": "200120",
-            "osVersion": "13.3.0",
+            'deviceId': '0',
+            "appVersion": "6.0.13",
+            "appBuild": "200513",
+            "osVersion": "13.5.0",
             "osType": "ios",
-            "deviceName": "iphone",
+            "deviceName": "unknow",
             "os": "ios"
         }),
-        # 'token': global_config.POCKET48_TOKEN
-        'token': 'k8EEcQjKCZGx4XO8v9O5PH8VlHZBuR8fB5be4WgQSredPbUZ1ryPDeFhRrrGv/Sv1SCg/JdDPrk='
+        'token': "oYf9xUxJ/GOY76RZdvww0wAz5FOzrMQj4yO3SnpKZfmjTHQ2y2FHNVFs8KtEAVYqjV6Cy/pIkd8="
     }
     return header
 
@@ -86,7 +87,7 @@ if __name__ == "__main__":
     worksheet.write(0, 0, 'ID')
     worksheet.write(0, 1, '姓名')
     worksheet.write(0, 2, '鸡腿数')
-    for i in range(71, 84):
+    for i in range(88, 93):
         get_single_week_rank(i)
 
     for k, v in rst.items():
