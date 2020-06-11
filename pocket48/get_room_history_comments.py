@@ -63,7 +63,6 @@ def get_room_history_comments(room_id, start_time, end_time=0):
 
 
 def get_room_comments(room_id, last_time, end_time):
-    print('room id: {}'.format(room_id))
     time.sleep(5)
     url = 'https://pocketapi.48.cn/im/api/v1/chatroom/msg/list/all'
     params = {
@@ -154,8 +153,6 @@ def get_room_list():
 
 
 if __name__ == '__main__':
-    pa = util.generate_pa()
-    print(pa)
     room_list = get_room_list()
     line = 1
     worksheet.write(0, 0, '成员姓名')
@@ -175,6 +172,7 @@ if __name__ == '__main__':
         get_room_history_comments(room['room_id'], 1591545600000, 1590940800000)
         for fan in rst[room['room_id']]:
             try:
+                print('留言粉丝数: {}'.format(len(rst[room['room_id']])))
                 print(fan)
                 worksheet.write(line, 0, room['name'])
                 worksheet.write(line, 1, room['room_id'])
