@@ -50,7 +50,7 @@ def get_header():
             "deviceName": "unknow",
             "os": "ios"
         }),
-        'token': "4eIQ/Wuz7QkWFuHRKEPREm8cLYhuAhaLJSDqdT4N2HuviFVTDbuINrLUD5MICo1Du3JWr7ii+Sw="
+        'token': "wlOMD+ilcqVK2rwx5HLvLAs4YnFZPwUzc+i+TCf/awDRC3Wpta9lz9NbHK66DAPXeQ3oO6f4NnQ="
     }
     return header
 
@@ -64,7 +64,7 @@ def get_room_history_comments(room_id, start_time, end_time=0):
 
 
 def get_room_comments(room_id, last_time, end_time):
-    time.sleep(3)
+    time.sleep(1.5)
     url = 'https://pocketapi.48.cn/im/api/v1/chatroom/msg/list/all'
     params = {
         "roomId": room_id,
@@ -180,7 +180,7 @@ if __name__ == '__main__':
             if room['room_id'] in [67236601]:
                 continue
             rst[room['room_id']] = set()
-            get_room_history_comments(room['room_id'], 1591891200000, 1591804800000)
+            get_room_history_comments(room['room_id'], 1592236800000, 1592150400000)
             print('留言粉丝数: {}'.format(len(rst[room['room_id']])))
 
             level1_2 = 0
@@ -235,4 +235,4 @@ if __name__ == '__main__':
     except Exception as e:
         print(e)
     finally:
-        workbook.save('comments_data.xls')
+        workbook.save('comments_data_20200615.xls')
