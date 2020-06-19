@@ -50,7 +50,7 @@ def get_header():
             "deviceName": "unknow",
             "os": "ios"
         }),
-        'token': "wlOMD+ilcqVK2rwx5HLvLAs4YnFZPwUzc+i+TCf/awDRC3Wpta9lz9NbHK66DAPXeQ3oO6f4NnQ="
+        'token': "bzo+8RLneQtjvl1q3Ah2Fk+PUSiMmda6wmdiAoBC3BJNl7FxFsY0juTT6TvDV8900avVXyFz6XQ="
     }
     return header
 
@@ -64,7 +64,7 @@ def get_room_history_comments(room_id, start_time, end_time=0):
 
 
 def get_room_comments(room_id, last_time, end_time):
-    time.sleep(1.5)
+    time.sleep(1)
     url = 'https://pocketapi.48.cn/im/api/v1/chatroom/msg/list/all'
     params = {
         "roomId": room_id,
@@ -98,9 +98,11 @@ def parse_room_comments(msgs, end_time):
             msg_time_0 = msg["msgTime"]
             if msg_time_0 < end_time:
                 return
+            if extInfo['user']['roleId'] != 1:
+                continue
 
             msg_time = util.convert_timestamp_to_timestr(msg["msgTime"])
-            if 'userId'  in extInfo['user'].keys():
+            if 'userId' in extInfo['user'].keys():
                 user_id = int(extInfo['user']['userId'])
             else:
                 user_id = 0
@@ -180,8 +182,7 @@ if __name__ == '__main__':
             if room['room_id'] in [67236601]:
                 continue
             rst[room['room_id']] = set()
-            get_room_history_comments(room['room_id'], 1592236800000, 1592150400000)
-            print('留言粉丝数: {}'.format(len(rst[room['room_id']])))
+            get_room_history_comments(room['room_id'], 1592496000000, 1592409600000)
 
             level1_2 = 0
             level3_6 = 0
@@ -223,16 +224,18 @@ if __name__ == '__main__':
             worksheet2.write(line2, 0, room['name'])
             total = len(rst[room['room_id']])
             worksheet2.write(line2, 1, total)
-            worksheet2.write(line2, 2, '%2f%%' % (level1_2 / total * 100))
-            worksheet2.write(line2, 3, '%2f%%' % (level3_6 / total * 100))
-            worksheet2.write(line2, 4, '%2f%%' % (level7_9 / total * 100))
-            worksheet2.write(line2, 5, '%2f%%' % (level10_12 / total * 100))
-            print('1-2级粉丝占比: {}, 3-6级占比: {}, 7-9级占比: {}, 10级以上占比: {}'.format('%2f%%' % (level1_2 / total * 100),
-                                                                             '%2f%%' % (level3_6 / total * 100),
-                                                                             '%2f%%' % (level7_9 / total * 100),
-                                                                             '%2f%%' % (level10_12 / total * 100)))
+            print('留言粉丝数: {}'.format(len(rst[room['room_id']])))
+            if total > 0:
+                worksheet2.write(line2, 2, '%.2f%%' % (level1_2 / total * 100))
+                worksheet2.write(line2, 3, '%.2f%%' % (level3_6 / total * 100))
+                worksheet2.write(line2, 4, '%.2f%%' % (level7_9 / total * 100))
+                worksheet2.write(line2, 5, '%.2f%%' % (level10_12 / total * 100))
+                print('1-2级粉丝占比: {}, 3-6级占比: {}, 7-9级占比: {}, 10级以上占比: {}'.format('%.2f%%' % (level1_2 / total * 100),
+                                                                                 '%.2f%%' % (level3_6 / total * 100),
+                                                                                 '%.2f%%' % (level7_9 / total * 100),
+                                                                                 '%.2f%%' % (level10_12 / total * 100)))
             line2 += 1
     except Exception as e:
         print(e)
     finally:
-        workbook.save('comments_data_20200615.xls')
+        workbook.save('comments_data_20200618.xls')
