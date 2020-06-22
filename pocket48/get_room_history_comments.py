@@ -9,6 +9,7 @@ from log.my_logger import pocket48_logger as logger
 import xlwt
 
 rst = {}
+rst2 = {}
 workbook = xlwt.Workbook(encoding='utf-8')
 worksheet = workbook.add_sheet('My Worksheet')
 worksheet2 = workbook.add_sheet('total')
@@ -50,9 +51,69 @@ def get_header():
             "deviceName": "unknow",
             "os": "ios"
         }),
-        'token': "bzo+8RLneQtjvl1q3Ah2Fk+PUSiMmda6wmdiAoBC3BJNl7FxFsY0juTT6TvDV8900avVXyFz6XQ="
+        'token': "jthdahj9bMK+udZ3J5tbKA6edg4F7fVn+wRCRdo5Qe5UGt8r0qcmrWSDwhAAvCmXeErFEQxmcPM="
     }
     return header
+
+
+def get_room_history_msg(member_id, room_id, start_time, end_time=0):
+    next_start_time = get_room_msg(member_id, room_id, start_time, end_time)
+    while next_start_time >= end_time:
+        next_start_time = get_room_msg(member_id, room_id, next_start_time, end_time)
+    print('done')
+
+
+def get_room_msg(member_id, room_id, last_time, end_time):
+    print('member_id: {}, room id: {}'.format(member_id, room_id))
+    time.sleep(0.5)
+    url = 'https://pocketapi.48.cn/im/api/v1/chatroom/msg/list/homeowner'
+    params = {
+        "ownerId": member_id,
+        "roomId": room_id,
+        "nextTime": last_time
+    }
+    try:
+        r = requests.post(url, data=json.dumps(params), headers=get_header(), verify=False).text
+    except Exception as e:
+        print(e)
+
+    try:
+        rsp_json = json.loads(r)
+        msgs = rsp_json['content']['message']
+        if not msgs:
+            return -1
+        parse_room_msg(msgs, end_time)
+        next_time = rsp_json['content']['nextTime']
+        return next_time
+    except Exception as e:
+        print(e)
+        return -1
+
+
+def parse_room_msg(msgs, end_time):
+    try:
+        for msg in msgs:
+            extInfo = json.loads(msg['extInfo'])
+            msg_id = msg['msgidClient']  # 消息id
+            # rst = cursor.execute("""
+            #     SELECT * FROM 'room_message' WHERE message_id=?
+            # """, msg_id)
+
+            msg_time_0 = msg["msgTime"]
+            if msg_time_0 < end_time:
+                return
+
+            msg_time = util.convert_timestamp_to_timestr(msg["msgTime"])
+            user_id = extInfo['user']['userId']
+            user_name = extInfo['user']['nickName']
+            room_id = int(extInfo['roomId'])
+            # if int(user_id) != member_messages['id']:
+            #     continue
+            rst2[room_id] += 1
+            # print('extInfo.keys():' + ','.join(extInfo.keys()))
+
+    except Exception as e:
+        print(e)
 
 
 def get_room_history_comments(room_id, start_time, end_time=0):
@@ -64,7 +125,7 @@ def get_room_history_comments(room_id, start_time, end_time=0):
 
 
 def get_room_comments(room_id, last_time, end_time):
-    time.sleep(1)
+    time.sleep(0.7)
     url = 'https://pocketapi.48.cn/im/api/v1/chatroom/msg/list/all'
     params = {
         "roomId": room_id,
@@ -169,11 +230,12 @@ if __name__ == '__main__':
     worksheet.write(0, 7, '是否已实名认证')
 
     worksheet2.write(0, 0, '成员姓名')
-    worksheet2.write(0, 1, '留言粉丝数')
-    worksheet2.write(0, 2, '1-2级粉丝数占比')
-    worksheet2.write(0, 3, '3-6级粉丝数占比')
-    worksheet2.write(0, 4, '7-9级粉丝数占比')
-    worksheet2.write(0, 5, '10级以上粉丝数占比')
+    worksheet2.write(0, 1, '发送消息数')
+    worksheet2.write(0, 2, '留言粉丝数')
+    worksheet2.write(0, 3, '1-2级粉丝数占比')
+    worksheet2.write(0, 4, '3-6级粉丝数占比')
+    worksheet2.write(0, 5, '7-9级粉丝数占比')
+    worksheet2.write(0, 6, '10级以上粉丝数占比')
 
     try:
 
@@ -182,7 +244,9 @@ if __name__ == '__main__':
             if room['room_id'] in [67236601]:
                 continue
             rst[room['room_id']] = set()
-            get_room_history_comments(room['room_id'], 1592496000000, 1592409600000)
+            rst2[room['room_id']] = 0
+            get_room_history_msg(room['id'], room['room_id'], 1592755200000, 1592668800000)
+            get_room_history_comments(room['room_id'], 1592755200000, 1592668800000)
 
             level1_2 = 0
             level3_6 = 0
@@ -222,14 +286,16 @@ if __name__ == '__main__':
                     logger.exception(e)
                     continue
             worksheet2.write(line2, 0, room['name'])
+            worksheet2.write(line2, 1, rst2[room['room_id']])
+            print('发送消息数: {}'.format(rst2[room['room_id']]))
             total = len(rst[room['room_id']])
-            worksheet2.write(line2, 1, total)
+            worksheet2.write(line2, 2, total)
             print('留言粉丝数: {}'.format(len(rst[room['room_id']])))
             if total > 0:
-                worksheet2.write(line2, 2, '%.2f%%' % (level1_2 / total * 100))
-                worksheet2.write(line2, 3, '%.2f%%' % (level3_6 / total * 100))
-                worksheet2.write(line2, 4, '%.2f%%' % (level7_9 / total * 100))
-                worksheet2.write(line2, 5, '%.2f%%' % (level10_12 / total * 100))
+                worksheet2.write(line2, 3, '%.2f%%' % (level1_2 / total * 100))
+                worksheet2.write(line2, 4, '%.2f%%' % (level3_6 / total * 100))
+                worksheet2.write(line2, 5, '%.2f%%' % (level7_9 / total * 100))
+                worksheet2.write(line2, 6, '%.2f%%' % (level10_12 / total * 100))
                 print('1-2级粉丝占比: {}, 3-6级占比: {}, 7-9级占比: {}, 10级以上占比: {}'.format('%.2f%%' % (level1_2 / total * 100),
                                                                                  '%.2f%%' % (level3_6 / total * 100),
                                                                                  '%.2f%%' % (level7_9 / total * 100),
@@ -238,4 +304,4 @@ if __name__ == '__main__':
     except Exception as e:
         print(e)
     finally:
-        workbook.save('comments_data_20200618.xls')
+        workbook.save('comments_data_20200621.xls')
