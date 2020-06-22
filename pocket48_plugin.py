@@ -57,7 +57,7 @@ def get_room_msgs():
 #     for task in pocket48_handler.listen_tasks:
 #         pocket48_handler.parse_member_live(r, task)
 
-@scheduler.scheduled_job('cron', hour='*/4')
+@scheduler.scheduled_job('cron', hour='*/12')
 def login_timely():
     my_logger.info('定时登录，刷新token')
     pocket48_handler.is_login = False
