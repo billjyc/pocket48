@@ -51,7 +51,7 @@ def get_header():
             "deviceName": "unknow",
             "os": "ios"
         }),
-        'token': "jthdahj9bMK+udZ3J5tbKA6edg4F7fVn+wRCRdo5Qe5UGt8r0qcmrWSDwhAAvCmXeErFEQxmcPM="
+        'token': "+nCFSVFB9jJiiVQJR1fTEH10FovnoJWJJA+bzGLaHQk6o7POeWbDt03R0vp5xHhBJYNqGiU81fM="
     }
     return header
 
@@ -237,71 +237,76 @@ if __name__ == '__main__':
     worksheet2.write(0, 5, '7-9级粉丝数占比')
     worksheet2.write(0, 6, '10级以上粉丝数占比')
 
-    try:
-
-        for room in room_list:
-            print(room['name'])
-            if room['room_id'] in [67236601]:
-                continue
-            rst[room['room_id']] = set()
-            rst2[room['room_id']] = 0
-            get_room_history_msg(room['id'], room['room_id'], 1592755200000, 1592668800000)
-            get_room_history_comments(room['room_id'], 1592755200000, 1592668800000)
-
-            level1_2 = 0
-            level3_6 = 0
-            level7_9 = 0
-            level10_12 = 0
-            for fan in rst[room['room_id']]:
-                try:
-                    print(fan)
-                    if int(room['id']) == int(fan.user_id):
-                        continue
-                    worksheet.write(line, 0, room['name'])
-                    worksheet.write(line, 1, room['room_id'])
-                    worksheet.write(line, 2, fan.user_id)
-                    worksheet.write(line, 3, fan.nick_name)
-                    worksheet.write(line, 4, fan.level)
-                    if fan.level <= 2:
-                        level1_2 += 1
-                    elif fan.level <= 6:
-                        level3_6 += 1
-                    elif fan.level <= 9:
-                        level7_9 += 1
-                    else:
-                        level10_12 += 1
-                    if fan.gender == 0:
-                        worksheet.write(line, 5, '未知')
-                    elif fan.gender == 1:
-                        worksheet.write(line, 5, '男')
-                    else:
-                        worksheet.write(line, 5, '女')
-                    if fan.is_vip:
-                        worksheet.write(line, 6, '是')
-                    else:
-                        worksheet.write(line, 6, '否')
-                    worksheet.write(line, 7, '是' if fan.verification else '否')
-                    line += 1
-                except Exception as e:
-                    logger.exception(e)
+    start_time = 1592236800000
+    end_time = 1592150400000
+    for i in range(15, 20):
+        print('202006{}'.format(i))
+        try:
+            for room in room_list:
+                print(room['name'])
+                if room['room_id'] in [67236601]:
                     continue
-            worksheet2.write(line2, 0, room['name'])
-            worksheet2.write(line2, 1, rst2[room['room_id']])
-            print('发送消息数: {}'.format(rst2[room['room_id']]))
-            total = len(rst[room['room_id']])
-            worksheet2.write(line2, 2, total)
-            print('留言粉丝数: {}'.format(len(rst[room['room_id']])))
-            if total > 0:
-                worksheet2.write(line2, 3, '%.2f%%' % (level1_2 / total * 100))
-                worksheet2.write(line2, 4, '%.2f%%' % (level3_6 / total * 100))
-                worksheet2.write(line2, 5, '%.2f%%' % (level7_9 / total * 100))
-                worksheet2.write(line2, 6, '%.2f%%' % (level10_12 / total * 100))
-                print('1-2级粉丝占比: {}, 3-6级占比: {}, 7-9级占比: {}, 10级以上占比: {}'.format('%.2f%%' % (level1_2 / total * 100),
-                                                                                 '%.2f%%' % (level3_6 / total * 100),
-                                                                                 '%.2f%%' % (level7_9 / total * 100),
-                                                                                 '%.2f%%' % (level10_12 / total * 100)))
-            line2 += 1
-    except Exception as e:
-        print(e)
-    finally:
-        workbook.save('comments_data_20200621.xls')
+                rst[room['room_id']] = set()
+                rst2[room['room_id']] = 0
+                get_room_history_msg(room['id'], room['room_id'], start_time, end_time)
+                get_room_history_comments(room['room_id'], start_time, end_time)
+
+                level1_2 = 0
+                level3_6 = 0
+                level7_9 = 0
+                level10_12 = 0
+                for fan in rst[room['room_id']]:
+                    try:
+                        print(fan)
+                        if int(room['id']) == int(fan.user_id):
+                            continue
+                        worksheet.write(line, 0, room['name'])
+                        worksheet.write(line, 1, room['room_id'])
+                        worksheet.write(line, 2, fan.user_id)
+                        worksheet.write(line, 3, fan.nick_name)
+                        worksheet.write(line, 4, fan.level)
+                        if fan.level <= 2:
+                            level1_2 += 1
+                        elif fan.level <= 6:
+                            level3_6 += 1
+                        elif fan.level <= 9:
+                            level7_9 += 1
+                        else:
+                            level10_12 += 1
+                        if fan.gender == 0:
+                            worksheet.write(line, 5, '未知')
+                        elif fan.gender == 1:
+                            worksheet.write(line, 5, '男')
+                        else:
+                            worksheet.write(line, 5, '女')
+                        if fan.is_vip:
+                            worksheet.write(line, 6, '是')
+                        else:
+                            worksheet.write(line, 6, '否')
+                        worksheet.write(line, 7, '是' if fan.verification else '否')
+                        line += 1
+                    except Exception as e:
+                        logger.exception(e)
+                        continue
+                worksheet2.write(line2, 0, room['name'])
+                worksheet2.write(line2, 1, rst2[room['room_id']])
+                print('发送消息数: {}'.format(rst2[room['room_id']]))
+                total = len(rst[room['room_id']])
+                worksheet2.write(line2, 2, total)
+                print('留言粉丝数: {}'.format(len(rst[room['room_id']])))
+                if total > 0:
+                    worksheet2.write(line2, 3, '%.2f%%' % (level1_2 / total * 100))
+                    worksheet2.write(line2, 4, '%.2f%%' % (level3_6 / total * 100))
+                    worksheet2.write(line2, 5, '%.2f%%' % (level7_9 / total * 100))
+                    worksheet2.write(line2, 6, '%.2f%%' % (level10_12 / total * 100))
+                    print('1-2级粉丝占比: {}, 3-6级占比: {}, 7-9级占比: {}, 10级以上占比: {}'.format('%.2f%%' % (level1_2 / total * 100),
+                                                                                     '%.2f%%' % (level3_6 / total * 100),
+                                                                                     '%.2f%%' % (level7_9 / total * 100),
+                                                                                     '%.2f%%' % (level10_12 / total * 100)))
+                line2 += 1
+        except Exception as e:
+            print(e)
+        finally:
+            end_time = start_time
+            start_time = start_time + 86400 * 1000
+            workbook.save('comments_data_202006{}.xls'.format(i))
