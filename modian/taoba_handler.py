@@ -34,6 +34,7 @@ class TaoBaEntity:
         self.current = current
         # self.target = target
         self.support_num = support_num
+        self.pk_group = None
 
 
 class TaoBaAccountHandler:
@@ -132,11 +133,30 @@ class TaoBaAccountHandler:
             name = r['datas']['title']
             current = r['datas']['donation']
             # user_num = r['user_num']
+            if 'pkgroup' in r['datas'].keys() and r['datas']['pkgroup']:
+                taoba_entity.pk_group = r['datas']['pkgroup']
             user_num = 0
             my_logger.info('支持人数: %s, 当前进度: %s', user_num, current)
             return name, current, user_num
         else:
             raise RuntimeError('获取项目筹款结果查询失败')
+
+    def get_pk_group(self, pk_group):
+        """
+        获取PK情况
+        :param pk_group:
+        :return:
+        """
+        my_logger.info('获取PK战况，pk group id: {}'.format(pk_group))
+        api = 'https://www.tao-ba.club/idols/pkgroup/pkstats'
+        data = {'pkgroup': pk_group, 'requestTime': int(time.time() * 1000), '_version_': 1, 'pf': 'h5'}
+        r = self.session.post(api, data=self.encrypt(data), headers=self.taoba_header())
+        r = self.decrypt(r.text)
+        if int(r['code']) == 0:
+            return r['list']
+        else:
+            return []
+
 
     def parse_order_details(self, orders, taoba_entity):
         my_logger.debug('taoba_entity: {}'.format(taoba_entity.taoba_id))
@@ -442,7 +462,9 @@ if __name__ == "__main__":
     # print(handler.decrypt('61$XZyIVv/J+M0IUewyF9B3yhxLb05Dst/M49To0uHioJDv3BQlHEN2C0ATBgM/I1dDLUs4paQ0divhDBWlBAAHXDup'))
     print(handler.encrypt({'id': '1634', 'offset': 0, 'ismore': True, 'requestTime': int(time.time() * 1000), 'pf': 'h5'}))
     #
-    rst = '6485$XZzmWO5uLzc0/ctiumVFZmvDz99EN+9rhk0xt33ciDDVQnVqI1n1xasazd8PVLRGFVnwwqssbBD/lAfuRx7fORmfv/qEieYRtIrWYB8rrX7KVDiaxohdG/PJ3zQd0n8Cv0CWvSM6AWfGqfz0qdsJExDTdHF3nGgQJIAViBxiwZfeGktNlSsgg4dQli+E57dlzXpNrdjrjjdYYiOdQabgMSLWwUy605lV9yPh+Yb9xuYK0b/G0GKEGMhakiv9D5Lz8ixI1hU6WW3E2cWD2ISxxd6gGdB1RsL616h5s/flwSZt7MZ6ywJkXVkwmd/h+iNss9Bh81wJlX2pCybyYavK0T7ZPOBqAKVF+sBTR8PxHnjCa+yB7o0Z7c/SdVKNBp7s4eIHMfI+QUcEbOQNYgLGz5zi1TsKdNYcExl9kMQOsP1eo6EN9okJYNKzE+zx/p+wthSm7s8llQlswEA8aOMeoVuTBJc8dCBXf92aEgk6P96TNq0+uPq4LkC0r0B8SK916Jh0V3OvHqz4EzWoRo8iMHnoHgEUjTwFBWBS3K038EMJfkYBOvZ2Abm3xRa6i1cynh2W2QhXdQDmXa70nl1LAfZ2Gm1r7tRvM1hHP1ev7NPAqoZfudyGe2WY9DFBl2Ge899e/p4BYsS64HvsFXzB0ayfqkH0HS0foCf40SCfWB9wy3pX+Q3Cb/iYkUB+vbcC6q/QHI6ysC4zaHOFobsbhcmJv4Kw3QNlew1MOvF5MCThrW6ZsaG1st5OkZICBfnRd0fQ7rPpPRzKJUoqPpfhBPJ0atv+bgwqPQJRYgZ0XsOlyqoQWdO1E0isJ0xxhCT7+Ik9ku5sroWP573lSgZU1REaKllxorESGVhz1Lg10CeksgoPx8GDg1pCRAUDNfPoWeVoGnFIcRLTw5fkAjghdOVXpPZ5cp7pFbZiB8czCD/LGfJ3+okkrXEnvQwlQ63IY4PE8IxFuDfbePql0mD2To1aBHSlhNwvpvWzGTrvvROZWSYOjZq/GBUhl5CqLloTtJeBbfeIMGyd3ABAlQ3oubl5K/qNB9M045nXnvG7HdI2+4vqlIxu13JbTzX+AeVBUlf4vYriLEeaab4CKrUyeYpwosNaR8h5D4xF3MWiNRQ75QINW48n/XJOLD0mestv1SI/tvgGigne0BOAZ53a7/rB7O4lJio5IG+g8p1L7pYsrwr6MPkGCWbu2L4LRZoFFLXMAm3qdAMVhrMP6v8gT2iiRW43CeQw9M3JtIm7zwJ8K2VKATJRcCcJ++PAwKZ7bzj6pzg4qM2wgCoWWt+IRMHNpOP3OeOurOIBIjUGxzw9HGYVBcsYSuA2G+OVdo6qu3EnfUxh0XW11PuUEJxBhQrV8hhP1nl9J0eL4/ZDNpV38l2y3v9IGs4ef06F9Cvu+xE4j5QW87OO44ncbTObNur0Nv3GPLneqZM+8nKesYGXsU5XS6vTWwqVxTncG6KQ528uaBNWxFXCqsbjux/mwOUqtsqBmkxgRbFI7jVpLKtFoaIojIvzpPpSb7/tDZb9OvfZAImUC8Y='
+    rst = '4841$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'
     rst = handler.decrypt(rst)
     print(rst)
-    print(len(rst['list']))
+    # pk参数
+    # {'pkgroup': '200624TVwh8e62', 'requestTime': 1593569363895, '_version_': 1, 'pf': 'h5'}
+    # print(len(rst['list']))
