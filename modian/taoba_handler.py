@@ -331,6 +331,15 @@ class TaoBaAccountHandler:
             msg += '%s\n集资项目: %s\n集资方式: %s\n' % (project_info, pro_name, taoba_entity.link)
             # msg += jizi_pk_report
 
+            if taoba_entity.pk_group:
+                pk_condition = self.get_pk_group(taoba_entity.pk_group)
+                if pk_condition:
+                    pk_msg = '当前PK战况: \n'
+                    current_rank = 1
+                    for item in pk_condition:
+                        pk_msg += '{}. {}: {}元\n'.format(current_rank, item['title'], item['donation'])
+                    QQHandler.send_to_groups(['483548995'], pk_msg)
+
             my_logger.info(msg)
             if global_config.USING_COOLQ_PRO is True:
                 my_logger.debug('使用酷Q PRO发送图片')
