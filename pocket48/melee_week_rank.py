@@ -19,13 +19,13 @@ worksheet = workbook.add_sheet('My Worksheet')
 def get_header():
     header = {
         'Content-Type': 'application/json;charset=utf-8',
-        'User-Agent': 'PocketFans201807/6.0.13 (iPad; iOS 13.5; Scale/2.00)',
+        'User-Agent': 'PocketFans201807/6.0.15 (iPad; iOS 13.5; Scale/2.00)',
         'pa': util.generate_pa(),
         'Host': 'pocketapi.48.cn',
         'appInfo': json.dumps({
             'vendor': 'apple',
             'deviceId': '0',
-            "appVersion": "6.0.13",
+            "appVersion": "6.0.15",
             "appBuild": "200513",
             "osVersion": "13.5.0",
             "osType": "ios",

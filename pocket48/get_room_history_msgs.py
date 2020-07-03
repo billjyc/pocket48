@@ -47,11 +47,11 @@ class TextMessageType:
 def get_header():
     header = {
         'Content-Type': 'application/json;charset=utf-8',
-        'User-Agent': 'PocketFans201807/6.0.10 (iPhone; iOS 13.3; Scale/2.00)',
+        'User-Agent': 'PocketFans201807/6.0.15 (iPhone; iOS 13.3; Scale/2.00)',
         'appInfo': json.dumps({
             'vendor': 'apple',
             'deviceId': 0,
-            "appVersion": "6.0.10",
+            "appVersion": "6.0.15",
             "appBuild": "200120",
             "osVersion": "13.3.0",
             "osType": "ios",

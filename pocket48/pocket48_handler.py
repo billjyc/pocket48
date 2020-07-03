@@ -603,7 +603,7 @@ class Pocket48Handler:
         """
         header = {
             'Content-Type': 'application/json;charset=utf-8',
-            'User-Agent': 'PocketFans201807/6.0.13 (iPad; iOS 13.5; Scale/2.00)',
+            'User-Agent': 'PocketFans201807/6.0.15 (iPad; iOS 13.5; Scale/2.00)',
             'pa': util.generate_pa(),
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
@@ -626,7 +626,7 @@ class Pocket48Handler:
         """
         header = {
             'Content-Type': 'application/json;charset=utf-8',
-            'User-Agent': 'PocketFans201807/6.0.13 (iPad; iOS 13.5; Scale/2.00)',
+            'User-Agent': 'PocketFans201807/6.0.15 (iPad; iOS 13.5; Scale/2.00)',
             'pa': util.generate_pa(),
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
@@ -651,7 +651,7 @@ class Pocket48Handler:
         logger.debug('token: %s', self.token)
         header = {
             'Content-Type': 'application/json;charset=utf-8',
-            'User-Agent': 'PocketFans201807/6.0.13 (iPad; iOS 13.5; Scale/2.00)',
+            'User-Agent': 'PocketFans201807/6.0.15 (iPad; iOS 13.5; Scale/2.00)',
             'pa': util.generate_pa(),
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
@@ -676,7 +676,7 @@ class Pocket48Handler:
         logger.debug('token: %s', self.token)
         header = {
             'Content-Type': 'application/json;charset=utf-8',
-            'User-Agent': 'PocketFans201807/6.0.13 (iPad; iOS 13.5; Scale/2.00)',
+            'User-Agent': 'PocketFans201807/6.0.15 (iPad; iOS 13.5; Scale/2.00)',
             'pa': util.generate_pa(),
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
