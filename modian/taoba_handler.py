@@ -363,8 +363,8 @@ class TaoBaAccountHandler:
                         current_rank += 1
                     sorted_pk_rst = sorted(pk_rst.items(), key=lambda item0: item0[1], reverse=True)
                     rank = 1
-                    for k, v in sorted_pk_rst.items():
-                        pk_msg += '{}. {}: {}元\n'.format(rank, k, v)
+                    for item in sorted_pk_rst:
+                        pk_msg += '{}. {}: {}元\n'.format(rank, item[0], item[1])
                         rank += 1
                     QQHandler.send_to_groups(['483548995'], sub_msg)
                     QQHandler.send_to_groups(['483548995'], sub_msg)
