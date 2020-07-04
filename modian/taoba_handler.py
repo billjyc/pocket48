@@ -334,11 +334,40 @@ class TaoBaAccountHandler:
             if taoba_entity.pk_group:
                 pk_condition = self.get_pk_group(taoba_entity.pk_group)
                 if pk_condition:
+                    FXF_ID = 5596
+                    YANGYE_ID = 5593
+
+                    WANLINA_ID = 5594
+                    QIJING_ID = 5604
+
+                    JIANGYUN_ID = 5481
+                    CHENLIN_ID = 5595
+
+                    pk_rst = {
+                        '冯晓菲+杨晔': 0,
+                        '万丽娜+祁静': 0,
+                        '蒋芸+陈琳': 0
+                    }
+
                     pk_msg = '当前PK战况: \n'
+                    sub_msg = '{}'.format(pk_msg)
                     current_rank = 1
                     for item in pk_condition:
-                        pk_msg += '{}. {}: {}元\n'.format(current_rank, item['title'], item['donation'])
-                    QQHandler.send_to_groups(['483548995'], pk_msg)
+                        if item['id'] in [FXF_ID, YANGYE_ID]:
+                            pk_rst['冯晓菲+杨晔'] += item['donation']
+                        elif item['id'] in [WANLINA_ID, QIJING_ID]:
+                            pk_rst['万丽娜+祁静'] += item['donation']
+                        else:
+                            pk_rst['蒋芸+陈琳'] += item['donation']
+                        sub_msg += '{}. {}: {}元\n'.format(current_rank, item['title'], item['donation'])
+                        current_rank += 1
+                    sorted_pk_rst = sorted(pk_rst.items(), key=lambda item0: item0[1], reverse=True)
+                    rank = 1
+                    for k, v in sorted_pk_rst.items():
+                        pk_msg += '{}. {}: {}元\n'.format(rank, k, v)
+                        rank += 1
+                    QQHandler.send_to_groups(['483548995'], sub_msg)
+                    QQHandler.send_to_groups(['483548995'], sub_msg)
 
             my_logger.info(msg)
             if global_config.USING_COOLQ_PRO is True:
@@ -471,7 +500,7 @@ if __name__ == "__main__":
     # print(handler.decrypt('61$XZyIVv/J+M0IUewyF9B3yhxLb05Dst/M49To0uHioJDv3BQlHEN2C0ATBgM/I1dDLUs4paQ0divhDBWlBAAHXDup'))
     print(handler.encrypt({'id': '1634', 'offset': 0, 'ismore': True, 'requestTime': int(time.time() * 1000), 'pf': 'h5'}))
     #
-    rst = '4841$XZyeV85v70Y2/gkMJ7l5qov7pL7KtinJfHpjG5JBYLdieUiW66VhmwFpCyw/Qdr3kCwMWZTV98AFESZ6ybPdndNm05vvj3JWex+qk3zkT2+O6MhjcLi2XDUtQVGE21JnEihTs3HkrM+XocGjo6gYk+/MB+vD213Rw01TnsIlQh0f7T79cLXhWWekiNn65HDpobPh1SWXqzHnCLLJ7K3Vt8byHJ0T1RqaFn2VlyZNygyL+hYZMY8HjJDUgTgiBLuGimS9c6Ulp2RKpKnQPt60DOBSFAG10w2BmGxUq/iX4jkfgd31m8lGUWij5bDw+XAL/srygWHtAAoJk/9iB00Y5Ay17abOSTL2yvQKqQvu2PnyDgdp4Pkxl+V7NsASSW5YcSkAf5YBoJLVMdlArcnS27Z9+B+b+DLcxTobscX4bPGUizRDxIBODmqNHLCUsTyM8YTAUvpToGMkaw0h2KEDbL2J18FDqpa+Y5/1cKrhuUbolxeXwo1jjSiXc4isZiFFa1BHTuRKE3Obke5RkTgMHq0jmh45u7F5r2m0KeMxs4Sjj3KLD8SgKL3PKMbv982ltGKgZagZoG/AcbXby3pIyA3BPkVkU4W7KzOo4+14uQkOMRApgOgPx7mQfVrcZ6CQB5NFbUQ5ORFlXXRDTA10+HcOWNRGW00cL4Y9oBMZ8aH2EJdYOfhlgJUyrNvYF+X8NWQzVb1jBYYZEB4g7xUY3qCnEHL/9YMaJZ9s9JtbNhMukCMH0YRZzBBv9vsroEKCV57JsteSP8t7xwooMDWA6t4vsLQN2ePIEe9lXZMeVryek7d5FRO/sREKzpX7U/IsCsii/FaCQqMtNOxB1XhWP7Km+KtVYxvE+L2sNcw0fIncYUE44HDZPwkxwKnvY2+HUKSyqxBCzfdNsNLYIXrPAbNDcUGJzvzWJv/5jj7DmzUD6xk5lFyIvNmLl++h+OounbJ9Fl6Y7GUJVMcQhULLRztFhA1ttNF1htCUlceLj4IcJBZl5wxtxdEDSl7peePY0UiCLYsMHPLhXr12/ScGDbpIOAcy+pMLievuXwCwAptmzcC8mQdUMZxO4eJRl/iFspIDKOztXTvpx1GzHontk0cLpGizgMb1n/IZiO2nVtup65S6Id2gVq3zv36nfMP75GNysD3ajGNwgkzdr3b0sG3UMbYeyjzkF1OXYGu7/xmjTdbbr3mPcT6/ee84CYemjM2NN4itnTvg/06abnuxDrjJ+lWXLwJrFkFj0RgK1XwWyTbg8miQjc66XF3n+uJO0IC2286F+nVKfFuN2ob9MwG6zGDpLRtNG89AZPiifXWD9MNI+hYgNWj6UICn9CRh9RVxbTo9a4t2+Jwa6RLiD7xCu4lwAQ1BMtjdJljL+++YgP9aPkwJAMEbiwFRLTVB6fcVW8DG6P8iiNolEVzA9sa/737f57tRtna/BHhVwirrCf3xkw04H7mh4khlwsU4Ruz0QRKUkUwZ8mHyr/NLyX7nx0LLCTWcRyg521Qofij/4Ga3lS2H3Gg/Km48dlPkqJNZwB/HjAeau1HPP/7TZIr9voQqR+vsyD+vhdRuKh7deARn9dEmbFMTeQwKhfY7DLezzop+fDbgEaCxEcSpA7QpNSgHi9E+2YlGbWaCrSZH8PC3MUIDrRf7bdRMDU2x7p3U0fNhBogV9+4itoyLirK6lyjaYkXg/QdV6EjOl+3NdxqWQdidtanfjO97vlj+tr/9X4h/pPfZnxm+zce66qTHpsXUF8630ssV7By35njA+nqNWD1Kd62Ls88A2b5KzV+8sq4JPU7xFuruyM3A21dL/LunF9hf29Sef1au1LtzizJd2tJ45tg365Y5+67dqFWpx9vOpSXRBzKeVRIU68jeW97xBlpQYvOfxlT9Lrxm0F5SMRbs19z+91BWWNt/oRonVPhfIN4Zece+WPGddCiY9sVjpj9JUW21Dyi6BzJZPNaU4Wl+nZHkFCX+Flg/7HK+1Qu5KxQd3SpGITfFDQmEqRy3NW1EB7aWzUwRvc4c0yw4Rpc+kW82c22ijoFyXw1QjnsKBNKcrtxPhnty6bIBFSJj9EIBxuIeoX0xW47XJh4yvJo786H04qfY7L3ofUIimMO4y/Ij551jXQvEeBR8THQbiOrUwWtD7sKhyY9LrZo7nhfK/H9YeCGtgWYc4hoqJ89w6PjA6StC6cUD'
+    rst = '1291$XZyWk1xv7kA0hqHLb+kBgiS9ml1dKfRwaGAkA9QImq4J35jgNNv54px36KZ5opJRGlRasGCz4O+IPunmUuyFcWsNY8AIyChQu3IxgSZqJzJhAU0Z7ljwAPbJZw1/i2bNLYY+CHisPGZHa6tVWL31DFabX8H5NbHAfdadIdZQoZA8Quk4gdr03fCm8A8AoD2KB28ljG0zas/9Eg/JCbYZh+MW3/yKiOrYGR71jWsVTz9UIbh4+RSspzPxCooXv+4suHF896QGPdcaRORI4BShl3xJKhYfEtZZqKFhPpbgFmdQB8EqE6NRhoTeouT/v3cTcikdYhwqY0Fg78yb3+uSafd1iijksXMLBHtkZJzfikQmRJohpplMfervtXWx3pCDt6F/nopdSpYHNr5TL46VG5R5GTavm5WyqojwN7fN5a4GLClpfGq0fecPyQgbtEQ70VKWOk3uHZ6+SB2eDoVu29Q2ULrvPQ75heiFt+Vq2frKcpz8QJAJv11UmXY14spQ9lPB3SoyclsZQy8uHBk6o8UyPTI91eo/sK8B8HxAPpYJEczZKN8vucAHtWfmZd+IPWFWX4l74eBDmajs97y8J/ASKCIvJHqoqcSJyPJ4yNCP2MHr2oer6R/U0ru3tD3v8v+DO8UlBdSYkla6M87wck52fzAtNHZnvk9DHs/UqOZilqOH3R2eiAAKovtuH47GEYYhjo8vGb1JMWZCWq/htKrJEpsqyxU/PNrEr9bvEM6nLQ=='
     rst = handler.decrypt(rst)
     print(rst)
     # pk参数
