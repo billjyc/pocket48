@@ -367,7 +367,7 @@ class TaoBaAccountHandler:
                         pk_msg += '{}. {}: {}元\n'.format(rank, item[0], item[1])
                         rank += 1
                     QQHandler.send_to_groups(['483548995'], sub_msg)
-                    QQHandler.send_to_groups(['483548995'], sub_msg)
+                    QQHandler.send_to_groups(['483548995'], pk_msg)
 
             my_logger.info(msg)
             if global_config.USING_COOLQ_PRO is True:
