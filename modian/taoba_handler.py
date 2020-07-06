@@ -333,41 +333,41 @@ class TaoBaAccountHandler:
 
             if taoba_entity.pk_group:
                 pk_condition = self.get_pk_group(taoba_entity.pk_group)
-                if pk_condition:
-                    FXF_ID = 5596
-                    YANGYE_ID = 5593
+                # if pk_condition:
+                #     FXF_ID = 5596
+                #     YANGYE_ID = 5593
+                #
+                #     WANLINA_ID = 5594
+                #     QIJING_ID = 5604
+                #
+                #     JIANGYUN_ID = 5481
+                #     CHENLIN_ID = 5595
+                #
+                #     pk_rst = {
+                #         '冯晓菲+杨晔': 0,
+                #         '万丽娜+祁静': 0,
+                #         '蒋芸+陈琳': 0
+                #     }
 
-                    WANLINA_ID = 5594
-                    QIJING_ID = 5604
-
-                    JIANGYUN_ID = 5481
-                    CHENLIN_ID = 5595
-
-                    pk_rst = {
-                        '冯晓菲+杨晔': 0,
-                        '万丽娜+祁静': 0,
-                        '蒋芸+陈琳': 0
-                    }
-
-                    pk_msg = '当前PK战况: \n'
-                    sub_msg = '{}'.format(pk_msg)
-                    current_rank = 1
-                    for item in pk_condition:
-                        if item['id'] in [FXF_ID, YANGYE_ID]:
-                            pk_rst['冯晓菲+杨晔'] += item['donation']
-                        elif item['id'] in [WANLINA_ID, QIJING_ID]:
-                            pk_rst['万丽娜+祁静'] += item['donation']
-                        else:
-                            pk_rst['蒋芸+陈琳'] += item['donation']
-                        sub_msg += '{}. {}: {}元\n'.format(current_rank, item['title'], item['donation'])
-                        current_rank += 1
-                    sorted_pk_rst = sorted(pk_rst.items(), key=lambda item0: item0[1], reverse=True)
-                    rank = 1
-                    for item in sorted_pk_rst:
-                        pk_msg += '{}. {}: {}元\n'.format(rank, item[0], item[1])
-                        rank += 1
+                pk_msg = '当前PK战况: \n'
+                sub_msg = '{}'.format(pk_msg)
+                current_rank = 1
+                for item in pk_condition:
+                    # if item['id'] in [FXF_ID, YANGYE_ID]:
+                    #     pk_rst['冯晓菲+杨晔'] += item['donation']
+                    # elif item['id'] in [WANLINA_ID, QIJING_ID]:
+                    #     pk_rst['万丽娜+祁静'] += item['donation']
+                    # else:
+                    #     pk_rst['蒋芸+陈琳'] += item['donation']
+                    sub_msg += '{}. {}: {}元\n'.format(current_rank, item['title'], item['donation'])
+                    current_rank += 1
+                    # sorted_pk_rst = sorted(pk_rst.items(), key=lambda item0: item0[1], reverse=True)
+                    # rank = 1
+                    # for item in sorted_pk_rst:
+                    #     pk_msg += '{}. {}: {}元\n'.format(rank, item[0], item[1])
+                    #     rank += 1
                     QQHandler.send_to_groups(['483548995'], sub_msg)
-                    QQHandler.send_to_groups(taoba_entity.broadcast_groups, pk_msg)
+                    # QQHandler.send_to_groups(taoba_entity.broadcast_groups, pk_msg)
             my_logger.info(msg)
             if global_config.USING_COOLQ_PRO is True:
                 my_logger.debug('使用酷Q PRO发送图片')

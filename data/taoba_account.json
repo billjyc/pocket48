@@ -1,20 +1,12 @@
 {
   "monitor_activities": [
     {
-      "modian_link": "https://www.tao-ba.club/#/pages/idols/detail?id=4971",
-      "modian_title": "这个夏天，一起快乐握手吧",
-      "modian_pro_id": "4971",
+      "modian_link": "https://www.tao-ba.club/#/pages/idols/detail?id=5744",
+      "modian_title": "冯晓菲——快乐握手的约定",
+      "modian_pro_id": "5744",
       "modian_need_display_rank": false,
       "broadcast_groups": ["483548995", "101724227"],
-      "qrcode": "http://i2.tiimg.com/667696/8695962e3bd809bb.png"
-    },
-    {
-      "modian_link": "https://www.tao-ba.club/#/pages/idols/detail?id=5596",
-      "modian_title": "最佳商户争夺战——冯晓菲篇",
-      "modian_pro_id": "5596",
-      "modian_need_display_rank": false,
-      "broadcast_groups": ["483548995", "101724227"],
-      "qrcode": "http://i2.tiimg.com/667696/884e63a29dd682b9.jpg"
+      "qrcode": "http://i2.tiimg.com/667696/f4afdb524b662261.png"
     }
   ],
   "taoba_account": "account",
