@@ -98,7 +98,8 @@ def update_pa():
 
 username = global_config.POCKET48_JSON["username"]
 password = global_config.POCKET48_JSON["password"]
+update_pa()
 pocket48_handler.login(username, password)
 # 先更新配置
 update_conf()
-update_pa()
+
