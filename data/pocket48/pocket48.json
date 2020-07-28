@@ -3,6 +3,8 @@
   "version": "6.0.16",
   "username": "***",
   "password": "***",
+  "pa_user": "***",
+  "pa_token": "***",
   "monitor_members": [
     {
       "name": "fengxiaofei",

@@ -82,6 +82,12 @@ def notify_performance():
     pocket48_handler.notify_performance()
 
 
+@scheduler.scheduled_job('cron', minute="*/5")
+def update_pa():
+    my_logger.info('更新pa值')
+    global_config.POCKET48_PA = util.generate_pa2(global_config.POCKET48_JSON['pa_user'],
+                                                  global_config.POCKET48_JSON['pa_token'])
+
 # @scheduler.scheduled_job('cron', second=30, minute='*/5')
 # def generate_pa():
 #     my_logger.info('生成pa')
@@ -94,3 +100,4 @@ password = global_config.POCKET48_JSON["password"]
 pocket48_handler.login(username, password)
 # 先更新配置
 update_conf()
+update_pa()

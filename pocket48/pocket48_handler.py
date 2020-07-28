@@ -604,7 +604,7 @@ class Pocket48Handler:
         header = {
             'Content-Type': 'application/json;charset=utf-8',
             'User-Agent': 'PocketFans201807/6.0.16 (iPad; iOS 13.5.1; Scale/2.00)',
-            'pa': util.generate_pa(),
+            'pa': global_config.POCKET48_PA,
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',
@@ -627,7 +627,7 @@ class Pocket48Handler:
         header = {
             'Content-Type': 'application/json;charset=utf-8',
             'User-Agent': 'PocketFans201807/6.0.16 (iPad; iOS 13.5.1; Scale/2.00)',
-            'pa': util.generate_pa(),
+            'pa': global_config.POCKET48_PA,
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',
@@ -652,7 +652,7 @@ class Pocket48Handler:
         header = {
             'Content-Type': 'application/json;charset=utf-8',
             'User-Agent': 'PocketFans201807/6.0.16 (iPad; iOS 13.5.1; Scale/2.00)',
-            'pa': util.generate_pa(),
+            'pa': global_config.POCKET48_PA,
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',
@@ -677,7 +677,7 @@ class Pocket48Handler:
         header = {
             'Content-Type': 'application/json;charset=utf-8',
             'User-Agent': 'PocketFans201807/6.0.16 (iPad; iOS 13.5.1; Scale/2.00)',
-            'pa': util.generate_pa(),
+            'pa': global_config.POCKET48_PA,
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',

@@ -258,6 +258,19 @@ def generate_pa():
     return str(rst, encoding='utf-8')
 
 
+def generate_pa2(username, token):
+    url = 'http://116.85.71.166:4848/getPA'
+    data = {
+        'userID': username,
+        'token': token
+    }
+    r = requests.get(url, data).json()
+    if int(r['status']) == 0:
+        return r['content']
+    else:
+        raise RuntimeError('获取PA出现错误！')
+
+
 if __name__ == '__main__':
     rst = generate_pa()
     print(rst)
@@ -277,4 +290,4 @@ if __name__ == '__main__':
     #
     # r = requests.post(url, post_fields, headers=header)
     # print r.text
-    pass
+    print(generate_pa2('000', '00000'))

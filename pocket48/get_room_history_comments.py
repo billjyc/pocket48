@@ -5,6 +5,7 @@ import sqlite3
 import os
 import time
 from utils import util
+from utils import global_config
 from log.my_logger import pocket48_logger as logger
 import xlwt
 
@@ -38,7 +39,7 @@ def get_header():
     header = {
         'Content-Type': 'application/json;charset=utf-8',
         'User-Agent': 'PocketFans201807/6.0.15 (iPad; iOS 13.5; Scale/2.00)',
-        'pa': util.generate_pa(),
+        'pa': global_config.POCKET48_PA,
         'appInfo': json.dumps({
             'vendor': 'apple',
             'deviceId': 0,
