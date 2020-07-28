@@ -87,6 +87,7 @@ def update_pa():
     my_logger.info('更新pa值')
     global_config.POCKET48_PA = util.generate_pa2(global_config.POCKET48_JSON['pa_user'],
                                                   global_config.POCKET48_JSON['pa_token'])
+    my_logger.info('pa: {}'.format(global_config.POCKET48_PA))
 
 # @scheduler.scheduled_job('cron', second=30, minute='*/5')
 # def generate_pa():
