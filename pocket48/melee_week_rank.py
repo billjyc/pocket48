@@ -9,6 +9,10 @@ from utils import util
 import traceback
 from utils import global_config
 import urllib.request
+from apscheduler.schedulers.background import BackgroundScheduler, BlockingScheduler
+
+scheduler = BackgroundScheduler()
+PA = ''
 
 rst = {}
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -17,10 +21,11 @@ worksheet = workbook.add_sheet('My Worksheet')
 
 
 def get_header():
+    global PA
     header = {
         'Content-Type': 'application/json;charset=utf-8',
         'User-Agent': 'PocketFans201807/6.0.15 (iPad; iOS 13.5; Scale/2.00)',
-        'pa': util.generate_pa(),
+        'pa': PA,
         'Host': 'pocketapi.48.cn',
         'appInfo': json.dumps({
             'vendor': 'apple',
@@ -48,6 +53,7 @@ def get_single_week_rank(week_id):
     pre_next_id = -1
 
     global rst
+    global PA
     print(week_id)
     time.sleep(5)
 
@@ -82,7 +88,17 @@ def get_single_week_rank(week_id):
     print(rst)
 
 
+@scheduler.scheduled_job('cron', minute="*/5")
+def update_pa():
+    global PA
+    print('更新pa值')
+    PA = util.generate_pa2('***', '***')
+    print('pa: {}'.format(global_config.POCKET48_PA))
+
+
 if __name__ == "__main__":
+    update_pa()
+    scheduler.start()
     line = 1
     worksheet.write(0, 0, 'ID')
     worksheet.write(0, 1, '姓名')
