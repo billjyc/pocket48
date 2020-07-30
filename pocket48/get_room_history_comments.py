@@ -8,6 +8,10 @@ from utils import util
 from utils import global_config
 from log.my_logger import pocket48_logger as logger
 import xlwt
+from apscheduler.schedulers.background import BackgroundScheduler, BlockingScheduler
+
+scheduler = BackgroundScheduler()
+PA = ''
 
 comment_rst = {}
 message_rst = {}
@@ -36,21 +40,22 @@ class Fan:
 
 
 def get_header():
+    global PA
     header = {
         'Content-Type': 'application/json;charset=utf-8',
-        'User-Agent': 'PocketFans201807/6.0.15 (iPad; iOS 13.5; Scale/2.00)',
-        'pa': global_config.POCKET48_PA,
+        'User-Agent': 'PocketFans201807/6.0.16 (iPad; iOS 13.5.1; Scale/2.00)',
+        'pa': PA,
         'appInfo': json.dumps({
             'vendor': 'apple',
             'deviceId': 0,
-            "appVersion": "6.0.15",
-            "appBuild": "200513",
-            "osVersion": "13.5.0",
+            "appVersion": "6.0.16",
+            "appBuild": "200701",
+            "osVersion": "13.5.1",
             "osType": "ios",
             "deviceName": "unknow",
             "os": "ios"
         }),
-        'token': "oBLrbdADJ/0DNrIg0Gy6YX+/OTXk9bvH931ez3jCodE66LcM5Oslq/6S5hh2pFLK75dhQCIaBB4="
+        'token': "jLuxm68GxS0chfEHjKnpdrIF7uVBaqGOkb0a+HiZwTQKKIC/rB7V1cqfKTCz6Y3wHkSsYNQapg4="
     }
     return header
 
@@ -220,12 +225,22 @@ def get_room_list():
     return rst
 
 
+@scheduler.scheduled_job('cron', minute="*/5")
+def update_pa():
+    global PA
+    print('更新pa值')
+    PA = util.generate_pa2('***', '***')
+    print('pa: {}'.format(PA))
+
+
 if __name__ == '__main__':
+    update_pa()
+    scheduler.start()
     room_list = get_room_list()
 
-    start_time = 1592755200000
-    end_time = 1592668800000
-    for i in range(21, 22):
+    start_time = 1595260800000
+    end_time = 1595174400000
+    for i in range(20, 27):
         comment_rst = {}
         message_rst = {}
         fan_rst = {}
@@ -258,7 +273,7 @@ if __name__ == '__main__':
         worksheet3.write(0, 2, '等级')
         worksheet3.write(0, 3, '留言成员数')
 
-        print('202006{}'.format(i))
+        print('202007{}'.format(i))
         try:
             for room in room_list:
                 print(room['name'])
@@ -335,4 +350,4 @@ if __name__ == '__main__':
         finally:
             end_time = start_time
             start_time = start_time + 86400 * 1000
-            workbook.save('comments_data_202006{}.xls'.format(i))
+            workbook.save('comments_data_202007{}.xls'.format(i))
