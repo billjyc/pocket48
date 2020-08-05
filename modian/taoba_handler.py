@@ -157,7 +157,6 @@ class TaoBaAccountHandler:
         else:
             return []
 
-
     def parse_order_details(self, orders, taoba_entity):
         my_logger.debug('taoba_entity: {}'.format(taoba_entity.taoba_id))
         my_logger.debug('keys: {}'.format(self.order_queues.keys()))
@@ -331,48 +330,6 @@ class TaoBaAccountHandler:
             msg += '%s\n集资项目: %s\n集资方式: %s\n' % (project_info, pro_name, taoba_entity.link)
             # msg += jizi_pk_report
 
-            if taoba_entity.pk_group:
-                pk_condition = self.get_pk_group(taoba_entity.pk_group)
-                # if pk_condition:
-                #     FXF_ID = 5596
-                #     YANGYE_ID = 5593
-                #
-                #     WANLINA_ID = 5594
-                #     QIJING_ID = 5604
-                #
-                #     JIANGYUN_ID = 5481
-                #     CHENLIN_ID = 5595
-                #
-                #     pk_rst = {
-                #         '冯晓菲+杨晔': 0,
-                #         '万丽娜+祁静': 0,
-                #         '蒋芸+陈琳': 0
-                #     }
-
-                pk_msg = '当前PK战况: \n'
-                sub_msg = '{}'.format(pk_msg)
-                current_rank = 1
-                for item in pk_condition:
-                    # if item['id'] in [FXF_ID, YANGYE_ID]:
-                    #     pk_rst['冯晓菲+杨晔'] += item['donation']
-                    # elif item['id'] in [WANLINA_ID, QIJING_ID]:
-                    #     pk_rst['万丽娜+祁静'] += item['donation']
-                    # else:
-                    #     pk_rst['蒋芸+陈琳'] += item['donation']
-                    sub_msg += '{}. {}: {}元\n'.format(current_rank, item['title'], item['donation'])
-                    current_rank += 1
-                    # sorted_pk_rst = sorted(pk_rst.items(), key=lambda item0: item0[1], reverse=True)
-                    # rank = 1
-                    # for item in sorted_pk_rst:
-                    #     pk_msg += '{}. {}: {}元\n'.format(rank, item[0], item[1])
-                    #     rank += 1
-                    QQHandler.send_to_groups(['483548995'], sub_msg)
-                    # QQHandler.send_to_groups(taoba_entity.broadcast_groups, pk_msg)
-            my_logger.info(msg)
-            if global_config.USING_COOLQ_PRO is True:
-                my_logger.debug('使用酷Q PRO发送图片')
-                msg += '\n[CQ:image,file={}]\n'.format(taoba_entity.qrcode)
-
             # if global_config.MODIAN_NEED_DISPLAY_PK:
             #     msg += self.pk_modian_activity()
 
@@ -406,6 +363,30 @@ class TaoBaAccountHandler:
         #     conn.commit()
         #     cursor.close()
         #     conn.close()
+
+    def pk_taoba_activity(self):
+        if global_config.MODIAN_NEED_DISPLAY_PK is False:
+            return '当前没有开启PK！'
+        my_logger.info('桃叭集资PK播报')
+
+        taoba_entity = TaoBaEntity('link', 'title', 7426)
+        msg = ''
+
+        if taoba_entity.pk_group:
+            pk_condition = self.get_pk_group(taoba_entity.pk_group)
+
+            pk_msg = '当前PK战况: \n'
+            sub_msg = '{}'.format(pk_msg)
+            current_rank = 1
+            for item in pk_condition:
+                sub_msg += '{}. {}: {}元\n'.format(current_rank, item['title'], item['donation'])
+                current_rank += 1
+            msg += sub_msg
+        my_logger.info(msg)
+        if global_config.USING_COOLQ_PRO is True:
+            my_logger.debug('使用酷Q PRO发送图片')
+            msg += '\n[CQ:image,file={}]\n'.format(taoba_entity.qrcode)
+        return msg
 
     def decrypt(self, response):
         """

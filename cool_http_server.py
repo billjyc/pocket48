@@ -282,7 +282,7 @@ def get_modian_pk():
     :return:
     """
     from modian_plugin import modian_handler
-    rst = modian_handler.pk_modian_activity()
+    rst = modian_handler.pk_taoba_activity()
     return rst
 
 

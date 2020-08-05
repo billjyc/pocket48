@@ -288,9 +288,9 @@ def notify_modian_pk():
     :return:
     """
     global modian_handler
-    msg = modian_handler.pk_modian_activity()
+    msg = modian_handler.pk_taoba_activity()
     my_logger.info(msg)
-    QQHandler.send_to_groups(modian_handler.modian_notify_groups, msg)
+    QQHandler.send_to_groups(modian_handler.taoba_notify_groups, msg)
 
 
 # modian_handler = ModianHandlerBS4([], [])
