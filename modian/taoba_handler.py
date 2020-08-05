@@ -241,10 +241,6 @@ class TaoBaAccountHandler:
             if global_config.MODIAN_CARD_DRAW:
                 card_report = self.card_draw_handler.draw(user_id, nickname, backer_money, pay_time)
 
-            if global_config.USING_COOLQ_PRO is True:
-                my_logger.debug('使用酷Q PRO发送图片')
-                msg += '\n[CQ:image,file={}]\n'.format(taoba_entity.qrcode)
-
             '''接棒相关'''
             my_logger.debug('接棒情况更新')
             for jiebang in jiebang_activities:
@@ -337,6 +333,10 @@ class TaoBaAccountHandler:
             # if global_config.MODIAN_NEED_DISPLAY_PK:
             #     msg += self.pk_modian_activity()
 
+            if global_config.USING_COOLQ_PRO is True:
+                my_logger.debug('使用酷Q PRO发送图片')
+                msg += '\n[CQ:image,file={}]\n'.format(taoba_entity.qrcode)
+
             QQHandler.send_to_groups(taoba_entity.broadcast_groups, msg)
             if card_report:
                 QQHandler.send_to_groups(taoba_entity.broadcast_groups, card_report)
@@ -374,6 +374,7 @@ class TaoBaAccountHandler:
         my_logger.info('桃叭集资PK播报')
 
         taoba_entity = TaoBaEntity('link', 'title', 7426)
+        self.get_current_and_target(taoba_entity)
         msg = ''
 
         if taoba_entity.pk_group:
