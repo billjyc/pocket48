@@ -241,6 +241,10 @@ class TaoBaAccountHandler:
             if global_config.MODIAN_CARD_DRAW:
                 card_report = self.card_draw_handler.draw(user_id, nickname, backer_money, pay_time)
 
+            if global_config.USING_COOLQ_PRO is True:
+                my_logger.debug('使用酷Q PRO发送图片')
+                msg += '\n[CQ:image,file={}]\n'.format(taoba_entity.qrcode)
+
             '''接棒相关'''
             my_logger.debug('接棒情况更新')
             for jiebang in jiebang_activities:
@@ -383,9 +387,6 @@ class TaoBaAccountHandler:
                 current_rank += 1
             msg += sub_msg
         my_logger.info(msg)
-        if global_config.USING_COOLQ_PRO is True:
-            my_logger.debug('使用酷Q PRO发送图片')
-            msg += '\n[CQ:image,file={}]\n'.format(taoba_entity.qrcode)
         return msg
 
     def decrypt(self, response):
