@@ -373,7 +373,7 @@ class TaoBaAccountHandler:
             return '当前没有开启PK！'
         my_logger.info('桃叭集资PK播报')
 
-        taoba_entity = TaoBaEntity('link', 'title', 7426)
+        taoba_entity = TaoBaEntity('link', 'title', 7546)
         self.get_current_and_target(taoba_entity)
         msg = ''
 
