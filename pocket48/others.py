@@ -37,19 +37,19 @@ class TextMessageType:
 def get_header():
     header = {
         'Content-Type': 'application/json;charset=utf-8',
-        'User-Agent': 'PocketFans201807/6.0.10 (iPhone; iOS 13.3; Scale/2.00)',
+        'User-Agent': 'PocketFans201807/6.0.16 (iPad; iOS 13.5.1; Scale/2.00)',
+        'pa': global_config.POCKET48_PA,
         'appInfo': json.dumps({
             'vendor': 'apple',
             'deviceId': 0,
-            "appVersion": "6.0.10",
-            "appBuild": "200120",
-            "osVersion": "13.3.0",
+            "appVersion": global_config.POCKET48_VERSION,
+            "appBuild": "200701",
+            "osVersion": "13.5.1",
             "osType": "ios",
-            "deviceName": "iphone",
+            "deviceName": "unknow",
             "os": "ios"
         }),
-        # 'token': global_config.POCKET48_TOKEN
-        'token': 'Cvz8OVaCoQpLYCS7r+3NlUuZB1cnEN8Y/vgq4cZwaFAUy7IeT6axMdGjFVvOpBtyXaYcOHfPaj4='
+        'token': global_config.POCKET48_TOKEN
     }
     return header
 
