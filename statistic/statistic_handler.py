@@ -142,7 +142,7 @@ class StatisticHandler:
                 member_name = member['name']
                 my_logger.info(member_name)
 
-                url1 = 'https://api.bilibili.com/x/relation/stat?vmid={}&jsonp=jsonp&callback=__jp4'.format(bilibili_id)
+                url1 = 'https://api.bilibili.com/x/relation/stat?vmid={}&jsonp=jsonp'.format(bilibili_id)
                 header = {
                     'Referer': 'https://space.bilibili.com/{}'.format(bilibili_id),
                     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'
@@ -151,12 +151,18 @@ class StatisticHandler:
                 rsp_json = json.loads(rsp[6: -1])
                 fan_number = rsp_json['data']['follower']
 
-                url2 = 'https://api.bilibili.com/x/space/upstat?mid={}&jsonp=jsonp&callback=__jp5'.format(bilibili_id)
-                rsp = self.session.get(url2, headers=header).text
+                try:
 
-                rsp_json = json.loads(rsp[6: -1])
-                view = rsp_json['data']['archive']['view']
-                print(rsp_json)
+                    url2 = 'https://api.bilibili.com/x/space/upstat?mid={}&jsonp=jsonp'.format(bilibili_id)
+                    rsp = self.session.get(url2, headers=header,
+                                           cookies={'SESSDATA': 'db49e46a%2C1614611003%2C81dfe*91'}).text
+
+                    rsp_json = json.loads(rsp[6: -1])
+                    view = rsp_json['data']['archive']['view']
+                    print(rsp_json)
+                except Exception as e:
+                    my_logger.exception(e)
+                    view = 0
 
                 url3 = 'https://api.bilibili.com/x/space/acc/info?mid={}&jsonp=jsonp'.format(bilibili_id)
                 rsp = self.session.get(url3, headers=header).json()
