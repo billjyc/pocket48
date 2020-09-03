@@ -226,7 +226,7 @@ class Pocket48Handler:
             if task.last_other_member_msg_time < 0 or time_now - task.last_other_member_msg_time >= 10 * 60:
                 logger.debug('其他成员出现在房间中')
                 member_name = ', '.join(task.other_members_names)
-                QQHandler.send_to_groups(task.member_room_msg_lite_groups, '%s来你们灰的房间里串门啦~' % member_name)
+                # QQHandler.send_to_groups(task.member_room_msg_lite_groups, '%s来你们灰的房间里串门啦~' % member_name)
             task.unread_other_member_msg_amount = 0
             task.last_other_member_msg_time = time_now
             task.other_members_names.clear()
@@ -243,7 +243,7 @@ class Pocket48Handler:
                 if global_config.USING_COOLQ_PRO:
                     msg += '[CQ:image,file=http://wx3.sinaimg.cn/large/789c06f9gy1fq4dl21j0rj20k00k0jsl.jpg]'
                 logger.debug(task.member_room_msg_lite_groups)
-                QQHandler.send_to_groups(task.member_room_msg_lite_groups, msg)
+                # QQHandler.send_to_groups(task.member_room_msg_lite_groups, msg)
                 logger.info(msg)
 
             else:
@@ -321,7 +321,7 @@ class Pocket48Handler:
                         self.save_msg_to_db(102, msg_id, user_id, user_name, msg_time, live_title)
 
                         live_message = '你们的崽崽开直播了\n直播标题: {}\n开始时间: {}'.format(live_title, msg_time)
-                        QQHandler.send_to_groups(task.member_room_msg_groups, live_message)
+                        # QQHandler.send_to_groups(task.member_room_msg_groups, live_message)
                     elif text_message_type == TextMessageType.VOTE:  # 投票
                         logger.debug('投票消息')
                         vote_content = extInfo['text']
@@ -372,7 +372,7 @@ class Pocket48Handler:
                             logger.info(message3)
                             # 语音消息直接单条发送
                             message2 = '[CQ:record,file={}]\n'.format(url)
-                            QQHandler.send_to_groups(task.member_room_msg_groups, message2)
+                            # QQHandler.send_to_groups(task.member_room_msg_groups, message2)
                         else:
                             message = ('【语音】[%s]-%s: %s\n' % (msg_time, user_name, url)) + message
                         self.save_msg_to_db(201, msg_id, user_id, user_name, msg_time, url)
@@ -400,7 +400,7 @@ class Pocket48Handler:
                 #      'express\\tsj000.gif')
                 # express_message2 = '[CQ:image,file=%s]' % (
                 #      'express\\lt001.png')
-                QQHandler.send_to_groups(task.member_room_msg_groups, message)
+                # QQHandler.send_to_groups(task.member_room_msg_groups, message)
                 self.get_member_room_msg_lite(task)
                 logger.info('message: %s', message)
                 # QQHandler.send_to_groups(task.member_room_msg_groups, express_message)
@@ -488,7 +488,8 @@ class Pocket48Handler:
                                                                  msg_time)
                         logger.debug(message)
                         if message and len(task.member_room_msg_groups) > 0:
-                            QQHandler.send_to_groups(task.member_room_msg_groups, message)
+                            pass
+                            # QQHandler.send_to_groups(task.member_room_msg_groups, message)
                     else:
                         logger.debug('礼物')
                         logger.debug('感谢{}送出的{}个{}，爱你呦~'.format(user_id, gift_num, gift_name))
@@ -710,7 +711,7 @@ class Pocket48Handler:
                 notify_str = '%s\n公演: %s\n时间: %s\n队伍: %s\n%s' % (
                     global_config.PERFORMANCE_NOTIFY, s['name'], s['time'], s['team'], live_msg)
                 logger.info('notify str: %s', notify_str)
-                QQHandler.send_to_groups(self.auto_reply_groups, notify_str)
+                # QQHandler.send_to_groups(self.auto_reply_groups, notify_str)
 
     # def get_fanpai_name(self, fanpai_user_id):
     #     """

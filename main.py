@@ -51,6 +51,6 @@ for member in members_list:
 import pocket48_plugin
 import statistic_plugin
 import weibo_plugin
-import modian_plugin
+# import modian_plugin
 
 scheduler.start()

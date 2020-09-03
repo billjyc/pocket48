@@ -70,13 +70,13 @@ def login_timely():
     pocket48_handler.checkin()
 
 
-@scheduler.scheduled_job('cron', hour='10', minute='17')
+# @scheduler.scheduled_job('cron', hour='10', minute='17')
 def kuan_time_broadcast():
     my_logger.info('款时播报')
     pocket48_handler.kuan_time_broadcast()
 
 
-@scheduler.scheduled_job('cron', second=30, minute='20,50', hour='13,18,19', day_of_week='2-6')
+# @scheduler.scheduled_job('cron', second=30, minute='20,50', hour='13,18,19', day_of_week='2-6')
 def notify_performance():
     my_logger.info('检查公演日程')
     pocket48_handler.notify_performance()

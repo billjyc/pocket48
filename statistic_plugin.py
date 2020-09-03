@@ -15,7 +15,7 @@ def read_statistic_conf():
     ConfigReader.read_conf()
 
 
-@scheduler.scheduled_job('cron', hour=3)
+# @scheduler.scheduled_job('cron', hour=3)
 def record_data():
     """
     记录数据

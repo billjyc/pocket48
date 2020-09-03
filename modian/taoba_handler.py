@@ -281,7 +281,7 @@ class TaoBaAccountHandler:
                     my_logger.debug(test_msg)
                     if len(test_msg) > 0:
                         msg += test_msg
-                        QQHandler.send_to_groups(['483548995'], test_msg)
+                        # QQHandler.send_to_groups(['483548995'], test_msg)
 
             '''金额类flag相关'''
             my_logger.debug('flag情况更新')
@@ -298,7 +298,8 @@ class TaoBaAccountHandler:
                     test_msgs += '已经达成目标\n'
             my_logger.debug(flag_test_msgs)
             if len(flag_test_msgs) > 0:
-                QQHandler.send_to_groups(['483548995'], flag_test_msgs)
+                pass
+                # QQHandler.send_to_groups(['483548995'], flag_test_msgs)
                 # msg += flag_test_msgs
 
             '''人头类flag相关'''
@@ -324,7 +325,8 @@ class TaoBaAccountHandler:
 
             my_logger.debug(count_flag_test_msgs)
             if len(count_flag_test_msgs) > 0:
-                QQHandler.send_to_groups(['483548995'], count_flag_test_msgs)
+                # QQHandler.send_to_groups(['483548995'], count_flag_test_msgs)
+                pass
                 # msg += flag_test_msgs
 
             msg += '%s\n集资项目: %s\n集资方式: %s\n' % (project_info, pro_name, taoba_entity.link)
@@ -337,9 +339,10 @@ class TaoBaAccountHandler:
                 my_logger.debug('使用酷Q PRO发送图片')
                 msg += '\n[CQ:image,file={}]\n'.format(taoba_entity.qrcode)
 
-            QQHandler.send_to_groups(taoba_entity.broadcast_groups, msg)
+            # QQHandler.send_to_groups(taoba_entity.broadcast_groups, msg)
             if card_report:
-                QQHandler.send_to_groups(taoba_entity.broadcast_groups, card_report)
+                pass
+                # QQHandler.send_to_groups(taoba_entity.broadcast_groups, card_report)
                 # QQHandler.send_to_groups(['483548995'], card_report)
 
             # 集五福
