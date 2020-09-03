@@ -147,17 +147,15 @@ class StatisticHandler:
                     'Referer': 'https://space.bilibili.com/{}'.format(bilibili_id),
                     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'
                 }
-                rsp = self.session.get(url1, headers=header).text
-                rsp_json = json.loads(rsp[6: -1])
-                fan_number = rsp_json['data']['follower']
+                rsp = self.session.get(url1, headers=header).json()
+                fan_number = rsp['data']['follower']
 
                 try:
 
                     url2 = 'https://api.bilibili.com/x/space/upstat?mid={}&jsonp=jsonp'.format(bilibili_id)
-                    rsp = self.session.get(url2, headers=header,
-                                           cookies={'SESSDATA': 'db49e46a%2C1614611003%2C81dfe*91'}).text
+                    rsp_json = self.session.get(url2, headers=header,
+                                                cookies={'SESSDATA': 'db49e46a%2C1614611003%2C81dfe*91'}).json()
 
-                    rsp_json = json.loads(rsp[6: -1])
                     view = rsp_json['data']['archive']['view']
                     print(rsp_json)
                 except Exception as e:
