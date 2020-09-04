@@ -1,13 +1,14 @@
 # -*- coding:utf-8 -*-
 import requests
 import json
-import sqlite3
-import os
+import urllib3
 import time
+import logging
 from utils import util
 from utils import global_config
 from log.my_logger import pocket48_logger as logger
-import xlwt
+import openpyxl
+import emoji
 from apscheduler.schedulers.background import BackgroundScheduler, BlockingScheduler
 
 scheduler = BackgroundScheduler()
@@ -16,6 +17,8 @@ PA = ''
 comment_rst = {}
 message_rst = {}
 fan_rst = {}
+
+urllib3.disable_warnings()
 
 
 class Fan:
@@ -55,7 +58,7 @@ def get_header():
             "deviceName": "unknow",
             "os": "ios"
         }),
-        'token': "jLuxm68GxS0chfEHjKnpdrIF7uVBaqGOkb0a+HiZwTQKKIC/rB7V1cqfKTCz6Y3wHkSsYNQapg4="
+        'token': "c8IOwqXffTUK71AZ5n4WXa/R2JIi32pA+qApuKI3AoecR4kyiG27E4lj/IVXZilOP/CyEYMBxss="
     }
     return header
 
@@ -129,7 +132,7 @@ def get_room_history_comments(room_id, start_time, end_time=0):
 
 
 def get_room_comments(room_id, last_time, end_time):
-    time.sleep(0.7)
+    time.sleep(0.5)
     url = 'https://pocketapi.48.cn/im/api/v1/chatroom/msg/list/all'
     params = {
         "roomId": room_id,
@@ -229,7 +232,7 @@ def get_room_list():
 def update_pa():
     global PA
     print('更新pa值')
-    PA = util.generate_pa2('***', '***')
+    PA = util.generate_pa2('billjyc', '76e4210ac0808020')
     print('pa: {}'.format(PA))
 
 
@@ -238,40 +241,40 @@ if __name__ == '__main__':
     scheduler.start()
     room_list = get_room_list()
 
-    start_time = 1595260800000
-    end_time = 1595174400000
-    for i in range(20, 27):
+    start_time = 1598284800000 + 3 * 86400 * 1000
+    end_time = 1598198400000 + 3 * 86400 * 1000
+    for i in range(27, 28):
         comment_rst = {}
         message_rst = {}
         fan_rst = {}
-        line = 1
-        line2 = 1
-        line3 = 1
-        workbook = xlwt.Workbook(encoding='utf-8')
-        worksheet = workbook.add_sheet('detail')
-        worksheet2 = workbook.add_sheet('total')
-        worksheet3 = workbook.add_sheet('fans_total')
-        worksheet.write(0, 0, '成员姓名')
-        worksheet.write(0, 1, '房间ID')
-        worksheet.write(0, 2, '粉丝ID')
-        worksheet.write(0, 3, '粉丝昵称')
-        worksheet.write(0, 4, '等级')
-        worksheet.write(0, 5, '性别')
-        worksheet.write(0, 6, '是否为vip')
-        worksheet.write(0, 7, '是否已实名认证')
+        line = 2
+        line2 = 2
+        line3 = 2
+        workbook = openpyxl.Workbook()
+        worksheet = workbook.create_sheet('detail')
+        worksheet2 = workbook.create_sheet('total')
+        worksheet3 = workbook.create_sheet('fans_total')
+        worksheet.cell(1, 1, '成员姓名')
+        worksheet.cell(1, 2, '房间ID')
+        worksheet.cell(1, 3, '粉丝ID')
+        worksheet.cell(1, 4, '粉丝昵称')
+        worksheet.cell(1, 5, '等级')
+        worksheet.cell(1, 6, '性别')
+        worksheet.cell(1, 7, '是否为vip')
+        worksheet.cell(1, 8, '是否已实名认证')
 
-        worksheet2.write(0, 0, '成员姓名')
-        worksheet2.write(0, 1, '发送消息数')
-        worksheet2.write(0, 2, '留言粉丝数')
-        worksheet2.write(0, 3, '1-2级粉丝数占比')
-        worksheet2.write(0, 4, '3-6级粉丝数占比')
-        worksheet2.write(0, 5, '7-9级粉丝数占比')
-        worksheet2.write(0, 6, '10级以上粉丝数占比')
+        worksheet2.cell(1, 1, '成员姓名')
+        worksheet2.cell(1, 2, '发送消息数')
+        worksheet2.cell(1, 3, '留言粉丝数')
+        worksheet2.cell(1, 4, '1-2级粉丝数占比')
+        worksheet2.cell(1, 5, '3-6级粉丝数占比')
+        worksheet2.cell(1, 6, '7-9级粉丝数占比')
+        worksheet2.cell(1, 7, '10级以上粉丝数占比')
 
-        worksheet3.write(0, 0, '粉丝ID')
-        worksheet3.write(0, 1, '粉丝昵称')
-        worksheet3.write(0, 2, '等级')
-        worksheet3.write(0, 3, '留言成员数')
+        worksheet3.cell(1, 1, '粉丝ID')
+        worksheet3.cell(1, 2, '粉丝昵称')
+        worksheet3.cell(1, 3, '等级')
+        worksheet3.cell(1, 4, '留言成员数')
 
         print('202007{}'.format(i))
         try:
@@ -294,11 +297,11 @@ if __name__ == '__main__':
                         print(fan)
                         if int(room['id']) == int(fan.user_id):
                             continue
-                        worksheet.write(line, 0, room['name'])
-                        worksheet.write(line, 1, room_id)
-                        worksheet.write(line, 2, fan.user_id)
-                        worksheet.write(line, 3, fan.nick_name)
-                        worksheet.write(line, 4, fan.level)
+                        worksheet.cell(line, 1, room['name'])
+                        worksheet.cell(line, 2, room_id)
+                        worksheet.cell(line, 3, fan.user_id)
+                        worksheet.cell(line, 4, emoji.demojize(fan.nick_name))
+                        worksheet.cell(line, 5, fan.level)
                         if fan.level <= 2:
                             level1_2 += 1
                         elif fan.level <= 6:
@@ -308,31 +311,31 @@ if __name__ == '__main__':
                         else:
                             level10_12 += 1
                         if fan.gender == 0:
-                            worksheet.write(line, 5, '未知')
+                            worksheet.cell(line, 6, '未知')
                         elif fan.gender == 1:
-                            worksheet.write(line, 5, '男')
+                            worksheet.cell(line, 6, '男')
                         else:
-                            worksheet.write(line, 5, '女')
+                            worksheet.cell(line, 6, '女')
                         if fan.is_vip:
-                            worksheet.write(line, 6, '是')
+                            worksheet.cell(line, 7, '是')
                         else:
-                            worksheet.write(line, 6, '否')
-                        worksheet.write(line, 7, '是' if fan.verification else '否')
+                            worksheet.cell(line, 7, '否')
+                        worksheet.cell(line, 8, '是' if fan.verification else '否')
                         line += 1
                     except Exception as e:
                         logger.exception(e)
                         continue
-                worksheet2.write(line2, 0, room['name'])
-                worksheet2.write(line2, 1, message_rst[room['room_id']])
+                worksheet2.cell(line2, 1, room['name'])
+                worksheet2.cell(line2, 2, message_rst[room['room_id']])
                 print('发送消息数: {}'.format(message_rst[room['room_id']]))
                 total = len(comment_rst[room['room_id']])
-                worksheet2.write(line2, 2, total)
+                worksheet2.cell(line2, 3, total)
                 print('留言粉丝数: {}'.format(len(comment_rst[room['room_id']])))
                 if total > 0:
-                    worksheet2.write(line2, 3, '%.2f%%' % (level1_2 / total * 100))
-                    worksheet2.write(line2, 4, '%.2f%%' % (level3_6 / total * 100))
-                    worksheet2.write(line2, 5, '%.2f%%' % (level7_9 / total * 100))
-                    worksheet2.write(line2, 6, '%.2f%%' % (level10_12 / total * 100))
+                    worksheet2.cell(line2, 4, '%.2f%%' % (level1_2 / total * 100))
+                    worksheet2.cell(line2, 5, '%.2f%%' % (level3_6 / total * 100))
+                    worksheet2.cell(line2, 6, '%.2f%%' % (level7_9 / total * 100))
+                    worksheet2.cell(line2, 7, '%.2f%%' % (level10_12 / total * 100))
                     print('1-2级粉丝占比: {}, 3-6级占比: {}, 7-9级占比: {}, 10级以上占比: {}'.format('%.2f%%' % (level1_2 / total * 100),
                                                                                      '%.2f%%' % (level3_6 / total * 100),
                                                                                      '%.2f%%' % (level7_9 / total * 100),
@@ -340,14 +343,14 @@ if __name__ == '__main__':
                 line2 += 1
 
             for fan in fan_rst:
-                worksheet3.write(line3, 0, fan.user_id)
-                worksheet3.write(line3, 1, fan.nick_name)
-                worksheet3.write(line3, 2, fan.level)
-                worksheet3.write(line3, 3, len(fan_rst[fan]))
+                worksheet3.cell(line3, 1, fan.user_id)
+                worksheet3.cell(line3, 2, emoji.demojize(fan.nick_name))
+                worksheet3.cell(line3, 3, fan.level)
+                worksheet3.cell(line3, 4, len(fan_rst[fan]))
                 line3 += 1
         except Exception as e:
             print(e)
         finally:
             end_time = start_time
             start_time = start_time + 86400 * 1000
-            workbook.save('comments_data_202007{}.xls'.format(i))
+            workbook.save('comments_data_202008{}.xlsx'.format(i))

@@ -8,5 +8,5 @@ mysql-connector
 beautifulsoup4
 lxml
 numpy
-emojis
+emoji
 pillow
