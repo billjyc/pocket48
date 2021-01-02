@@ -1,5 +1,5 @@
 # pocket48
-基于[cq-http-python-sdk](https://github.com/richardchien/cqhttp-python-sdk)和Python3.6制作
+基于[Graia Application for mirai-api-http](https://github.com/GraiaProject/Application)和Python3.9制作
 
 监控成员口袋48聚聚房间，微博和摩点项目
 
@@ -22,11 +22,9 @@
 * 摩点插件所需的数据库建表语句存放在`data/db.sql`中（数据库名为`card_draw`）
 
 
-### coolq配置
-* 具体使用请参照(https://richardchien.github.io/coolq-http-api)
-* 先启动`coolq_http_server.py`, 再启动`main.py`
-* 如果使用了酷Q Pro，在`conf.ini`的`using_coolq_pro`项中填写"yes"
- 
+### mirai配置
+* 具体使用请参照(https://graia-document.vercel.app/docs/guides/about-config)
+* 先启动`mirai_bot.py`, 再启动`main.py`
 
 ### 口袋48插件使用
 * 首先确保你想监控的成员已经开通口袋房间（否则会拉不到数据）

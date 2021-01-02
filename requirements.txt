@@ -2,7 +2,6 @@ requests
 APScheduler
 DBUtils
 PyMySQL
-cqhttp
 SQLalchemy
 mysql-connector
 beautifulsoup4
@@ -11,3 +10,5 @@ numpy
 emoji
 pillow
 graia-application-mirai
+graia-component-selector
+graia-template

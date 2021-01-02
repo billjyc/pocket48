@@ -11,7 +11,7 @@ from pocket48.pocket48_handler import Pocket48ListenTask, Member
 
 # 读取口袋48的配置
 global_config.MEMBER_JSON = json.load(open('data/pocket48/member.json', encoding='utf8'))
-global_config.POCKET48_JSON = json.load(open('data/pocket48/pocket48.json'), encoding='utf8')
+global_config.POCKET48_JSON = json.load(open('data/pocket48/pocket48.json', encoding='utf8'))
 global_config.POCKET48_VERSION = global_config.POCKET48_JSON['version']
 global_config.IMEI = global_config.POCKET48_JSON['IMEI']
 
@@ -48,8 +48,8 @@ for member in members_list:
     else:
         logger.error('member_name: {}不在数据文件中，请重试！'.format(member_pinyin))
 
-import pocket48_plugin
-import statistic_plugin
+# import pocket48_plugin
+# import statistic_plugin
 import weibo_plugin
 # import modian_plugin
 
