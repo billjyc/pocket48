@@ -1,0 +1,33 @@
+{
+  "activities": [
+
+    {
+      "flag_name": "10.15解锁头像",
+      "pro_id": "33035",
+      "target_flag_amount": 14580,
+      "end_time": "2018-10-16 23:59:59",
+      "remark": ""
+    },
+    {
+      "flag_name": "满12500追加101.7（老阿姨）",
+      "pro_id": "33035",
+      "target_flag_amount": 12500,
+      "end_time": "2018-10-17 23:59:59",
+      "remark": ""
+    },
+    {
+      "flag_name": "满13140追加101.7元（瓜瓜是你的小可爱吗）",
+      "pro_id": "33035",
+      "target_flag_amount": 13140,
+      "end_time": "2018-10-17 23:59:59",
+      "remark": ""
+    },
+    {
+      "flag_name": "满14130追加101.7（黑洞）",
+      "pro_id": "33035",
+      "target_flag_amount": 14130,
+      "end_time": "2018-10-17 23:59:59",
+      "remark": ""
+    }
+  ]
+}

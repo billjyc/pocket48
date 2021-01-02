@@ -6,6 +6,12 @@ import urllib
 import hashlib
 import requests
 import json
+import base64
+import string
+import math
+import urllib.parse
+import csv
+from log.my_logger import pocket48_logger as logger
 
 
 def convert_timestamp_to_timestr(timestamp):
@@ -31,6 +37,10 @@ def convert_timestr_to_timestamp(time_str):
 
 def random_str(strs):
     return random.choice(strs)
+
+
+def build_cq_images(img_url):
+    return '[CQ:image,file=%s]' % img_url
 
 
 # 过滤HTML中的标签
@@ -102,10 +112,10 @@ def make_signature(post_fields):
     :return:
     """
     post_fields_sorted = ksort(post_fields)
-    md5_string = urllib.urlencode(post_fields_sorted) + '&p=das41aq6'
-    print md5_string
+    md5_string = urllib.parse.urlencode(post_fields_sorted) + '&p=das41aq6'
+    # print md5_string
     sign = hashlib.md5(md5_string).hexdigest()[5:21]
-    print sign
+    # print sign
     return sign
 
 
@@ -113,19 +123,171 @@ def ksort(d):
     return [(k, d[k]) for k in sorted(d.keys())]
 
 
+def save_image(img_url):
+    rsp = requests.get(img_url)
+
+    with open('1.jpg', 'wb') as f:
+        f.write(rsp.content)
+    print('done')
+
+
+def compute_stick_num(min_stick_num, backer_money):
+    """
+    计算接棒活动中的棒数
+    :param min_stick_num: 接棒最小金额
+    :param backer_money: 集资金额
+    :return:
+    """
+    rst = 0
+    # 冯晓菲应援会特别定制，10.17算1棒，但是在20以上就按10元1棒计算
+    if min_stick_num == 10.17:
+        if 10.17 <= backer_money < 20:
+            rst = 1
+        elif backer_money >= 20:
+            rst = int(backer_money // 10)
+    else:
+        rst = int(backer_money // min_stick_num)
+    return rst
+
+
+def weight_choice(candidate, weight):
+    """
+    加权随机抽选
+    :param candidate:
+    :param weight: 权重
+    :return: index of candidate
+    """
+    if len(candidate) != len(weight):
+        raise RuntimeError('候选数组和权重数组的长度不一致！')
+    weight_sum = int(sum(weight))
+
+    if weight_sum != 100:
+        raise RuntimeError('权重设置有误，权重之和不为100，实际值为: {}'.format(weight_sum))
+
+    t = random.randint(0, weight_sum*10 - 1) / 10
+    for i, val in enumerate(weight):
+        t -= val
+        if t < 0:
+            return i
+    return 0
+
+
+def choice(candidate, num=1):
+    """
+    随机抽选（非加权）
+    :param candidate:
+    :param num: 抽取的数量
+    :return:
+    """
+    return random.sample(candidate, num)
+
+
+def read_txt(file_path):
+    """
+    读取txt文件
+    :param file_path:
+    :return:
+    """
+    rst = []
+    file = open(file_path, mode='r', encoding='utf-8')
+    context = file.readlines()
+    # 按行读取
+    for i in context:
+        rst.append(i.strip())
+    return rst
+
+
+def is_digit(x):
+    """
+    判断字符串是否为数字
+    :param x:
+    :return:
+    """
+    try:
+        float(x)
+        return True
+    except ValueError:
+        pass
+
+    try:
+        import unicodedata
+        unicodedata.numeric(x)
+        return True
+    except (TypeError, ValueError):
+        pass
+    return False
+
+
+def is_positive_integer(x):
+    try:
+        x = int(x)
+        return isinstance(x, int)
+    except ValueError:
+        return False
+
+
+def read_csv(file_path):
+    """
+    读取csv文件
+    :param file_path:
+    :return:
+    """
+    with open(file_path, 'r', encoding='utf-8') as csv_file:
+        read = csv.DictReader(csv_file)
+        rows = [row for row in read]
+    return rows
+
+
+def generate_pa():
+    """
+    生成口袋48的pa值
+    :param length:
+    :return:
+    """
+    salt = 'K4bMWJawAtnyyTNOa70S'
+    current_timestamp = int(time.time()) * 1000
+    random_num = random.randint(1000, 9999)
+    mix_data = hashlib.md5((str(current_timestamp) + str(random_num) + salt).encode(encoding='utf-8'))
+    mix_str = mix_data.hexdigest()
+
+    source = str(current_timestamp) + ',' + str(random_num) + ',' + mix_str
+    rst = base64.b64encode(source.encode(encoding='utf-8'))
+
+    logger.info('pa: {}'.format(str(rst, encoding='utf-8')))
+
+    return str(rst, encoding='utf-8')
+
+
+def generate_pa2(username, token):
+    url = 'http://116.85.71.166:4848/getPA'
+    data = {
+        'userID': username,
+        'token': token
+    }
+    r = requests.get(url, data).json()
+    if int(r['status']) == 0:
+        return r['content']
+    else:
+        raise RuntimeError('获取PA出现错误！')
+
+
 if __name__ == '__main__':
+    rst = generate_pa()
+    print(rst)
+    # save_image('https://nos.netease.com/nim/NDA5MzEwOA==/bmltYV8xNzc5NzQyNDlfMTUxNTAzODQyMzkyN182OGMzZTA2OS00NzUwLTQ2MWYtOWI3NC1jODNiNmMzMDhhMzM=')
     # strs = filter_tags("""
     # test<span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_tu-65768ccc23.png\" style=\"width:1em;height:1em;\" alt=\"[吐]\"></span><span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_haha-bdd6ceb619.png\" style=\"width:1em;height:1em;\" alt=\"[哈哈]\"></span><span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/default/d_tu-65768ccc23.png\" style=\"width:1em;height:1em;\" alt=\"[吐]\"></span><span class=\"url-icon\"><img src=\"//h5.sinaimg.cn/m/emoticon/icon/others/l_xin-8e9a1a0346.png\" style=\"width:1em;height:1em;\" alt=\"[心]\"></span><br/><a class='k' href='https://m.weibo.cn/k/test?from=feed'>#test#</a>
     # """)
     # print strs
-    url = 'https://wds.modian.com/api/project/orders'
-    post_fields = {
-        "pro_id": 10289,
-        "page": 1,
-    }
-    header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.104 Safari/537.36 Core/1.53.4033.400 QQBrowser/9.7.12622.400'}
-    sign = make_signature(post_fields)
-    post_fields['sign'] = sign
-
-    r = requests.post(url, post_fields, headers=header)
-    print r.text
+    # url = 'https://wds.modian.com/api/project/orders'
+    # post_fields = {
+    #     "pro_id": 10289,
+    #     "page": 1,
+    # }
+    # header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.104 Safari/537.36 Core/1.53.4033.400 QQBrowser/9.7.12622.400'}
+    # sign = make_signature(post_fields)
+    # post_fields['sign'] = sign
+    #
+    # r = requests.post(url, post_fields, headers=header)
+    # print r.text
+    print(generate_pa2('000', '00000'))

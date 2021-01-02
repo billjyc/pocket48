@@ -1,40 +1,68 @@
 # pocket48
-纯属个人自娱自乐
+基于[cq-http-python-sdk](https://github.com/richardchien/cqhttp-python-sdk)和Python3.6制作
 
-基于[qqbot](https://github.com/pandolia/qqbot)和Python2.7制作，基于酷Q的请参照coolq分支
+监控成员口袋48聚聚房间，微博和摩点项目
 
-监控成员口袋48聚聚房间，微博和微打赏项目
+目前可用的插件:
+* 如果不想使用某插件，只需要在`main.py`中注释掉相应行即可
+* `pocket48_plugin`(口袋48插件)
+* `weibo_plugin`(微博监听插件)
+* `modian_plugin`（摩点监听插件)
+* `statistic_plugin` (数据收集插件）
 
-目前可用的插件: 
-* pocket48_plugin(口袋48插件)
-* weibo_plugin(微博监听插件)
-* wds_plugin（微打赏监听插件)
+口袋48插件1分钟监听一次，微博插件1分钟监听一次，摩点插件20秒监听一次（可以自行调整）
 
-口袋48插件1分钟监听一次，微博插件45秒监听一次，微打赏插件1分钟监听一次（可以自行调整）
+### 前置条件
+* 目前需要的Python3 library有：
+    + DB操作相关：`pymysql` + `DBUtils`
+    + 定时任务相关：`APScheduler`
+    + 酷Q HTTP API相关：`cqhttp`
+    + 网络相关：`requests`
+* 在项目目录的上一级目录新建`logs`文件夹，日志文件会存放在该目录中
+* 摩点插件所需的数据库建表语句存放在`data/db.sql`中（数据库名为`card_draw`）
 
-### qqbot配置
-* 具体使用请参照qqbot的主页
-* 在~/.qqbot-tmp/v2.3.conf中配置机器人的qq消息, 在plugin中可以填写自己想要使用的插件
-* 请填写接收二维码的邮箱及邮箱授权码，百度即可搜到授权码生成方法
-* 在run-pocket48.sh中最后一行'qqbot -u'后面的参数修改为配置的qq用户名
-* 配置完成之后，运行run-pocket48.sh即可
+
+### coolq配置
+* 具体使用请参照(https://richardchien.github.io/coolq-http-api)
+* 先启动`coolq_http_server.py`, 再启动`main.py`
+* 如果使用了酷Q Pro，在`conf.ini`的`using_coolq_pro`项中填写"yes"
  
-### 口袋48和微博插件使用
-* 暂时不支持监听多个成员
-* 首先确保你想监控的成员已经开通口袋房间
-* 在conf.ini中修改自己想要监控的成员的拼音（目前只有Team SII和NII的资料，如果有其他人的话，可以自行按照里面的格式添加成员的口袋ID，房间ID，微博链接）
-* 可以给不同的群开放不同的功能(目前有房间消息，房间评论，直播提醒，微博提醒），详情请见conf.ini</p>
-* 由于qqbot限制，暂不支持语音和图片消息</p>
-* 在conf.ini中修改内容，注意一定要按照格式来写，否则无法解析
-* 在写了群号之后，一定在底下加上群名称（底层限制，无法通过群号来搜索群名）
+
+### 口袋48插件使用
+* 首先确保你想监控的成员已经开通口袋房间（否则会拉不到数据）
+* `data/pocket48/pocket48.json`
+    + `IMEI`: 手机序列号，可以使用真机，也可以使用模拟器
+    + `version`: 所使用的口袋48的版本
+    + `username`, `password`: 登录口袋48所需的用户名和密码（建议使用小号）
+    + `monitor_members`: 监控成员列表，每一项需要填写如下内容：
+        * `member_room_msg_groups`：接收成员消息的群号，用分号分隔
+        + `member_room_comment_groups`: 接收成员房间评论的群号，用分号分隔
+        + `member_live_groups`：如果成员开启直播，接收开播提醒的群号，用分号分隔
+        + `member_room_comment_lite_groups`: 如果距离成员上一条房间消息发送超过10分钟后，又有新的成员消息，这时会发送一条提醒到群中
+        + `room_msg_lite_notify`: 简易版提醒的提示语，支持多个，随机发送
+* `conf.ini`相关配置
+    + `performance_notify`: 公演直播提示语，需要在`data/schedule.json`中配置
+* 在`conf.ini`中修改内容，注意一定要按照格式来写，否则无法解析
 
 
-### 微打赏插件使用
-* 微打赏监控数据在data/wds.json中，monitor_activities为监控项目，wds_pk_activities为PK活动的项目
-* 摩点的插件还在开发中
+### 微博插件使用
+* 微博uid在`data/member.json`中，可以自行填写
+* `conf.ini`相关配置
+    + `member_weibo_groups`: 接收成员微博提醒的群号，使用分号分隔
+
+
+### 摩点插件使用
+* 需要安装MySQL
+* 摩点监控数据在`data/wds.json`中，`monitor_activities`为监控项目，`modian_pk_activities`为PK活动的项目
+* 接棒活动播报（测试中）：在`data/modian_jiebang.json`中增加对应的接棒活动，相关数据记录在`data/modian.db`中
+* 金额flag类活动播报（测试中）：在`data/modian_flag.json`中增加对应的flag活动
+* 接棒和金额flag类活动播报类的发送QQ群暂时hardcode在代码中，请自行进行修改
+
+
+### 数据插件使用
+* 目前仅能记录应援群的人数变化情况，使用前需要自行添加记录在`statistic/statistics.db`的'member'表中（member_id和member_name要和data/member.json中的一致)
 
 
 ### 注意事项
-* 第一次使用时会向邮箱中发送登录二维码，用手机QQ扫码登录即可
-* 每天晚上10点钟（可以再pocket48_plugin.py中的restart_sche()函数中修改重启时间）
-* qqbot没有coolq稳定，会经常出现掉线的情况，所以需要扫码重新登录
+* 仍然在开发中
+

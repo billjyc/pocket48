@@ -3,9 +3,10 @@ import threading
 import requests
 import time
 import urllib
-from qqbot.utf8logger import INFO,ERROR,DEBUG
-import Queue
+from asyncio import Queue
 import os
+
+from log.my_logger import logger as my_logger
 
 
 class Download(threading.Thread):
@@ -23,7 +24,7 @@ class Download(threading.Thread):
         per = 100.0 * a * b / c
         if per > 100:
             per = 100
-        print '%.2f%%' % per
+        print('%.2f%%' % per)
 
     def run(self):
         while True:
@@ -34,15 +35,15 @@ class Download(threading.Thread):
                 live_url = self.queue.get()
                 ext = live_url.split('.')[-1]
                 file_name = name + '.' + ext
-                INFO('%s直播下载开始...', file_name)
+                my_logger.info('%s直播下载开始...', file_name)
                 r = requests.get(live_url, verify=False)
                 local_path = os.path.join('../', file_name)
                 with open(local_path, 'wb') as code:
                     code.write(r.content)
                 # urllib.urlretrieve(url, local_path, self.Schedule)
-                INFO('下载完成')
+                my_logger.info('下载完成')
             else:
-                INFO('直播下载队列为空！')
+                my_logger.info('直播下载队列为空！')
             time.sleep(60)
 
 
@@ -63,7 +64,7 @@ if __name__ == '__main__':
     # queue.put(url3)
 
     while True:
-        print 'main thread'
+        print('main thread')
         time.sleep(30)
     # while True:
     #     print 'main thread'

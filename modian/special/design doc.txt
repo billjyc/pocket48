@@ -1,0 +1,52 @@
+第一次JZ10元以上建号 按照一个姓名库来随机命名并在给定数值范围内生成5项属性，并且属性在触发事件时可实时加减变动，这样的功能是前提
+
+人物类：
+    id：摩点ID，PK，string
+    name: 随机姓名, string
+    属性1：int
+    属性2：int
+    属性3：int
+    属性4：int
+    属性5：int
+
+账号是否已创建：
+    if modian_id in DB:
+        return True
+     else:
+        return False
+
+创建人物：
+    属性随机生成
+    随机生成姓名
+    存DB
+    return new 人物()
+
+集资：
+    if 账号已创建：
+        各种操作()
+    else:
+        if 集资>=10:
+            创建人物()
+        else:
+            什么都不做
+
+姓名：
+    活动开始前，读文件到内存(list)中，读数据库，去掉已经使用的姓名
+    创建姓名时，读取内存，随机拼接姓名，并将该姓名从list中去除
+
+事件:
+    if 集资<10: return;
+    mod = 集资
+    maxEvent = 3
+    amount = [200, 100, 50, 10]
+    idx = 0
+    WHILE maxEvent > 0 {
+        eventTime = mod div amount[idx]
+        eventTime = eventTime > maxEvent ? maxEvent : eventTime
+        for i=1 to eventTime {
+            触发事件
+        }
+        maxEvent -= eventTime
+        idx++
+        mod = mod % amount[idx]
+    }

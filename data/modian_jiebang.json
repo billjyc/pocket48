@@ -1,0 +1,31 @@
+{
+  "activities": [
+    {
+      "jiebang_name": "MySQL接棒Test",
+      "pro_id": "15972",
+      "target_stick_num": 100,
+      "min_stick_amount": 1,
+      "start_time": "2018-05-19 16:00:00",
+      "end_time": "2018-05-25 23:59:59",
+      "need_detail": 1
+    },
+    {
+      "jiebang_name": "10.17元接棒",
+      "pro_id": "1634",
+      "target_stick_num": 9999,
+      "min_stick_amount": 10.17,
+      "start_time": "2020-04-17 13:00:00",
+      "end_time": "2020-04-30 23:59:59",
+      "need_detail": 2
+    },
+    {
+      "jiebang_name": "30.51元接棒无上限",
+      "pro_id": "74791",
+      "target_stick_num": 9999,
+      "min_stick_amount": 30.51,
+      "start_time": "2019-07-24 16:11:00",
+      "end_time": "2019-07-24 21:59:59",
+      "need_detail": 3
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+requests
+APScheduler
+DBUtils
+PyMySQL
+cqhttp
+SQLalchemy
+mysql-connector
+beautifulsoup4
+lxml
+numpy
+emoji
+pillow
