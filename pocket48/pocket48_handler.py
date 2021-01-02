@@ -542,13 +542,6 @@ class Pocket48Handler:
             logger.exception(e)
             return False
 
-    def kuan_time_broadcast(self):
-        """
-        款时播报
-        :return:
-        """
-        QQHandler.send_to_groups(['101724227'], '款时')
-
     # def parse_member_live(self, response, task):
     #     """
     #     对直播列表进行处理，找到正在直播的指定成员

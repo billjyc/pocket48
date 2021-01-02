@@ -7,6 +7,7 @@
 import json
 import requests
 import logging
+from qq.qqhandler import QQHandler
 
 try:
     from log.my_logger import weibo_logger as my_logger
@@ -229,6 +230,13 @@ class WeiboMonitor:
         except Exception as e:
             my_logger.exception(e)
             return None
+
+    def kuan_time_broadcast(self):
+        """
+        款时播报
+        :return:
+        """
+        QQHandler.send_to_groups(['101724227'], '款时')
 
 
 if __name__ == '__main__':

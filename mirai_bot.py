@@ -86,7 +86,7 @@ async def group_message_listener(app: GraiaMiraiApplication, group: Group, messa
             # AI智能回复
             logger.debug('AI智能回复')
             if len(content) > 1 and content.startswith('%'):
-                content = message[1:]
+                content = content[1:]
                 logger.debug('提问内容: %s' % content)
                 reply = ai_bot.nlp_textchat(content, member.id)
                 await app.sendGroupMessage(group, MessageChain.create([
