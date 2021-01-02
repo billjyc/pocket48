@@ -10,3 +10,4 @@ lxml
 numpy
 emoji
 pillow
+graia-application-mirai
