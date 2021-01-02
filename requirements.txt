@@ -2,6 +2,7 @@ requests
 APScheduler
 DBUtils
 PyMySQL
+DBUtils==1.3
 SQLalchemy
 mysql-connector
 beautifulsoup4
