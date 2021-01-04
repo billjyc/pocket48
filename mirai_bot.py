@@ -77,6 +77,7 @@ async def group_message_listener(app: GraiaMiraiApplication, group: Group, messa
     logger.info(content)
     user_id = member.id
     group_id = group.id
+    logger.info(group)
     if member.id != 421497163:
         if content in AUTO_REPLY:
             await app.sendGroupMessage(group, MessageChain.create([

@@ -6,7 +6,7 @@ https://richardchien.github.io/coolq-http-api/3.3/#/API
 """
 from log.my_logger import logger
 from utils.bot import bot
-from graia.application.group import Group
+from graia.application.group import Group, MemberPerm
 from graia.application.message.chain import MessageChain
 from graia.application.message.elements.internal import Plain, Image, At, AtAll, Voice, Face
 
@@ -49,7 +49,7 @@ class QQHandler:
         for group in groups:
             try:
                 logger.info(group)
-                group = Group(id=int(group))
+                group = Group(id=int(group), name='群', accountPerm=MemberPerm.Member)
                 bot.sendGroupMessage(group, message=MessageChain.create([Plain(message)]))
             except Exception as exp:
                 logger.exception(exp)
