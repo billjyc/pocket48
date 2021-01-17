@@ -16,14 +16,15 @@
 * 目前需要的Python3 library有：
     + DB操作相关：`pymysql` + `DBUtils`
     + 定时任务相关：`APScheduler`
-    + 酷Q HTTP API相关：`cqhttp`
+    + mirai HTTP API相关：`graia-application-mirai`, `graia-component-selector`, `graia-template`
     + 网络相关：`requests`
 * 在项目目录的上一级目录新建`logs`文件夹，日志文件会存放在该目录中
 * 摩点插件所需的数据库建表语句存放在`data/db.sql`中（数据库名为`card_draw`）
 
 
 ### mirai配置
-* 具体使用请参照(https://graia-document.vercel.app/docs/guides/about-config)
+* 首先需要启动mirai-console-loader
+* 参数配置请参照(https://graia-document.vercel.app/docs/guides/about-config)
 * 先启动`mirai_bot.py`, 再启动`main.py`
 
 ### 口袋48插件使用
@@ -51,7 +52,7 @@
 
 ### 摩点插件使用
 * 需要安装MySQL
-* 摩点监控数据在`data/wds.json`中，`monitor_activities`为监控项目，`modian_pk_activities`为PK活动的项目
+* 摩点监控数据在`data/modian.json`中，`monitor_activities`为监控项目，`modian_pk_activities`为PK活动的项目
 * 接棒活动播报（测试中）：在`data/modian_jiebang.json`中增加对应的接棒活动，相关数据记录在`data/modian.db`中
 * 金额flag类活动播报（测试中）：在`data/modian_flag.json`中增加对应的flag活动
 * 接棒和金额flag类活动播报类的发送QQ群暂时hardcode在代码中，请自行进行修改
