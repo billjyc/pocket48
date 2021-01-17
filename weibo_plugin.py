@@ -110,7 +110,7 @@ def monitor_member_weibo():
                         # QQHandler.send_to_groups(member_weibo_groups, text)
 
 
-@scheduler.scheduled_job('cron', hour='10', minute='17')
+@scheduler.scheduled_job('cron', hour='10, 22', minute='17')
 def kuan_time_broadcast():
     my_logger.info('款时播报')
     weibo_monitor.kuan_time_broadcast()

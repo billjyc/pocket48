@@ -7,7 +7,9 @@
 import json
 import requests
 import logging
+import asyncio
 from qq.qqhandler import QQHandler
+from utils.bot import loop
 
 try:
     from log.my_logger import weibo_logger as my_logger
@@ -236,7 +238,7 @@ class WeiboMonitor:
         款时播报
         :return:
         """
-        QQHandler.send_to_groups(['101724227'], '款时')
+        loop.run_until_complete(QQHandler.send_to_groups(['483548995'], '款时'))
 
 
 if __name__ == '__main__':
