@@ -1,6 +1,6 @@
 requests
 APScheduler
-DBUtils
+DBUtils==1.3
 PyMySQL
 SQLalchemy
 mysql-connector

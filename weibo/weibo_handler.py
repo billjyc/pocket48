@@ -238,7 +238,7 @@ class WeiboMonitor:
         款时播报
         :return:
         """
-        loop.run_until_complete(QQHandler.send_to_groups(['483548995'], '款时'))
+        loop.run_until_complete(QQHandler.send_to_groups(['101724227'], '款时'))
 
 
 if __name__ == '__main__':
