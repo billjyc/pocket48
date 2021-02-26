@@ -9,7 +9,7 @@ try:
 except:
     logger = logging.getLogger(__name__)
 
-from DBUtils.pooled_db import PooledDB
+from DBUtils.PooledDB import PooledDB
 from utils import db_config as Config
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
