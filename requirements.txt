@@ -14,3 +14,4 @@ graia-component-selector
 graia-template
 devtools
 pydantic<1.7.1
+m3u8
