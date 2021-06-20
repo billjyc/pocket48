@@ -33,6 +33,8 @@ class TextMessageType:
     TEXT = 'TEXT'  # 普通文字消息
     REPLY = 'REPLY'  # 普通翻牌
     FLIPCARD = 'FLIPCARD'  # 鸡腿翻牌
+    FLIPCARD_AUDIO = 'FLIPCARD_AUDIO'  # 语音翻牌
+    FLIPCARD_VIDEO = 'FLIPCARD_VIDEO'  # 视频翻牌
     LIVEPUSH = 'LIVEPUSH'  # 直播
     VOTE = 'VOTE'  # 投票
     PASSWORD_REDPACKAGE = 'PASSWORD_REDPACKAGE'  # 红包消息
@@ -351,6 +353,18 @@ class Pocket48Handler:
                         print('红包消息')
                         content = '【红包】{}'.format(extInfo['redPackageTitle'])
                         self.save_msg_to_db(106, msg_id, user_id, user_name, msg_time, content)
+                    elif text_message_type == TextMessageType.FLIPCARD_AUDIO:
+                        print('语音翻牌')
+                        suburl = json.loads(extInfo['answer'])['url']
+                        audio_url = 'https://mp4.48.cn{}'.format(suburl)
+                        content = '【语音翻牌】{}'.format(audio_url)
+                        self.save_msg_to_db(107, msg_id, user_id, user_name, msg_time, content)
+                    elif text_message_type == TextMessageType.FLIPCARD_AUDIO:
+                        print('视频翻牌')
+                        suburl = json.loads(extInfo['answer'])['url']
+                        video_url = 'https://mp4.48.cn{}'.format(suburl)
+                        content = '【视频翻牌】{}'.format(video_url)
+                        self.save_msg_to_db(108, msg_id, user_id, user_name, msg_time, content)
                 elif msg['msgType'] == MessageType.IMAGE:  # 图片消息
                     logger.debug('图片')
                     bodys = json.loads(msg['bodys'])
@@ -597,15 +611,15 @@ class Pocket48Handler:
         """
         header = {
             'Content-Type': 'application/json;charset=utf-8',
-            'User-Agent': 'PocketFans201807/6.0.16 (iPad; iOS 13.5.1; Scale/2.00)',
+            'User-Agent': 'PocketFans201807/6.2.0 (iPad; iOS 14.4; Scale/2.00)',
             'pa': global_config.POCKET48_PA,
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',
                 'deviceId': '0',
                 "appVersion": global_config.POCKET48_VERSION,
-                "appBuild": "200701",
-                "osVersion": "13.5.1",
+                "appBuild": "21060903",
+                "osVersion": "14.4.0",
                 "osType": "ios",
                 "deviceName": "unknow",
                 "os": "ios"
@@ -620,15 +634,15 @@ class Pocket48Handler:
         """
         header = {
             'Content-Type': 'application/json;charset=utf-8',
-            'User-Agent': 'PocketFans201807/6.0.16 (iPad; iOS 13.5.1; Scale/2.00)',
+            'User-Agent': 'PocketFans201807/6.2.0 (iPad; iOS 14.4; Scale/2.00)',
             'pa': global_config.POCKET48_PA,
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',
                 'deviceId': '0',
                 "appVersion": global_config.POCKET48_VERSION,
-                "appBuild": "200701",
-                "osVersion": "13.5.1",
+                "appBuild": "21060903",
+                "osVersion": "14.4.0",
                 "osType": "ios",
                 "deviceName": "unknow",
                 "os": "ios"
@@ -645,15 +659,15 @@ class Pocket48Handler:
         logger.debug('token: %s', self.token)
         header = {
             'Content-Type': 'application/json;charset=utf-8',
-            'User-Agent': 'PocketFans201807/6.0.16 (iPad; iOS 13.5.1; Scale/2.00)',
+            'User-Agent': 'PocketFans201807/6.2.0 (iPad; iOS 14.4; Scale/2.00)',
             'pa': global_config.POCKET48_PA,
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',
                 'deviceId': '0',
                 "appVersion": global_config.POCKET48_VERSION,
-                "appBuild": "200701",
-                "osVersion": "13.5.1",
+                "appBuild": "21060903",
+                "osVersion": "14.4.0",
                 "osType": "ios",
                 "deviceName": "unknow",
                 "os": "ios"
@@ -670,15 +684,15 @@ class Pocket48Handler:
         logger.debug('token: %s', self.token)
         header = {
             'Content-Type': 'application/json;charset=utf-8',
-            'User-Agent': 'PocketFans201807/6.0.16 (iPad; iOS 13.5.1; Scale/2.00)',
+            'User-Agent': 'PocketFans201807/6.2.0 (iPad; iOS 14.4; Scale/2.00)',
             'pa': global_config.POCKET48_PA,
             'Host': 'pocketapi.48.cn',
             'appInfo': json.dumps({
                 'vendor': 'apple',
                 'deviceId': '0',
                 "appVersion": global_config.POCKET48_VERSION,
-                "appBuild": "200701",
-                "osVersion": "13.5.1",
+                "appBuild": "21060903",
+                "osVersion": "14.4.0",
                 "osType": "ios",
                 "deviceName": "unknow",
                 "os": "ios"
