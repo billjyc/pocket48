@@ -111,7 +111,7 @@ class Pocket48Handler:
             'pwd': str(password),
             'mobile': str(username),
         }
-        res = self.session.post(login_url, json=params, headers=self.login_header_args()).json()
+        res = self.session.post(login_url, json=params, headers=self.login_header_args(), verify=False).json()
         # 登录成功
         if res['status'] == 200:
             self.token = res['content']['token']
