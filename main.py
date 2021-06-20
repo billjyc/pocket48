@@ -48,8 +48,8 @@ for member in members_list:
     else:
         logger.error('member_name: {}不在数据文件中，请重试！'.format(member_pinyin))
 
-# import pocket48_plugin
-# import statistic_plugin
+import pocket48_plugin
+import statistic_plugin
 import weibo_plugin
 # import modian_plugin
 
