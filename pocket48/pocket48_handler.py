@@ -618,7 +618,7 @@ class Pocket48Handler:
                 'vendor': 'apple',
                 'deviceId': '0',
                 "appVersion": global_config.POCKET48_VERSION,
-                "appBuild": "21060903",
+                "appBuild": "200701",
                 "osVersion": "14.4.0",
                 "osType": "ios",
                 "deviceName": "unknow",
@@ -641,7 +641,7 @@ class Pocket48Handler:
                 'vendor': 'apple',
                 'deviceId': '0',
                 "appVersion": global_config.POCKET48_VERSION,
-                "appBuild": "21060903",
+                "appBuild": "200701",
                 "osVersion": "14.4.0",
                 "osType": "ios",
                 "deviceName": "unknow",
@@ -666,7 +666,7 @@ class Pocket48Handler:
                 'vendor': 'apple',
                 'deviceId': '0',
                 "appVersion": global_config.POCKET48_VERSION,
-                "appBuild": "21060903",
+                "appBuild": "200701",
                 "osVersion": "14.4.0",
                 "osType": "ios",
                 "deviceName": "unknow",
@@ -691,7 +691,7 @@ class Pocket48Handler:
                 'vendor': 'apple',
                 'deviceId': '0',
                 "appVersion": global_config.POCKET48_VERSION,
-                "appBuild": "21060903",
+                "appBuild": "200701",
                 "osVersion": "14.4.0",
                 "osType": "ios",
                 "deviceName": "unknow",
@@ -800,7 +800,8 @@ if __name__ == '__main__':
     # }))
     member = Member('左婧媛', '327577', '67380556')
     task = Pocket48ListenTask(member)
-    pocket48_handler.login('**', '**')
+    pocket48_handler.login('17011967934', '19930727')
+    # pocket48_handler.token = 'fujHfMzC4BMDIHdQPxmstDufaJJOQIV0U3rrwUUQ4CipYH+EO5Q8+tjdsf3Gn/p/NKfC069FYmg='
     r = pocket48_handler.get_member_room_msg(task)
     pocket48_handler.parse_room_msg(r, task)
     # base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
