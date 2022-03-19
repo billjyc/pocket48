@@ -9,10 +9,9 @@ lxml
 numpy
 emoji
 pillow
-graia-application-mirai==0.19.2
-graia-broadcast==0.8.1
+graia-ariadne
+graia-application-mirai
 graia-component-selector
 graia-template
 devtools
-pydantic==1.7.1
 m3u8
