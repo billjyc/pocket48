@@ -8,8 +8,8 @@ from graia.ariadne.model import Friend, MiraiSession
 # from graia.application import GraiaMiraiApplication, Session
 from graia.broadcast import Broadcast
 
-loop = asyncio.get_event_loop()
-bcc = Broadcast(loop=loop)
+# loop = asyncio.get_event_loop()
+# bcc = Broadcast(loop=loop)
 
 # bot = GraiaMiraiApplication(
 #     broadcast=bcc,

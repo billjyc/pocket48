@@ -1,13 +1,18 @@
 # -*- coding:utf-8 -*-
 
-from graia.application import GraiaMiraiApplication
-from graia.application.friend import Friend
-from graia.application.group import Group, Member
-from graia.application.message.chain import MessageChain
-from graia.application.message.elements.internal import Plain, At
+# from graia.application import GraiaMiraiApplication
+# from graia.application.friend import Friend
+# from graia.application.group import Group, Member
+# from graia.application.message.chain import MessageChain
+# from graia.application.message.elements.internal import Plain, At
+
+from graia.ariadne.app import Ariadne
+from graia.ariadne.message.chain import MessageChain
+from graia.ariadne.message.element import Plain, At
+from graia.ariadne.model import Friend, MiraiSession, Group, Member
 
 from log.my_logger import logger
-from utils.bot import bcc, bot
+from utils.bot import bot
 from utils.config_reader import ConfigReader
 from qq.ai_reply import QQAIBot
 from utils import util
@@ -65,14 +70,14 @@ except Exception as e:
     logger.exception('导入mysql出现错误', e)
 
 
-@bcc.receiver("FriendMessage")
-async def friend_message_listener(app: GraiaMiraiApplication, friend: Friend, message: MessageChain):
+@bot.broadcast.receiver("FriendMessage")
+async def friend_message_listener(app: Ariadne, friend: Friend, message: MessageChain):
     content = message.asDisplay()
     logger.info(content)
 
 
-@bcc.receiver("GroupMessage")
-async def group_message_listener(app: GraiaMiraiApplication, group: Group, message: MessageChain, member: Member):
+@bot.broadcast.receiver("GroupMessage")
+async def group_message_listener(app: Ariadne, group: Group, message: MessageChain, member: Member):
     content = message.asDisplay()
     logger.info(content)
     user_id = member.id
