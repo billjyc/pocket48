@@ -1,5 +1,5 @@
 # pocket48
-基于[Graia Application for mirai-api-http](https://github.com/GraiaProject/Application)和Python3.9制作
+基于[Graia Ariadne](https://github.com/GraiaProject/Ariadne/)和Python3.9制作
 
 监控成员口袋48聚聚房间，微博和摩点项目
 
@@ -24,7 +24,7 @@
 
 ### mirai配置
 * 首先需要启动mirai-console-loader
-* 参数配置请参照(https://graia-document.vercel.app/docs/guides/about-config)
+* 参数配置请参照(https://graia.readthedocs.io/quickstart/)
 * 先启动`mirai_bot.py`, 再启动`main.py`
 
 ### 口袋48插件使用
