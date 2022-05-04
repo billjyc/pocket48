@@ -5,9 +5,9 @@
 
 目前可用的插件:
 * 如果不想使用某插件，只需要在`main.py`中注释掉相应行即可
-* `pocket48_plugin`(口袋48插件)
+* `pocket48_plugin`(口袋48插件，大概率不能用了)
 * `weibo_plugin`(微博监听插件)
-* `modian_plugin`（摩点监听插件)
+* `modian_plugin`（摩点监听插件，大概率不能用，但是调用原理可用来设计新的jz软件)
 * `statistic_plugin` (数据收集插件）
 
 口袋48插件1分钟监听一次，微博插件1分钟监听一次，摩点插件20秒监听一次（可以自行调整）
@@ -24,7 +24,7 @@
 
 ### mirai配置
 * 首先需要启动mirai-console-loader
-* 参数配置请参照(https://graia.readthedocs.io/quickstart/)
+* 参数配置请参照(https://graia.readthedocs.io/projects/ariadne/quickstart/)
 * 先启动`mirai_bot.py`, 再启动`main.py`
 
 ### 口袋48插件使用
