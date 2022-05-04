@@ -7,9 +7,9 @@ from graia.ariadne.model import Friend, MiraiSession
 
 # from graia.application import GraiaMiraiApplication, Session
 from graia.broadcast import Broadcast
+loop = asyncio.new_event_loop()
 
-# loop = asyncio.get_event_loop()
-# bcc = Broadcast(loop=loop)
+broadcast = Broadcast(loop=loop)
 
 # bot = GraiaMiraiApplication(
 #     broadcast=bcc,
@@ -21,4 +21,4 @@ from graia.broadcast import Broadcast
 #     )
 # )
 
-bot = Ariadne(MiraiSession(host="http://localhost:8080", verify_key="SNH48Forever", account=421497163))
+bot = Ariadne(broadcast=broadcast, connect_info=MiraiSession(host="http://localhost:8080", verify_key="SNH48Forever", account=421497163))

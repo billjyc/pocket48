@@ -8,11 +8,12 @@
 
 from graia.ariadne.app import Ariadne
 from graia.ariadne.message.chain import MessageChain
+from graia.ariadne.event.message import GroupMessage
 from graia.ariadne.message.element import Plain, At
 from graia.ariadne.model import Friend, MiraiSession, Group, Member
 
 from log.my_logger import logger
-from utils.bot import bot
+from utils.bot import bot, broadcast, loop
 from utils.config_reader import ConfigReader
 from qq.ai_reply import QQAIBot
 from utils import util
@@ -70,13 +71,16 @@ except Exception as e:
     logger.exception('导入mysql出现错误', e)
 
 
-@bot.broadcast.receiver("FriendMessage")
+@broadcast.receiver("FriendMessage")
 async def friend_message_listener(app: Ariadne, friend: Friend, message: MessageChain):
     content = message.asDisplay()
     logger.info(content)
+    await app.sendMessage(friend, MessageChain.create([
+                Plain("test")
+            ]))
 
 
-@bot.broadcast.receiver("GroupMessage")
+@broadcast.receiver(GroupMessage)
 async def group_message_listener(app: Ariadne, group: Group, message: MessageChain, member: Member):
     content = message.asDisplay()
     logger.info(content)
@@ -85,7 +89,7 @@ async def group_message_listener(app: Ariadne, group: Group, message: MessageCha
     logger.info(group)
     if member.id != 421497163:
         if content in AUTO_REPLY:
-            await app.sendGroupMessage(group, MessageChain.create([
+            await app.sendMessage(group, MessageChain.create([
                 Plain(AUTO_REPLY[content])
             ]))
         elif content.startswith('%'):
@@ -95,29 +99,29 @@ async def group_message_listener(app: Ariadne, group: Group, message: MessageCha
                 content = content[1:]
                 logger.debug('提问内容: %s' % content)
                 reply = ai_bot.nlp_textchat(content, member.id)
-                await app.sendGroupMessage(group, MessageChain.create([
+                await app.sendMessage(group, MessageChain.create([
                     Plain(reply)
                 ]))
         elif content == '抽签':
             try:
                 message = draw_lottery(user_id, group_id)
-                await app.sendGroupMessage(group, MessageChain.create([
+                await app.sendMessage(group, MessageChain.create([
                     At(user_id), Plain(message)
                 ]))
             except Exception as e:
                 logger.exception(e)
-                await app.sendGroupMessage(group, MessageChain.create([
+                await app.sendMessage(group, MessageChain.create([
                     Plain('抽签出现错误')
                 ]))
         elif content == '解签':
             try:
                 message = solve_lottery(user_id, group_id)
-                await app.sendGroupMessage(group, MessageChain.create([
+                await app.sendMessage(group, MessageChain.create([
                     At(user_id), Plain(message)
                 ]))
             except Exception as e:
                 logger.exception(e)
-                await app.sendGroupMessage(group, MessageChain.create([
+                await app.sendMessage(group, MessageChain.create([
                     Plain('解签出现错误')
                 ]))
 
@@ -212,4 +216,5 @@ def solve_lottery(user_id, group_id):
 
 
 if __name__ == '__main__':
-    bot.launch_blocking()
+    loop.run_until_complete(bot.lifecycle())
+    # bot.launch_blocking()
